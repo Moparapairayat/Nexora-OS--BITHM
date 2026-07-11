@@ -88,7 +88,7 @@ export function CommandPalette({
               autoFocus
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search dashboards, labs, reports, AI tools..."
+              placeholder="Search pages, labs, reports, and tools..."
               className="h-12 min-w-0 flex-1 bg-transparent text-base text-white outline-none placeholder:text-slate-500 light:text-slate-950"
             />
             <button
@@ -103,7 +103,7 @@ export function CommandPalette({
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-slate-500">
             <Badge tone="cyan">Ctrl K</Badge>
-            <span>Jump across role workspaces, modules and AI tools.</span>
+            <span>Open any page available to your account.</span>
           </div>
         </div>
 

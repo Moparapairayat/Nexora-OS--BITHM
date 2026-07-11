@@ -50,7 +50,7 @@ export function DataHubPage({ role }: { role: AppRole }) {
     <AppShell
       role={role}
       title="Data Hub"
-      subtitle="Review institution data, quality checks, exports, API connections and database migration steps."
+      subtitle="Review institution data, resolve quality issues, and prepare exports or migrations."
       nav={data.nav}
       navGroups={data.navGroups}
       accountEmail={data.accountEmail}
@@ -58,8 +58,8 @@ export function DataHubPage({ role }: { role: AppRole }) {
       <div className="grid gap-5">
         <PageHeader
           eyebrow="Institution Data"
-          title="Prepare academic data for real use"
-          subtitle="Review sample workflows, institution data and Postgres migration steps before pilot deployment."
+          title="Review and prepare institution data"
+          subtitle="Check record counts, data quality, integrations, and remaining Postgres migration work."
           tone="cyan"
           action={
             <Button type="button" variant="secondary">
@@ -150,7 +150,7 @@ function ConnectorPanel() {
   return (
     <DashboardCard
       title="Data Sources"
-      detail="See what is running in memory now and what is ready for Postgres later."
+      detail="See where the current data comes from and which sources still need Postgres."
       icon={HardDrive}
       tone="cyan"
     >

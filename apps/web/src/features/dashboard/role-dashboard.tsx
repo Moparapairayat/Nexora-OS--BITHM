@@ -224,17 +224,17 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,430px)] lg:items-center">
           <div className="min-w-0">
             <p className="text-sm font-medium text-slate-300 light:text-slate-700">
-              Welcome back, Student Nexora
+              Welcome back
             </p>
             <h1 className="mt-4 max-w-3xl text-3xl font-semibold tracking-normal text-[var(--foreground)] sm:text-5xl light:text-slate-950">
               Your{" "}
               <span className="text-[var(--brand-lime)] light:text-emerald-600">
-                academic workspace
+                work for today
               </span>
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-400 light:text-slate-600">
-              Manage your assignments, labs, AI tools and progress in one
-              polished Nexora OS command center.
+              Check upcoming deadlines, continue your lab work, and review
+              recent feedback.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button
@@ -674,8 +674,8 @@ function readableModelMode(mode: string) {
 function AssistantPanel({ activity }: { activity: string[] }) {
   return (
     <DashboardCard
-      title="Nexora AI Assistant"
-      detail="Recent AI help, warnings and suggested next steps."
+      title="Recent suggestions"
+      detail="Warnings, explanations, and useful next steps from your recent work."
       icon={Sparkles}
       tone="emerald"
     >

@@ -42,31 +42,30 @@ const moduleCopy: Record<
   "academic-shield": {
     eyebrow: "AcademicShield",
     subtitle:
-      "Review originality, AI writing risk, matched sources, highlighted paragraphs, rewrite guidance and citations.",
+      "Check originality, review matched sources, and fix citation issues before you submit.",
     tone: "rose",
   },
   "ml-studio": {
     eyebrow: "ML Experiment Studio",
     subtitle:
-      "Dataset upload, data preview, model selection, training progress and metric reporting for university ML labs.",
+      "Upload a dataset, train a model, and review the results from your ML lab.",
     tone: "emerald",
   },
   portfolio: {
     eyebrow: "Portfolio Builder",
     subtitle:
-      "Preview your portfolio with project cards, skills, links and AI-assisted descriptions.",
+      "Organize your projects, skills, and links before publishing your portfolio.",
     tone: "cyan",
   },
   "skill-dna": {
     eyebrow: "Skill DNA",
-    subtitle:
-      "See skill scores, recommended next steps and how recent work affects your progress.",
+    subtitle: "See what you are doing well and which skills to work on next.",
     tone: "violet",
   },
   feedback: {
     eyebrow: "Feedback Center",
     subtitle:
-      "Review teacher feedback, fix drafts, resubmission history and student replies.",
+      "Read feedback, track requested changes, and review your resubmission history.",
     tone: "amber",
   },
 };
@@ -83,8 +82,7 @@ export function ModuleExperiencePage({
   const title = titleFromSlug(slug);
   const copy = moduleCopy[key] ?? {
     eyebrow: title,
-    subtitle:
-      "This page is ready for the next set of module-specific actions and data.",
+    subtitle: "The tools and information for this section will appear here.",
     tone: role === "admin" ? "violet" : role === "teacher" ? "amber" : "cyan",
   };
 
@@ -103,7 +101,7 @@ export function ModuleExperiencePage({
           title={title}
           subtitle={copy.subtitle}
           tone={copy.tone}
-          action={<AIButton>Generate insight</AIButton>}
+          action={<AIButton>Create summary</AIButton>}
         />
         {renderModuleBody(key, role)}
       </div>
@@ -400,8 +398,8 @@ function GenericCommandSurface({ role }: { role: AppRole }) {
   return (
     <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,0.85fr)]">
       <BentoCard
-        title="Module page ready"
-        detail="This page has the shared Nexora layout and is ready for live module data."
+        title="Nothing to show yet"
+        detail="This section does not have any live data yet."
         icon={roleIcon}
         tone={
           role === "admin" ? "violet" : role === "teacher" ? "amber" : "cyan"
@@ -416,11 +414,10 @@ function GenericCommandSurface({ role }: { role: AppRole }) {
               />
             </div>
             <h3 className="mt-5 text-lg font-semibold text-white">
-              Ready to connect module logic
+              This section is still being set up
             </h3>
             <p className="mt-2 text-sm leading-6 text-slate-400">
-              Connect the data, forms and actions when this module is ready for
-              deeper workflow logic.
+              Data and actions will appear here once the module is connected.
             </p>
           </div>
         </div>

@@ -49,7 +49,7 @@ export function OperationsPage({ role }: { role: AppRole }) {
     <AppShell
       role={role}
       title="Production Ops"
-      subtitle="Check roles, sessions, uploads, background jobs, audit events and deployment readiness."
+      subtitle="Monitor services, sessions, storage, jobs, and deployment checks."
       nav={data.nav}
       navGroups={data.navGroups}
       accountEmail={data.accountEmail}
@@ -57,8 +57,8 @@ export function OperationsPage({ role }: { role: AppRole }) {
       <div className="grid gap-5">
         <PageHeader
           eyebrow="System Readiness"
-          title="Keep Nexora OS ready for deployment"
-          subtitle="Monitor protected services, security events, storage, background jobs and deployment checks from one admin page."
+          title="Check production readiness"
+          subtitle="Review service health, security events, storage, background jobs, and deployment checks."
           tone="emerald"
           action={
             <Button type="button" variant="secondary">

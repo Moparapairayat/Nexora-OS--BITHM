@@ -638,9 +638,9 @@ export const roleDashboards: Record<AppRole, RoleDashboardData> = {
   student: {
     role: "student",
     eyebrow: "Student Dashboard",
-    title: "BITHM academic workspace",
+    title: "Your BITHM dashboard",
     subtitle:
-      "Your academic command center for reports, labs, AI tools and progress.",
+      "Keep track of assignments, labs, feedback, and your recent progress.",
     accountEmail: "student@nexora.local",
     nav: studentNav,
     navGroups: studentNavGroups,
@@ -708,9 +708,9 @@ export const roleDashboards: Record<AppRole, RoleDashboardData> = {
   teacher: {
     role: "teacher",
     eyebrow: "Teacher Dashboard",
-    title: "Review student work with clearer feedback",
+    title: "Review student work and give clear feedback",
     subtitle:
-      "Create briefs, monitor live labs, review submissions and send fix requests with editable AI drafts.",
+      "Monitor labs, review submissions, and send students specific changes to make.",
     accountEmail: "teacher@nexora.local",
     nav: teacherNav,
     navGroups: teacherNavGroups,
@@ -777,9 +777,9 @@ export const roleDashboards: Record<AppRole, RoleDashboardData> = {
   admin: {
     role: "admin",
     eyebrow: "Admin Dashboard",
-    title: "Manage Nexora OS for your institution",
+    title: "Manage your institution",
     subtitle:
-      "Manage users, departments, courses, OTHM units, AI model settings, storage and AcademicShield.",
+      "Manage users, departments, courses, access, storage, and system settings.",
     accountEmail: "admin@nexora.local",
     nav: adminNav,
     navGroups: adminNavGroups,

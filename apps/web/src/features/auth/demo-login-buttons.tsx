@@ -66,7 +66,7 @@ export function DemoLoginButtons({
 
     if (!response?.token) {
       setError(
-        "Demo login unavailable. Check that the API is running and demo users are seeded.",
+        "Demo login is unavailable. Start the API and make sure the demo accounts have been seeded.",
       );
       setLoadingRole(null);
       return;

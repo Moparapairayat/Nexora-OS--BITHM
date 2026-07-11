@@ -68,7 +68,7 @@ export function ComingSoonPage({
     <AppShell
       role={role}
       title={title}
-      subtitle={`${section} is being prepared for a future release.`}
+      subtitle={`${title} is not available yet.`}
       nav={data.nav}
       navGroups={data.navGroups}
       accountEmail={data.accountEmail}
@@ -116,16 +116,16 @@ export function ComingSoonPage({
             {section} · Coming Soon
           </Badge>
           <h1 className="command-text-gradient mt-4 max-w-2xl text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-            {title} is on the roadmap
+            {title} is coming soon
           </h1>
           <p className="mt-4 max-w-xl text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
-            We are shaping a focused, reliable experience for this module. It
-            will be available in a future Nexora OS release.
+            This page is still in development. We will add it once the core
+            workflow is ready to use.
           </p>
 
           <div className="mt-8 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-slate-300 light:border-slate-200 light:bg-white/70 light:text-slate-700">
             <Layers3 className="h-4 w-4 text-cyan-300" aria-hidden="true" />
-            Planned for a future Nexora OS release
+            Planned for a future release
           </div>
         </div>
       </Card>

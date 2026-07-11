@@ -362,7 +362,7 @@ export function AdminUsersPage({ role }: { role: AppRole }) {
     <AppShell
       role={role}
       title="Users"
-      subtitle="Admin-managed student, teacher and admin accounts."
+      subtitle="Manage student, teacher, and administrator accounts."
       nav={data.nav}
       navGroups={data.navGroups}
       accountEmail={data.accountEmail}
@@ -370,8 +370,8 @@ export function AdminUsersPage({ role }: { role: AppRole }) {
       <div className="grid gap-5">
         <PageHeader
           eyebrow="Admin User Management"
-          title="Manage Nexora OS users"
-          subtitle="Create accounts, assign roles, activate or deactivate users, reset passwords and protect admin access."
+          title="Manage user accounts"
+          subtitle="Create accounts, assign roles, reset passwords, and control access."
           tone="violet"
           action={
             <div className="flex flex-wrap gap-2">

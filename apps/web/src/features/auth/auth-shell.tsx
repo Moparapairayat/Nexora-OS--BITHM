@@ -157,11 +157,11 @@ export const authInputClass =
   "nexora-focus h-10 sm:h-[45px] w-full min-w-0 rounded-lg sm:rounded-2xl border border-[var(--line)] bg-[rgba(245,247,242,0.055)] px-3 sm:px-4 text-xs sm:text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] transition-all duration-200 focus:border-[#32f59a] focus:bg-[rgba(50,245,154,0.08)] focus:shadow-[0_0_0_3px_rgba(50,245,154,0.12)] light:border-slate-300 light:bg-white light:text-slate-900 light:placeholder:text-slate-400 light:shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:light:shadow-[0_4px_12px_rgba(0,0,0,0.06)] light:focus:border-emerald-400 light:focus:bg-emerald-50 light:focus:ring-4 light:focus:ring-emerald-100/50";
 
 function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
-  const title = mode === "register" ? "Nice to meet you :)" : "Welcome back :)";
+  const title = mode === "register" ? "Create your account" : "Welcome back";
   const subtitle =
     mode === "register"
-      ? "Request your Nexora OS academic workspace"
-      : "Continue your AI academic workflow";
+      ? "Request access to your BITHM courses and tools."
+      : "Sign in to pick up where you left off.";
 
   return (
     <div className="relative order-2 min-h-[250px] overflow-hidden p-0 sm:min-h-[320px] md:min-h-[380px] lg:order-1 lg:min-h-0">
@@ -194,7 +194,7 @@ function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
                 className="h-3 w-3 sm:h-3.5 sm:w-3.5"
                 aria-hidden="true"
               />
-              AI Portal
+              Academic Portal
             </span>
           </div>
 
@@ -221,7 +221,7 @@ function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
                 Workspace
               </p>
               <p className="mt-1 sm:mt-2 text-xs sm:text-sm font-semibold text-white">
-                AI labs and reports
+                Labs, reports, and code
               </p>
             </div>
           </div>

@@ -72,7 +72,7 @@ export function LoginForm() {
     });
 
     if (!response?.token) {
-      setError("Sign in failed. Check your email, password and database user.");
+      setError("We couldn't sign you in. Check your email and password.");
       setIsSubmitting(false);
       return;
     }
@@ -94,9 +94,9 @@ export function LoginForm() {
       <AuthBrand />
 
       <div className="mt-2 sm:mt-4 md:mt-5">
-        <Badge tone="emerald">University Portal</Badge>
+        <Badge tone="emerald">BITHM Portal</Badge>
         <h1 className="mt-2 sm:mt-3 text-balance text-lg sm:text-xl md:text-[1.75rem] font-bold leading-tight tracking-tight text-[var(--foreground)] light:text-slate-900">
-          Welcome to Nexora OS
+          Sign in to Nexora OS
         </h1>
         <p className="mt-1 sm:mt-2 text-xs sm:text-sm leading-5 sm:leading-6 text-[var(--muted)] light:text-slate-600">
           Sign in to continue your academic work.
@@ -164,7 +164,7 @@ export function LoginForm() {
 
         <div className="pt-1 sm:pt-2 border-t border-[var(--line)] light:border-slate-200 grid gap-1.5 sm:gap-2">
           <p className="text-[9px] sm:text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] light:text-slate-600">
-            Demo quick access
+            Try a demo account
           </p>
           <DemoLoginButtons />
         </div>

@@ -90,7 +90,7 @@ function RestrictedModulePage({
     <AppShell
       role={role}
       title="Page not available"
-      subtitle="This route is outside the current role workspace."
+      subtitle="Your account does not have access to this page."
       nav={data.nav}
       navGroups={data.navGroups}
       accountEmail={data.accountEmail}
@@ -98,8 +98,8 @@ function RestrictedModulePage({
       <div className="grid gap-5">
         <PageHeader
           eyebrow="Role protected"
-          title="This page is not available for your role"
-          subtitle="Use the sidebar to open pages assigned to this workspace. Admin-only and teacher-review tools stay hidden from student accounts."
+          title="You do not have access to this page"
+          subtitle="Use the sidebar to open a page available to your account."
           tone="amber"
           action={
             <Link
@@ -117,9 +117,8 @@ function RestrictedModulePage({
           tone="amber"
         >
           <p className="text-sm leading-6 text-slate-400 light:text-slate-600">
-            Navigation is filtered by Student, Teacher and Admin roles. This
-            keeps management pages, review queues and system controls out of the
-            wrong workspace.
+            Access is based on your account role. If you think you should be
+            able to open this page, contact an administrator.
           </p>
         </DashboardCard>
       </div>

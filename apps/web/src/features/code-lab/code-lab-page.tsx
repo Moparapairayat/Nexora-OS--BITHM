@@ -779,7 +779,7 @@ function CodeLabHeader({
               </span>
             </div>
             <p className="mt-1 text-sm font-semibold text-[#0B1B33]">
-              Build, run and test code in one focused workspace.
+              Write, run, and test code without leaving the page.
             </p>
           </div>
         </div>
@@ -3021,7 +3021,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
         } else if (!cancelled) {
           setDbStatus("draft");
           setConsoleOutput(
-            "Database workspace is not available yet. Changes will use emergency draft cache until login/API is ready.",
+            "The server is unavailable. Your changes are saved in this browser for now.",
           );
         }
       }
@@ -4124,7 +4124,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     <AppShell
       role={role}
       title="Code Lab"
-      subtitle="Write, run and test your code in your academic coding workspace."
+      subtitle="Write, run, and test code for your lab tasks."
       nav={roleData.nav}
       navGroups={roleData.navGroups}
       accountEmail={roleData.accountEmail}

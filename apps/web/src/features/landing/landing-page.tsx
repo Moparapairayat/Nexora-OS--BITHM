@@ -15,25 +15,25 @@ import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const subtitle =
-  "Your AI-powered learning space for assignments, labs & real coding projects";
+  "One place for assignments, labs, feedback, and hands-on coding work.";
 
 const roleAccess = [
   {
     label: "Student",
     href: "/login",
-    detail: "Learn with AI, ace assignments & build real projects",
+    detail: "Work on assignments, labs, and practical projects",
     icon: GraduationCap,
   },
   {
     label: "Teacher",
     href: "/login",
-    detail: "Guide students, review work & track progress",
+    detail: "Review work, give feedback, and track progress",
     icon: UsersRound,
   },
   {
     label: "Admin",
     href: "/login",
-    detail: "Keep everything running smoothly",
+    detail: "Manage users, courses, access, and system settings",
     icon: UserCog,
   },
 ];
@@ -58,23 +58,22 @@ export function LandingPage() {
                   className="h-12 w-[185px] sm:w-[210px]"
                 />
                 <p className="mt-1.5 text-xs font-semibold text-[var(--muted)] light:text-slate-600">
-                  Access Portal
+                  Sign in to your account
                 </p>
               </div>
             </div>
 
             <Badge tone="emerald" className="mt-8">
-              University Internal System
+              BITHM Academic Platform
             </Badge>
             <h1 className="command-text-gradient mt-4 text-balance text-3xl font-semibold leading-[1.1] sm:mt-5 sm:text-5xl md:text-6xl">
-              Welcome to Nexora OS
+              Study, build, and submit your work
             </h1>
             <p className="mt-3 max-w-2xl text-sm font-medium leading-6 sm:text-base sm:mt-5 sm:leading-7 text-[#dfe8df] light:text-slate-700">
               {subtitle}
             </p>
             <p className="mt-2 max-w-xl text-xs leading-5 sm:text-sm sm:mt-3 sm:leading-6 text-[var(--muted)] light:text-slate-600">
-              Get started instantly with your personalized workspace. Sign in to
-              explore assignments, build projects, and grow together.
+              Sign in with your student, teacher, or admin account to continue.
             </p>
 
             <div className="mt-6 sm:mt-8 grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-3">
@@ -110,10 +109,10 @@ export function LandingPage() {
             <div className="grid gap-2 sm:gap-3">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-lime)] light:text-emerald-700">
-                  Try it out first
+                  Explore the demo
                 </p>
                 <p className="mt-1 text-xs leading-5 text-[var(--muted)] light:text-slate-600">
-                  Test drive with demo accounts. No setup needed.
+                  Choose a demo role to see how the platform works.
                 </p>
               </div>
               <DemoLoginButtons variant="portal" />
@@ -134,7 +133,7 @@ export function LandingPage() {
               href="/login"
               className="nexora-focus inline-flex h-11 sm:h-12 w-full items-center justify-center gap-2 rounded-lg sm:rounded-xl bg-[linear-gradient(135deg,#d9ff57_0%,#6cf6b3_46%,#32f59a_100%)] px-4 text-xs sm:text-sm font-semibold !text-black shadow-[0_14px_42px_rgba(50,245,154,0.22)] transition hover:brightness-110 light:bg-[linear-gradient(135deg,#0ba85d_0%,#24d482_56%,#b8f34f_100%)] light:!text-white light:shadow-[0_16px_32px_rgba(7,154,86,0.24)]"
             >
-              Let's get started
+              Sign in
               <ShieldCheck
                 className="h-3 w-3 sm:h-4 sm:w-4"
                 aria-hidden="true"

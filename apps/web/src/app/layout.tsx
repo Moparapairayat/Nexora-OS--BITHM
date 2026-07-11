@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   ),
   title: "Nexora OS",
   description:
-    "Multi-Model AI Academic Operating System for Assignment, Lab & Development Workflows.",
+    "BITHM's platform for assignments, labs, coding projects, feedback, and academic administration.",
   icons: {
     icon: nexoraLogoSrc,
     shortcut: nexoraLogoSrc,
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Nexora OS",
     description:
-      "Multi-Model AI Academic Operating System for Assignment, Lab & Development Workflows.",
+      "BITHM's platform for assignments, labs, coding projects, feedback, and academic administration.",
     images: [nexoraLogoSrc],
   },
 };

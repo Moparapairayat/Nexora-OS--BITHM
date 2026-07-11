@@ -1769,7 +1769,7 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
     <AppShell
       role={role}
       title="Database Visualizer"
-      subtitle="Design and validate DBML, SQL DDL, Prisma and Mongoose schemas with a live ERD workspace."
+      subtitle="Write a schema, inspect the relationships, and export the diagram."
       nav={data.nav}
       navGroups={data.navGroups}
       accountEmail={data.accountEmail}

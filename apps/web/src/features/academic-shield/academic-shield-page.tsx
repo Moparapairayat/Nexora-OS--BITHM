@@ -65,21 +65,21 @@ const modeCopy: Record<
 > = {
   student: {
     eyebrow: "AcademicShield",
-    title: "Originality and AI Writing Review",
+    title: "Check originality before you submit",
     subtitle:
-      "Check assignment text against internal submissions, fuzzy phrase matches, semantic overlap, citations and AI writing risk before submission.",
+      "Review matched sources, citation gaps, and writing-risk indicators in your assignment.",
   },
   teacher: {
-    eyebrow: "Teacher Integrity Console",
-    title: "Plagiarism Reports and Evidence Review",
+    eyebrow: "Academic Integrity Review",
+    title: "Review originality reports and evidence",
     subtitle:
-      "Review ranked sources, highlighted matches, citation gaps and AI writing risk advisories before making an academic decision.",
+      "Inspect matched sources, highlighted passages, and citation gaps before making a decision.",
   },
   admin: {
-    eyebrow: "AcademicShield Settings",
-    title: "Integrity Model Control Plane",
+    eyebrow: "AcademicShield Administration",
+    title: "Manage originality checks and policies",
     subtitle:
-      "Monitor similarity checks, semantic ranking, risk thresholds, citation policy and report exports.",
+      "Review check results, adjust thresholds, manage citation policy, and export reports.",
   },
 };
 
