@@ -1,0 +1,12 @@
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.turbo/
+.docker-data/
+.logs/
+storage/
+uploads/
+package-lock.json
+*.tsbuildinfo

@@ -1,0 +1,38 @@
+{
+  "name": "nexora-os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Nexora OS monorepo: multi-model AI academic operating system for assignments, labs, reports, coding, and AI learning.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,api,ml -c cyan,green,magenta \"npm run dev:web\" \"npm run dev:api\" \"npm run dev:ml\"",
+    "dev:web": "npm run dev --workspace @nexora/web",
+    "dev:api": "npm run dev --workspace @nexora/api",
+    "dev:ml": "uvicorn app.main:app --app-dir services/ml-nlp --reload --port 8010",
+    "build": "npm run build --workspace @nexora/types && npm run build --workspace @nexora/config && npm run build --workspace @nexora/api && npm run build --workspace @nexora/web",
+    "build:web": "npm run build --workspace @nexora/web",
+    "build:api": "npm run build --workspace @nexora/api",
+    "start": "npm run start --workspace @nexora/api",
+    "lint": "npm run lint --workspace @nexora/web",
+    "typecheck": "npm run build --workspace @nexora/types && npm run build --workspace @nexora/config && npm run typecheck --workspace @nexora/api && npm run typecheck --workspace @nexora/types && npm run typecheck --workspace @nexora/config",
+    "db:generate": "prisma generate --schema prisma/schema.prisma",
+    "db:migrate:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
+    "db:push": "prisma db push --schema prisma/schema.prisma",
+    "db:seed": "tsx prisma/seed.ts",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,md,css}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2",
+    "prisma": "^6.19.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "bcryptjs": "^3.0.2"
+  }
+}

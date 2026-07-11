@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: nexora-fullstack-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nexora_fullstack
+      POSTGRES_PASSWORD: nexora_fullstack
+      POSTGRES_DB: nexora_os_fullstack
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./.docker-data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U nexora_fullstack -d nexora_os_fullstack",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

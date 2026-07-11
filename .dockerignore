@@ -1,0 +1,46 @@
+# Version-control and local tooling
+.git
+.gitignore
+.codex/
+.idea/
+.vscode/
+
+# Dependencies and build output
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+**/coverage/
+.turbo/
+**/*.tsbuildinfo
+
+# Secrets, logs, and runtime data
+.env
+.env.*
+.logs/
+**/.logs/
+*.log
+.docker-data/
+storage/
+uploads/
+minio-data/
+postgres-data/
+
+# Python local state
+.venv/
+venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini

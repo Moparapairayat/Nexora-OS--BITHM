@@ -1,0 +1,760 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  DELETED
+}
+
+enum AssignmentStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  FIX_REQUESTED
+  RESUBMITTED
+  PASS
+  REFER
+}
+
+enum LabTaskStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  SUBMITTED
+  UNDER_REVIEW
+  FIX_REQUESTED
+  FIXING
+  RESUBMITTED
+  COMPLETED
+}
+
+enum LabReportStatus {
+  DRAFT
+  SUBMITTED
+  EVIDENCE_CHECK
+  CORRECTION_REQUESTED
+  RESUBMITTED
+  ACCEPTED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum SubmissionDecision {
+  PASS
+  REFER
+  ACCEPTED
+  FIX_REQUESTED
+}
+
+model User {
+  id                     String                 @id @default(cuid())
+  name                   String
+  email                  String                 @unique
+  passwordHash           String
+  role                   UserRole               @default(STUDENT)
+  status                 UserStatus             @default(ACTIVE)
+  departmentId           String?
+  courseId               String?
+  unitId                 String?
+  batchId                String?
+  department             Department?            @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  course                 Course?                @relation("UserCourse", fields: [courseId], references: [id], onDelete: SetNull)
+  unit                   OthmUnit?              @relation("UserUnit", fields: [unitId], references: [id], onDelete: SetNull)
+  batch                  Batch?                 @relation(fields: [batchId], references: [id], onDelete: SetNull)
+  createdAssignments     AssignmentBrief[]      @relation("AssignmentCreator")
+  assignmentSubmissions  AssignmentSubmission[]
+  teachingLabs           LabSession[]           @relation("LabSessionTeacher")
+  labSubmissions         LabSubmission[]
+  labReports             LabReport[]
+  feedbackGiven          TeacherFeedback[]      @relation("FeedbackTeacher")
+  feedbackReceived       TeacherFeedback[]      @relation("FeedbackStudent")
+  fixRequestsCreated     FixRequest[]           @relation("FixTeacher")
+  fixRequestsReceived    FixRequest[]           @relation("FixStudent")
+  codeSnippets           CodeSnippet[]
+  codeWorkspaces         CodeWorkspace[]
+  codeRuns               CodeRun[]
+  codeVersions           CodeVersion[]
+  codeReviews            CodeReview[]           @relation("CodeReviewer")
+  reviewedLabSubmissions LabSubmission[]        @relation("LabSubmissionReviewer")
+  datasets               Dataset[]
+  diagrams               Diagram[]
+  presentations          Presentation[]
+  documents              Document[]
+  plagiarismReports      PlagiarismReport[]
+  writingRiskReports     WritingRiskReport[]
+  citations              Citation[]
+  academicWebScans       AcademicWebScan[]
+  academicRewrites       AcademicRewrite[]
+  academicShieldExports  AcademicShieldExport[]
+  portfolio              Portfolio?
+  skillScores            SkillScore[]
+  aiRequestLogs          AIRequestLog[]
+  systemLogs             SystemLog[]            @relation("SystemLogActor")
+  createdAt              DateTime               @default(now())
+  updatedAt              DateTime               @updatedAt
+  deletedAt              DateTime?
+
+  @@index([role])
+  @@index([status])
+  @@index([departmentId])
+  @@index([courseId])
+  @@index([unitId])
+}
+
+model Role {
+  id          String   @id @default(cuid())
+  name        UserRole @unique
+  description String
+  permissions String[]
+  createdAt   DateTime @default(now())
+}
+
+model Department {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  code      String?  @unique
+  users     User[]
+  courses   Course[]
+  batches   Batch[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Course {
+  id            String     @id @default(cuid())
+  title         String
+  code          String?    @unique
+  departmentId  String
+  department    Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  batches       Batch[]
+  othmUnits     OthmUnit[]
+  assignedUsers User[]     @relation("UserCourse")
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Batch {
+  id           String     @id @default(cuid())
+  name         String
+  departmentId String
+  courseId     String
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  course       Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  students     User[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model OthmUnit {
+  id               String            @id @default(cuid())
+  code             String            @unique
+  title            String
+  courseId         String?
+  course           Course?           @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  assignedUsers    User[]            @relation("UserUnit")
+  assignmentBriefs AssignmentBrief[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model AssignmentBrief {
+  id               String                 @id @default(cuid())
+  title            String
+  scenario         String
+  taskNumber       String
+  wordLimit        Int
+  referencingStyle String
+  deadline         DateTime?
+  checklist        String[]               @default([])
+  unitId           String
+  createdById      String
+  unit             OthmUnit               @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  createdBy        User                   @relation("AssignmentCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  learningOutcomes LearningOutcome[]
+  submissions      AssignmentSubmission[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+}
+
+model LearningOutcome {
+  id           String               @id @default(cuid())
+  code         String
+  title        String
+  assignmentId String
+  assignment   AssignmentBrief      @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  criteria     AssessmentCriteria[]
+}
+
+model AssessmentCriteria {
+  id                String          @id @default(cuid())
+  code              String
+  description       String
+  learningOutcomeId String
+  learningOutcome   LearningOutcome @relation(fields: [learningOutcomeId], references: [id], onDelete: Cascade)
+}
+
+model AssignmentSubmission {
+  id                   String              @id @default(cuid())
+  status               AssignmentStatus    @default(DRAFT)
+  fileName             String?
+  fileUrl              String?
+  wordCount            Int?
+  originalityScore     Int?
+  aiWritingRiskScore   Int?
+  checklist            String[]            @default([])
+  evidence             String[]            @default([])
+  coveredCriteriaCodes String[]            @default([])
+  studentId            String
+  assignmentBriefId    String
+  student              User                @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  assignmentBrief      AssignmentBrief     @relation(fields: [assignmentBriefId], references: [id], onDelete: Cascade)
+  fixRequests          FixRequest[]
+  feedback             TeacherFeedback[]
+  plagiarismReports    PlagiarismReport[]
+  writingRiskReports   WritingRiskReport[]
+  submittedAt          DateTime?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
+}
+
+model LabSession {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  startsAt    DateTime?
+  status      LabTaskStatus @default(NOT_STARTED)
+  teacherId   String
+  teacher     User          @relation("LabSessionTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  tasks       LabTask[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model LabTask {
+  id               String          @id @default(cuid())
+  title            String
+  prompt           String
+  starterCode      String?
+  visibleTestCases Json?
+  hiddenTestCases  Json?
+  labSessionId     String
+  labSession       LabSession      @relation(fields: [labSessionId], references: [id], onDelete: Cascade)
+  codeWorkspaces   CodeWorkspace[]
+  submissions      LabSubmission[]
+  labReports       LabReport[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+}
+
+model LabSubmission {
+  id            String            @id @default(cuid())
+  status        LabTaskStatus     @default(NOT_STARTED)
+  language      String
+  code          String
+  output        String?
+  error         String?
+  version       Int               @default(1)
+  studentId     String
+  labTaskId     String?
+  workspaceId   String?
+  codeVersionId String?
+  reviewerId    String?
+  reviewStatus  String            @default("PENDING")
+  teacherNote   String?
+  fixReason     String?
+  reviewedAt    DateTime?
+  student       User              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  labTask       LabTask?          @relation(fields: [labTaskId], references: [id], onDelete: SetNull)
+  workspace     CodeWorkspace?    @relation(fields: [workspaceId], references: [id], onDelete: SetNull)
+  codeVersion   CodeVersion?      @relation("LabSubmissionVersion", fields: [codeVersionId], references: [id], onDelete: SetNull)
+  reviewer      User?             @relation("LabSubmissionReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  fixRequests   FixRequest[]
+  feedback      TeacherFeedback[]
+  codeReviews   CodeReview[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+model LabReport {
+  id                 String              @id @default(cuid())
+  status             LabReportStatus     @default(DRAFT)
+  objective          String?
+  toolsUsed          String?
+  implementation     String?
+  testingEvidence    String?
+  problemsFaced      String?
+  solution           String?
+  conclusion         String?
+  screenshotUrls     String[]
+  codeAttachmentUrls String[]            @default([])
+  originalityScore   Int?
+  aiWritingRiskScore Int?
+  studentId          String
+  labTaskId          String?
+  student            User                @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  labTask            LabTask?            @relation(fields: [labTaskId], references: [id], onDelete: SetNull)
+  fixRequests        FixRequest[]
+  feedback           TeacherFeedback[]
+  plagiarismReports  PlagiarismReport[]
+  writingRiskReports WritingRiskReport[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+}
+
+model FixRequest {
+  id                     String                @id @default(cuid())
+  reason                 String
+  aiDraft                String?
+  teacherNote            String?
+  status                 String                @default("OPEN")
+  teacherId              String
+  studentId              String
+  assignmentSubmissionId String?
+  labSubmissionId        String?
+  labReportId            String?
+  teacher                User                  @relation("FixTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  student                User                  @relation("FixStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  assignmentSubmission   AssignmentSubmission? @relation(fields: [assignmentSubmissionId], references: [id], onDelete: Cascade)
+  labSubmission          LabSubmission?        @relation(fields: [labSubmissionId], references: [id], onDelete: Cascade)
+  labReport              LabReport?            @relation(fields: [labReportId], references: [id], onDelete: Cascade)
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+}
+
+model TeacherFeedback {
+  id                     String                @id @default(cuid())
+  content                String
+  decision               SubmissionDecision?
+  teacherId              String
+  studentId              String
+  assignmentSubmissionId String?
+  labSubmissionId        String?
+  labReportId            String?
+  teacher                User                  @relation("FeedbackTeacher", fields: [teacherId], references: [id], onDelete: Cascade)
+  student                User                  @relation("FeedbackStudent", fields: [studentId], references: [id], onDelete: Cascade)
+  assignmentSubmission   AssignmentSubmission? @relation(fields: [assignmentSubmissionId], references: [id], onDelete: Cascade)
+  labSubmission          LabSubmission?        @relation(fields: [labSubmissionId], references: [id], onDelete: Cascade)
+  labReport              LabReport?            @relation(fields: [labReportId], references: [id], onDelete: Cascade)
+  createdAt              DateTime              @default(now())
+}
+
+model CodeSnippet {
+  id        String               @id @default(cuid())
+  title     String
+  language  String
+  code      String
+  version   Int                  @default(1)
+  lastRun   Json?
+  ownerId   String
+  owner     User                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  reviews   CodeReview[]
+  versions  CodeSnippetVersion[]
+  createdAt DateTime             @default(now())
+  updatedAt DateTime             @updatedAt
+}
+
+model CodeSnippetVersion {
+  id        String      @id @default(cuid())
+  title     String
+  language  String
+  code      String
+  result    Json
+  version   Int
+  summary   String
+  snippetId String
+  snippet   CodeSnippet @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+}
+
+model CodeWorkspace {
+  id           String          @id @default(cuid())
+  title        String          @default("Code Lab Workspace")
+  activeFileId String?
+  status       String          @default("DRAFT")
+  ownerId      String
+  labTaskId    String?
+  owner        User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  labTask      LabTask?        @relation(fields: [labTaskId], references: [id], onDelete: SetNull)
+  files        CodeFile[]
+  runs         CodeRun[]
+  versions     CodeVersion[]
+  submissions  LabSubmission[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([ownerId])
+  @@index([labTaskId])
+}
+
+model CodeFile {
+  id          String        @id @default(cuid())
+  workspaceId String
+  name        String
+  folder      String        @default("main")
+  language    String
+  content     String
+  sortOrder   Int           @default(0)
+  workspace   CodeWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  runs        CodeRun[]
+  versions    CodeVersion[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@unique([workspaceId, name])
+  @@index([workspaceId])
+}
+
+model CodeRun {
+  id              String           @id @default(cuid())
+  workspaceId     String
+  fileId          String?
+  ownerId         String
+  language        String
+  code            String
+  stdin           String?
+  stdout          String
+  stderr          String?
+  success         Boolean
+  adapter         String
+  executionTimeMs Int
+  errorMessage    String?
+  result          Json?
+  workspace       CodeWorkspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  file            CodeFile?        @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  owner           User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  testResults     CodeTestResult[]
+  createdAt       DateTime         @default(now())
+
+  @@index([workspaceId])
+  @@index([ownerId])
+}
+
+model CodeTestResult {
+  id              String   @id @default(cuid())
+  codeRunId       String
+  input           String
+  expected        String
+  stdout          String
+  stderr          String?
+  passed          Boolean
+  executionTimeMs Int      @default(0)
+  codeRun         CodeRun  @relation(fields: [codeRunId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+
+  @@index([codeRunId])
+}
+
+model CodeVersion {
+  id             String          @id @default(cuid())
+  workspaceId    String
+  fileId         String?
+  createdById    String
+  version        Int
+  title          String
+  language       String
+  code           String
+  runResult      Json?
+  testResults    Json?
+  summary        String
+  workspace      CodeWorkspace   @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  file           CodeFile?       @relation(fields: [fileId], references: [id], onDelete: SetNull)
+  createdBy      User            @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  labSubmissions LabSubmission[] @relation("LabSubmissionVersion")
+  createdAt      DateTime        @default(now())
+
+  @@unique([workspaceId, version])
+  @@index([workspaceId])
+  @@index([createdById])
+}
+
+model CodeReview {
+  id              String         @id @default(cuid())
+  summary         String
+  issues          Json?
+  complexity      String?
+  snippetId       String?
+  labSubmissionId String?
+  reviewerId      String?
+  snippet         CodeSnippet?   @relation(fields: [snippetId], references: [id], onDelete: SetNull)
+  labSubmission   LabSubmission? @relation(fields: [labSubmissionId], references: [id], onDelete: SetNull)
+  reviewer        User?          @relation("CodeReviewer", fields: [reviewerId], references: [id], onDelete: SetNull)
+  createdAt       DateTime       @default(now())
+}
+
+model Dataset {
+  id           String         @id @default(cuid())
+  name         String
+  fileUrl      String
+  rowCount     Int?
+  columnCount  Int?
+  columns      String[]       @default([])
+  rawCsv       String?
+  previewRows  Json?
+  missingRows  Json?
+  targetColumn String?
+  ownerId      String
+  owner        User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  experiments  MLExperiment[]
+  createdAt    DateTime       @default(now())
+
+  @@index([ownerId])
+}
+
+model MLExperiment {
+  id                String     @id @default(cuid())
+  name              String
+  taskType          String
+  algorithm         String
+  targetColumn      String?
+  trainingRows      Int?
+  metrics           Json?
+  confusionMatrix   Json?
+  featureImportance Json?
+  reportUrl         String?
+  reportContent     String?
+  datasetId         String
+  dataset           Dataset    @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  reports           MLReport[]
+  createdAt         DateTime   @default(now())
+
+  @@index([datasetId])
+}
+
+model MLReport {
+  id           String       @id @default(cuid())
+  format       String
+  fileName     String
+  content      String
+  experimentId String
+  experiment   MLExperiment @relation(fields: [experimentId], references: [id], onDelete: Cascade)
+  createdAt    DateTime     @default(now())
+
+  @@index([experimentId])
+}
+
+model Diagram {
+  id        String          @id @default(cuid())
+  title     String
+  source    String
+  format    String
+  nodes     Json?
+  edges     Json?
+  ownerId   String
+  owner     User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  exports   DiagramExport[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([ownerId])
+}
+
+model DiagramExport {
+  id        String   @id @default(cuid())
+  format    String
+  fileName  String
+  content   String
+  diagramId String
+  diagram   Diagram  @relation(fields: [diagramId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([diagramId])
+}
+
+model Presentation {
+  id        String   @id @default(cuid())
+  title     String
+  outline   Json
+  fileUrl   String?
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  title     String
+  type      String
+  content   String
+  fileUrl   String?
+  ownerId   String
+  owner     User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PlagiarismReport {
+  id                     String                 @id @default(cuid())
+  originalityScore       Int
+  riskLevel              RiskLevel
+  matchedSources         Json?
+  highlightedMatches     Json?
+  pdfUrl                 String?
+  userId                 String
+  assignmentSubmissionId String?
+  labReportId            String?
+  user                   User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignmentSubmission   AssignmentSubmission?  @relation(fields: [assignmentSubmissionId], references: [id], onDelete: Cascade)
+  labReport              LabReport?             @relation(fields: [labReportId], references: [id], onDelete: Cascade)
+  webScans               AcademicWebScan[]
+  exports                AcademicShieldExport[]
+  createdAt              DateTime               @default(now())
+
+  @@index([userId])
+  @@index([assignmentSubmissionId])
+  @@index([labReportId])
+}
+
+model WritingRiskReport {
+  id                     String                @id @default(cuid())
+  riskScore              Int
+  riskLevel              RiskLevel
+  confidence             String
+  explanation            String
+  disclaimer             String
+  features               Json?
+  pdfUrl                 String?
+  userId                 String
+  assignmentSubmissionId String?
+  labReportId            String?
+  user                   User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assignmentSubmission   AssignmentSubmission? @relation(fields: [assignmentSubmissionId], references: [id], onDelete: Cascade)
+  labReport              LabReport?            @relation(fields: [labReportId], references: [id], onDelete: Cascade)
+  createdAt              DateTime              @default(now())
+
+  @@index([userId])
+  @@index([assignmentSubmissionId])
+  @@index([labReportId])
+}
+
+model Citation {
+  id        String   @id @default(cuid())
+  style     String
+  source    Json
+  inText    String
+  reference String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AcademicWebScan {
+  id                 String            @id @default(cuid())
+  url                String
+  title              String
+  similarity         Int
+  semanticScore      Int
+  citationStatus     String
+  matchedPhrases     String[]          @default([])
+  recommendation     String
+  textPreview        String
+  plagiarismReportId String?
+  userId             String
+  plagiarismReport   PlagiarismReport? @relation(fields: [plagiarismReportId], references: [id], onDelete: SetNull)
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime          @default(now())
+
+  @@index([userId])
+  @@index([plagiarismReportId])
+}
+
+model AcademicRewrite {
+  id                        String   @id @default(cuid())
+  originalText              String
+  rewrittenText             String
+  citationPreservationNotes String[] @default([])
+  riskWarnings              String[] @default([])
+  model                     String?
+  mode                      String?
+  userId                    String
+  user                      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt                 DateTime @default(now())
+
+  @@index([userId])
+}
+
+model AcademicShieldExport {
+  id                 String            @id @default(cuid())
+  format             String
+  fileName           String
+  content            String
+  report             Json
+  plagiarismReportId String?
+  userId             String
+  plagiarismReport   PlagiarismReport? @relation(fields: [plagiarismReportId], references: [id], onDelete: SetNull)
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt          DateTime          @default(now())
+
+  @@index([userId])
+  @@index([plagiarismReportId])
+}
+
+model Portfolio {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  headline     String
+  bio          String?
+  projects     Json?
+  certificates Json?
+  contact      Json?
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model SkillScore {
+  id        String   @id @default(cuid())
+  category  String
+  score     Int
+  evidence  Json?
+  roadmap   Json?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, category])
+}
+
+model AIRequestLog {
+  id        String   @id @default(cuid())
+  task      String
+  model     String
+  mode      String
+  prompt    String
+  response  Json?
+  latencyMs Int?
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     String
+  event     String
+  metadata  Json?
+  actorId   String?
+  actor     User?    @relation("SystemLogActor", fields: [actorId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
