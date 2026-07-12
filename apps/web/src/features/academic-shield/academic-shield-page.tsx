@@ -313,7 +313,7 @@ export function AcademicShieldPage({
           ]}
         />
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(320px,0.82fr)_minmax(0,1.18fr)]">
+        <div className="grid gap-5 lg:grid-cols-[minmax(280px,0.82fr)_minmax(0,1.18fr)]">
           <Card>
             <div className="flex items-start justify-between gap-4">
               <div>
@@ -382,12 +382,12 @@ export function AcademicShieldPage({
           rewriteHistory={rewriteHistory}
         />
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1.12fr)_minmax(340px,0.88fr)]">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,0.88fr)]">
           <SourceRankingPanel sources={report.sourceRanking} />
           <HighlightPanel report={report} />
         </div>
 
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(340px,0.8fr)]">
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.8fr)]">
           <CitationPanel
             citation={citation}
             citationStyle={citationStyle}
@@ -430,7 +430,7 @@ function ProMaxWorkflowPanel({
   rewriteHistory: AcademicRewriteSuggestion[];
 }) {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
       <Card>
         <div className="flex items-start justify-between gap-4">
           <div>

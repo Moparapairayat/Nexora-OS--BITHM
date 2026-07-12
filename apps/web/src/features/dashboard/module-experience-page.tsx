@@ -135,7 +135,7 @@ function renderModuleBody(key: string, role: AppRole) {
 
 function AcademicShieldSurface() {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(340px,0.8fr)]">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(300px,0.8fr)]">
       <div className="grid gap-5">
         <MetricRail
           items={[
@@ -207,7 +207,7 @@ function AcademicShieldSurface() {
 
 function MLStudioSurface() {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(320px,0.8fr)_minmax(0,1.2fr)]">
+    <div className="grid gap-5 lg:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.2fr)]">
       <DashboardCard
         title="Dataset Upload"
         detail="Upload a CSV, preview rows, find missing values and choose the target column."
@@ -258,7 +258,7 @@ function MLStudioSurface() {
 
 function PortfolioSurface() {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)]">
       <DashboardCard
         title="Public Portfolio Preview"
         detail="A portfolio preview with project outcomes, skills and live links."
@@ -347,7 +347,7 @@ function SkillDnaSurface() {
 
 function FeedbackSurface() {
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(340px,0.9fr)]">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(300px,0.9fr)]">
       <DashboardCard
         title="Feedback Timeline"
         detail="Teacher feedback, fix drafts and resubmission status in one place."
@@ -396,7 +396,7 @@ function GenericCommandSurface({ role }: { role: AppRole }) {
         : Palette;
 
   return (
-    <div className="grid gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(340px,0.85fr)]">
+    <div className="grid gap-5 lg:grid-cols-[minmax(0,1.15fr)_minmax(300px,0.85fr)]">
       <BentoCard
         title="Nothing to show yet"
         detail="This section does not have any live data yet."

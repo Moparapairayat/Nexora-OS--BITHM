@@ -434,7 +434,7 @@ export function AdminUsersPage({ role }: { role: AppRole }) {
           </div>
         )}
 
-        <div className="grid gap-5 xl:grid-cols-[420px_minmax(0,1fr)]">
+            <div className="grid gap-5 lg:grid-cols-[minmax(280px,420px)_minmax(0,1fr)]">
           <UserFormPanel
             form={form}
             setForm={setForm}
@@ -503,7 +503,7 @@ export function AdminUsersPage({ role }: { role: AppRole }) {
               </select>
             </div>
 
-            <div className="mt-5 overflow-x-auto">
+            <div className="mt-5 max-w-full overflow-x-auto rounded-[18px] border border-[var(--line)] shadow-[inset_0_1px_0_rgba(245,247,242,0.05)] light:border-slate-200/70 light:bg-white/40 [scrollbar-width:thin]">
               <table className="min-w-[980px] w-full border-separate border-spacing-y-2">
                 <thead>
                   <tr className="text-left text-xs uppercase tracking-[0.16em] text-[var(--text-muted)]">

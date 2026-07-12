@@ -5,7 +5,6 @@ import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { PenguinLoadingSpinner } from "@/components/ui/loading-spinner";
 import { apiPost } from "@/lib/workflow-api";
 import { cn } from "@/lib/utils";
 
@@ -117,9 +116,7 @@ export function DemoLoginButtons({
               onClick={() => void signInDemo(account)}
             >
               {isLoading ? (
-                <span className="mx-auto">
-                  <PenguinLoadingSpinner size="sm" showText={false} />
-                </span>
+                <span className="mx-auto">Signing in...</span>
               ) : (
                 <span className="inline-flex items-center gap-2">
                   <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />

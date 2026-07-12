@@ -5,6 +5,7 @@ import { ArrowLeft, Clock3, Layers3, Sparkles } from "lucide-react";
 import Image from "next/image";
 
 import { AppShell } from "@/components/layout/app-shell";
+import { BrandedBackground } from "@/components/brand/branded-background";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { roleDashboards, type AppRole, type Tone } from "@/lib/mock-data";
@@ -74,6 +75,7 @@ export function ComingSoonPage({
       accountEmail={data.accountEmail}
     >
       <Card className="relative overflow-hidden p-0">
+        <BrandedBackground variant="subtle" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.12),transparent_48%)]" />
         <div className="absolute right-4 top-4 z-10 sm:right-5 sm:top-5">
           <Link

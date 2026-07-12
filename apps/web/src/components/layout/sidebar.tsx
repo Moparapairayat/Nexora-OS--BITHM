@@ -160,9 +160,10 @@ export function Sidebar({
         onClick={onClose}
       />
       <aside
+        style={collapsed ? { width: 92 } : undefined}
         className={cn(
-          "command-surface-strong nexora-sidebar fixed inset-y-3 left-3 z-40 flex w-[304px] flex-col overflow-visible rounded-[24px] transition-[transform,width] duration-300 light:rounded-[28px] light:border-slate-200/80 lg:sticky lg:top-3 lg:z-auto lg:h-[calc(100vh-24px)] lg:translate-x-0",
-          collapsed && "lg:w-[92px]",
+          "command-surface-strong nexora-sidebar fixed inset-y-3 left-3 z-40 flex w-[304px] flex-col overflow-visible rounded-[24px] transition-[transform,width] duration-300 light:rounded-[28px] light:border-slate-200/80 lg:sticky lg:top-3 lg:z-auto lg:h-[calc(100dvh-24px)] lg:w-[248px] lg:translate-x-0 2xl:w-[304px]",
+          collapsed && "lg:w-[92px] 2xl:w-[92px]",
           open ? "translate-x-0" : "-translate-x-[110%]",
         )}
       >

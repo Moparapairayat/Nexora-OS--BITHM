@@ -4171,10 +4171,10 @@ export function CodeLabPage({ role }: { role: AppRole }) {
 
         <div
           className={cn(
-            "grid gap-3",
+            "code-lab-workspace-grid grid gap-3",
             workspaceExpanded
-              ? "min-h-0 grid-cols-[340px_minmax(0,1fr)_320px]"
-              : "lg:h-[calc(100vh-166px)] lg:min-h-[720px] xl:grid-cols-[320px_minmax(0,1fr)_300px] 2xl:grid-cols-[340px_minmax(0,1fr)_320px]",
+              ? "min-h-0 grid-cols-1 [&>:first-child]:hidden [&>:last-child]:hidden lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)_minmax(220px,280px)] lg:[&>:first-child]:flex lg:[&>:last-child]:block 2xl:grid-cols-[340px_minmax(0,1fr)_320px]"
+              : "lg:min-h-[680px] lg:h-[calc(100dvh-166px)] lg:min-h-[700px] lg:grid-cols-[minmax(220px,250px)_minmax(0,1fr)] lg:[&>:last-child]:hidden 2xl:grid-cols-[340px_minmax(0,1fr)_320px] 2xl:[&>:last-child]:block",
           )}
         >
           <CodeLabSidebar

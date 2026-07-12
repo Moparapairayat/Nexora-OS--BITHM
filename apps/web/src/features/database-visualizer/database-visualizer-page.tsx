@@ -1165,7 +1165,7 @@ function ERDCanvas({
             ))}
 
             {tables.length === 0 ? (
-              <div className="absolute left-10 top-10 w-[420px] rounded-[24px] border border-dashed border-white/15 bg-[rgba(18,24,21,0.9)] p-6 text-center shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-300 light:bg-white/90 light:shadow-[0_18px_42px_rgba(33,45,74,0.08)]">
+              <div className="absolute left-4 right-4 top-6 w-auto max-w-[420px] rounded-[24px] border border-dashed border-white/15 bg-[rgba(18,24,21,0.9)] p-4 text-center shadow-[0_24px_70px_rgba(0,0,0,0.34)] sm:left-10 sm:right-auto sm:top-10 sm:w-[calc(100%-5rem)] sm:p-6 light:border-slate-300 light:bg-white/90 light:shadow-[0_18px_42px_rgba(33,45,74,0.08)]">
                 <IconTile icon={AlertTriangle} tone="amber" />
                 <h3 className="mt-4 text-lg font-bold text-white light:text-slate-950">
                   No diagram generated yet
@@ -1224,7 +1224,7 @@ function DetailsPanel({
         </span>
       </header>
 
-      <div className="grid gap-4 p-4 xl:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,360px)]">
         <div className="rounded-[18px] border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-[#fbfefd]">
           {selectedTable ? (
             <>
@@ -1801,7 +1801,7 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
           onShare={handleShare}
         />
 
-        <section className="grid overflow-hidden rounded-b-[18px] border-x border-b border-white/10 bg-[rgba(18,24,21,0.78)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_18px_50px_rgba(15,23,42,0.10)] lg:h-[calc(100vh-142px)] lg:min-h-[720px] xl:grid-cols-[430px_minmax(0,1fr)] 2xl:grid-cols-[460px_minmax(0,1fr)]">
+        <section className="grid overflow-hidden rounded-b-[18px] border-x border-b border-white/10 bg-[rgba(18,24,21,0.78)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_18px_50px_rgba(15,23,42,0.10)] lg:h-[calc(100dvh-142px)] lg:min-h-[720px] lg:grid-cols-[minmax(300px,430px)_minmax(0,1fr)] 2xl:grid-cols-[460px_minmax(0,1fr)]">
           <div className="flex min-h-0 flex-col overflow-hidden border-r border-white/10 bg-[#0d1110] light:border-slate-200 light:bg-white">
             <header className="flex shrink-0 flex-col gap-2 border-b border-white/10 bg-[#121715] p-2.5 light:border-slate-200 light:bg-[#fbfefd]">
               <div className="flex flex-wrap items-center justify-between gap-2">

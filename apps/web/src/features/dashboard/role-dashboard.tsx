@@ -152,7 +152,7 @@ export function RoleDashboard({ role }: { role: AppRole }) {
             }))}
           />
 
-          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(360px,0.75fr)]">
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.75fr)]">
             <div className="grid gap-5">
               <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
                 <WorkflowTimeline items={data.workflows} />
@@ -218,7 +218,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
   ];
 
   return (
-    <div className="grid gap-4 sm:gap-5">
+    <div className="student-dashboard grid gap-4 2xl:gap-5">
       <section className="relative overflow-hidden rounded-[24px] border border-[color:var(--border-emerald)] bg-[linear-gradient(145deg,rgba(18,24,21,0.94)_0%,rgba(9,13,11,0.9)_48%,rgba(5,7,6,0.96)_100%)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.36),0_0_70px_rgba(50,245,154,0.08)] backdrop-blur sm:p-6 light:border-slate-200/80 light:bg-[linear-gradient(145deg,#ffffff_0%,#f4fff6_56%,#ffffff_100%)] light:shadow-[0_20px_54px_rgba(33,45,74,0.08)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_24%,rgba(50,245,154,0.17),transparent_34%),radial-gradient(circle_at_90%_12%,rgba(217,255,87,0.14),transparent_24%),linear-gradient(120deg,rgba(138,95,61,0.12),transparent_42%)] light:bg-[radial-gradient(circle_at_78%_24%,rgba(11,191,106,0.15),transparent_34%),radial-gradient(circle_at_90%_12%,rgba(184,243,79,0.16),transparent_24%)]" />
         <div className="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,430px)] lg:items-center">
@@ -258,13 +258,13 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         </div>
       </section>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 2xl:gap-4">
         {data.stats.map((stat, index) => {
           const Icon = statIcons[index] ?? Activity;
           return (
             <section
               key={stat.label}
-              className="relative min-w-0 overflow-hidden rounded-[22px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-4 shadow-[0_22px_60px_rgba(0,0,0,0.3),0_0_42px_rgba(50,245,154,0.055)] sm:p-5 light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]"
+              className="relative min-w-0 overflow-hidden rounded-[22px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-5 shadow-[0_22px_60px_rgba(0,0,0,0.3),0_0_42px_rgba(50,245,154,0.055)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]"
             >
               <div className="absolute -right-10 -top-12 h-28 w-28 rounded-full bg-[rgba(50,245,154,0.14)] blur-2xl light:bg-emerald-100/70" />
               <div className="relative flex items-start justify-between gap-4">
@@ -295,7 +295,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         })}
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(340px,0.75fr)]">
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-5 2xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(340px,0.75fr)]">
         <WorkflowTimeline items={data.workflows} />
 
         <DashboardCard
@@ -334,7 +334,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
           detail="Your recent work mapped to academic and technical skills."
           icon={Sparkles}
           tone="violet"
-          className="lg:col-span-2 2xl:col-span-1"
+          className="lg:col-span-2 xl:col-span-1"
         >
           <div className="h-64">
             <SkillRadarChart data={data.skillData} />
@@ -342,7 +342,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         </DashboardCard>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2 2xl:grid-cols-[minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(380px,1fr)]">
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-5 2xl:grid-cols-[minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(380px,1fr)]">
         <StudentListCard
           title="Upcoming Deadlines"
           icon={CalendarClock}
@@ -355,7 +355,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
           rows={submissions}
           action="View all submissions"
         />
-        <div className="lg:col-span-2 2xl:col-span-1">
+        <div className="lg:col-span-2 xl:col-span-1">
           <StudentAssistantPanel activity={data.activity} />
         </div>
       </div>
@@ -466,7 +466,7 @@ function StudentListCard({
               <FileText className="h-4 w-4" aria-hidden="true" />
             </span>
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-[var(--foreground)] light:text-slate-900">
+              <p className="line-clamp-2 text-sm font-semibold leading-5 text-[var(--foreground)] light:text-slate-900">
                 {name}
               </p>
               <p className="mt-1 truncate text-xs text-slate-400 light:text-slate-500">

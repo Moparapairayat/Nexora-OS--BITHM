@@ -41,7 +41,7 @@ export function Topbar({
 }) {
   return (
     <>
-      <header className="sticky top-0 z-20 -mx-4 rounded-t-3xl border-b border-[var(--line)] bg-[rgba(5,7,6,0.76)] px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)] backdrop-blur-xl light:border-slate-200/80 light:bg-white/82 light:shadow-[0_14px_38px_rgba(36,50,84,0.06)] light:rounded-t-[28px] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <header className="sticky top-0 z-20 -mx-4 rounded-t-3xl border-b border-[var(--line)] bg-[rgba(5,7,6,0.76)] px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)] backdrop-blur-xl light:rounded-t-[28px] light:border-[color:var(--line)] light:bg-[rgba(250,253,251,0.88)] light:shadow-[0_10px_30px_rgba(31,67,49,0.055)] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div className="flex min-h-14 items-center gap-2.5">
           <button
             type="button"
@@ -68,7 +68,7 @@ export function Topbar({
             </div>
           </div>
 
-          <div className="hidden min-w-0 flex-1 lg:flex lg:justify-center">
+          <div className="hidden min-w-0 flex-1 min-[1360px]:flex min-[1360px]:justify-center">
             <CommandSearch onClick={() => setCommandOpen(true)} />
           </div>
           <div className="hidden items-center gap-2 rounded-2xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.08)] px-3 py-2 text-xs font-semibold text-[var(--brand-emerald)] light:border-emerald-100 light:bg-white light:text-emerald-700 light:shadow-[0_10px_24px_rgba(20,150,92,0.08)] xl:flex">

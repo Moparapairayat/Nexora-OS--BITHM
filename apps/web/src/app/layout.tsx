@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppProviders } from "@/components/providers/app-providers";
 import "./globals.css";
@@ -33,6 +33,19 @@ export const metadata: Metadata = {
       "BITHM's platform for assignments, labs, coding projects, feedback, and academic administration.",
     images: [nexoraLogoSrc],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  colorScheme: "dark light",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#050706" },
+    { media: "(prefers-color-scheme: light)", color: "#f3f7f4" },
+  ],
 };
 
 const themeInitScript = `
