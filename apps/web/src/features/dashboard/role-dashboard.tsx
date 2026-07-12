@@ -207,9 +207,9 @@ export function RoleDashboard({ role }: { role: AppRole }) {
 function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
   const statIcons = [FileText, FlaskConical, Bell, ChartNoAxesCombined];
   const deadlines = [
-    ["Assignment Report (LO3)", "Submit by May 25, 2025", "2 days left"],
-    ["Lab Report - Validation", "Submit by May 28, 2025", "5 days left"],
-    ["LiveLab Task - DOM", "Submit by May 30, 2025", "7 days left"],
+    ["Assignment Report (LO3)", "Submit by July 15, 2026", "3 days left"],
+    ["Lab Report - Validation", "Submit by July 18, 2026", "6 days left"],
+    ["LiveLab Task - DOM", "Submit by July 20, 2026", "8 days left"],
   ];
   const submissions = [
     ["Task 1 Report - LO2 & LO3", "Submitted 2h ago", "Under Review"],
@@ -498,11 +498,14 @@ function StudentAssistantPanel({ activity }: { activity: string[] }) {
           <Sparkles className="h-4 w-4" aria-hidden="true" />
         </span>
         <div>
-          <h2 className="text-sm font-semibold text-[var(--foreground)] light:text-slate-950">
-            AI Assistant
-          </h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-sm font-semibold text-[var(--foreground)] light:text-slate-950">
+              AI Assistant
+            </h2>
+            <Badge tone="slate">Coming soon</Badge>
+          </div>
           <p className="text-xs text-slate-400 light:text-slate-500">
-            How can I help you today?
+            These tools are not available yet.
           </p>
         </div>
       </div>
@@ -518,7 +521,9 @@ function StudentAssistantPanel({ activity }: { activity: string[] }) {
           <button
             key={item}
             type="button"
-            className="nexora-focus rounded-full border border-white/10 bg-white/[0.035] px-3 py-2 text-xs font-semibold text-slate-300 transition hover:border-[color:var(--border-emerald)] hover:bg-[rgba(50,245,154,0.08)] hover:text-[var(--brand-lime)] light:border-slate-200 light:bg-white light:text-slate-700 light:hover:border-emerald-100 light:hover:bg-emerald-50 light:hover:text-emerald-700"
+            disabled
+            title="Coming soon"
+            className="rounded-full border border-white/10 bg-white/[0.025] px-3 py-2 text-xs font-semibold text-slate-500 opacity-70 light:border-slate-200 light:bg-slate-50 light:text-slate-400"
           >
             {item}
           </button>
@@ -534,11 +539,16 @@ function StudentAssistantPanel({ activity }: { activity: string[] }) {
           </p>
         ))}
       </div>
-      <div className="mt-5 flex items-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-3 py-2 shadow-[inset_0_1px_0_rgba(245,247,242,0.05)] light:border-slate-200 light:bg-white light:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+      <div className="mt-5 flex items-center gap-2 rounded-2xl border border-white/10 bg-black/20 px-3 py-2 opacity-60 shadow-[inset_0_1px_0_rgba(245,247,242,0.05)] light:border-slate-200 light:bg-slate-50 light:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
         <span className="min-w-0 flex-1 text-sm text-slate-500 light:text-slate-400">
           Ask anything...
         </span>
-        <Button type="button" className="h-10 w-10 rounded-xl px-0">
+        <Button
+          type="button"
+          disabled
+          title="Coming soon"
+          className="h-10 w-10 rounded-xl px-0"
+        >
           <Send className="h-4 w-4" aria-hidden="true" />
         </Button>
       </div>

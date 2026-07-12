@@ -155,7 +155,7 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          className="h-10 sm:h-11 w-full rounded-xl sm:rounded-2xl text-xs sm:text-sm"
+          className="auth-primary-action h-10 w-full rounded-xl text-xs sm:h-11 sm:rounded-2xl sm:text-sm"
           disabled={isSubmitting}
         >
           {isSubmitting ? "Signing in..." : "Sign In"}

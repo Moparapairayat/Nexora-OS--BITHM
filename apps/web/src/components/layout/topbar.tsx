@@ -26,6 +26,12 @@ const roleInitial: Record<AppRole, string> = {
   admin: "A",
 };
 
+const serviceLabel: Record<AppRole, string> = {
+  student: "Workspace ready",
+  teacher: "Review tools ready",
+  admin: "Local services online",
+};
+
 export function Topbar({
   role,
   title,
@@ -73,7 +79,7 @@ export function Topbar({
           </div>
           <div className="hidden items-center gap-2 rounded-2xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.08)] px-3 py-2 text-xs font-semibold text-[var(--brand-emerald)] light:border-emerald-100 light:bg-white light:text-emerald-700 light:shadow-[0_10px_24px_rgba(20,150,92,0.08)] xl:flex">
             <span className="h-2 w-2 rounded-full bg-[var(--brand-emerald)] shadow-[0_0_12px_rgba(50,245,154,0.9)]" />
-            AI Router: Local
+            {serviceLabel[role]}
           </div>
 
           <Button

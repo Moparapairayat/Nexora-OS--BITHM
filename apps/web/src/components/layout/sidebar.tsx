@@ -21,7 +21,7 @@ const collapsedRoleClass: Record<AppRole, string> = {
 };
 
 const roleProfileLabel: Record<AppRole, string> = {
-  student: "Student Nexora",
+  student: "Mopara Pair Ayat",
   teacher: "Teacher Nexora",
   admin: "Admin Nexora",
 };
