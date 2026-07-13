@@ -83,15 +83,70 @@ const modeCopy: Record<
   },
 };
 
+const featureCopy: Record<
+  string,
+  { eyebrow: string; title: string; subtitle: string }
+> = {
+  "web-source-scan": {
+    eyebrow: "Web Source Scan",
+    title: "Compare a submission with an online source",
+    subtitle:
+      "Check similarity, citation status, and source details for a specific URL.",
+  },
+  "ai-writing-risk": {
+    eyebrow: "AI Writing Risk",
+    title: "Review writing-risk indicators",
+    subtitle:
+      "Inspect writing patterns as advisory evidence before making an academic decision.",
+  },
+  "academic-rewrite": {
+    eyebrow: "Academic Rewrite",
+    title: "Improve a passage without losing its meaning",
+    subtitle:
+      "Prepare a clearer draft while preserving evidence and citation responsibility.",
+  },
+  "citation-generator": {
+    eyebrow: "Citation Generator",
+    title: "Create and manage academic citations",
+    subtitle:
+      "Build references from source details and keep them ready for your report.",
+  },
+  "originality-reports": {
+    eyebrow: "Originality Reports",
+    title: "Review and export originality evidence",
+    subtitle:
+      "Inspect similarity, matched sources, citation gaps, and report details.",
+  },
+  "plagiarism-reports": {
+    eyebrow: "Plagiarism Reports",
+    title: "Review matched-source reports",
+    subtitle:
+      "Inspect similarity evidence and citation status across submitted work.",
+  },
+};
+
 export function AcademicShieldPage({
   role,
   mode,
+  feature = "academic-shield",
 }: {
   role: AppRole;
   mode: AcademicShieldMode;
+  feature?: string;
 }) {
   const roleData = roleDashboards[role];
-  const copy = modeCopy[mode];
+  const copy = featureCopy[feature] ?? modeCopy[mode];
+  const isOverview = feature === "academic-shield";
+  const showScanInput =
+    isOverview ||
+    feature === "plagiarism-reports" ||
+    feature === "ai-writing-risk";
+  const showMetrics = showScanInput || feature === "originality-reports";
+  const showSourceEvidence =
+    isOverview ||
+    feature === "plagiarism-reports" ||
+    feature === "originality-reports";
+  const showCitation = isOverview || feature === "citation-generator";
   const [text, setText] = useState(sampleText);
   const [citationStyle, setCitationStyle] = useState("Harvard");
   const [sourceTitle, setSourceTitle] = useState("Responsive Testing Guidance");
@@ -257,156 +312,173 @@ export function AcademicShieldPage({
           subtitle={copy.subtitle}
           tone="rose"
           action={
-            <div className="flex flex-wrap gap-2">
-              <select
-                value={exportFormat}
-                onChange={(event) =>
-                  setExportFormat(
-                    event.target.value as AcademicShieldExportResult["format"],
-                  )
-                }
-                className={`${inputClass} h-11 w-32`}
-              >
-                <option value="markdown">Markdown</option>
-                <option value="pdf">PDF</option>
-                <option value="docx">DOCX</option>
-                <option value="json">JSON</option>
-              </select>
-              <Button
-                type="button"
-                onClick={exportReport}
-                disabled={isExporting}
-              >
-                {isExporting ? "Exporting..." : "Export Report"}
-                <Download className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            </div>
+            isOverview || feature === "originality-reports" ? (
+              <div className="flex flex-wrap gap-2">
+                <select
+                  value={exportFormat}
+                  onChange={(event) =>
+                    setExportFormat(
+                      event.target
+                        .value as AcademicShieldExportResult["format"],
+                    )
+                  }
+                  className={`${inputClass} h-11 w-32`}
+                >
+                  <option value="markdown">Markdown</option>
+                  <option value="pdf">PDF</option>
+                  <option value="docx">DOCX</option>
+                  <option value="json">JSON</option>
+                </select>
+                <Button
+                  type="button"
+                  onClick={exportReport}
+                  disabled={isExporting}
+                >
+                  {isExporting ? "Exporting..." : "Export Report"}
+                  <Download className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </div>
+            ) : undefined
           }
         />
 
-        <MetricRail
-          items={[
-            {
-              label: "Originality",
-              value: `${report.originalityScore}%`,
-              tone: "emerald",
-              icon: ShieldCheck,
-            },
-            {
-              label: "Similarity",
-              value: `${report.overallSimilarity}%`,
-              tone: riskTone(report.riskLevel),
-              icon: Radar,
-            },
-            {
-              label: "AI writing risk",
-              value: `${report.writingRisk.score}%`,
-              tone: riskTone(report.writingRisk.riskLevel),
-              icon: BrainCircuit,
-            },
-            {
-              label: "Citation gaps",
-              value: String(report.citationGapCount),
-              tone: report.citationGapCount > 0 ? "amber" : "emerald",
-              icon: BookOpen,
-            },
-          ]}
-        />
+        {showMetrics ? (
+          <MetricRail
+            items={[
+              {
+                label: "Originality",
+                value: `${report.originalityScore}%`,
+                tone: "emerald",
+                icon: ShieldCheck,
+              },
+              {
+                label: "Similarity",
+                value: `${report.overallSimilarity}%`,
+                tone: riskTone(report.riskLevel),
+                icon: Radar,
+              },
+              {
+                label: "AI writing risk",
+                value: `${report.writingRisk.score}%`,
+                tone: riskTone(report.writingRisk.riskLevel),
+                icon: BrainCircuit,
+              },
+              {
+                label: "Citation gaps",
+                value: String(report.citationGapCount),
+                tone: report.citationGapCount > 0 ? "amber" : "emerald",
+                icon: BookOpen,
+              },
+            ]}
+          />
+        ) : null}
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(280px,0.82fr)_minmax(0,1.18fr)]">
-          <Card>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <Badge tone="rose">Integrity input</Badge>
-                <h2 className="mt-3 text-xl font-semibold text-white light:text-slate-950">
-                  Submission text
-                </h2>
-                <p className="mt-2 text-sm leading-6 text-slate-400 light:text-slate-600">
-                  Run an institutional check before the final academic review.
+        {showScanInput ? (
+          <div className="grid gap-5 lg:grid-cols-[minmax(280px,0.82fr)_minmax(0,1.18fr)]">
+            <Card>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <Badge tone="rose">Integrity input</Badge>
+                  <h2 className="mt-3 text-xl font-semibold text-white light:text-slate-950">
+                    Submission text
+                  </h2>
+                  <p className="mt-2 text-sm leading-6 text-slate-400 light:text-slate-600">
+                    Run an institutional check before the final academic review.
+                  </p>
+                </div>
+                <ShieldAlert className="h-5 w-5 text-[var(--brand-lime)]" />
+              </div>
+              <FieldLabel label="Assignment or report content">
+                <textarea
+                  value={text}
+                  onChange={(event) => setText(event.target.value)}
+                  className={`${inputClass} min-h-[280px] resize-y leading-6`}
+                />
+              </FieldLabel>
+              <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                <Button
+                  type="button"
+                  onClick={runIntegrityScan}
+                  disabled={isChecking}
+                >
+                  {isChecking ? "Checking..." : "Run Full Scan"}
+                  <FileSearch className="h-4 w-4" aria-hidden="true" />
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={runWritingRisk}
+                  disabled={isRiskChecking}
+                >
+                  {isRiskChecking ? "Analyzing..." : "AI Risk Only"}
+                  <BrainCircuit className="h-4 w-4" aria-hidden="true" />
+                </Button>
+              </div>
+              <div className="mt-4 grid gap-3 rounded-xl border border-amber-200/20 bg-amber-300/8 p-4">
+                <p className="text-sm font-semibold text-amber-100 light:text-amber-800">
+                  Advisory policy
+                </p>
+                <p className="text-sm leading-6 text-slate-300 light:text-slate-700">
+                  {academicShieldDisclaimer}
                 </p>
               </div>
-              <ShieldAlert className="h-5 w-5 text-[var(--brand-lime)]" />
-            </div>
-            <FieldLabel label="Assignment or report content">
-              <textarea
-                value={text}
-                onChange={(event) => setText(event.target.value)}
-                className={`${inputClass} min-h-[280px] resize-y leading-6`}
-              />
-            </FieldLabel>
-            <div className="mt-4 grid gap-2 sm:grid-cols-2">
-              <Button
-                type="button"
-                onClick={runIntegrityScan}
-                disabled={isChecking}
-              >
-                {isChecking ? "Checking..." : "Run Full Scan"}
-                <FileSearch className="h-4 w-4" aria-hidden="true" />
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={runWritingRisk}
-                disabled={isRiskChecking}
-              >
-                {isRiskChecking ? "Analyzing..." : "AI Risk Only"}
-                <BrainCircuit className="h-4 w-4" aria-hidden="true" />
-              </Button>
-            </div>
-            <div className="mt-4 grid gap-3 rounded-xl border border-amber-200/20 bg-amber-300/8 p-4">
-              <p className="text-sm font-semibold text-amber-100 light:text-amber-800">
-                Advisory policy
-              </p>
-              <p className="text-sm leading-6 text-slate-300 light:text-slate-700">
-                {academicShieldDisclaimer}
-              </p>
-            </div>
-          </Card>
+            </Card>
 
-          <div className="grid gap-5">
-            <MethodScoreGrid report={report} />
-            <WritingRiskPanel report={report} />
+            <div className="grid gap-5">
+              <MethodScoreGrid report={report} />
+              <WritingRiskPanel report={report} />
+            </div>
           </div>
-        </div>
+        ) : null}
 
-        <ProMaxWorkflowPanel
-          webScanUrl={webScanUrl}
-          setWebScanUrl={setWebScanUrl}
-          runWebSourceScan={runWebSourceScan}
-          isWebScanning={isWebScanning}
-          webScan={webScan}
-          webScanHistory={webScanHistory}
-          runAcademicRewrite={runAcademicRewrite}
-          isRewriting={isRewriting}
-          rewrite={rewrite}
-          rewriteHistory={rewriteHistory}
-        />
-
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,0.88fr)]">
-          <SourceRankingPanel sources={report.sourceRanking} />
-          <HighlightPanel report={report} />
-        </div>
-
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.8fr)]">
-          <CitationPanel
-            citation={citation}
-            citationStyle={citationStyle}
-            setCitationStyle={setCitationStyle}
-            sourceTitle={sourceTitle}
-            setSourceTitle={setSourceTitle}
-            sourceUrl={sourceUrl}
-            setSourceUrl={setSourceUrl}
-            citations={citations}
-            generateCitation={generateCitation}
+        {isOverview ||
+        feature === "web-source-scan" ||
+        feature === "academic-rewrite" ? (
+          <ProMaxWorkflowPanel
+            feature={feature}
+            webScanUrl={webScanUrl}
+            setWebScanUrl={setWebScanUrl}
+            runWebSourceScan={runWebSourceScan}
+            isWebScanning={isWebScanning}
+            webScan={webScan}
+            webScanHistory={webScanHistory}
+            runAcademicRewrite={runAcademicRewrite}
+            isRewriting={isRewriting}
+            rewrite={rewrite}
+            rewriteHistory={rewriteHistory}
           />
-          <RoleContextPanel mode={mode} report={report} />
-        </div>
+        ) : null}
+
+        {showSourceEvidence ? (
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.12fr)_minmax(300px,0.88fr)]">
+            <SourceRankingPanel sources={report.sourceRanking} />
+            <HighlightPanel report={report} />
+          </div>
+        ) : null}
+
+        {showCitation ? (
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(300px,0.8fr)]">
+            <CitationPanel
+              citation={citation}
+              citationStyle={citationStyle}
+              setCitationStyle={setCitationStyle}
+              sourceTitle={sourceTitle}
+              setSourceTitle={setSourceTitle}
+              sourceUrl={sourceUrl}
+              setSourceUrl={setSourceUrl}
+              citations={citations}
+              generateCitation={generateCitation}
+            />
+            <RoleContextPanel mode={mode} report={report} />
+          </div>
+        ) : null}
       </div>
     </AppShell>
   );
 }
 
 function ProMaxWorkflowPanel({
+  feature,
   webScanUrl,
   setWebScanUrl,
   runWebSourceScan,
@@ -418,6 +490,7 @@ function ProMaxWorkflowPanel({
   rewrite,
   rewriteHistory,
 }: {
+  feature: string;
   webScanUrl: string;
   setWebScanUrl: (value: string) => void;
   runWebSourceScan: () => void;
@@ -431,110 +504,114 @@ function ProMaxWorkflowPanel({
 }) {
   return (
     <div className="grid gap-5 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-      <Card>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <Badge tone="cyan">Web source scan</Badge>
-            <h2 className="mt-3 text-xl font-semibold text-white light:text-slate-950">
-              External source verification
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400 light:text-slate-600">
-              Compare the current submission text against a target URL and
-              decide whether citation repair is needed.
-            </p>
-          </div>
-          <Globe2
-            className="h-5 w-5 text-[var(--brand-lime)]"
-            aria-hidden="true"
-          />
-        </div>
-        <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-          <FieldLabel label="Source URL">
-            <input
-              value={webScanUrl}
-              onChange={(event) => setWebScanUrl(event.target.value)}
-              className={inputClass}
-              placeholder="https://example.edu/source"
-            />
-          </FieldLabel>
-          <Button
-            type="button"
-            className="self-end"
-            onClick={runWebSourceScan}
-            disabled={isWebScanning}
-          >
-            {isWebScanning ? "Scanning..." : "Scan URL"}
-            <ExternalLink className="h-4 w-4" aria-hidden="true" />
-          </Button>
-        </div>
-        <div className="mt-5 grid gap-3">
-          {webScan ? (
-            <WebScanCard scan={webScan} active />
-          ) : (
-            <div className="rounded-xl border border-white/10 bg-white/[0.035] p-4 text-sm text-slate-400 light:border-slate-200 light:bg-white/70 light:text-slate-600">
-              Run a web source scan to see similarity, citation status and
-              source repair guidance.
-            </div>
-          )}
-          {webScanHistory.slice(0, 3).map((scan) => (
-            <WebScanCard key={scan.id} scan={scan} />
-          ))}
-        </div>
-      </Card>
-
-      <Card>
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <Badge tone="emerald">Academic rewrite</Badge>
-            <h2 className="mt-3 text-xl font-semibold text-white light:text-slate-950">
-              Source-safe rewrite assistant
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-400 light:text-slate-600">
-              Generate a rewrite draft that preserves assessment meaning,
-              evidence links and citation responsibility.
-            </p>
-          </div>
-          <Wand2
-            className="h-5 w-5 text-[var(--brand-lime)]"
-            aria-hidden="true"
-          />
-        </div>
-        <Button
-          type="button"
-          className="mt-5"
-          onClick={runAcademicRewrite}
-          disabled={isRewriting}
-        >
-          {isRewriting ? "Rewriting..." : "Generate Academic Rewrite"}
-          <FileCheck2 className="h-4 w-4" aria-hidden="true" />
-        </Button>
-        <div className="mt-5 grid gap-4">
-          {rewrite ? (
-            <RewriteCard rewrite={rewrite} />
-          ) : (
-            <div className="rounded-xl border border-white/10 bg-white/[0.035] p-4 text-sm text-slate-400 light:border-slate-200 light:bg-white/70 light:text-slate-600">
-              Rewrite output will appear here with citation-preservation notes
-              and risk warnings.
-            </div>
-          )}
-          {rewriteHistory.slice(0, 2).map((item) => (
-            <div
-              key={item.id}
-              className="rounded-xl border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-white/70"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <Badge tone="slate">Rewrite history</Badge>
-                <span className="text-xs text-slate-500">
-                  {new Date(item.createdAt).toLocaleString()}
-                </span>
-              </div>
-              <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400 light:text-slate-600">
-                {item.rewrittenText}
+      {feature === "academic-shield" || feature === "web-source-scan" ? (
+        <Card>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <Badge tone="cyan">Web source scan</Badge>
+              <h2 className="mt-3 text-xl font-semibold text-white light:text-slate-950">
+                External source verification
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400 light:text-slate-600">
+                Compare the current submission text against a target URL and
+                decide whether citation repair is needed.
               </p>
             </div>
-          ))}
-        </div>
-      </Card>
+            <Globe2
+              className="h-5 w-5 text-[var(--brand-lime)]"
+              aria-hidden="true"
+            />
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+            <FieldLabel label="Source URL">
+              <input
+                value={webScanUrl}
+                onChange={(event) => setWebScanUrl(event.target.value)}
+                className={inputClass}
+                placeholder="https://example.edu/source"
+              />
+            </FieldLabel>
+            <Button
+              type="button"
+              className="self-end"
+              onClick={runWebSourceScan}
+              disabled={isWebScanning}
+            >
+              {isWebScanning ? "Scanning..." : "Scan URL"}
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </div>
+          <div className="mt-5 grid gap-3">
+            {webScan ? (
+              <WebScanCard scan={webScan} active />
+            ) : (
+              <div className="rounded-xl border border-white/10 bg-white/[0.035] p-4 text-sm text-slate-400 light:border-slate-200 light:bg-white/70 light:text-slate-600">
+                Run a web source scan to see similarity, citation status and
+                source repair guidance.
+              </div>
+            )}
+            {webScanHistory.slice(0, 3).map((scan) => (
+              <WebScanCard key={scan.id} scan={scan} />
+            ))}
+          </div>
+        </Card>
+      ) : null}
+
+      {feature === "academic-shield" || feature === "academic-rewrite" ? (
+        <Card>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <Badge tone="emerald">Academic rewrite</Badge>
+              <h2 className="mt-3 text-xl font-semibold text-white light:text-slate-950">
+                Source-safe rewrite assistant
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-slate-400 light:text-slate-600">
+                Generate a rewrite draft that preserves assessment meaning,
+                evidence links and citation responsibility.
+              </p>
+            </div>
+            <Wand2
+              className="h-5 w-5 text-[var(--brand-lime)]"
+              aria-hidden="true"
+            />
+          </div>
+          <Button
+            type="button"
+            className="mt-5"
+            onClick={runAcademicRewrite}
+            disabled={isRewriting}
+          >
+            {isRewriting ? "Rewriting..." : "Generate Academic Rewrite"}
+            <FileCheck2 className="h-4 w-4" aria-hidden="true" />
+          </Button>
+          <div className="mt-5 grid gap-4">
+            {rewrite ? (
+              <RewriteCard rewrite={rewrite} />
+            ) : (
+              <div className="rounded-xl border border-white/10 bg-white/[0.035] p-4 text-sm text-slate-400 light:border-slate-200 light:bg-white/70 light:text-slate-600">
+                Rewrite output will appear here with citation-preservation notes
+                and risk warnings.
+              </div>
+            )}
+            {rewriteHistory.slice(0, 2).map((item) => (
+              <div
+                key={item.id}
+                className="rounded-xl border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-white/70"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <Badge tone="slate">Rewrite history</Badge>
+                  <span className="text-xs text-slate-500">
+                    {new Date(item.createdAt).toLocaleString()}
+                  </span>
+                </div>
+                <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400 light:text-slate-600">
+                  {item.rewrittenText}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      ) : null}
     </div>
   );
 }

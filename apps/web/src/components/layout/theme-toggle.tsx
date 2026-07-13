@@ -50,12 +50,12 @@ export function ThemeToggle() {
     <Button
       type="button"
       variant="ghost"
-      className="h-10 w-10 px-0"
+      className="h-10 w-10 px-0 rounded-xl border border-white/12 bg-white/[0.045] hover:bg-white/[0.08] transition-all duration-200 light:border-emerald-950/10 light:bg-white light:hover:bg-emerald-50 text-slate-300 light:text-slate-700 hover:text-white light:hover:text-emerald-900"
       onClick={toggleTheme}
       aria-label={label}
       title={label}
     >
-      <Icon className="h-4 w-4" aria-hidden="true" />
+      <Icon className="h-4.5 w-4.5" aria-hidden="true" />
     </Button>
   );
 }

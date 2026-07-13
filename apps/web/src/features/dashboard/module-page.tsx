@@ -71,7 +71,13 @@ export function ModulePage({ role, slug }: { role: AppRole; slug: string[] }) {
   }
 
   if (academicShieldMode) {
-    return <AcademicShieldPage role={role} mode={academicShieldMode} />;
+    return (
+      <AcademicShieldPage
+        role={role}
+        mode={academicShieldMode}
+        feature={slug[0]}
+      />
+    );
   }
 
   return <ModuleExperiencePage role={role} slug={slug} />;
@@ -180,6 +186,7 @@ function resolveComingSoonSection(key: string): ComingSoonSection | null {
       ]),
     ],
     ["Activity & Notifications", new Set(["activity", "notifications"])],
+    ["AcademicShield", new Set(["academic-rewrite"])],
     [
       "Developer Tools",
       new Set([

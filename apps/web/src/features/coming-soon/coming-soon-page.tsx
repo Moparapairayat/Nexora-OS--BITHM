@@ -17,7 +17,8 @@ export type ComingSoonSection =
   | "Content Studio"
   | "Feedback"
   | "Activity & Notifications"
-  | "Developer Tools";
+  | "Developer Tools"
+  | "AcademicShield";
 
 const sectionTone: Record<ComingSoonSection, Tone> = {
   "Academic Work": "cyan",
@@ -27,6 +28,7 @@ const sectionTone: Record<ComingSoonSection, Tone> = {
   Feedback: "amber",
   "Activity & Notifications": "slate",
   "Developer Tools": "cyan",
+  AcademicShield: "rose",
 };
 
 const mascotByRoute: Record<string, string> = {
@@ -47,6 +49,13 @@ const mascotByRoute: Record<string, string> = {
   "github-analyzer": "/mascots/pengu-github-analyzer-bored.gif",
   "deployment-assistant": "/mascots/pengu-deployment-no.gif",
   "dataset-manager": "/mascots/pengu-dataset-pain.gif",
+  "ml-studio": "/mascots/pengu-ml-studio-ping-pong.gif",
+  "automl-assistant": "/mascots/pengu-automl-hello.gif",
+  "ml-reports": "/mascots/pengu-ml-reports-dance.gif",
+  "slide-maker": "/mascots/pengu-slide-maker-waiting.gif",
+  documentation: "/mascots/pengu-documentation-shocked.gif",
+  "research-assistant": "/mascots/pengu-research-dance.gif",
+  "ocr-document-reader": "/mascots/pengu-ocr-rainy.gif",
 };
 
 export function ComingSoonPage({

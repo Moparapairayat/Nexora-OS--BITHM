@@ -43,9 +43,11 @@ const demoLogins: Array<{
 export function DemoLoginButtons({
   className,
   variant = "compact",
+  onDark = false,
 }: {
   className?: string;
   variant?: "compact" | "portal";
+  onDark?: boolean;
 }) {
   const router = useRouter();
   const [loadingRole, setLoadingRole] = useState<DemoRole | null>(null);
@@ -111,6 +113,8 @@ export function DemoLoginButtons({
                 variant === "portal" ? "h-10" : "h-9",
                 variant === "portal" &&
                   "justify-between border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.07)] text-[var(--foreground)] hover:bg-[rgba(50,245,154,0.12)]",
+                onDark &&
+                  "border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/16 light:text-white",
               )}
               disabled={loadingRole !== null}
               onClick={() => void signInDemo(account)}
