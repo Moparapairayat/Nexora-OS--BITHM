@@ -8,7 +8,9 @@ function authHeaders() {
   };
 
   if (typeof window !== "undefined") {
-    const token = window.localStorage.getItem("nexora_token");
+    const token =
+      window.localStorage.getItem("nexora_token") ??
+      window.sessionStorage.getItem("nexora_token");
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;

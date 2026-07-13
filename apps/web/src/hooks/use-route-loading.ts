@@ -1,19 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
-let globalLoadingState = false;
 let loadingListeners: Array<(isLoading: boolean) => void> = [];
 
 export function triggerRouteLoading() {
-  globalLoadingState = true;
   loadingListeners.forEach((listener) => listener(true));
-  // Set minimum visible time for loader (3 seconds for better visibility during testing)
+  // Keep route feedback visible briefly without slowing navigation.
   setTimeout(() => {
-    globalLoadingState = false;
     loadingListeners.forEach((listener) => listener(false));
-  }, 3000);
+  }, 650);
 }
 
 export function subscribeToRouteLoading(
@@ -48,7 +45,10 @@ export function useRouteLoading() {
 
 // Expose to window for debugging and manual triggering
 if (typeof window !== "undefined") {
-  (window as any).__nexoraRouteLoading = {
+  const debugWindow = window as Window & {
+    __nexoraRouteLoading?: { triggerLoading: typeof triggerRouteLoading };
+  };
+  debugWindow.__nexoraRouteLoading = {
     triggerLoading: triggerRouteLoading,
   };
 }

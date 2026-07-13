@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Search, Sparkles, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { iconMap } from "@/components/layout/icon-map";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,7 @@ export function CommandPalette({
   onOpenChange: (open: boolean) => void;
 }) {
   const [query, setQuery] = useState("");
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -41,6 +42,37 @@ export function CommandPalette({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [onOpenChange]);
+
+  useEffect(() => {
+    if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function keepFocusInside(event: KeyboardEvent) {
+      if (event.key !== "Tab" || !dialogRef.current) return;
+      const focusable = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", keepFocusInside);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", keepFocusInside);
+    };
+  }, [open]);
 
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -69,8 +101,14 @@ export function CommandPalette({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/75 px-4 py-6 backdrop-blur-xl sm:pt-20">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/75 px-4 py-6 backdrop-blur-xl sm:pt-20"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onOpenChange(false);
+      }}
+    >
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Nexora command palette"
@@ -86,6 +124,7 @@ export function CommandPalette({
             </div>
             <input
               autoFocus
+              aria-label="Search pages and tools"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search pages, labs, reports, and tools..."

@@ -122,6 +122,8 @@ export function RoleTabs<TValue extends string>({
 }) {
   return (
     <div
+      role="tablist"
+      aria-label="Account role"
       className="grid min-w-0 gap-1 rounded-lg sm:rounded-2xl border border-[var(--line)] bg-black/20 p-1 light:border-emerald-100 light:bg-emerald-50/70"
       style={{
         gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
@@ -134,8 +136,11 @@ export function RoleTabs<TValue extends string>({
           <button
             key={option.value}
             type="button"
+            role="tab"
+            aria-selected={active}
+            tabIndex={active ? 0 : -1}
             className={cn(
-              "nexora-focus relative h-8 sm:h-10 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition",
+              "nexora-focus relative h-10 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition",
               active
                 ? "text-[#07100b] light:text-white"
                 : "text-[var(--muted)] hover:text-[var(--foreground)] light:text-slate-600 light:hover:text-emerald-900",
@@ -171,7 +176,10 @@ export function AuthField({
       <span className="font-semibold">{label}</span>
       {children}
       {error ? (
-        <span className="text-[10px] sm:text-xs font-medium text-rose-300 light:text-rose-600 animate-pulse">
+        <span
+          role="alert"
+          className="text-[10px] sm:text-xs font-medium text-rose-300 light:text-rose-600 animate-pulse"
+        >
           ⚠️ {error}
         </span>
       ) : null}

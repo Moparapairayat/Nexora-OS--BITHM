@@ -5,7 +5,7 @@ import {
   ArrowRight,
   Bell,
   Bot,
-  BookOpen,
+  BookOpenCheck,
   CalendarClock,
   CalendarDays,
   ChartNoAxesCombined,
@@ -31,7 +31,6 @@ import { useEffect, useState } from "react";
 
 import { AppShell } from "@/components/layout/app-shell";
 import {
-  AIButton,
   BentoCard,
   CommandLinkRow,
   DataTable,
@@ -84,6 +83,12 @@ const roleAction = {
   admin: "Check system",
 } satisfies Record<AppRole, string>;
 
+const roleActionHref = {
+  student: "/student/code-lab",
+  teacher: "/teacher/pending-reviews",
+  admin: "/admin/production-ops",
+} satisfies Record<AppRole, string>;
+
 const roleEyebrow = {
   student: "Student Dashboard",
   teacher: "Teacher Dashboard",
@@ -113,13 +118,20 @@ export function RoleDashboard({ role }: { role: AppRole }) {
     skillData: baseData.skillData,
   });
   const data = { ...baseData, ...runtimeData };
+  const [dashboardStatus, setDashboardStatus] = useState<
+    "loading" | "live" | "saved"
+  >("loading");
 
   useEffect(() => {
     let active = true;
 
     void apiGet<DashboardRuntimeData>(`/dashboard/${role}`).then((response) => {
-      if (active && response) {
+      if (!active) return;
+      if (response) {
         setRuntimeData(response);
+        setDashboardStatus("live");
+      } else {
+        setDashboardStatus("saved");
       }
     });
 
@@ -137,6 +149,13 @@ export function RoleDashboard({ role }: { role: AppRole }) {
       navGroups={data.navGroups}
       accountEmail={data.accountEmail}
     >
+      <p className="sr-only" role="status" aria-live="polite">
+        {dashboardStatus === "loading"
+          ? "Loading dashboard updates."
+          : dashboardStatus === "live"
+            ? "Dashboard is up to date."
+            : "Showing your most recent dashboard information."}
+      </p>
       {role === "student" ? (
         <StudentAcademicDashboard data={data} />
       ) : (
@@ -146,7 +165,15 @@ export function RoleDashboard({ role }: { role: AppRole }) {
             title={data.title}
             subtitle={data.subtitle}
             tone={roleHeroTone[role]}
-            action={<AIButton>{roleAction[role]}</AIButton>}
+            action={
+              <Link
+                href={roleActionHref[role]}
+                className="nexora-focus inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[linear-gradient(135deg,#d9ff57_0%,#6cf6b3_46%,#32f59a_100%)] px-4 text-sm font-semibold text-[#07100b] shadow-[0_0_35px_rgba(50,245,154,0.2)] transition hover:brightness-110 light:bg-[linear-gradient(135deg,#087a49_0%,#0aa75f_58%,#16bb70_100%)] light:text-white"
+              >
+                {roleAction[role]}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            }
           />
 
           <MetricRail
@@ -216,52 +243,58 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
   const statIcons = [FileText, FlaskConical, Bell, ChartNoAxesCombined];
   const quickActions = [
     {
-      title: "New Assignment",
-      detail: "Create assignment",
+      title: "Assignment Reports",
+      detail: "Review your coursework",
       href: "/student/assignments",
       icon: FilePlus2,
-      tone: "bg-[linear-gradient(145deg,#8b5cf6,#5b35d5)] shadow-[0_8px_18px_rgba(109,69,219,0.28)]",
+      tone: "bg-[linear-gradient(145deg,#6b62cc,#5148aa)] shadow-[0_7px_16px_rgba(81,72,170,0.20)]",
+      comingSoon: true,
     },
     {
-      title: "Live Coding Lab",
-      detail: "Start coding session",
+      title: "Coding Lab",
+      detail: "Resume your practice",
       href: "/student/code-lab",
       icon: Code2,
-      tone: "bg-[linear-gradient(145deg,#62d4e9,#25a9c9)] shadow-[0_8px_18px_rgba(37,169,201,0.25)]",
+      tone: "bg-[linear-gradient(145deg,#3298aa,#25798d)] shadow-[0_7px_16px_rgba(37,121,141,0.18)]",
+      comingSoon: false,
     },
     {
-      title: "AI Code Assistant",
-      detail: "Get coding help",
+      title: "Code Support",
+      detail: "Review coding guidance",
       href: "/student/code-doctor",
       icon: Bot,
-      tone: "bg-[linear-gradient(145deg,#7777f5,#4e46d7)] shadow-[0_8px_18px_rgba(78,70,215,0.28)]",
+      tone: "bg-[linear-gradient(145deg,#6b62cc,#5148aa)] shadow-[0_7px_16px_rgba(81,72,170,0.20)]",
+      comingSoon: true,
     },
     {
-      title: "Lab Report",
-      detail: "Create new report",
+      title: "Lab Reports",
+      detail: "Review your reports",
       href: "/student/lab-reports",
       icon: ClipboardCheck,
-      tone: "bg-[linear-gradient(145deg,#1db982,#078a5c)] shadow-[0_8px_18px_rgba(7,138,92,0.25)]",
+      tone: "bg-[linear-gradient(145deg,#238e6a,#176f53)] shadow-[0_7px_16px_rgba(23,111,83,0.18)]",
+      comingSoon: true,
     },
     {
-      title: "Check Plagiarism",
-      detail: "Verify originality",
+      title: "Originality Check",
+      detail: "Review your writing",
       href: "/student/academic-shield",
       icon: ShieldCheck,
-      tone: "bg-[linear-gradient(145deg,#f5679a,#df3775)] shadow-[0_8px_18px_rgba(223,55,117,0.24)]",
+      tone: "bg-[linear-gradient(145deg,#6b62cc,#5148aa)] shadow-[0_7px_16px_rgba(81,72,170,0.20)]",
+      comingSoon: false,
     },
     {
-      title: "Search Documents",
-      detail: "Find in resources",
+      title: "Research Resources",
+      detail: "Explore study materials",
       href: "/student/research-assistant",
       icon: Search,
-      tone: "bg-[linear-gradient(145deg,#6689ee,#3c5ed5)] shadow-[0_8px_18px_rgba(60,94,213,0.25)]",
+      tone: "bg-[linear-gradient(145deg,#3298aa,#25798d)] shadow-[0_7px_16px_rgba(37,121,141,0.18)]",
+      comingSoon: true,
     },
   ];
   const deadlines = [
-    ["Assignment Report (LO3)", "Submit by July 15, 2026", "3 days left"],
-    ["Lab Report - Validation", "Submit by July 18, 2026", "6 days left"],
-    ["LiveLab Task - DOM", "Submit by July 20, 2026", "8 days left"],
+    ["Assignment Report (LO3)", "Due 15 July at 23:59", "2 days left"],
+    ["Lab Report - Validation", "Due 18 July at 23:59", "5 days left"],
+    ["LiveLab Task - DOM", "Due 20 July at 18:00", "7 days left"],
   ];
   const submissions = [
     ["Task 1 Report - LO2 & LO3", "Submitted 2h ago", "Under Review"],
@@ -283,30 +316,29 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
               👋
             </p>
             <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-normal text-[var(--foreground)] sm:text-3xl light:text-slate-950">
-              Your{" "}
+              Here&apos;s your{" "}
               <span className="text-[var(--brand-lime)] light:text-emerald-600">
-                work for today
+                academic work for today
               </span>
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-5 text-slate-400 light:text-slate-600">
-              Check upcoming deadlines, continue your lab work, and review
-              recent feedback.
+              Review your deadlines, continue your lab work, and check your
+              latest feedback.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
-              <Button
-                type="button"
-                className="h-9 w-full rounded-xl px-4 sm:w-auto"
+              <Link
+                href="/student/code-lab"
+                className="student-hero-primary nexora-focus inline-flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-[rgba(217,255,87,0.58)] bg-[linear-gradient(135deg,#d9ff57_0%,#6cf6b3_46%,#32f59a_100%)] px-4 text-sm font-semibold text-[#07100b] shadow-[0_14px_42px_rgba(50,245,154,0.22)] transition hover:brightness-110 sm:w-auto light:border-emerald-800 light:bg-[linear-gradient(135deg,#087a49_0%,#0aa75f_58%,#16bb70_100%)] light:text-white light:shadow-[0_10px_24px_rgba(7,122,73,0.2)]"
               >
-                Continue task
+                Resume lab
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                className="h-9 w-full rounded-xl px-4 sm:w-auto"
+              </Link>
+              <Link
+                href="/student/assignments"
+                className="nexora-focus inline-flex h-9 w-full items-center justify-center rounded-xl border border-[var(--line)] bg-[rgba(18,24,21,0.72)] px-4 text-sm font-semibold text-[var(--foreground)] transition hover:border-[color:var(--border-emerald)] sm:w-auto light:bg-white/88 light:text-[#15251f]"
               >
-                Deadlines
-              </Button>
+                View deadlines
+              </Link>
             </div>
           </div>
 
@@ -318,31 +350,40 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         aria-label="Quick actions"
         className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6"
       >
-        {quickActions.map(({ title, detail, href, icon: Icon, tone }) => (
-          <Link
-            key={title}
-            href={href}
-            className="quick-action-card nexora-focus group flex min-w-0 items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface-elevated)] px-3 py-3 shadow-[var(--shadow-command)] transition hover:border-[var(--line-strong)]"
-          >
-            <span
-              className={`relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl text-white ring-1 ring-white/25 after:absolute after:inset-x-1 after:top-0 after:h-1/2 after:rounded-full after:bg-white/20 after:blur-sm ${tone}`}
+        {quickActions.map(
+          ({ title, detail, href, icon: Icon, tone, comingSoon }) => (
+            <Link
+              key={title}
+              href={href}
+              className="quick-action-card nexora-focus group flex min-w-0 items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface-elevated)] px-3 py-3 shadow-[var(--shadow-command)] transition hover:border-[var(--line-strong)]"
             >
-              <Icon
-                className="relative z-10 h-5 w-5 text-white"
-                aria-hidden="true"
-              />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="quick-action-title block truncate text-xs font-semibold text-[var(--foreground)]">
-                {title}
+              <span
+                className={`quick-action-icon relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl text-white ${tone}`}
+              >
+                <Icon
+                  className="quick-action-glyph relative z-10 h-5 w-5 text-white"
+                  aria-hidden="true"
+                />
               </span>
-              <span className="quick-action-detail mt-1 block truncate text-[11px] text-[var(--text-muted)]">
-                {detail}
+              <span className="min-w-0 flex-1">
+                <span className="flex min-w-0 items-center gap-1.5">
+                  <span className="quick-action-title block truncate text-xs font-semibold text-[var(--foreground)]">
+                    {title}
+                  </span>
+                  {comingSoon ? (
+                    <span className="shrink-0 rounded-full bg-white/8 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-slate-400 light:bg-slate-100 light:text-slate-500">
+                      Soon
+                    </span>
+                  ) : null}
+                </span>
+                <span className="quick-action-detail mt-1 block truncate text-[11px] text-[var(--text-muted)]">
+                  {detail}
+                </span>
               </span>
-            </span>
-            <ChevronRight className="quick-action-chevron h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]" />
-          </Link>
-        ))}
+              <ChevronRight className="quick-action-chevron h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]" />
+            </Link>
+          ),
+        )}
       </nav>
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5 2xl:gap-4">
@@ -351,7 +392,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
           return (
             <section
               key={stat.label}
-              className="relative min-w-0 overflow-hidden rounded-[20px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-4 shadow-[0_22px_60px_rgba(0,0,0,0.3),0_0_42px_rgba(50,245,154,0.055)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]"
+              className="student-standard-card relative min-w-0 overflow-hidden rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-3 shadow-[0_18px_44px_rgba(0,0,0,0.26)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]"
             >
               <div className="absolute -right-10 -top-12 h-28 w-28 rounded-full bg-[rgba(50,245,154,0.14)] blur-2xl light:bg-emerald-100/70" />
               <div className="relative flex items-start justify-between gap-4">
@@ -359,19 +400,20 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
                   <p className="text-sm font-semibold text-[var(--foreground)] light:text-slate-900">
                     {stat.label}
                   </p>
-                  <p className="mt-2 font-mono text-2xl font-semibold text-[var(--brand-emerald)] sm:text-3xl light:text-emerald-600">
+                  <p className="mt-1 font-mono text-2xl font-semibold text-[var(--brand-emerald)] light:text-emerald-600">
                     {stat.value}
                   </p>
                 </div>
-                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-lime)] light:border-transparent light:bg-emerald-50 light:text-emerald-600">
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-lime)] light:border-transparent light:bg-emerald-50 light:text-emerald-600">
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
               </div>
-              <div className="relative mt-2 flex flex-wrap items-center justify-between gap-2 sm:gap-3">
-                <p className="text-xs text-slate-400 light:text-slate-500">
+              <div className="relative mt-1.5 flex min-w-0 items-center justify-between gap-2 sm:gap-3">
+                <p className="min-w-0 truncate text-xs text-slate-400 light:text-slate-500">
                   {stat.trend}
                 </p>
                 <MiniSparkline
+                  variant={index}
                   tone={
                     index === 2 ? "amber" : index === 3 ? "violet" : "emerald"
                   }
@@ -380,30 +422,30 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
             </section>
           );
         })}
-        <section className="relative min-w-0 overflow-hidden rounded-[20px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-4 shadow-[0_22px_60px_rgba(0,0,0,0.3),0_0_42px_rgba(50,245,154,0.055)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]">
+        <section className="student-standard-card relative min-w-0 overflow-hidden rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-3 shadow-[0_18px_44px_rgba(0,0,0,0.26)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]">
           <div className="absolute -right-10 -top-12 h-28 w-28 rounded-full bg-violet-500/12 blur-2xl light:bg-violet-100/70" />
           <div className="relative flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-sm font-semibold text-[var(--foreground)] light:text-slate-900">
                 Weekly Goal Progress
               </p>
-              <p className="mt-2 font-mono text-2xl font-semibold text-[#a78bfa] sm:text-3xl light:text-violet-600">
+              <p className="mt-1 font-mono text-2xl font-semibold text-[#a78bfa] light:text-violet-600">
                 75%
               </p>
             </div>
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-violet-300/20 bg-violet-500/10 text-violet-300 light:border-transparent light:bg-violet-50 light:text-violet-600">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-violet-300/20 bg-violet-500/10 text-violet-300 light:border-transparent light:bg-violet-50 light:text-violet-600">
               <Target className="h-5 w-5" aria-hidden="true" />
             </span>
           </div>
-          <div className="relative mt-2">
+          <div className="relative mt-1">
             <p className="text-[11px] text-slate-400 light:text-slate-500">
-              Keep going — you&apos;re doing well.
+              You&apos;ve completed most of this week&apos;s planned work.
             </p>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/8 light:bg-slate-200">
+            <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/8 light:bg-slate-200">
               <div className="h-full w-3/4 rounded-full bg-[linear-gradient(90deg,#8b5cf6,#6cf6b3)]" />
             </div>
-            <p className="mt-1.5 text-[11px] text-slate-400 light:text-slate-500">
-              6 of 8 tasks completed
+            <p className="mt-1 text-[11px] text-slate-400 light:text-slate-500">
+              6 of 8 planned tasks complete
             </p>
           </div>
         </section>
@@ -413,8 +455,8 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         <WorkflowTimeline items={data.workflows} />
 
         <DashboardCard
-          title="This Week's Activity"
-          detail="Assignments, labs and feedback updated this week."
+          title="Weekly Progress"
+          detail="A summary of your coursework, labs, and feedback this week."
           icon={CalendarDays}
           tone="emerald"
         >
@@ -423,10 +465,10 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
           </div>
           <div className="mt-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
             {[
-              ["14", "Assignments"],
-              ["9", "Feedback"],
-              ["87%", "Completion"],
-              ["4.2h", "Study Time"],
+              ["3", "Due this week"],
+              ["2", "Feedback notes"],
+              ["6/8", "Weekly tasks"],
+              ["4h 12m", "Study time"],
             ].map(([value, label]) => (
               <div
                 key={label}
@@ -444,9 +486,9 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         </DashboardCard>
 
         <DashboardCard
-          title="Skill DNA Radar"
-          detail="Your recent work mapped to academic and technical skills."
-          icon={Sparkles}
+          title="Skills Overview"
+          detail="How your recent work is contributing to key academic and technical skills."
+          icon={ChartNoAxesCombined}
           tone="violet"
           className="lg:col-span-2 xl:col-span-1"
         >
@@ -462,12 +504,14 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
           icon={CalendarClock}
           rows={deadlines}
           action="View all deadlines"
+          href="/student/assignments"
         />
         <StudentListCard
           title="Recent Submissions"
           icon={ClipboardCheck}
           rows={submissions}
           action="View all submissions"
+          href="/student/submissions"
         />
         <div className="lg:col-span-2 xl:col-span-1">
           <StudentAssistantPanel activity={data.activity} />
@@ -502,19 +546,67 @@ function AcademicHeroVisual() {
   );
 }
 
-function MiniSparkline({ tone }: { tone: "emerald" | "amber" | "violet" }) {
+const sparklineData = [
+  {
+    path: "M2 22 C12 20 18 17 27 17 S40 9 49 12 S62 20 70 13 S82 10 90 8",
+    endY: 8,
+  },
+  {
+    path: "M2 23 C11 21 18 20 27 16 S42 13 50 9 S62 8 69 15 S80 10 90 7",
+    endY: 7,
+  },
+  {
+    path: "M2 22 C13 18 20 17 29 14 S43 8 51 11 S62 23 70 16 S81 14 90 12",
+    endY: 12,
+  },
+  {
+    path: "M2 23 C10 19 21 18 29 15 S43 12 51 14 S62 22 70 15 S82 10 90 11",
+    endY: 11,
+  },
+];
+
+function MiniSparkline({
+  tone,
+  variant,
+}: {
+  tone: "emerald" | "amber" | "violet";
+  variant: number;
+}) {
   const color =
-    tone === "amber" ? "#f97316" : tone === "violet" ? "#8d6cff" : "#07a75d";
+    tone === "amber" ? "#f97316" : tone === "violet" ? "#8d6cff" : "#07c875";
+  const series = sparklineData[variant] ?? sparklineData[0];
+  const gradientId = `metric-sparkline-${variant}-${tone}`;
 
   return (
-    <svg viewBox="0 0 92 28" className="h-8 w-24" aria-hidden="true">
+    <svg viewBox="0 0 94 30" className="h-7 w-20 shrink-0" aria-hidden="true">
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.24" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
       <path
-        d="M2 22 C 14 18, 18 16, 28 15 S 42 7, 50 10 S 62 25, 70 15 S 82 12, 90 9"
+        d="M2 26 H92"
+        fill="none"
+        stroke="currentColor"
+        strokeDasharray="2 4"
+        strokeOpacity="0.12"
+      />
+      <path
+        d={`${series.path} L90 28 L2 28 Z`}
+        fill={`url(#${gradientId})`}
+        stroke="none"
+      />
+      <path
+        d={series.path}
         fill="none"
         stroke={color}
         strokeLinecap="round"
-        strokeWidth="2"
+        strokeLinejoin="round"
+        strokeWidth="2.25"
       />
+      <circle cx="90" cy={series.endY} r="4" fill={color} fillOpacity="0.16" />
+      <circle cx="90" cy={series.endY} r="2" fill={color} />
     </svg>
   );
 }
@@ -524,14 +616,16 @@ function StudentListCard({
   icon: Icon,
   rows,
   action,
+  href,
 }: {
   title: string;
   icon: LucideIcon;
   rows: string[][];
   action: string;
+  href: string;
 }) {
   return (
-    <section className="min-w-0 rounded-[20px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-4 shadow-[0_22px_60px_rgba(0,0,0,0.3),0_0_42px_rgba(50,245,154,0.055)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]">
+    <section className="student-standard-card min-w-0 rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-4 shadow-[0_18px_44px_rgba(0,0,0,0.26)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <span className="grid h-9 w-9 place-items-center rounded-2xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-lime)] light:border-transparent light:bg-emerald-50 light:text-emerald-600">
@@ -544,6 +638,11 @@ function StudentListCard({
         <Badge tone="emerald">Live</Badge>
       </div>
       <div className="mt-3 grid gap-2">
+        {rows.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-white/10 px-3 py-6 text-center text-xs text-slate-500 light:border-slate-200">
+            You&apos;re all caught up for now.
+          </div>
+        ) : null}
         {rows.map(([name, detail, status]) => (
           <div
             key={name}
@@ -566,33 +665,33 @@ function StudentListCard({
           </div>
         ))}
       </div>
-      <button
-        type="button"
+      <Link
+        href={href}
         className="nexora-focus mt-3 inline-flex items-center gap-2 rounded-xl text-sm font-semibold text-[var(--brand-lime)] transition hover:text-[var(--brand-emerald)] light:text-emerald-700 light:hover:text-emerald-900"
       >
         {action}
         <ArrowRight className="h-4 w-4" aria-hidden="true" />
-      </button>
+      </Link>
     </section>
   );
 }
 
 function StudentAssistantPanel({ activity }: { activity: string[] }) {
   return (
-    <section className="min-w-0 rounded-[20px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-4 shadow-[0_22px_60px_rgba(0,0,0,0.3),0_0_42px_rgba(50,245,154,0.055)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]">
+    <section className="student-standard-card min-w-0 rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-4 shadow-[0_18px_44px_rgba(0,0,0,0.26)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]">
       <div className="flex items-center gap-3">
         <span className="grid h-9 w-9 place-items-center rounded-2xl border border-[color:var(--border-lime)] bg-[rgba(217,255,87,0.10)] text-[var(--brand-lime)] light:border-transparent light:bg-violet-50 light:text-violet-600">
-          <Sparkles className="h-4 w-4" aria-hidden="true" />
+          <BookOpenCheck className="h-4 w-4" aria-hidden="true" />
         </span>
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-sm font-semibold text-[var(--foreground)] light:text-slate-950">
-              AI Assistant
+              Study Assistant
             </h2>
             <Badge tone="slate">Coming soon</Badge>
           </div>
           <p className="text-xs text-slate-400 light:text-slate-500">
-            These tools are not available yet.
+            Guided study tools will be available here soon.
           </p>
         </div>
       </div>
@@ -628,7 +727,7 @@ function StudentAssistantPanel({ activity }: { activity: string[] }) {
       </div>
       <div className="mt-3 flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-1.5 opacity-60 shadow-[inset_0_1px_0_rgba(245,247,242,0.05)] light:border-slate-200 light:bg-slate-50 light:shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
         <span className="min-w-0 flex-1 text-sm text-slate-500 light:text-slate-400">
-          Ask anything...
+          Ask about your coursework...
         </span>
         <Button
           type="button"

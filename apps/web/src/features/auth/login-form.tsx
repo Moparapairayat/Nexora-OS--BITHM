@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Info } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,9 +20,10 @@ import { Button } from "@/components/ui/button";
 import { apiPost } from "@/lib/workflow-api";
 
 const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  email: z.string().email("Enter a valid email address."),
+  password: z.string().min(8, "Password must be at least 8 characters."),
   role: z.enum(["student", "teacher", "admin"]),
+  remember: z.boolean(),
 });
 
 type LoginValues = z.infer<typeof schema>;
@@ -40,6 +41,7 @@ export function LoginForm() {
     register,
     handleSubmit,
     setValue,
+    setFocus,
     formState: { errors },
   } = useForm<LoginValues>({
     resolver: zodResolver(schema),
@@ -47,12 +49,15 @@ export function LoginForm() {
       email: "",
       password: "",
       role: "student",
+      remember: true,
     },
   });
 
   const [selectedRole, setSelectedRole] = useState<LoginRole>("student");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRecoveryHelp, setShowRecoveryHelp] = useState(false);
 
   function selectRole(role: LoginRole) {
     setSelectedRole(role);
@@ -74,10 +79,9 @@ export function LoginForm() {
     if (!response?.token) {
       setError("We couldn't sign you in. Check your email and password.");
       setIsSubmitting(false);
+      setFocus("email");
       return;
     }
-
-    window.localStorage.setItem("nexora_token", response.token);
 
     const role =
       response.user.role === "ADMIN" || response.user.role === "SUPER_ADMIN"
@@ -85,6 +89,23 @@ export function LoginForm() {
         : response.user.role === "TEACHER"
           ? "teacher"
           : "student";
+
+    if (role !== values.role) {
+      setError(
+        `This account belongs to the ${role} workspace. Select ${role} and try again.`,
+      );
+      setIsSubmitting(false);
+      return;
+    }
+
+    const preferredStorage = values.remember
+      ? window.localStorage
+      : window.sessionStorage;
+    const otherStorage = values.remember
+      ? window.sessionStorage
+      : window.localStorage;
+    otherStorage.removeItem("nexora_token");
+    preferredStorage.setItem("nexora_token", response.token);
 
     router.push(`/${role}/dashboard`);
   }
@@ -123,40 +144,76 @@ export function LoginForm() {
         <AuthField label="Email" error={errors.email?.message}>
           <input
             {...register("email")}
+            id="login-email"
+            type="email"
             autoComplete="email"
+            placeholder="you@example.com"
+            aria-invalid={Boolean(errors.email)}
             className={authInputClass}
           />
         </AuthField>
 
         <AuthField label="Password" error={errors.password?.message}>
-          <input
-            {...register("password")}
-            type="password"
-            autoComplete="current-password"
-            className={authInputClass}
-          />
+          <div className="relative">
+            <input
+              {...register("password")}
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              autoComplete="current-password"
+              placeholder="Enter your password"
+              aria-invalid={Boolean(errors.password)}
+              className={`${authInputClass} pr-11`}
+            />
+            <button
+              type="button"
+              className="nexora-focus absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-lg text-[var(--muted)] transition hover:bg-white/10 hover:text-[var(--foreground)] light:hover:bg-emerald-50 light:hover:text-emerald-700"
+              onClick={() => setShowPassword((current) => !current)}
+              aria-label={showPassword ? "Hide password" : "Show password"}
+              title={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Eye className="h-4 w-4" aria-hidden="true" />
+              )}
+            </button>
+          </div>
         </AuthField>
 
         <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between text-[11px] sm:text-xs text-[var(--muted)] light:text-slate-600">
           <label className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
             <input
+              {...register("remember")}
               type="checkbox"
               className="h-4 w-4 rounded border border-[var(--line)] bg-black/30 accent-[#32f59a] hover:bg-black/50 transition-colors light:border-slate-300 light:bg-slate-100 light:accent-emerald-600 light:hover:bg-slate-200"
             />
             <span className="font-medium">Remember me</span>
           </label>
-          <a
-            href="#forgot-password"
+          <button
+            type="button"
             className="nexora-focus rounded-md transition-all duration-200 hover:text-[#32f59a] hover:underline light:hover:text-emerald-600 font-medium"
+            onClick={() => setShowRecoveryHelp((current) => !current)}
+            aria-expanded={showRecoveryHelp}
           >
             Forgot password?
-          </a>
+          </button>
         </div>
+
+        {showRecoveryHelp ? (
+          <div className="flex gap-2 rounded-xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.07)] px-3 py-2.5 text-xs leading-5 text-[var(--muted)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-900">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-emerald)]" />
+            <p>
+              Passwords are managed by BITHM. Contact your department admin to
+              reset your access.
+            </p>
+          </div>
+        ) : null}
 
         <Button
           type="submit"
           className="auth-primary-action h-10 w-full rounded-xl text-xs sm:h-11 sm:rounded-2xl sm:text-sm"
           disabled={isSubmitting}
+          aria-busy={isSubmitting}
         >
           {isSubmitting ? "Signing in..." : "Sign In"}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -170,7 +227,11 @@ export function LoginForm() {
         </div>
 
         {error ? (
-          <p className="rounded-lg sm:rounded-xl border border-rose-300/30 bg-rose-500/15 px-4 py-3 text-xs font-medium text-rose-100 light:border-rose-300 light:bg-rose-50 light:text-rose-800 flex items-center gap-2 animate-shake">
+          <p
+            role="alert"
+            aria-live="assertive"
+            className="rounded-lg sm:rounded-xl border border-rose-300/30 bg-rose-500/15 px-4 py-3 text-xs font-medium text-rose-100 light:border-rose-300 light:bg-rose-50 light:text-rose-800 flex items-center gap-2 animate-shake"
+          >
             <span>⚠️</span>
             {error}
           </p>

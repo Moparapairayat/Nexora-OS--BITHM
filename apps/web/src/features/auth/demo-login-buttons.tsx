@@ -67,7 +67,7 @@ export function DemoLoginButtons({
 
     if (!response?.token) {
       setError(
-        "Demo login is unavailable. Start the API and make sure the demo accounts have been seeded.",
+        "The demo workspace is temporarily unavailable. Please try again shortly.",
       );
       setLoadingRole(null);
       return;
@@ -117,6 +117,7 @@ export function DemoLoginButtons({
                   "border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/16 light:text-white",
               )}
               disabled={loadingRole !== null}
+              aria-busy={isLoading}
               onClick={() => void signInDemo(account)}
             >
               {isLoading ? (
@@ -135,7 +136,11 @@ export function DemoLoginButtons({
         })}
       </div>
       {error ? (
-        <p className="rounded-xl border border-rose-300/20 bg-rose-500/10 px-3 py-2 text-xs text-rose-100 light:text-rose-700">
+        <p
+          role="alert"
+          aria-live="assertive"
+          className="rounded-xl border border-rose-300/20 bg-rose-500/10 px-3 py-2 text-xs text-rose-100 light:text-rose-700"
+        >
           {error}
         </p>
       ) : null}

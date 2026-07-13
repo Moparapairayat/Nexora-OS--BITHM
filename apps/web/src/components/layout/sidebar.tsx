@@ -1,8 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  LogOut,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import { iconMap } from "@/components/layout/icon-map";
@@ -73,7 +79,7 @@ function badge({
 
 function childLinkClass(active: boolean) {
   return cn(
-    "nexora-focus group/child relative grid min-h-9 grid-cols-[14px_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border px-2.5 py-2 text-xs transition light:text-[13px]",
+    "nexora-focus group/child relative grid min-h-9 grid-cols-[14px_minmax(0,1fr)_auto] items-center gap-2 rounded-xl border px-2.5 py-1.5 text-xs transition light:text-[13px]",
     active
       ? "border-[color:var(--border-lime)] bg-[rgba(217,255,87,0.105)] text-white shadow-[0_0_26px_rgba(217,255,87,0.1)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-950 light:shadow-[inset_3px_0_0_#05a95b,0_10px_22px_rgba(20,150,92,0.08)]"
       : "border-transparent text-slate-400 hover:border-[color:var(--border-emerald)] hover:bg-white/[0.055] hover:text-white light:text-slate-600 light:hover:border-emerald-100 light:hover:bg-emerald-50/70 light:hover:text-emerald-950",
@@ -100,6 +106,7 @@ export function Sidebar({
   onToggleCollapsed: () => void;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
   const groups = useMemo(
     () =>
       navGroups && navGroups.length > 0 ? navGroups : fallbackNavGroups(nav),
@@ -117,19 +124,19 @@ export function Sidebar({
   const [expandedIds, setExpandedIds] = useState<string[]>(defaultExpandedIds);
 
   useEffect(() => {
-    // Sync with localStorage after hydration
-    try {
-      const stored = window.localStorage.getItem(storageKey);
-      if (stored) {
-        const parsed = JSON.parse(stored) as string[];
-        if (Array.isArray(parsed)) {
-          setExpandedIds(parsed);
-          return;
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        if (stored) {
+          const parsed = JSON.parse(stored) as string[];
+          if (Array.isArray(parsed)) setExpandedIds(parsed);
         }
+      } catch {
+        // Non-critical preference persistence.
       }
-    } catch {
-      // Non-critical preference persistence.
-    }
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [storageKey]);
 
   useEffect(() => {
@@ -146,6 +153,13 @@ export function Sidebar({
         ? current.filter((id) => id !== groupId)
         : [...current, groupId],
     );
+  }
+
+  function signOut() {
+    window.localStorage.removeItem("nexora_token");
+    window.sessionStorage.removeItem("nexora_token");
+    onClose();
+    router.replace("/login");
   }
 
   return (
@@ -195,8 +209,8 @@ export function Sidebar({
             type="button"
             className="nexora-focus hidden rounded-xl border border-white/10 bg-white/[0.05] p-2 text-slate-300 transition hover:bg-white/[0.09] light:border-slate-200 light:bg-white light:text-slate-500 light:shadow-[0_8px_18px_rgba(33,45,74,0.06)] light:hover:bg-emerald-50 lg:block"
             onClick={onToggleCollapsed}
-            aria-label="Toggle sidebar"
-            title="Toggle sidebar"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? (
               <ChevronRight className="h-4 w-4" />
@@ -215,15 +229,17 @@ export function Sidebar({
           </button>
         </div>
 
-        <div className={cn("relative px-4 py-4", collapsed && "lg:px-3")}>
+        <div
+          className={cn("relative px-4 py-3.5", collapsed && "lg:px-3 lg:py-3")}
+        >
           <div
             className={cn(
-              "rounded-[22px] border border-white/10 bg-white/[0.045] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] light:border-slate-200/80 light:bg-white light:shadow-[0_16px_34px_rgba(33,45,74,0.07)]",
+              "rounded-[22px] border border-white/10 bg-white/[0.045] p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] light:border-slate-200/80 light:bg-white light:shadow-[0_16px_34px_rgba(33,45,74,0.07)]",
               collapsed && "lg:hidden",
             )}
           >
             <RoleBadge role={role} />
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-3 flex items-center gap-3">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[linear-gradient(145deg,#d9ff57,#32f59a)] font-semibold text-[#07100b] light:bg-[linear-gradient(145deg,#00a65e,#35dc8b)] light:text-white">
                 {role.charAt(0).toUpperCase()}
               </span>
@@ -236,7 +252,7 @@ export function Sidebar({
                 </p>
               </div>
             </div>
-            <div className="mt-4 flex flex-wrap items-center gap-2">
+            <div className="mt-3 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(50,245,154,0.1)] px-2.5 py-1 text-[11px] font-semibold text-[var(--brand-emerald)] light:bg-emerald-50 light:text-emerald-700">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-emerald)]" />
                 Online
@@ -265,7 +281,7 @@ export function Sidebar({
 
         <nav
           className={cn(
-            "scrollbar-thin relative min-h-0 flex-1 px-3 pb-4",
+            "sidebar-scroll scrollbar-thin relative min-h-0 flex-1 overscroll-contain px-3 pb-4",
             collapsed
               ? "overflow-y-auto lg:overflow-visible"
               : "overflow-y-auto",
@@ -273,7 +289,7 @@ export function Sidebar({
         >
           <div
             className={cn(
-              "grid gap-2",
+              "grid gap-1.5",
               collapsed && "lg:place-items-center lg:gap-3",
             )}
           >
@@ -294,7 +310,7 @@ export function Sidebar({
                   <button
                     type="button"
                     className={cn(
-                      "nexora-focus group/parent flex min-h-11 w-full items-center gap-3 rounded-2xl border px-3 py-2.5 text-left text-sm transition light:min-h-10",
+                      "nexora-focus group/parent relative flex min-h-10 w-full items-center gap-3 overflow-hidden rounded-2xl border px-3 py-2 text-left text-sm transition",
                       isActiveGroup
                         ? "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.1)] text-white shadow-[0_0_30px_rgba(50,245,154,0.1)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-950 light:shadow-[0_10px_24px_rgba(20,150,92,0.08)]"
                         : "border-transparent text-slate-400 hover:border-white/10 hover:bg-white/[0.055] hover:text-white light:text-slate-600 light:hover:border-emerald-100 light:hover:bg-emerald-50/65 light:hover:text-emerald-950",
@@ -304,6 +320,15 @@ export function Sidebar({
                     aria-expanded={isExpanded}
                     title={collapsed ? group.label : undefined}
                   >
+                    {isActiveGroup ? (
+                      <span
+                        className={cn(
+                          "absolute inset-y-2 left-0 w-0.5 rounded-r-full bg-[var(--brand-emerald)]",
+                          collapsed && "lg:hidden",
+                        )}
+                        aria-hidden="true"
+                      />
+                    ) : null}
                     <Icon
                       className={cn(
                         "h-4 w-4 shrink-0 transition",
@@ -345,7 +370,7 @@ export function Sidebar({
                     )}
                   >
                     <div className="overflow-hidden">
-                      <div className="ml-5 mt-1 grid gap-1 border-l border-white/10 pl-3 light:border-slate-200/80">
+                      <div className="ml-5 mt-1 grid gap-0.5 border-l border-white/10 pl-3 light:border-slate-200/80">
                         {group.items.map((item) => {
                           const active = isItemActive(item, pathname);
 
@@ -374,6 +399,27 @@ export function Sidebar({
             })}
           </div>
         </nav>
+
+        <div
+          className={cn(
+            "relative border-t border-white/10 p-3 light:border-slate-200/70",
+            collapsed && "lg:grid lg:place-items-center",
+          )}
+        >
+          <button
+            type="button"
+            className={cn(
+              "nexora-focus flex min-h-10 w-full items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold text-slate-400 transition hover:bg-rose-500/10 hover:text-rose-300 light:text-slate-600 light:hover:bg-rose-50 light:hover:text-rose-700",
+              collapsed && "lg:h-11 lg:w-11 lg:justify-center lg:px-0",
+            )}
+            onClick={signOut}
+            aria-label="Sign out"
+            title="Sign out"
+          >
+            <LogOut className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <span className={cn(collapsed && "lg:hidden")}>Sign out</span>
+          </button>
+        </div>
       </aside>
     </>
   );
@@ -389,7 +435,13 @@ function SidebarChildLink({
   onClick: () => void;
 }) {
   return (
-    <Link href={item.href} className={childLinkClass(active)} onClick={onClick}>
+    <Link
+      href={item.href}
+      className={childLinkClass(active)}
+      onClick={onClick}
+      aria-current={active ? "page" : undefined}
+      title={item.label}
+    >
       <span
         className={cn(
           "h-1.5 w-1.5 rounded-full transition",

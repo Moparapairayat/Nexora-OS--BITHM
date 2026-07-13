@@ -638,35 +638,35 @@ export const roleDashboards: Record<AppRole, RoleDashboardData> = {
   student: {
     role: "student",
     eyebrow: "Student Dashboard",
-    title: "Your BITHM dashboard",
+    title: "Your academic dashboard",
     subtitle:
-      "Keep track of assignments, labs, feedback, and your recent progress.",
+      "Keep track of your coursework, lab sessions, feedback, and progress.",
     accountEmail: "student@nexora.local",
     nav: studentNav,
     navGroups: studentNavGroups,
     stats: [
       {
-        label: "Active assignments",
+        label: "Assignments in progress",
         value: "3",
-        trend: "+1 this week",
+        trend: "1 due on 15 July",
         tone: "cyan",
       },
       {
-        label: "Live lab sessions",
+        label: "Current lab sessions",
         value: "2",
-        trend: "1 in progress",
+        trend: "Next lab: Thursday, 10:00",
         tone: "emerald",
       },
       {
-        label: "Pending fixes",
+        label: "Revisions needed",
         value: "1",
-        trend: "Due in 18h",
+        trend: "Due 14 July at 18:00",
         tone: "amber",
       },
       {
-        label: "Skill DNA score",
+        label: "Skills progress",
         value: "78",
-        trend: "+6 after labs",
+        trend: "Updated after latest lab",
         tone: "violet",
       },
     ],
@@ -674,28 +674,28 @@ export const roleDashboards: Record<AppRole, RoleDashboardData> = {
       {
         label: "Task 1 Report",
         status: "Under Review",
-        detail: "Your LO2 and AC 4.3 evidence is waiting for teacher feedback.",
+        detail: "Your LO2 and AC 4.3 evidence has been submitted for review.",
         tone: "cyan",
       },
       {
         label: "JavaScript Form Validation Lab",
-        status: "Fix Requested",
+        status: "Revision Needed",
         detail:
-          "Add checks for empty fields and negative values before resubmitting.",
+          "Add validation for empty fields and negative values before you resubmit.",
         tone: "amber",
       },
       {
         label: "Lab Report for Form Validation",
         status: "Draft",
         detail:
-          "The objective and tools sections were filled from your lab session.",
+          "Your objective and tools sections are ready for you to review.",
         tone: "emerald",
       },
     ],
     activity: [
-      "AcademicShield marked the writing risk as medium.",
-      "AI Code Doctor explained the JavaScript validation issue.",
-      "Task 2 Website/Mobile App Project was added to your portfolio draft.",
+      "Your latest writing review found a moderate risk that needs attention.",
+      "Guidance is available for the JavaScript validation issue.",
+      "Your Website and Mobile App project was added to your portfolio draft.",
     ],
     skillData: [
       { skill: "Frontend", score: 82 },

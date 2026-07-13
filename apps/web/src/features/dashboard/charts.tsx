@@ -25,7 +25,7 @@ const throughputData = [
 
 export function ThroughputChart() {
   return (
-    <ResponsiveContainer width="100%" height={220} minWidth={1}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
       <AreaChart data={throughputData} margin={{ left: -18, right: 8 }}>
         <defs>
           <linearGradient id="assignments" x1="0" y1="0" x2="0" y2="1">
@@ -85,7 +85,7 @@ export function SkillRadarChart({
   data: Array<{ skill: string; score: number }>;
 }) {
   return (
-    <ResponsiveContainer width="100%" height={220} minWidth={1}>
+    <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
       <RadarChart data={data}>
         <PolarGrid stroke="var(--chart-grid)" />
         <PolarAngleAxis

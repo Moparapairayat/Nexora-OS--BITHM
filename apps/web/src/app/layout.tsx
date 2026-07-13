@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { AppProviders } from "@/components/providers/app-providers";
 import "./globals.css";
 
@@ -67,7 +68,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <Script id="nexora-theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
         <AppProviders>{children}</AppProviders>
       </body>
     </html>
