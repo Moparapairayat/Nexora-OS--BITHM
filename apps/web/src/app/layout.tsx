@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { AppProviders } from "@/components/providers/app-providers";
+import { PremiumCursor } from "@/components/ui/premium-cursor";
 import "./globals.css";
 
 const nexoraLogoSrc = "/brand/nexora-os-logo.png";
@@ -71,6 +72,7 @@ export default function RootLayout({
         <Script id="nexora-theme-init" strategy="beforeInteractive">
           {themeInitScript}
         </Script>
+        <PremiumCursor />
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

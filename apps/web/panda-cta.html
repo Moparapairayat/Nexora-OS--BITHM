@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelFlow Panda - AI Enhanced Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* ==================================================
+           UI & ENVIRONMENT STYLES
+           ================================================== */
+        :root {
+            --bg-color: #0b0d14;
+            --card-bg: rgba(22, 25, 37, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #f0f2f8;
+            --text-muted: #8b92a5;
+            --accent: #4ade80;
+            --accent-hover: #22c55e;
+            --ai-accent: #a5b4fc;
+            --ai-accent-hover: #818cf8;
+            
+            /* Mascot Layout Variables */
+            --panda-size: 500px;
+            --panda-top: -100px;
+            --panda-right: -280px;
+
+            /* Spotlight Layer Variables (Easily adjustable) */
+            --spotlight-color: rgba(255, 228, 180, 0.08); /* 8% warm light intensity */
+            --spotlight-fade: rgba(255, 228, 180, 0.02);  /* 2% mid-fade intensity */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(74, 222, 128, 0.03), transparent 30%),
+                radial-gradient(circle at 85% 30%, rgba(99, 102, 241, 0.04), transparent 30%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .contact-container {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            padding: 20px;
+            z-index: 1;
+        }
+
+        /* Ambient Spotlight Layer */
+        .ambient-spotlight {
+            position: absolute;
+            top: -250px; /* Positions the center of the light outside the viewport */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1000px;
+            height: 800px;
+            background: radial-gradient(ellipse at 50% 0%, var(--spotlight-color) 0%, var(--spotlight-fade) 40%, transparent 70%);
+            filter: blur(6px); /* Heavy cinematic blur */
+            pointer-events: none; /* Crucial: clicks pass through to the form and mascot */
+            mix-blend-mode: screen; /* Naturally brightens the dark scene without washing out whites */
+            z-index: 50; /* Sits above the card and panda to gently illuminate them */
+        }
+
+        /* The Premium Contact Card */
+        .contact-card {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 50px 48px;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.5), 
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                inset 0 0 40px rgba(255, 255, 255, 0.02);
+            z-index: 2;
+        }
+
+        .contact-header { margin-bottom: 36px; }
+        .contact-header h2 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .contact-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .form-group { margin-bottom: 24px; position: relative; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            padding: 16px 20px;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: rgba(74, 222, 128, 0.5);
+            background: rgba(0, 0, 0, 0.4);
+            box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.08);
+        }
+        textarea.form-control { resize: none; height: 120px; }
+
+        /* AI Toolbar Styles */
+        .ai-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .ai-btn {
+            background: rgba(165, 180, 252, 0.1);
+            border: 1px solid rgba(165, 180, 252, 0.2);
+            color: var(--ai-accent);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-btn:hover:not(:disabled) {
+            background: rgba(165, 180, 252, 0.2);
+            border-color: rgba(165, 180, 252, 0.4);
+            color: var(--text-main);
+        }
+
+        .ai-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .ai-status {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-left: auto;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        .ai-status.visible { opacity: 1; }
+        .ai-status.error { color: #f87171; }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent), #10b981);
+            color: #022c22;
+            border: none;
+            padding: 18px;
+            border-radius: 14px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 25px rgba(74, 222, 128, 0.2);
+            margin-top: 8px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(74, 222, 128, 0.3);
+            filter: brightness(1.05);
+        }
+
+        /* ==================================================
+           MASCOT STRUCTURAL & ANIMATION PREP STYLES
+           ================================================== */
+        .mascot-container {
+            position: absolute;
+            top: var(--panda-top);
+            right: var(--panda-right);
+            width: var(--panda-size);
+            height: var(--panda-size);
+            z-index: 10;
+            /* Container cannot receive clicks, but children can */
+            pointer-events: none; 
+        }
+
+        .mascot-svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            /* Allow falling character to render outside bounding box */
+            overflow: visible; 
+            filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.4));
+        }
+
+        /* We restore pointer-events to the actual character for hit detection */
+        #panda-character { pointer-events: auto; }
+        .interactive-zone { cursor: pointer; }
+
+        #panda-head { transform-origin: 300px 230px; }
+        #panda-body { transform-origin: 300px 240px; }
+        #arm-hanging { transform-origin: 360px 110px; }
+        #arm-free { transform-origin: 260px 280px; }
+        #leg-left { transform-origin: 290px 360px; }
+        #leg-right { transform-origin: 360px 360px; }
+        #bamboo-branch { transform-origin: 480px 20px; }
+        #panda-character { transform-origin: 360px 110px; isolation: isolate; }
+
+        /* Idle & Interaction Behavior Transforms */
+        #panda-fall-wrapper { transform-origin: 300px 300px; will-change: transform; }
+        #panda-head-idle { transform-origin: 300px 230px; will-change: transform; }
+        #panda-body-idle { transform-origin: 300px 240px; will-change: transform; }
+        #arm-free-idle { transform-origin: 260px 280px; will-change: transform; }
+        #arm-hanging-idle { transform-origin: 360px 110px; will-change: transform; }
+        #bamboo-branch-idle { transform-origin: 480px 20px; will-change: transform; }
+        #eye-left-inner { transform-origin: 254px 212px; will-change: transform; }
+        #eye-right-inner { transform-origin: 334px 199px; will-change: transform; }
+        
+        #pupil-left-idle, #pupil-right-idle, #spiral-eyes, #eye-left-group, #eye-right-group { 
+            will-change: transform; 
+            transition: opacity 0.2s ease;
+        }
+        #mouth-line, #mouth-yawn, #mouth-smile, #mouth-annoyed { 
+            transition: opacity 0.2s ease; 
+        }
+
+        #pupil-left, #pupil-right { will-change: transform; }
+        #panda-head, #panda-body { will-change: transform; }
+        #bamboo-branch { will-change: transform; }
+        
+        .spiral-path { transform-origin: center; }
+    </style>
+</head>
+<body>
+
+    <main class="contact-container">
+        
+        <!-- Premium Ambient Spotlight Layer -->
+        <div class="ambient-spotlight"></div>
+
+        <!-- UI Card -->
+        <div class="contact-card">
+            <div class="contact-header">
+                <h2>Have something in mind?</h2>
+                <p>Building your next web experience? <br>Drop us a message.</p>
+            </div>
+            
+            <form id="contact-form">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" placeholder="Your Name" id="input-name">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" placeholder="you@example.com" id="input-email">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="message-input" class="form-control" placeholder="Tell us about your idea.."></textarea>
+                    
+                    <!-- AI Features Toolbar -->
+                    <div class="ai-toolbar">
+                        <button type="button" class="ai-btn" onclick="rewriteMessage('professional')" id="btn-prof">
+                            ✨ Make Professional
+                        </button>
+                        <button type="button" class="ai-btn" onclick="rewriteMessage('friendly')" id="btn-friend">
+                            ✨ Make Friendly
+                        </button>
+                        <span id="ai-status" class="ai-status">Ready</span>
+                    </div>
+                </div>
+                <button type="button" class="submit-btn" id="submit-btn">Send Message</button>
+            </form>
+        </div>
+
+        <!-- Mascot SVG Structure -->
+        <div class="mascot-container" id="mascot-container">
+            <svg class="mascot-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="bamboo-grad" x1="0%" y1="0%" x2="20%" y2="100%">
+                        <stop offset="0%" stop-color="#345e3c" />
+                        <stop offset="40%" stop-color="#4c8257" />
+                        <stop offset="60%" stop-color="#5a9667" />
+                        <stop offset="100%" stop-color="#24452a" />
+                    </linearGradient>
+                    <linearGradient id="leaf-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#4ade80" />
+                        <stop offset="100%" stop-color="#16a34a" />
+                    </linearGradient>
+                    <radialGradient id="fur-white-head" cx="35%" cy="30%" r="75%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="65%" stop-color="#f4f6fa" />
+                        <stop offset="90%" stop-color="#dce1ee" />
+                        <stop offset="100%" stop-color="#c4cbe0" />
+                    </radialGradient>
+                    <radialGradient id="fur-white-body" cx="40%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#f8fafc" />
+                        <stop offset="75%" stop-color="#e2e8f0" />
+                        <stop offset="100%" stop-color="#cbd5e1" />
+                    </radialGradient>
+                    <radialGradient id="fur-black" cx="30%" cy="30%" r="80%">
+                        <stop offset="0%" stop-color="#474a56" />
+                        <stop offset="35%" stop-color="#262831" />
+                        <stop offset="85%" stop-color="#13141a" />
+                        <stop offset="100%" stop-color="#090a0d" />
+                    </radialGradient>
+                    <radialGradient id="fur-black-limb" cx="45%" cy="25%" r="80%">
+                        <stop offset="0%" stop-color="#3b3e4a" />
+                        <stop offset="50%" stop-color="#1d1e26" />
+                        <stop offset="100%" stop-color="#0b0c10" />
+                    </radialGradient>
+                    <radialGradient id="eye-white" cx="40%" cy="40%" r="65%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="70%" stop-color="#f1f3f8" />
+                        <stop offset="100%" stop-color="#b0b5c4" />
+                    </radialGradient>
+                    <radialGradient id="iris-grad" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stop-color="#c27a3e" />
+                        <stop offset="60%" stop-color="#7a4216" />
+                        <stop offset="100%" stop-color="#361a05" />
+                    </radialGradient>
+                    <radialGradient id="snout-grad" cx="45%" cy="35%" r="60%">
+                        <stop offset="0%" stop-color="#ffffff" />
+                        <stop offset="80%" stop-color="#eaedf4" />
+                        <stop offset="100%" stop-color="#d0d5e3" />
+                    </radialGradient>
+                    <radialGradient id="paw-pad" cx="35%" cy="30%" r="65%">
+                        <stop offset="0%" stop-color="#696c7a" />
+                        <stop offset="100%" stop-color="#2a2c36" />
+                    </radialGradient>
+                    <filter id="shadow-soft" x="-30%" y="-30%" width="160%" height="160%">
+                        <feDropShadow dx="0" dy="10" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+                    </filter>
+                    <filter id="shadow-hard" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="-2" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/>
+                    </filter>
+                    <filter id="inner-glow">
+                        <feComponentTransfer in="SourceAlpha"><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+                        <feGaussianBlur stdDeviation="3" result="blur"/>
+                        <feOffset dx="-3" dy="-3"/>
+                        <feComposite operator="out" in2="SourceAlpha"/>
+                        <feComposite operator="in" in2="SourceGraphic"/>
+                        <feBlend mode="screen" in2="SourceGraphic" result="blend"/>
+                    </filter>
+                </defs>
+
+                <g id="bamboo-leaves-bg" fill="url(#leaf-grad)" opacity="0.75" filter="url(#shadow-soft)">
+                    <path d="M 470 40 Q 430 10 405 55 Q 450 75 470 40" />
+                    <path d="M 320 100 Q 270 60 260 120 Q 310 140 320 100" />
+                </g>
+
+                <g id="bamboo-branch" filter="url(#shadow-soft)">
+                    <g id="bamboo-branch-idle">
+                        <path d="M 100 290 C 230 230, 390 120, 520 10" fill="none" stroke="url(#bamboo-grad)" stroke-width="28" stroke-linecap="round" />
+                        <g fill="#4ade80" opacity="0.45">
+                            <path d="M 412 82 Q 420 75 430 88 Q 420 95 412 82" transform="rotate(-32 421 85)"/>
+                            <path d="M 288 152 Q 296 145 306 158 Q 296 165 288 152" transform="rotate(-26 297 155)"/>
+                            <path d="M 166 226 Q 174 219 184 232 Q 174 239 166 226" transform="rotate(-21 175 229)"/>
+                        </g>
+                    </g>
+                </g>
+
+                <g id="panda-character">
+                    <!-- The new wrapper decoupling gravity from the branch physics -->
+                    <g id="panda-fall-wrapper">
+                        <g id="arm-hanging">
+                            <g id="arm-hanging-idle">
+                                <path d="M 330 250 C 375 180, 400 130, 365 100 C 345 85, 320 115, 310 140 C 300 170, 305 210, 295 250 Z" fill="url(#fur-black-limb)" />
+                                <g filter="url(#shadow-hard)">
+                                    <path d="M 368 102 C 360 85, 335 100, 345 120 Z" fill="url(#fur-black)"/>
+                                    <path d="M 356 98 C 348 81, 323 96, 333 116 Z" fill="url(#fur-black)"/>
+                                    <path d="M 344 95 C 336 78, 311 93, 321 113 Z" fill="url(#fur-black)"/>
+                                </g>
+                            </g>
+                        </g>
+
+                        <g id="leg-right">
+                        <path id="leg-right-path" d="M 365 350 C 400 375, 410 420, 380 445 C 350 470, 325 425, 335 375 Z" fill="url(#fur-black-limb)"/>
+                    </g>
+
+                        <g id="panda-body" filter="url(#inner-glow)">
+                            <g id="panda-body-idle">
+                                <ellipse cx="325" cy="305" rx="85" ry="105" fill="url(#fur-white-body)" transform="rotate(-12 325 305)" filter="url(#shadow-soft)" />
+                            </g>
+                        </g>
+
+                        <g id="leg-left" filter="url(#shadow-soft)">
+                            <path d="M 275 365 C 245 410, 250 455, 280 475 C 310 495, 335 440, 320 380 Z" fill="url(#fur-black-limb)"/>
+                            <g id="paw-pads-left" transform="rotate(-20 285 455)">
+                                <ellipse cx="290" cy="455" rx="16" ry="11" fill="url(#paw-pad)" />
+                                <circle cx="272" cy="440" r="4.5" fill="url(#paw-pad)" />
+                                <circle cx="288" cy="435" r="4.5" fill="url(#paw-pad)" />
+                                <circle cx="304" cy="438" r="4.5" fill="url(#paw-pad)" />
+                            </g>
+                        </g>
+
+                        <g id="arm-free" filter="url(#shadow-soft)">
+                            <g id="arm-free-idle">
+                                <path d="M 260 270 C 215 305, 220 365, 235 390 C 255 415, 280 375, 285 315 Z" fill="url(#fur-black-limb)"/>
+                            </g>
+                        </g>
+
+                        <g id="panda-head" filter="url(#shadow-soft)">
+                            <g id="panda-head-idle">
+                                <circle id="ear-left" cx="220" cy="160" r="35" fill="url(#fur-black)" filter="url(#shadow-soft)"/>
+                                <circle id="ear-right" cx="380" cy="135" r="34" fill="url(#fur-black)" filter="url(#shadow-soft)"/>
+                                <ellipse id="head-base" cx="300" cy="220" rx="105" ry="90" fill="url(#fur-white-head)" transform="rotate(-6 300 220)" filter="url(#inner-glow)"/>
+
+                                <g id="eye-left-group">
+                                    <ellipse cx="250" cy="215" rx="24" ry="36" fill="url(#fur-black)" transform="rotate(28 250 215)"/>
+                                    <g id="eye-left-inner">
+                                        <ellipse cx="254" cy="212" rx="13" ry="18" fill="url(#eye-white)" transform="rotate(12 254 212)"/>
+                                        <!-- Normal Pupils -->
+                                        <g class="pupils" id="pupil-left">
+                                            <g id="pupil-left-idle">
+                                                <circle cx="257" cy="212" r="8.5" fill="url(#iris-grad)" />
+                                                <circle cx="257" cy="212" r="5" fill="#050608" />
+                                                <circle cx="253" cy="208" r="3" fill="#ffffff" opacity="0.95" />
+                                                <circle cx="261" cy="215" r="1.5" fill="#ffffff" opacity="0.6" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+
+                                <g id="eye-right-group">
+                                    <ellipse cx="338" cy="202" rx="24" ry="36" fill="url(#fur-black)" transform="rotate(-28 338 202)"/>
+                                    <g id="eye-right-inner">
+                                        <ellipse cx="334" cy="199" rx="13" ry="18" fill="url(#eye-white)" transform="rotate(-12 334 199)"/>
+                                        <!-- Normal Pupils -->
+                                        <g class="pupils" id="pupil-right">
+                                            <g id="pupil-right-idle">
+                                                <circle cx="331" cy="199" r="8.5" fill="url(#iris-grad)" />
+                                                <circle cx="331" cy="199" r="5" fill="#050608" />
+                                                <circle cx="327" cy="195" r="3" fill="#ffffff" opacity="0.95" />
+                                                <circle cx="335" cy="202" r="1.5" fill="#ffffff" opacity="0.6" />
+                                            </g>
+                                        </g>
+                                    </g>
+                                </g>
+                                
+                                <!-- Dizzy Spiral Eyes -->
+                                <g id="spiral-eyes" opacity="0">
+                                    <path class="spiral-path" id="spiral-l" d="M 257 212 m 0,0.5 a 0.5,0.5 0 0,0 1,0 a 1.5,1.5 0 0,0 -3,0 a 2.5,2.5 0 0,0 5,0 a 3.5,3.5 0 0,0 -7,0 a 4.5,4.5 0 0,0 9,0 a 5.5,5.5 0 0,0 -11,0 a 6.5,6.5 0 0,0 13,0" fill="none" stroke="#7a4216" stroke-width="1.8" stroke-linecap="round" />
+                                    <path class="spiral-path" id="spiral-r" d="M 331 199 m 0,0.5 a 0.5,0.5 0 0,0 1,0 a 1.5,1.5 0 0,0 -3,0 a 2.5,2.5 0 0,0 5,0 a 3.5,3.5 0 0,0 -7,0 a 4.5,4.5 0 0,0 9,0 a 5.5,5.5 0 0,0 -11,0 a 6.5,6.5 0 0,0 13,0" fill="none" stroke="#7a4216" stroke-width="1.8" stroke-linecap="round" />
+                                </g>
+
+                                <g id="snout-group">
+                                    <ellipse cx="292" cy="252" rx="32" ry="24" fill="url(#snout-grad)" filter="url(#shadow-hard)" opacity="0.98"/>
+                                    <path d="M 283 243 Q 292 237 301 243 Q 304 249 292 254 Q 280 249 283 243 Z" fill="#13141a" />
+                                    <ellipse cx="289" cy="242" rx="4" ry="2" fill="#ffffff" opacity="0.4" transform="rotate(-12 289 242)"/>
+                                    
+                                    <!-- Mouth States -->
+                                    <path id="mouth-line" d="M 278 260 Q 292 272 306 256" fill="none" stroke="#262831" stroke-width="2.5" stroke-linecap="round"/>
+                                    <path id="mouth-yawn" d="M 285 258 Q 292 278 299 258 Q 292 270 285 258 Z" fill="#13141a" opacity="0" />
+                                    <path id="mouth-smile" d="M 276 256 Q 292 272 308 252" fill="none" stroke="#262831" stroke-width="2.5" stroke-linecap="round" opacity="0" />
+                                    <path id="mouth-annoyed" d="M 283 262 L 301 259" fill="none" stroke="#262831" stroke-width="2.5" stroke-linecap="round" opacity="0" />
+                                </g>
+                            </g>
+                        </g>
+                        
+                        <!-- Interactive Hitboxes move with the body -->
+                        <g id="hitboxes">
+                            <circle id="hit-belly" cx="325" cy="305" r="70" fill="transparent" class="interactive-zone"/>
+                            <circle id="hit-nose" cx="292" cy="252" r="25" fill="transparent" class="interactive-zone"/>
+                        </g>
+                    </g>
+                </g>
+
+                <g id="bamboo-leaves-fg" fill="url(#leaf-grad)" filter="url(#shadow-soft)">
+                    <path d="M 375 110 Q 395 145 425 135 Q 400 95 375 110" />
+                    <path d="M 140 230 Q 95 240 75 285 Q 120 265 140 230" />
+                </g>
+
+                <!-- Particle Layers -->
+                <g id="zzz-layer"></g>
+                <g id="stars-layer"></g>
+                <g id="leaves-layer"></g>
+                <g id="dust-layer"></g>
+            </svg>
+        </div>
+    </main>
+
+    <!-- Gemini API Script (Unchanged) -->
+    <script>
+        const apiKey = "";
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        async function fetchWithRetry(url, options, maxRetries = 5) {
+            const delays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(res => setTimeout(res, delays[i]));
+                }
+            }
+        }
+
+        async function rewriteMessage(tone) {
+            const textarea = document.getElementById('message-input');
+            const originalText = textarea.value.trim();
+            const statusEl = document.getElementById('ai-status');
+            const btnProf = document.getElementById('btn-prof');
+            const btnFriend = document.getElementById('btn-friend');
+
+            if (!originalText) {
+                setStatus("Please write a message first.", true);
+                return;
+            }
+
+            setStatus(`Generating ${tone} draft...`, false);
+            btnProf.disabled = true;
+            btnFriend.disabled = true;
+
+            const prompt = `Rewrite the following message to sound ${tone}. It is a message in a website contact form. Only return the rewritten message, do not include any conversational filler, intro, or quotes. \n\nMessage: "${originalText}"`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+            try {
+                const data = await fetchWithRetry(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const generatedText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (generatedText) {
+                    textarea.value = generatedText.trim();
+                    setStatus("Updated successfully!");
+                } else {
+                    throw new Error("Invalid response format");
+                }
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                setStatus("Failed to connect to AI.", true);
+            } finally {
+                btnProf.disabled = false;
+                btnFriend.disabled = false;
+                setTimeout(() => {
+                    if (statusEl.textContent === "Updated successfully!" || statusEl.classList.contains('error')) {
+                        statusEl.classList.remove('visible');
+                    }
+                }, 3000);
+            }
+        }
+
+        function setStatus(message, isError = false) {
+            const statusEl = document.getElementById('ai-status');
+            statusEl.textContent = message;
+            statusEl.classList.add('visible');
+            if (isError) statusEl.classList.add('error');
+            else statusEl.classList.remove('error');
+        }
+    </script>
+
+    <!-- ==================================================
+         PANDA CURSOR-TRACKING ANIMATION 
+         ================================================== -->
+    <script>
+    (function pandaCursorTracking() {
+        'use strict';
+
+        const MAX_PUPIL_OFFSET_X = 6, MAX_PUPIL_OFFSET_Y = 8;
+        const MAX_HEAD_ROTATION = 15, MAX_BODY_LEAN = 5;      
+        const SENSITIVITY_RADIUS = 650;
+        const EASE_EYES = 0.35, EASE_HEAD = 0.10, EASE_BODY = 0.045;
+        const HEAD_ORIGIN_VB = { x: 300, y: 230 }, VIEWBOX_SIZE = 500;
+
+        const mascotContainer = document.getElementById('mascot-container');
+        const pupilLeft = document.getElementById('pupil-left');
+        const pupilRight = document.getElementById('pupil-right');
+        const headGroup = document.getElementById('panda-head');
+        const bodyGroup = document.getElementById('panda-body');
+
+        if (!mascotContainer || !pupilLeft || !pupilRight || !headGroup || !bodyGroup) return;
+
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let headOriginScreen = { x: 0, y: 0 };
+        let currentPupilX = 0, currentPupilY = 0, currentHeadRot = 0, currentBodyRot = 0;
+
+        window.pandaAttentionTarget = null; 
+
+        function updateHeadOrigin() {
+            const rect = mascotContainer.getBoundingClientRect();
+            const scaleX = rect.width / VIEWBOX_SIZE;
+            const scaleY = rect.height / VIEWBOX_SIZE;
+            headOriginScreen.x = rect.left + HEAD_ORIGIN_VB.x * scaleX;
+            headOriginScreen.y = rect.top + HEAD_ORIGIN_VB.y * scaleY;
+        }
+
+        window.addEventListener('pointermove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        }, { passive: true });
+        window.addEventListener('resize', updateHeadOrigin, { passive: true });
+        updateHeadOrigin();
+
+        function tick() {
+            const targetX = window.pandaAttentionTarget ? window.pandaAttentionTarget.x : mouseX;
+            const targetY = window.pandaAttentionTarget ? window.pandaAttentionTarget.y : mouseY;
+            
+            const dx = targetX - headOriginScreen.x;
+            const dy = targetY - headOriginScreen.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const angle = Math.atan2(dy, dx);
+            const proximity = Math.min(distance / SENSITIVITY_RADIUS, 1);
+
+            const targetPupilX = Math.cos(angle) * MAX_PUPIL_OFFSET_X * proximity;
+            const targetPupilY = Math.sin(angle) * MAX_PUPIL_OFFSET_Y * proximity;
+            const normX = Math.max(-1, Math.min(1, dx / (window.innerWidth / 2)));
+            const targetHeadRot = normX * MAX_HEAD_ROTATION;
+            const targetBodyRot = normX * MAX_BODY_LEAN;
+
+            currentPupilX += (targetPupilX - currentPupilX) * EASE_EYES;
+            currentPupilY += (targetPupilY - currentPupilY) * EASE_EYES;
+            currentHeadRot += (targetHeadRot - currentHeadRot) * EASE_HEAD;
+            currentBodyRot += (targetBodyRot - currentBodyRot) * EASE_BODY;
+
+            const pupilTransform = `translate(${currentPupilX.toFixed(2)}px, ${currentPupilY.toFixed(2)}px)`;
+            pupilLeft.style.transform = pupilTransform;
+            pupilRight.style.transform = pupilTransform;
+            headGroup.style.transform = `rotate(${currentHeadRot.toFixed(2)}deg)`;
+            bodyGroup.style.transform = `rotate(${currentBodyRot.toFixed(2)}deg)`;
+
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    })();
+    </script>
+
+    <!-- ==================================================
+         BAMBOO SPRING PHYSICS & HANGING SWING
+         ================================================== -->
+    <script>
+    (function bambooSwingPhysics() {
+        'use strict';
+        const BRANCH_STIFFNESS = 0.018, BRANCH_DAMPING = 0.22, BRANCH_MAX_BEND = 5;        
+        const PANDA_STIFFNESS = 0.010, PANDA_DAMPING = 0.16, PANDA_SWING_FACTOR = 1.3;   
+        const IDLE_SWAY_AMPLITUDE = 0.5, IDLE_SWAY_SPEED = 0.00035;  
+        const CURSOR_INFLUENCE_RADIUS = 700, BRANCH_ORIGIN_VB = { x: 480, y: 20 }, VIEWBOX_SIZE = 500;
+
+        const mascotContainer = document.getElementById('mascot-container');
+        const branchGroup = document.getElementById('bamboo-branch');
+        const pandaCharacter = document.getElementById('panda-character');
+
+        if (!mascotContainer || !branchGroup || !pandaCharacter) return;
+
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let branchOriginScreen = { x: 0, y: 0 }, branchAngle = 0, branchVelocity = 0;
+        let pandaSwingAngle = 0, pandaVelocity = 0;
+
+        function updateBranchOrigin() {
+            const rect = mascotContainer.getBoundingClientRect();
+            const scaleX = rect.width / VIEWBOX_SIZE;
+            const scaleY = rect.height / VIEWBOX_SIZE;
+            branchOriginScreen.x = rect.left + BRANCH_ORIGIN_VB.x * scaleX;
+            branchOriginScreen.y = rect.top + BRANCH_ORIGIN_VB.y * scaleY;
+        }
+
+        window.addEventListener('pointermove', e => { mouseX = e.clientX; mouseY = e.clientY; }, { passive: true });
+        window.addEventListener('resize', updateBranchOrigin, { passive: true });
+        updateBranchOrigin();
+
+        function stepSpring(angle, velocity, target, stiffness, damping) {
+            const acceleration = -stiffness * (angle - target) - damping * velocity;
+            return [angle + velocity + acceleration, velocity + acceleration];
+        }
+
+        function tick(timestamp) {
+            const dx = mouseX - branchOriginScreen.x, dy = mouseY - branchOriginScreen.y;
+            const proximity = Math.min(Math.sqrt(dx * dx + dy * dy) / CURSOR_INFLUENCE_RADIUS, 1);
+            const pull = Math.max(-1, Math.min(1, dx / CURSOR_INFLUENCE_RADIUS)) * proximity;
+            const idleOffset = Math.sin(timestamp * IDLE_SWAY_SPEED) * IDLE_SWAY_AMPLITUDE;
+            
+            [branchAngle, branchVelocity] = stepSpring(branchAngle, branchVelocity, pull * BRANCH_MAX_BEND + idleOffset, BRANCH_STIFFNESS, BRANCH_DAMPING);
+            [pandaSwingAngle, pandaVelocity] = stepSpring(pandaSwingAngle, pandaVelocity, branchAngle * PANDA_SWING_FACTOR, PANDA_STIFFNESS, PANDA_DAMPING);
+
+            branchGroup.style.transform = `rotate(${branchAngle.toFixed(3)}deg)`;
+            pandaCharacter.style.transform = `rotate(${pandaSwingAngle.toFixed(3)}deg)`;
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    })();
+    </script>
+
+    <!-- ==================================================
+         PREMIUM INTERACTION SYSTEM & SUCCESS SEQUENCE
+         ================================================== -->
+    <script>
+    (function premiumInteractionSystem() {
+        'use strict';
+
+        // ----------------------------------------------------
+        // DOM REFERENCES & STATE
+        // ----------------------------------------------------
+        const dom = {
+            fallWrapper: document.getElementById('panda-fall-wrapper'),
+            head: document.getElementById('panda-head-idle'),
+            body: document.getElementById('panda-body-idle'),
+            arm: document.getElementById('arm-free-idle'),
+            armHanging: document.getElementById('arm-hanging-idle'),
+            bamboo: document.getElementById('bamboo-branch-idle'),
+            eyeLeftInner: document.getElementById('eye-left-inner'),
+            eyeRightInner: document.getElementById('eye-right-inner'),
+            pupilLeft: document.getElementById('pupil-left-idle'),
+            pupilRight: document.getElementById('pupil-right-idle'),
+            basePupils: document.querySelectorAll('.pupils'),
+            spiralEyesLayer: document.getElementById('spiral-eyes'),
+            spiralL: document.getElementById('spiral-l'),
+            spiralR: document.getElementById('spiral-r'),
+            mouthLine: document.getElementById('mouth-line'),
+            mouthYawn: document.getElementById('mouth-yawn'),
+            mouthSmile: document.getElementById('mouth-smile'),
+            mouthAnnoyed: document.getElementById('mouth-annoyed'),
+            zzzLayer: document.getElementById('zzz-layer'),
+            starsLayer: document.getElementById('stars-layer'),
+            leavesLayer: document.getElementById('leaves-layer'),
+            dustLayer: document.getElementById('dust-layer')
+        };
+
+        if (!dom.head || !dom.body) return;
+
+        // NEW: 'CELEBRATING' state added
+        let state = 'AWAKE'; 
+        let lastMouseTime = performance.now();
+        let clickCount = 0;
+        let clickTimer = null;
+        
+        // Base procedural states applied to `-idle` wrappers + fall mechanics
+        const stateVals = {
+            headRot: 0,
+            eyeScaleY: 1,
+            pupilX: 0,
+            armRot: 0,
+            armHangingRot: 0,
+            legRightRot: 0, // NEW: Added leg rotation for visibility
+            bodyScaleX: 1,
+            bodyScaleY: 1,
+            bambooProceduralBending: 0,
+            fallX: 0,
+            fallY: 0,
+            fallRot: 0
+        };
+
+        let breath = { headRot: 0, scaleY: 0, scaleX: 0, bambooRot: 0 };
+        let activeTweens = [], activeDelays = [], particleEntities = [];
+
+        // ----------------------------------------------------
+        // TWEENING & UTILS
+        // ----------------------------------------------------
+        const easeInCubic = t => t * t * t;
+        const easeInOutCubic = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+        const easeOutElastic = t => {
+            const c4 = (2 * Math.PI) / 3;
+            return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+        };
+
+        function animateProp(prop, endValue, duration, easing = easeInOutCubic) {
+            return new Promise(resolve => {
+                activeTweens.push({
+                    prop, startValue: stateVals[prop], endValue, duration, easing, startTime: performance.now(), resolve
+                });
+            });
+        }
+
+        function sleepDelay(ms) {
+            return new Promise(resolve => {
+                const timerId = setTimeout(() => {
+                    activeDelays = activeDelays.filter(d => d.timerId !== timerId);
+                    resolve();
+                }, ms);
+                activeDelays.push({ timerId, resolve });
+            });
+        }
+
+        function cancelAllAnimations() {
+            activeTweens.forEach(t => t.resolve());
+            activeTweens = [];
+            activeDelays.forEach(d => { clearTimeout(d.timerId); d.resolve(); });
+            activeDelays = [];
+        }
+
+        function setMouth(type) {
+            dom.mouthLine.style.opacity = type === 'line' ? '1' : '0';
+            dom.mouthYawn.style.opacity = type === 'yawn' ? '1' : '0';
+            dom.mouthSmile.style.opacity = type === 'smile' ? '1' : '0';
+            dom.mouthAnnoyed.style.opacity = type === 'annoyed' ? '1' : '0';
+        }
+
+        // ----------------------------------------------------
+        // IDLE SEQUENCES
+        // ----------------------------------------------------
+        async function playIdleSequence() {
+            if (state !== 'AWAKE') return;
+            state = 'LOOKING_AROUND';
+            await Promise.all([animateProp('headRot', -12, 1000), animateProp('pupilX', -3, 1000)]);
+            if (state === 'WAKING_UP' || state === 'CELEBRATING') return;
+            await sleepDelay(600);
+            await Promise.all([animateProp('headRot', 12, 1200), animateProp('pupilX', 3, 1200)]);
+            if (state === 'WAKING_UP' || state === 'CELEBRATING') return;
+            await sleepDelay(500);
+            await Promise.all([animateProp('headRot', -4, 900), animateProp('pupilX', 0, 900)]);
+            if (state === 'WAKING_UP' || state === 'CELEBRATING') return;
+
+            state = 'YAWNING';
+            setMouth('yawn');
+            await Promise.all([
+                animateProp('armRot', -100, 900, easeOutCubic), 
+                animateProp('headRot', -16, 1100),              
+                animateProp('eyeScaleY', 0.25, 1000)            
+            ]);
+            if (state === 'WAKING_UP' || state === 'CELEBRATING') return;
+            await sleepDelay(800);
+            
+            setMouth('line');
+            await Promise.all([animateProp('armRot', 0, 1000), animateProp('headRot', 0, 1000), animateProp('eyeScaleY', 1, 900)]);
+            if (state === 'WAKING_UP' || state === 'CELEBRATING') return;
+
+            state = 'FALLING_ASLEEP';
+            await Promise.all([animateProp('eyeScaleY', 0.04, 1800), animateProp('headRot', 8, 1800)]);
+            if (state === 'WAKING_UP' || state === 'CELEBRATING') return;
+            state = 'ASLEEP';
+        }
+
+        async function wakeUpSequence() {
+            if (state === 'CELEBRATING') return;
+            state = 'WAKING_UP';
+            setMouth('line');
+            dom.spiralEyesLayer.style.opacity = '0';
+            dom.basePupils.forEach(p => p.style.opacity = '1');
+
+            await Promise.all([
+                animateProp('eyeScaleY', 1, 400, easeOutCubic),
+                animateProp('headRot', -8, 400, easeOutCubic),
+                animateProp('armRot', -30, 400, easeOutCubic),
+                animateProp('pupilX', 0, 400),
+                animateProp('bodyScaleX', 1, 400),
+                animateProp('bodyScaleY', 1, 400)
+            ]);
+            
+            await Promise.all([animateProp('headRot', 0, 500), animateProp('armRot', 0, 500)]);
+            state = 'AWAKE';
+            lastMouseTime = performance.now(); 
+        }
+
+        // ----------------------------------------------------
+        // NEW: CINEMATIC FORM SUCCESS SEQUENCE
+        // ----------------------------------------------------
+        async function playSubmitSequence() {
+            if (state === 'CELEBRATING') return;
+            state = 'CELEBRATING'; // Global lock out
+            cancelAllAnimations();
+            
+            // Phase 1: Realization (Lit up with excitement)
+            setMouth('smile');
+            await Promise.all([
+                animateProp('headRot', -10, 300),
+                animateProp('eyeScaleY', 1.3, 300),
+                animateProp('pupilX', 0, 300)
+            ]);
+            
+            // Phase 2: Energetic Clapping
+            // Let go of branch (both arms meet in the middle)
+            animateProp('armHangingRot', 100, 200, easeOutCubic);
+            animateProp('armRot', -100, 200, easeOutCubic);
+            animateProp('legRightRot', 30, 300, easeOutCubic); // Reveal rear leg
+            
+            let clapping = true;
+            (async () => {
+                while(clapping) {
+                    animateProp('armHangingRot', 130, 100);
+                    await animateProp('armRot', -130, 100);
+                    animateProp('armHangingRot', 90, 100);
+                    await animateProp('armRot', -90, 100);
+                    
+                    // Body bouncing while clapping mid-air
+                    animateProp('fallY', -10, 100).then(()=>animateProp('fallY', 0, 100));
+                    
+                    // Bamboo shakes heavily from the sheer energy
+                    animateProp('bambooProceduralBending', 15 + Math.random()*10, 100)
+                        .then(() => animateProp('bambooProceduralBending', 0, 100));
+                }
+            })();
+            
+            // Clap for 1.5 seconds
+            await sleepDelay(1500); 
+            clapping = false;
+            
+            // Phase 3: The Snap
+            setMouth('line'); // Shock!
+            animateProp('eyeScaleY', 1.5, 100);
+            animateProp('headRot', -25, 100);
+            
+            // Bamboo snapping back up violently
+            animateProp('bambooProceduralBending', -25, 150, easeOutCubic).then(() => {
+                animateProp('bambooProceduralBending', 0, 600, easeOutElastic);
+            });
+            for(let i=0; i<6; i++) setTimeout(spawnLeaf, i * 40);
+            
+            // Mid-air realization (classic cartoon hang time)
+            await sleepDelay(250); 
+            
+            // Phase 4: The Fall
+            Promise.all([
+                // Plunge down and slightly left towards the form card edge
+                animateProp('fallY', 320, 600, easeInCubic),
+                animateProp('fallX', -180, 600, easeInCubic),
+                // Flip completely
+                animateProp('fallRot', -360, 600, easeInCubic),
+                // Flail arms wildly
+                animateProp('armHangingRot', -180, 600),
+                animateProp('armRot', 180, 600),
+                animateProp('headRot', 25, 600)
+            ]);
+            
+            await sleepDelay(600);
+            
+            // Phase 5: Landing Impact
+            setMouth('annoyed'); // Squinty face on impact
+            animateProp('eyeScaleY', 0.1, 100);
+            animateProp('bodyScaleY', 0.45, 150, easeOutCubic);
+            animateProp('bodyScaleX', 1.45, 150, easeOutCubic);
+            
+            // Spawn dust puff at landing coordinate (base of panda)
+            for(let i=0; i<5; i++) {
+                spawnDust(300 + stateVals.fallX, 300 + stateVals.fallY + 100);
+            }
+            
+            await sleepDelay(150);
+            
+            // Recover from squish
+            animateProp('bodyScaleY', 1, 600, easeOutElastic);
+            animateProp('bodyScaleX', 1, 600, easeOutElastic);
+            
+            // Sit up, rub head embarrassingly
+            animateProp('armHangingRot', 0, 500); // Right arm rests
+            animateProp('armRot', -140, 500);     // Left arm rubs head
+            animateProp('headRot', -15, 500);
+            setMouth('smile');
+            animateProp('eyeScaleY', 0.7, 400); // Sheepish look
+            
+            await sleepDelay(700);
+            
+            // Look around hoping nobody saw
+            await animateProp('pupilX', -5, 400);
+            await sleepDelay(300);
+            await animateProp('pupilX', 5, 400);
+            await sleepDelay(300);
+            await animateProp('pupilX', 0, 400);
+            
+            await sleepDelay(200);
+            
+            // Phase 6: Climb back up
+            animateProp('armHangingRot', 180, 300);
+            animateProp('armRot', -180, 300);
+            setMouth('line');
+            animateProp('eyeScaleY', 1, 300);
+            
+            await sleepDelay(300);
+            
+            // Scramble upwards
+            Promise.all([
+                animateProp('fallY', 0, 900, easeInOutCubic),
+                animateProp('fallX', 0, 900, easeInOutCubic),
+                animateProp('fallRot', 0, 900, easeInOutCubic)
+            ]);
+            
+            let climbing = true;
+            (async () => {
+                while(climbing) {
+                    animateProp('armHangingRot', 150, 100);
+                    await animateProp('armRot', -210, 100);
+                    animateProp('armHangingRot', 210, 100);
+                    await animateProp('armRot', -150, 100);
+                }
+            })();
+            
+            await sleepDelay(900);
+            climbing = false;
+            
+            // Phase 7: Reset to normal
+            await Promise.all([
+                animateProp('armHangingRot', 0, 500, easeOutElastic),
+                animateProp('armRot', 0, 500, easeOutElastic),
+                animateProp('legRightRot', 0, 500, easeOutElastic), // Hide rear leg
+                animateProp('headRot', 0, 500)
+            ]);
+            
+            state = 'AWAKE';
+            lastMouseTime = performance.now();
+        }
+
+        // ----------------------------------------------------
+        // OTHER INTERACTIONS
+        // ----------------------------------------------------
+        async function playDizzySequence() {
+            if (state !== 'AWAKE') return;
+            state = 'DIZZY';
+            cancelAllAnimations();
+            dom.basePupils.forEach(p => p.style.opacity = '0');
+            dom.spiralEyesLayer.style.opacity = '1';
+            
+            animateProp('headRot', -15, 300, easeOutCubic);
+            animateProp('eyeScaleY', 1.2, 300, easeOutCubic);
+            for(let i=0; i<3; i++) spawnStar(i * (Math.PI * 2 / 3));
+
+            await sleepDelay(2000);
+
+            await animateProp('headRot', 15, 100, easeOutCubic);
+            await animateProp('headRot', -15, 150, easeOutCubic);
+            await animateProp('headRot', 0, 150, easeOutCubic);
+
+            dom.basePupils.forEach(p => p.style.opacity = '1');
+            dom.spiralEyesLayer.style.opacity = '0';
+            animateProp('eyeScaleY', 1, 300);
+            state = 'AWAKE';
+            lastMouseTime = performance.now();
+        }
+
+        async function playWaveSequence() {
+            if (state !== 'AWAKE' && state !== 'GIGGLING') return;
+            state = 'WAVING';
+            cancelAllAnimations();
+            setMouth('smile');
+
+            await Promise.all([
+                animateProp('armRot', -130, 400, easeOutCubic),
+                animateProp('headRot', 8, 400)
+            ]);
+
+            for(let i=0; i<3; i++) {
+                await animateProp('armRot', -100, 200);
+                await animateProp('armRot', -140, 200);
+            }
+
+            setMouth('line');
+            await Promise.all([animateProp('armRot', 0, 500), animateProp('headRot', 0, 500)]);
+            state = 'AWAKE';
+            lastMouseTime = performance.now();
+        }
+
+        async function playGiggleSequence() {
+            if (state !== 'AWAKE') return;
+            state = 'GIGGLING';
+            cancelAllAnimations();
+            setMouth('smile');
+
+            await Promise.all([
+                animateProp('bodyScaleY', 0.92, 150, easeOutCubic),
+                animateProp('bodyScaleX', 1.05, 150, easeOutCubic),
+                animateProp('headRot', -5, 150)
+            ]);
+            await Promise.all([
+                animateProp('bodyScaleY', 1.05, 150, easeOutCubic),
+                animateProp('bodyScaleX', 0.97, 150, easeOutCubic),
+                animateProp('headRot', 3, 150)
+            ]);
+            await Promise.all([
+                animateProp('bodyScaleY', 1, 400, easeOutElastic),
+                animateProp('bodyScaleX', 1, 400, easeOutElastic),
+                animateProp('headRot', 0, 400)
+            ]);
+
+            setMouth('line');
+            state = 'AWAKE';
+            lastMouseTime = performance.now();
+        }
+
+        async function playSneezeSequence() {
+            if (state !== 'AWAKE') return;
+            state = 'SNEEZING';
+            cancelAllAnimations();
+            setMouth('yawn');
+
+            await Promise.all([
+                animateProp('headRot', -20, 600, easeOutCubic),
+                animateProp('eyeScaleY', 0.2, 600),
+                animateProp('bodyScaleY', 1.05, 600),
+                animateProp('bodyScaleX', 0.98, 600)
+            ]);
+            
+            await sleepDelay(200);
+
+            setMouth('line');
+            spawnLeaf();
+            await Promise.all([
+                animateProp('headRot', 35, 150, easeOutCubic),
+                animateProp('eyeScaleY', 0.05, 100),
+                animateProp('bodyScaleY', 0.9, 150),
+                animateProp('bodyScaleX', 1.05, 150),
+                animateProp('armRot', -20, 150)
+            ]);
+
+            await sleepDelay(300);
+
+            await Promise.all([
+                animateProp('headRot', 0, 600, easeOutElastic),
+                animateProp('eyeScaleY', 1, 400),
+                animateProp('bodyScaleY', 1, 600, easeOutElastic),
+                animateProp('bodyScaleX', 1, 600, easeOutElastic),
+                animateProp('armRot', 0, 600)
+            ]);
+
+            state = 'AWAKE';
+            lastMouseTime = performance.now();
+        }
+
+        async function playAnnoyedSequence() {
+            state = 'ANNOYED';
+            cancelAllAnimations();
+            setMouth('annoyed');
+
+            await Promise.all([
+                animateProp('armRot', -80, 400, easeOutCubic), 
+                animateProp('headRot', -15, 400, easeOutCubic), 
+                animateProp('pupilX', -4, 400),
+                animateProp('eyeScaleY', 0.5, 400)
+            ]);
+
+            await sleepDelay(3000);
+
+            setMouth('smile');
+            await Promise.all([
+                animateProp('headRot', 0, 500),
+                animateProp('pupilX', 0, 500),
+                animateProp('eyeScaleY', 1, 500)
+            ]);
+            await sleepDelay(500);
+            
+            setMouth('line');
+            animateProp('armRot', 0, 500);
+
+            clickCount = 0;
+            state = 'AWAKE';
+            lastMouseTime = performance.now();
+        }
+
+        function handleInputFocus(e) {
+            const rect = e.target.getBoundingClientRect();
+            window.pandaAttentionTarget = { x: rect.left + rect.width, y: rect.top + rect.height/2 };
+            if (state === 'AWAKE') { state = 'TYPING'; cancelAllAnimations(); }
+        }
+
+        function handleInputBlur() {
+            window.pandaAttentionTarget = null;
+            if (state === 'TYPING') { state = 'AWAKE'; lastMouseTime = performance.now(); }
+        }
+
+        let nodTimer = null;
+        function handleInputType() {
+            if (state !== 'TYPING') return;
+            if (!nodTimer) {
+                nodTimer = setTimeout(() => nodTimer = null, 1500);
+                if (Math.random() > 0.3) animateProp('headRot', 8, 150).then(() => animateProp('headRot', 0, 250));
+            }
+        }
+
+        async function hoverSendBtn() {
+            if (state !== 'AWAKE') return;
+            state = 'HOVER';
+            cancelAllAnimations();
+            setMouth('smile');
+            await Promise.all([animateProp('armRot', 65, 400, easeOutCubic), animateProp('headRot', -5, 400)]);
+        }
+
+        async function unhoverSendBtn() {
+            if (state !== 'HOVER') return;
+            setMouth('line');
+            await Promise.all([animateProp('armRot', 0, 400), animateProp('headRot', 0, 400)]);
+            state = 'AWAKE';
+            lastMouseTime = performance.now();
+        }
+
+        // ----------------------------------------------------
+        // PARTICLES (Zzz, Stars, Leaves, Dust)
+        // ----------------------------------------------------
+        function spawnZzz() {
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.textContent = "z";
+            text.setAttribute("fill", "#dce1ee");
+            text.setAttribute("font-family", "Outfit, sans-serif");
+            text.setAttribute("font-weight", "600");
+            text.setAttribute("font-size", "22px");
+            dom.zzzLayer.appendChild(text);
+            particleEntities.push({ type: 'zzz', el: text, startTime: performance.now() });
+        }
+
+        function spawnStar(angleOffset) {
+            const star = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            star.setAttribute("d", "M 0 -8 L 2 -2 L 8 0 L 2 2 L 0 8 L -2 2 L -8 0 L -2 -2 Z");
+            star.setAttribute("fill", "#fbbf24");
+            dom.starsLayer.appendChild(star);
+            particleEntities.push({ type: 'star', el: star, startTime: performance.now(), angleOffset });
+        }
+
+        function spawnLeaf() {
+            const leaf = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            leaf.setAttribute("d", "M 0 0 Q -10 -5 -15 5 Q 0 15 0 0");
+            leaf.setAttribute("fill", "#4ade80");
+            dom.leavesLayer.appendChild(leaf);
+            particleEntities.push({ type: 'leaf', el: leaf, startTime: performance.now() });
+        }
+        
+        function spawnDust(x, y) {
+            const puff = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            puff.setAttribute("r", 10 + Math.random() * 12);
+            puff.setAttribute("fill", "#cbd5e1");
+            dom.dustLayer.appendChild(puff);
+            particleEntities.push({ 
+                type: 'dust', 
+                el: puff, 
+                startTime: performance.now(),
+                x, y,
+                vx: (Math.random() - 0.5) * 0.15,
+                vy: -Math.random() * 0.08
+            });
+        }
+
+        // ----------------------------------------------------
+        // EVENT LISTENERS
+        // ----------------------------------------------------
+        
+        let mouseX = 0, mouseY = 0, lastX = 0, lastY = 0, lastT = performance.now(), fastFrames = 0;
+        
+        window.addEventListener('pointermove', (e) => {
+            mouseX = e.clientX; mouseY = e.clientY;
+            lastMouseTime = performance.now();
+            if (state === 'ASLEEP' || state === 'FALLING_ASLEEP' || state === 'LOOKING_AROUND' || state === 'YAWNING') {
+                cancelAllAnimations();
+                wakeUpSequence();
+            }
+        }, { passive: true });
+
+        document.getElementById('panda-character').addEventListener('dblclick', playWaveSequence);
+
+        document.getElementById('panda-character').addEventListener('click', (e) => {
+            clickCount++; clearTimeout(clickTimer);
+            clickTimer = setTimeout(() => clickCount = 0, 1000);
+            
+            if (clickCount >= 5 && state !== 'ANNOYED' && state !== 'CELEBRATING') {
+                playAnnoyedSequence(); return;
+            }
+            if (state !== 'AWAKE') return;
+            if (e.target.id === 'hit-nose') playSneezeSequence();
+            else if (e.target.id === 'hit-belly') playGiggleSequence();
+        });
+
+        document.querySelectorAll('.form-control').forEach(el => {
+            el.addEventListener('focus', handleInputFocus);
+            el.addEventListener('blur', handleInputBlur);
+            el.addEventListener('input', handleInputType);
+        });
+
+        document.getElementById('submit-btn').addEventListener('mouseenter', hoverSendBtn);
+        document.getElementById('submit-btn').addEventListener('mouseleave', unhoverSendBtn);
+        
+        // FORM SUBMISSION HOOK
+        document.getElementById('submit-btn').addEventListener('click', (e) => {
+            const name = document.getElementById('input-name').value.trim();
+            const email = document.getElementById('input-email').value.trim();
+            const msg = document.getElementById('message-input').value.trim();
+            
+            if (name && email && msg) {
+                const btn = e.target;
+                btn.textContent = "Sent successfully!";
+                btn.style.background = "#10b981";
+                btn.disabled = true;
+                
+                // Trigger the massive celebration fall animation
+                playSubmitSequence();
+                
+                // Reset form eventually
+                setTimeout(() => {
+                    btn.textContent = "Send Message";
+                    btn.style.background = "";
+                    btn.disabled = false;
+                    document.getElementById('input-name').value = '';
+                    document.getElementById('input-email').value = '';
+                    document.getElementById('message-input').value = '';
+                }, 6500); 
+            } else {
+                setStatus("Please fill out all fields.", true);
+                setTimeout(() => setStatus("Ready"), 3000);
+            }
+        });
+
+
+        // ----------------------------------------------------
+        // MAIN ANIMATION LOOP
+        // ----------------------------------------------------
+        let lastZzzTime = 0, starSpin = 0;
+        
+        function tick(timestamp) {
+            // Idle Check
+            if (state === 'AWAKE' && (timestamp - lastMouseTime > 5000)) playIdleSequence();
+
+            // Dizzy Check
+            const dt = timestamp - lastT;
+            if (dt > 0) {
+                const vel = Math.hypot(mouseX - lastX, mouseY - lastY) / dt;
+                if (vel > 3.0) fastFrames++; else fastFrames = 0;
+                if (fastFrames > 5 && state === 'AWAKE') playDizzySequence();
+            }
+            lastX = mouseX; lastY = mouseY; lastT = timestamp;
+
+            // Process Tweens
+            for (let i = activeTweens.length - 1; i >= 0; i--) {
+                const t = activeTweens[i];
+                const progress = Math.min((timestamp - t.startTime) / t.duration, 1);
+                if (progress >= 1) {
+                    stateVals[t.prop] = t.endValue;
+                    t.resolve();
+                    activeTweens.splice(i, 1);
+                } else {
+                    stateVals[t.prop] = t.startValue + (t.endValue - t.startValue) * t.easing(progress);
+                }
+            }
+
+            // Procedural Breathing & Dizzy Modifiers
+            if (state === 'ASLEEP' || state === 'FALLING_ASLEEP') {
+                const cycle = timestamp * 0.002;
+                breath.scaleY = Math.sin(cycle) * 0.015;
+                breath.scaleX = Math.cos(cycle) * 0.005; 
+                breath.headRot = Math.sin(cycle) * 1.5;
+                breath.bambooRot = Math.sin(cycle - 0.5) * 0.4;
+            } else {
+                breath.scaleY *= 0.9; breath.scaleX *= 0.9;
+                breath.headRot *= 0.9; breath.bambooRot *= 0.9;
+            }
+
+            if (state === 'DIZZY') {
+                const cycle = timestamp * 0.015;
+                stateVals.headRot = Math.sin(cycle) * 6;
+                starSpin = timestamp * 0.15;
+                dom.spiralL.style.transform = `rotate(${timestamp * 0.5}deg)`;
+                dom.spiralR.style.transform = `rotate(${timestamp * 0.5}deg)`;
+            }
+
+            // Apply All Transforms
+            // Apply fall wrapper logic first (decoupled translation & rotation)
+            dom.fallWrapper.style.transform = `translate(${stateVals.fallX}px, ${stateVals.fallY}px) rotate(${stateVals.fallRot}deg)`;
+            
+            dom.head.style.transform = `rotate(${stateVals.headRot + breath.headRot}deg)`;
+            dom.body.style.transform = `scale(${stateVals.bodyScaleX + breath.scaleX}, ${stateVals.bodyScaleY + breath.scaleY})`;
+            dom.arm.style.transform = `rotate(${stateVals.armRot}deg)`;
+            dom.armHanging.style.transform = `rotate(${stateVals.armHangingRot}deg)`;
+            document.getElementById('leg-right').style.transform = `rotate(${stateVals.legRightRot}deg)`;
+            dom.bamboo.style.transform = `rotate(${breath.bambooRot + stateVals.bambooProceduralBending}deg)`;
+            
+            const eyeScale = `scaleY(${stateVals.eyeScaleY})`;
+            dom.eyeLeftInner.style.transform = eyeScale;
+            dom.eyeRightInner.style.transform = eyeScale;
+            
+            const pupilTrans = `translateX(${stateVals.pupilX}px)`;
+            dom.pupilLeft.style.transform = pupilTrans;
+            dom.pupilRight.style.transform = pupilTrans;
+
+            // Particle Updates
+            if (state === 'ASLEEP' && (timestamp - lastZzzTime > 2500)) { spawnZzz(); lastZzzTime = timestamp; }
+
+            for (let i = particleEntities.length - 1; i >= 0; i--) {
+                const p = particleEntities[i];
+                const age = timestamp - p.startTime;
+
+                if (p.type === 'zzz') {
+                    const life = age / 4000;
+                    if (life >= 1) { p.el.remove(); particleEntities.splice(i, 1); }
+                    else {
+                        const driftY = -life * 75, driftX = Math.sin(life * Math.PI * 3) * 12 + life * 15;
+                        let opacity = life < 0.2 ? life / 0.2 : life > 0.6 ? 1 - ((life - 0.6) / 0.4) : 1;
+                        p.el.setAttribute('transform', `translate(${290 + driftX}, ${240 + driftY}) scale(${0.5 + life})`);
+                        p.el.setAttribute('opacity', opacity);
+                    }
+                } 
+                else if (p.type === 'star') {
+                    if (state !== 'DIZZY') { p.el.remove(); particleEntities.splice(i, 1); }
+                    else {
+                        const angle = p.angleOffset + (starSpin * Math.PI / 180);
+                        p.el.setAttribute('transform', `translate(${300 + Math.cos(angle)*60}, ${200 + Math.sin(angle)*24}) rotate(${starSpin*2}) scale(1.5)`);
+                    }
+                }
+                else if (p.type === 'leaf') {
+                    const life = age / 2000;
+                    if (life >= 1) { p.el.remove(); particleEntities.splice(i, 1); }
+                    else {
+                        const x = 350 - (life * 40) + Math.sin(life * 10) * 15;
+                        p.el.setAttribute('transform', `translate(${x}, ${140 + (life * 150)}) rotate(${life * 180})`);
+                        p.el.setAttribute('opacity', 1 - (life * life));
+                    }
+                }
+                else if (p.type === 'dust') {
+                    const life = age / 800;
+                    if (life >= 1) { p.el.remove(); particleEntities.splice(i, 1); }
+                    else {
+                        p.el.setAttribute('transform', `translate(${p.x + p.vx * age}, ${p.y + p.vy * age}) scale(${1 + life})`);
+                        p.el.setAttribute('opacity', 0.8 * (1 - life));
+                    }
+                }
+            }
+            requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    })();
+    </script>
+</body>
+</html>
