@@ -528,41 +528,6 @@ body::before {
     linear-gradient(180deg, #f8fbf8 0%, #f2f7f3 52%, #f4f8f6 100%);
 }
 
-body::after {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-  background-image:
-    linear-gradient(rgba(108, 246, 179, 0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(217, 255, 87, 0.04) 1px, transparent 1px),
-    linear-gradient(
-      120deg,
-      rgba(50, 245, 154, 0.055),
-      transparent 34%,
-      rgba(138, 95, 61, 0.08)
-    );
-  background-size:
-    38px 38px,
-    38px 38px,
-    100% 100%;
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 88%);
-}
-
-.light body::after {
-  background-image:
-    linear-gradient(rgba(58, 72, 112, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(58, 72, 112, 0.04) 1px, transparent 1px),
-    linear-gradient(
-      120deg,
-      rgba(18, 191, 232, 0.07),
-      transparent 35%,
-      rgba(174, 234, 36, 0.08)
-    );
-  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.72), transparent 86%);
-}
-
 a {
   color: inherit;
   text-decoration: none;

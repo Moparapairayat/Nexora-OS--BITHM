@@ -21,6 +21,46 @@ import { NexoraLogo } from "@/components/brand/nexora-logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { DemoLoginButtons } from "@/features/auth/demo-login-buttons";
 
+const cardShape: Record<string, string> = {
+  violet: "border-violet-300/30",
+  emerald: "border-emerald-300/30",
+  cyan: "border-cyan-300/30",
+  amber: "border-amber-300/30",
+  rose: "border-rose-300/30",
+  sky: "border-sky-300/30",
+  orange: "border-orange-300/30",
+};
+
+const cardRingFrom: Record<string, string> = {
+  violet: "from-violet-400/70",
+  emerald: "from-emerald-400/70",
+  cyan: "from-cyan-400/70",
+  amber: "from-amber-400/70",
+  rose: "from-rose-400/70",
+  sky: "from-sky-400/70",
+  orange: "from-orange-400/70",
+};
+
+const cardDot: Record<string, string> = {
+  violet: "bg-violet-300",
+  emerald: "bg-emerald-300",
+  cyan: "bg-cyan-300",
+  amber: "bg-amber-300",
+  rose: "bg-rose-300",
+  sky: "bg-sky-300",
+  orange: "bg-orange-300",
+};
+
+const cardGlow: Record<string, string> = {
+  violet: "bg-violet-500/20",
+  emerald: "bg-emerald-500/20",
+  cyan: "bg-cyan-500/20",
+  amber: "bg-amber-500/20",
+  rose: "bg-rose-500/20",
+  sky: "bg-sky-500/20",
+  orange: "bg-orange-500/20",
+};
+
 const platformAreas = [
   {
     title: "Student essentials",
@@ -153,16 +193,19 @@ const roleCards = [
     title: "Students",
     detail: "Complete coursework and code projects, then follow feedback.",
     icon: GraduationCap,
+    tone: "bg-emerald-500/10 text-emerald-300 light:bg-emerald-50 light:text-emerald-700",
   },
   {
     title: "Teachers",
     detail: "Review submissions, oversee lab work, and give useful feedback.",
     icon: UsersRound,
+    tone: "bg-cyan-500/10 text-cyan-300 light:bg-cyan-50 light:text-cyan-700",
   },
   {
     title: "Administrators",
     detail: "Manage users, courses, permissions, and day-to-day operations.",
     icon: UserCog,
+    tone: "bg-violet-500/10 text-violet-300 light:bg-violet-50 light:text-violet-700",
   },
 ];
 
@@ -274,12 +317,10 @@ const faqs = [
 export function LandingPage() {
   return (
     <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_10%_7%,rgba(139,92,246,0.08),transparent_24%),radial-gradient(circle_at_88%_14%,rgba(16,185,129,0.12),transparent_28%),linear-gradient(180deg,#fbfdfb_0%,#eff8f3_48%,#f8fbf9_100%)] light:text-[#15251f]">
-      <div className="pointer-events-none fixed inset-0 z-0 opacity-50 [background-image:radial-gradient(rgba(80,255,177,0.16)_0.7px,transparent_0.7px)] [background-size:18px_18px] [mask-image:linear-gradient(to_bottom,black,transparent_72%)] light:opacity-30" />
       <LandingNav />
 
       {/* HERO SECTION */}
       <section className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:54px_54px] [mask-image:linear-gradient(to_bottom,black,transparent_82%)] light:bg-[linear-gradient(rgba(15,118,82,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(15,118,82,0.035)_1px,transparent_1px)]" />
         <div className="nexora-brand-arc pointer-events-none absolute -left-[500px] top-[-120px] h-[620px] w-[620px] -rotate-12 opacity-75 sm:-left-[455px]" />
         <div className="nexora-brand-arc pointer-events-none absolute -right-[540px] bottom-[-150px] h-[680px] w-[680px] rotate-[148deg] opacity-65 sm:-right-[490px]" />
         <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/5" />
@@ -467,18 +508,32 @@ export function LandingPage() {
             {platformAreas.map(({ title, detail, icon: Icon, tone, tools }) => (
               <article
                 key={title}
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.055),rgba(255,255,255,0.018))] p-4 backdrop-blur-sm transition duration-300 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-emerald-300/55 before:to-transparent hover:-translate-y-0.5 hover:border-emerald-300/25 hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)] light:border-emerald-950/9 light:bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(241,249,244,0.9))] light:shadow-[0_14px_35px_rgba(31,67,49,0.055)] light:hover:shadow-[0_18px_42px_rgba(31,67,49,0.1)] sm:p-5"
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.055),rgba(255,255,255,0.018))] p-3.5 backdrop-blur-sm transition duration-300 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-emerald-300/55 before:to-transparent hover:-translate-y-0.5 hover:border-emerald-300/25 hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)] light:border-emerald-950/9 light:bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(241,249,244,0.9))] light:shadow-[0_14px_35px_rgba(31,67,49,0.055)] light:hover:shadow-[0_18px_42px_rgba(31,67,49,0.1)] sm:p-4"
               >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute right-3 top-3 h-14 w-14 rounded-full bg-gradient-to-tr to-transparent p-[2px] ${cardRingFrom[tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ?? "emerald"] ?? "from-emerald-400/70"}`}
+                >
+                  <span className="block h-full w-full rounded-full bg-[#0b120e]/90 light:bg-white/90" />
+                </span>
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute right-5 top-5 h-6 w-6 animate-[spin_16s_linear_infinite] rounded-full border border-dashed ${cardShape[tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ?? "emerald"] ?? "border-emerald-300/30"}`}
+                />
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute right-[28px] top-[28px] h-1.5 w-1.5 rounded-full ${cardDot[tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ?? "emerald"] ?? "bg-emerald-300"}`}
+                />
                 <span
                   className={`grid h-10 w-10 place-items-center rounded-xl ${tone}`}
                 >
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
-                <h3 className="mt-4 text-base font-semibold">{title}</h3>
+                 <h3 className="mt-3 text-base font-semibold">{title}</h3>
                 <p className="mt-1.5 text-sm leading-5 text-slate-400 light:text-slate-600">
                   {detail}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-1.5">
+                <div className="mt-3 flex flex-wrap gap-1.5">
                   {tools.map((tool) => (
                     <span
                       key={tool}
@@ -488,7 +543,7 @@ export function LandingPage() {
                     </span>
                   ))}
                 </div>
-                <div className="mt-4 flex items-center justify-between border-t border-white/8 pt-3.5 text-xs text-slate-400 light:border-emerald-950/8 light:text-slate-600">
+                <div className="mt-3 flex items-center justify-between border-t border-white/8 pt-3 text-xs text-slate-400 light:border-emerald-950/8 light:text-slate-600">
                   <span>{tools.length} tools</span>
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </div>
@@ -550,7 +605,7 @@ export function LandingPage() {
       >
         <div className="absolute inset-0 bg-[#07100b]/88 light:bg-[#f2f8f4]/88" />
         <div className="nexora-flow-line pointer-events-none absolute -left-[8%] top-[24%] h-[300px] w-[112%] -rotate-[7deg]" />
-        <div className="pointer-events-none absolute left-[16%] top-[20%] h-56 w-56 rounded-full bg-violet-500/8 blur-[90px]" />
+        <div className="pointer-events-none absolute left-[16%] top-[20%] h-56 w-56 rounded-full bg-violet-500/8 blur-[90px] light:bg-violet-500/22" />
         <div className="relative mx-auto max-w-7xl px-5 md:px-8">
           <SectionHeading
             eyebrow="Core workflows"
@@ -648,33 +703,46 @@ export function LandingPage() {
           detail="Students, teachers, and administrators use the same system with the controls relevant to their work."
         />
         <div className="mt-8 grid gap-5 lg:grid-cols-3">
-          {roleCards.map(({ title, detail }, index) => (
-            <Link
-              key={title}
-              href="/login"
-              className="group relative h-[300px] overflow-hidden rounded-2xl border border-white/10 bg-[#101612] shadow-[0_22px_60px_rgba(0,0,0,0.24)] transition hover:-translate-y-1 hover:border-emerald-300/25 light:border-emerald-950/9 light:bg-white light:shadow-[0_18px_45px_rgba(31,67,49,0.09)]"
-            >
-              <Image
-                src={
-                  index === 0
-                    ? "/landing/mentor-modern-1/hero-image.png"
-                    : index === 1
-                      ? "/landing/mentor-modern-1/instructor-image.png"
-                      : "/landing/mentor-modern-1/faqs.png"
-                }
-                alt={title}
-                fill
-                className="object-cover object-center transition duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-[#087a55] via-[#087a55]/60 to-transparent p-6 text-center opacity-90 transition group-hover:opacity-100">
-                <h3 className="text-xl font-semibold text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-white/85">{detail}</p>
-                <span className="mt-3 inline-flex items-center justify-center gap-2 text-sm font-semibold text-white">
-                  Sign in <ArrowRight className="h-4 w-4" />
+          {roleCards.map(({ title, detail, icon: Icon, tone }) => {
+            const hue =
+              tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ??
+              "emerald";
+            return (
+              <Link
+                key={title}
+                href="/login"
+                className="group relative flex min-h-[264px] flex-col items-center overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(160deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] px-6 pb-7 pt-8 text-center transition duration-300 hover:-translate-y-1 hover:border-emerald-300/25 hover:shadow-[0_24px_60px_rgba(0,0,0,0.28)] light:border-emerald-950/9 light:bg-[linear-gradient(160deg,rgba(255,255,255,0.97),rgba(241,249,244,0.92))] light:shadow-[0_16px_40px_rgba(31,67,49,0.08)] light:hover:shadow-[0_20px_46px_rgba(31,67,49,0.12)]"
+              >
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute -right-10 -top-10 -z-10 h-36 w-36 rounded-full blur-3xl ${cardGlow[hue] ?? "bg-emerald-500/20"}`}
+                />
+                <span className="relative grid h-16 w-16 place-items-center rounded-2xl">
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-0 rounded-2xl bg-gradient-to-tr to-transparent p-[2px] ${cardRingFrom[hue] ?? "from-emerald-400/70"}`}
+                  >
+                    <span className="block h-full w-full rounded-2xl bg-[#0d1410] light:bg-white" />
+                  </span>
+                  <span
+                    className={`relative grid h-[52px] w-[52px] place-items-center rounded-xl ${tone}`}
+                  >
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </span>
                 </span>
-              </div>
-            </Link>
-          ))}
+                <h3 className="relative mt-5 text-xl font-semibold text-white light:text-slate-950">
+                  {title}
+                </h3>
+                <p className="relative mt-2 max-w-[28ch] text-sm leading-6 text-slate-400 light:text-slate-600">
+                  {detail}
+                </p>
+                <span className="relative mt-5 inline-flex items-center gap-2 text-sm font-semibold text-emerald-300 light:text-emerald-700">
+                  Sign in
+                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
@@ -989,6 +1057,12 @@ function LandingNav() {
 
         <div className="flex shrink-0 items-center gap-3">
           <nav className="hidden items-center gap-5 text-sm text-slate-300 xl:flex light:text-slate-600">
+            <a
+              href="#about"
+              className="transition hover:text-emerald-300 light:hover:text-emerald-700"
+            >
+              About
+            </a>
             <a
               href="#platform"
               className="transition hover:text-emerald-300 light:hover:text-emerald-700"

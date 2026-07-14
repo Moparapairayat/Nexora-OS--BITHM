@@ -47,13 +47,11 @@ export function AuthShell({
 
 function AuthBackgroundBranding() {
   return (
-    <div
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-0 overflow-hidden"
-    >
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.018)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.018)_1px,transparent_1px)] bg-[size:42px_42px] opacity-50 light:bg-[linear-gradient(rgba(5,95,55,0.035)_1px,transparent_1px),linear-gradient(90deg,rgba(5,95,55,0.035)_1px,transparent_1px)]" />
-
-      <div className="absolute -left-[13rem] top-[7%] h-16 w-[46rem] -rotate-[31deg] bg-[linear-gradient(90deg,transparent_0%,#32f59a_18%,#36d9ff_72%,transparent_100%)] opacity-55 blur-[0.2px] sm:-left-[9rem] sm:h-20 light:opacity-65" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div className="absolute -left-[13rem] top-[7%] h-16 w-[46rem] -rotate-[31deg] bg-[linear-gradient(90deg,transparent_0%,#32f59a_18%,#36d9ff_72%,transparent_100%)] opacity-55 blur-[0.2px] sm:-left-[9rem] sm:h-20 light:opacity-65" />
       <div className="absolute -left-[10rem] top-[11%] h-5 w-[42rem] -rotate-[31deg] bg-[#d9ff57] opacity-75 sm:h-7 light:opacity-85" />
       <div className="absolute -left-8 -top-24 h-64 w-64 rotate-[24deg] rounded-[42px] bg-[linear-gradient(145deg,#8b5cf6,#5b3df5)] opacity-45 sm:-left-2 sm:-top-20 light:opacity-65" />
 

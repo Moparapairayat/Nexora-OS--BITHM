@@ -397,10 +397,10 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
               <div className="absolute -right-10 -top-12 h-28 w-28 rounded-full bg-[rgba(50,245,154,0.14)] blur-2xl light:bg-emerald-100/70" />
               <div className="relative flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <p className="text-sm font-semibold text-[var(--foreground)] light:text-slate-900">
+                  <p className="min-h-[2.5rem] text-sm font-semibold leading-5 text-[var(--foreground)] light:text-slate-900">
                     {stat.label}
                   </p>
-                  <p className="mt-1 font-mono text-2xl font-semibold text-[var(--brand-emerald)] light:text-emerald-600">
+                  <p className="mt-1 font-mono text-3xl font-semibold leading-none text-[var(--brand-emerald)] light:text-emerald-600">
                     {stat.value}
                   </p>
                 </div>
@@ -408,7 +408,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
                   <Icon className="h-5 w-5" aria-hidden="true" />
                 </span>
               </div>
-              <div className="relative mt-1.5 flex min-w-0 items-center justify-between gap-2 sm:gap-3">
+              <div className="relative mt-3 flex min-w-0 items-center justify-between gap-2 sm:gap-3">
                 <p className="min-w-0 truncate text-xs text-slate-400 light:text-slate-500">
                   {stat.trend}
                 </p>
