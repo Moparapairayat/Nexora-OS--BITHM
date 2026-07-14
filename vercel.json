@@ -1,7 +1,7 @@
 {
   "version": 2,
+  "installCommand": "npm install && npm install --no-save lightningcss-linux-x64-gnu@1.32.0 @tailwindcss/oxide-linux-x64-gnu@4.3.1",
   "buildCommand": "npm run build --workspace @nexora/types && npm run build --workspace @nexora/config && npm run build --workspace @nexora/web",
   "outputDirectory": "apps/web/.next",
-  "installCommand": "npm install",
   "framework": "nextjs"
 }
