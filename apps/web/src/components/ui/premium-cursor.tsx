@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Sparkles, Flame } from "lucide-react";
 
 export function PremiumCursor() {
   const [isEpicMode, setIsEpicMode] = useState<boolean>(true);
@@ -126,8 +127,10 @@ export function PremiumCursor() {
     const screen = screenRef.current;
     if (isEpicMode && screen) {
       screen.innerHTML = "";
+      // Start all segments off-screen so dragon doesn't cover content on load.
+      // They will snap to the pointer position on first mouse move.
       for (let i = 0; i < N; i++) {
-        elems[i] = { use: null, x: width / 2, y: 0 };
+        elems[i] = { use: null, x: -200, y: -200 };
       }
 
       const prepend = (useId: string, i: number) => {
@@ -164,9 +167,16 @@ export function PremiumCursor() {
           const ax = (Math.cos(3 * frm) * state.rad * width) / height;
           const ay = (Math.sin(4 * frm) * state.rad * height) / width;
 
-          // Head follows pointer at /10 — matches original
-          e.x += (ax + mx - e.x) / 10;
-          e.y += (ay + my - e.y) / 10;
+          // Head follows pointer at /10 — matches original.
+          // If pointer is still at the initial off-screen position, snap the head
+          // directly there instead of lerping so dragon never drifts on-screen.
+          if (mx < -100 && my < -100) {
+            e.x = -200;
+            e.y = -200;
+          } else {
+            e.x += (ax + mx - e.x) / 10;
+            e.y += (ay + my - e.y) / 10;
+          }
 
           for (let i = 1; i < N; i++) {
             const currentElem = elems[i];
@@ -192,11 +202,8 @@ export function PremiumCursor() {
 
           if (state.rad < radm) state.rad++;
           frm += 0.003;
-
-          if (state.rad > 60) {
-            pointer.current.x += (width / 2 - pointer.current.x) * 0.05;
-            pointer.current.y += (height / 2 - pointer.current.y) * 0.05;
-          }
+          // NOTE: idle-drift toward center removed — it caused the dragon to
+          // drift over the hero heading when the user stopped moving the mouse.
         }
       } else {
         // ── PREMIUM MINIMALIST CURSOR ANIMATION LOOP ───────────────────────
@@ -549,50 +556,78 @@ export function PremiumCursor() {
         </>
       )}
 
-      {/* ── FLOATING TOGGLE SWITCH BUTTON ─────────────────────────────────── */}
-      <button
-        onClick={toggleMode}
+      {/* ── FLOATING TOGGLE SWITCH WIDGET ─────────────────────────────────── */}
+      <div
+        className="fixed bottom-6 right-6 z-[9999999] pointer-events-auto hidden md:flex flex-col gap-1.5 p-1.5 rounded-2xl border backdrop-blur-xl transition-all duration-300 shadow-xl bg-black/40 light:bg-white/85 border-white/10 light:border-black/10 shadow-black/10 dark:shadow-black/40"
         style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          zIndex: 9999999,
-          pointerEvents: "auto",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          padding: "10px 16px",
-          borderRadius: "99px",
-          border: isEpicMode ? "1px solid rgba(255, 85, 0, 0.45)" : "1px solid var(--cursor-ring-color)",
-          background: isEpicMode
-            ? "linear-gradient(135deg, rgba(50, 15, 5, 0.88) 0%, rgba(12, 3, 0, 0.96) 100%)"
-            : "linear-gradient(135deg, rgba(20, 20, 20, 0.85) 0%, rgba(10, 10, 10, 0.95) 100%)",
-          backdropFilter: "blur(12px)",
-          color: isEpicMode ? "#ffaa00" : "var(--cursor-dot-color)",
-          fontFamily: "var(--font-geist-sans), sans-serif",
-          fontSize: "12px",
-          fontWeight: 600,
-          boxShadow: isEpicMode
-            ? "0 6px 20px rgba(255, 34, 0, 0.3), inset 0 0 12px rgba(255, 85, 0, 0.15)"
-            : "0 6px 20px rgba(0, 0, 0, 0.45)",
-          transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
-          cursor: "pointer",
+          borderColor: isEpicMode 
+            ? "rgba(249, 115, 22, 0.25)" 
+            : "var(--cursor-ring-color)",
         }}
-        data-cursor="hover"
       >
-        <span
-          style={{
-            fontSize: "15px",
-            filter: isEpicMode ? "drop-shadow(0 0 5px #ff5500)" : "none",
-            transition: "filter 0.3s ease",
-          }}
-        >
-          {isEpicMode ? "🔥" : "✨"}
-        </span>
-        <span style={{ letterSpacing: "0.5px" }}>
-          {isEpicMode ? "Epic Mode: ON" : "Epic Mode: OFF"}
-        </span>
-      </button>
+        {/* Tiny subtle section label */}
+        <div className="px-2 pt-0.5 pb-0 text-[9px] font-bold tracking-widest text-slate-500 light:text-slate-400 uppercase select-none opacity-80">
+          Cursor Style
+        </div>
+        
+        {/* Segmented Switch Group */}
+        <div className="relative flex items-center p-0.5 bg-black/20 dark:bg-black/35 light:bg-black/5 rounded-xl border border-white/5 light:border-black/5">
+          {/* Moving background pill */}
+          <div
+            className="absolute top-0.5 bottom-0.5 rounded-[10px] transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]"
+            style={{
+              left: isEpicMode ? "50%" : "2px",
+              width: "calc(50% - 2px)",
+              background: isEpicMode
+                ? "linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(234, 88, 12, 0.08) 100%)"
+                : "var(--cursor-ring-color)",
+              border: isEpicMode
+                ? "1px solid rgba(249, 115, 22, 0.3)"
+                : "1px solid var(--cursor-ring-color)",
+            }}
+          />
+          
+          {/* Classic Mode Button */}
+          <button
+            onClick={() => isEpicMode && toggleMode()}
+            className={`relative flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all duration-300 select-none ${
+              !isEpicMode
+                ? "text-[var(--cursor-accent-color)] font-bold"
+                : "text-slate-400 light:text-slate-500 hover:text-slate-200 light:hover:text-slate-800"
+            }`}
+            style={{ width: "86px" }}
+            data-cursor="hover"
+          >
+            <Sparkles 
+              className={`w-3.5 h-3.5 transition-transform duration-300 ${!isEpicMode ? "scale-110" : "scale-100"}`} 
+              style={{
+                filter: !isEpicMode ? "drop-shadow(0 0 4px var(--cursor-accent-color))" : "none"
+              }}
+            />
+            <span>Classic</span>
+          </button>
+
+          {/* Epic Mode Button */}
+          <button
+            onClick={() => !isEpicMode && toggleMode()}
+            className={`relative flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all duration-300 select-none ${
+              isEpicMode
+                ? "text-orange-500 light:text-orange-600 font-bold"
+                : "text-slate-400 light:text-slate-500 hover:text-slate-200 light:hover:text-slate-800"
+            }`}
+            style={{ width: "86px" }}
+            data-cursor="hover"
+          >
+            <Flame 
+              className={`w-3.5 h-3.5 transition-transform duration-300 ${isEpicMode ? "scale-110 rotate-3" : "scale-100"}`}
+              style={{
+                filter: isEpicMode ? "drop-shadow(0 0 5px rgba(249,115,22,0.8))" : "none"
+              }}
+            />
+            <span>Epic</span>
+          </button>
+        </div>
+      </div>
     </>
   );
 }

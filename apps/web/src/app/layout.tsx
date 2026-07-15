@@ -50,12 +50,7 @@ export const viewport: Viewport = {
   ],
 };
 
-const themeInitScript = `
-try {
-  var storedTheme = window.localStorage.getItem("nexora-theme");
-  document.documentElement.classList.toggle("light", storedTheme === "light");
-} catch (_) {}
-`;
+
 
 export default function RootLayout({
   children,
@@ -69,9 +64,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Script id="nexora-theme-init" strategy="beforeInteractive">
-          {themeInitScript}
-        </Script>
+        <Script
+          id="nexora-theme-init"
+          src="/theme-init.js"
+          strategy="beforeInteractive"
+        />
         <PremiumCursor />
         <AppProviders>{children}</AppProviders>
       </body>

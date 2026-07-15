@@ -1183,22 +1183,22 @@ export function PandaCTA() {
         {/* UI Card */}
         <div className="contact-card">
           <div className="contact-header">
-            <h2>Have something in mind?</h2>
-            <p>Building your next web experience? <br />Drop us a message.</p>
+            <h2>Get in touch with us</h2>
+            <p>Have a question about Nexora OS or BITHM? <br />We&apos;d love to hear from you.</p>
           </div>
           
           <form id="contact-form" onSubmit={(e) => e.preventDefault()}>
             <div className="form-group">
               <label htmlFor="input-name">Name</label>
-              <input type="text" className="form-control" placeholder="Your Name" id="input-name" />
+              <input type="text" className="form-control" placeholder="Your full name" id="input-name" />
             </div>
             <div className="form-group">
               <label htmlFor="input-email">Email</label>
-              <input type="email" className="form-control" placeholder="you@example.com" id="input-email" />
+              <input type="email" className="form-control" placeholder="your@email.com" id="input-email" />
             </div>
             <div className="form-group">
               <label htmlFor="message-input">Message</label>
-              <textarea id="message-input" className="form-control" placeholder="Tell us about your idea.."></textarea>
+              <textarea id="message-input" className="form-control" placeholder="How can we help you? Ask about the platform, enrollment, features..."></textarea>
             </div>
             <button 
               type="button" 

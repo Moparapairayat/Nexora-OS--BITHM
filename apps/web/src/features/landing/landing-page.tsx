@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -68,14 +68,14 @@ const cardGlow: Record<string, string> = {
 const platformAreas = [
   {
     title: "Student essentials",
-    detail: "Your dashboard, updates, and notices in one place.",
+    detail: "Core student dashboard and notices.",
     icon: GraduationCap,
     tone: "bg-violet-500/10 text-violet-300 light:bg-violet-50 light:text-violet-700",
     tools: ["Dashboard", "Activity", "Notifications"],
   },
   {
     title: "Academic work",
-    detail: "Follow coursework from the first brief to final feedback.",
+    detail: "Follow coursework and feedback.",
     icon: BookOpen,
     tone: "bg-emerald-500/10 text-emerald-300 light:bg-emerald-50 light:text-emerald-700",
     tools: [
@@ -88,7 +88,7 @@ const platformAreas = [
   },
   {
     title: "AI workspace",
-    detail: "Planned tools for project planning, code, briefs, and feedback.",
+    detail: "AI tools for planning and code.",
     icon: Layers3,
     tone: "bg-cyan-500/10 text-cyan-300 light:bg-cyan-50 light:text-cyan-700",
     tools: [
@@ -100,8 +100,7 @@ const platformAreas = [
   },
   {
     title: "Developer tools",
-    detail:
-      "Write code, inspect databases, test APIs, and prepare deployments.",
+    detail: "Write code and inspect databases.",
     icon: Code2,
     tone: "bg-amber-500/10 text-amber-300 light:bg-amber-50 light:text-amber-700",
     tools: [
@@ -115,14 +114,14 @@ const platformAreas = [
   },
   {
     title: "ML & data",
-    detail: "Prepare datasets and keep machine-learning work organized.",
+    detail: "Prepare datasets and ML work.",
     icon: Database,
     tone: "bg-rose-500/10 text-rose-300 light:bg-rose-50 light:text-rose-700",
     tools: ["Dataset Manager", "ML Studio", "AutoML Assistant", "ML Reports"],
   },
   {
     title: "Content studio",
-    detail: "Work on slides, documentation, research, and scanned documents.",
+    detail: "Create slides and documents.",
     icon: FileCheck2,
     tone: "bg-sky-500/10 text-sky-300 light:bg-sky-50 light:text-sky-700",
     tools: [
@@ -134,8 +133,7 @@ const platformAreas = [
   },
   {
     title: "AcademicShield",
-    detail:
-      "Check sources, citations, originality, and possible writing risks.",
+    detail: "Check originality and citations.",
     icon: ShieldCheck,
     tone: "bg-orange-500/10 text-orange-300 light:bg-orange-50 light:text-orange-700",
     tools: [
@@ -149,7 +147,7 @@ const platformAreas = [
   },
   {
     title: "Portfolio & skills",
-    detail: "Present completed work and keep track of developing skills.",
+    detail: "Track skills and portfolios.",
     icon: BarChart3,
     tone: "bg-lime-500/10 text-lime-300 light:bg-lime-50 light:text-lime-700",
     tools: [
@@ -161,7 +159,7 @@ const platformAreas = [
   },
   {
     title: "Feedback",
-    detail: "Keep teacher comments and requested changes easy to find.",
+    detail: "Track feedback and changes.",
     icon: UsersRound,
     tone: "bg-fuchsia-500/10 text-fuchsia-300 light:bg-fuchsia-50 light:text-fuchsia-700",
     tools: ["Feedback Center", "Fix Requests"],
@@ -245,22 +243,22 @@ const latestAreas = [
 
 const platformNotes = [
   {
-    category: "Student workflow",
-    title: "Keep deadlines, submissions, and requested changes in view",
+    category: "Student Workflow",
+    title: "Visualizing Deadlines & Tasks",
     detail:
-      "The dashboard shows current work and teacher feedback without making students search for it.",
+      "A unified dashboard tracks current tasks, submissions, and teacher feedback, keeping students updated without the hassle of searching.",
   },
   {
-    category: "Practical learning",
-    title: "Keep practical work and its evidence together",
+    category: "Hands-On Learning",
+    title: "Linking Code to Reports",
     detail:
-      "Students can complete a practical task in Code Lab and use the result in their report.",
+      "Seamlessly connect practical lab work to final reports, allowing students to import live coding outcomes directly into their academic evidence.",
   },
   {
-    category: "Clear product status",
-    title: "Be clear about what is ready and what is planned",
+    category: "Transparent Progress",
+    title: "Clear Development Roadmap",
     detail:
-      "Coming Soon pages distinguish available tools from modules that are still being developed.",
+      "Always know what features are fully functional and what modules are coming next, separating active learning tools from upcoming releases.",
   },
 ];
 
@@ -318,16 +316,163 @@ const faqs = [
   },
 ];
 
+const toolCardStyles: Record<string, {
+  bgClass: string;
+  hoverShadow: string;
+  textClass: string;
+  textMutedClass: string;
+  badgeClass: string;
+  svgStroke: string;
+  iconCircleBg: string;
+}> = {
+  violet: {
+    bgClass: "bg-[#6355E6]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(99,85,230,0.32)]",
+    textClass: "text-white",
+    textMutedClass: "text-purple-100/80 font-medium",
+    badgeClass: "bg-white/12 text-white border border-white/5",
+    svgStroke: "rgba(255,255,255,0.22)",
+    iconCircleBg: "bg-white/12 text-white",
+  },
+  emerald: {
+    bgClass: "bg-[#10B981]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(16,185,129,0.32)]",
+    textClass: "text-white",
+    textMutedClass: "text-emerald-50/80 font-medium",
+    badgeClass: "bg-white/12 text-white border border-white/5",
+    svgStroke: "rgba(255,255,255,0.22)",
+    iconCircleBg: "bg-white/12 text-white",
+  },
+  cyan: {
+    bgClass: "bg-[#06B6D4]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(6,182,212,0.32)]",
+    textClass: "text-white",
+    textMutedClass: "text-cyan-50/80 font-medium",
+    badgeClass: "bg-white/12 text-white border border-white/5",
+    svgStroke: "rgba(255,255,255,0.22)",
+    iconCircleBg: "bg-white/12 text-white",
+  },
+  amber: {
+    bgClass: "bg-[#FED97B]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(254,217,123,0.32)]",
+    textClass: "text-amber-950",
+    textMutedClass: "text-amber-900/80 font-medium",
+    badgeClass: "bg-black/7 text-amber-950 border border-black/5",
+    svgStroke: "rgba(120,80,20,0.18)",
+    iconCircleBg: "bg-black/7 text-amber-950",
+  },
+  rose: {
+    bgClass: "bg-[#FDA4AF]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(253,164,175,0.32)]",
+    textClass: "text-rose-950",
+    textMutedClass: "text-rose-900/80 font-medium",
+    badgeClass: "bg-black/7 text-rose-950 border border-black/5",
+    svgStroke: "rgba(150,50,70,0.18)",
+    iconCircleBg: "bg-black/7 text-rose-950",
+  },
+  sky: {
+    bgClass: "bg-[#BAC8FF]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(186,200,255,0.32)]",
+    textClass: "text-indigo-950",
+    textMutedClass: "text-indigo-900/80 font-medium",
+    badgeClass: "bg-black/7 text-indigo-950 border border-black/5",
+    svgStroke: "rgba(50,60,150,0.16)",
+    iconCircleBg: "bg-black/7 text-indigo-950",
+  },
+  orange: {
+    bgClass: "bg-[#FFD8A8]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(255,216,168,0.32)]",
+    textClass: "text-orange-950",
+    textMutedClass: "text-orange-900/80 font-medium",
+    badgeClass: "bg-black/7 text-orange-950 border border-black/5",
+    svgStroke: "rgba(150,80,20,0.16)",
+    iconCircleBg: "bg-black/7 text-orange-950",
+  },
+  lime: {
+    bgClass: "bg-[#E2F9A7]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(226,249,167,0.32)]",
+    textClass: "text-lime-950",
+    textMutedClass: "text-lime-900/80 font-medium",
+    badgeClass: "bg-black/7 text-lime-950 border border-black/5",
+    svgStroke: "rgba(80,120,20,0.16)",
+    iconCircleBg: "bg-black/7 text-lime-950",
+  },
+  fuchsia: {
+    bgClass: "bg-[#FAA2C1]",
+    hoverShadow: "hover:shadow-[0_20px_40px_rgba(250,162,193,0.32)]",
+    textClass: "text-fuchsia-950",
+    textMutedClass: "text-fuchsia-900/80 font-medium",
+    badgeClass: "bg-black/7 text-fuchsia-950 border border-black/5",
+    svgStroke: "rgba(150,40,90,0.16)",
+    iconCircleBg: "bg-black/7 text-fuchsia-950",
+  },
+};
+
 export function LandingPage() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeIdx, setActiveIdx] = useState(1);
+  const [isHovered, setIsHovered] = useState(false);
+  const isDown = useRef(false);
+  const startX = useRef(0);
+  const scrollLeftVal = useRef(0);
+
+  // Safe-scrolling helpers to temporarily bypass CSS scroll snap conflicts
+  const safeScroll = (amount: number) => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    slider.classList.remove("snap-x", "snap-mandatory");
+    slider.scrollBy({ left: amount, behavior: "smooth" });
+
+    setTimeout(() => {
+      if (sliderRef.current) {
+        sliderRef.current.classList.add("snap-x", "snap-mandatory");
+      }
+    }, 600);
+  };
+
+  const safeScrollTo = (position: number) => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    slider.classList.remove("snap-x", "snap-mandatory");
+    slider.scrollTo({ left: position, behavior: "smooth" });
+
+    setTimeout(() => {
+      if (sliderRef.current) {
+        sliderRef.current.classList.add("snap-x", "snap-mandatory");
+      }
+    }, 600);
+  };
+
+  // Auto-scrolling system
+  useEffect(() => {
+    if (isHovered || isDown.current) return;
+
+    const interval = setInterval(() => {
+      if (sliderRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
+        // Check if we are at the end
+        if (scrollLeft >= scrollWidth - clientWidth - 25) {
+          safeScrollTo(0);
+        } else {
+          // Scroll by one card width (350px card + 20px gap = 370px)
+          safeScroll(370);
+        }
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [isHovered]);
 
   const scroll = (direction: "left" | "right") => {
     if (sliderRef.current) {
-      const { scrollLeft, clientWidth } = sliderRef.current;
+      const { clientWidth } = sliderRef.current;
       const amount = direction === "left" ? -clientWidth * 0.75 : clientWidth * 0.75;
-      sliderRef.current.scrollBy({ left: amount, behavior: "smooth" });
+      safeScroll(amount);
     }
   };
 
@@ -336,7 +481,45 @@ export function LandingPage() {
       const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
       setCanScrollLeft(scrollLeft > 10);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+
+      // Scroll progress percentage
+      const maxScroll = scrollWidth - clientWidth;
+      if (maxScroll > 0) {
+        setScrollProgress((scrollLeft / maxScroll) * 100);
+      }
+
+      // Active card index (1-based, out of 9)
+      const cardWidth = 350 + 20; // card width + gap
+      const index = Math.min(
+        Math.max(Math.round(scrollLeft / cardWidth) + 1, 1),
+        9
+      );
+      setActiveIdx(index);
     }
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!sliderRef.current) return;
+    isDown.current = true;
+    startX.current = e.pageX - sliderRef.current.offsetLeft;
+    scrollLeftVal.current = sliderRef.current.scrollLeft;
+  };
+
+  const handleMouseLeave = () => {
+    isDown.current = false;
+    setIsHovered(false);
+  };
+
+  const handleMouseUp = () => {
+    isDown.current = false;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDown.current || !sliderRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - sliderRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5;
+    sliderRef.current.scrollLeft = scrollLeftVal.current - walk;
   };
 
   return (
@@ -350,7 +533,7 @@ export function LandingPage() {
         <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/5" />
         <div className="pointer-events-none absolute -right-20 bottom-10 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/15 blur-[130px] light:bg-emerald-400/8" />
 
-        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-between gap-10 px-5 md:flex-row md:px-8 lg:gap-16">
+        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 md:grid-cols-2 items-center gap-10 px-5 md:px-8 lg:gap-16">
           <div className="relative w-full max-w-[560px]">
             <div className="mb-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300 shadow-[0_2px_10px_rgba(16,185,129,0.05)] light:border-emerald-600/15 light:bg-emerald-50 light:text-emerald-700">
@@ -376,7 +559,7 @@ export function LandingPage() {
                   href="/login"
                   className="relative z-10 inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-emerald-300/15 bg-[#087a55] px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(5,68,46,0.22)] hover:bg-[#066b4a] light:bg-[#087a55] light:!text-white light:hover:bg-[#066b4a]"
                 >
-                  Open Nexora OS
+                  Login
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -390,14 +573,24 @@ export function LandingPage() {
 
             <div className="mt-12 flex items-center gap-4 text-sm text-slate-400 light:text-slate-600">
               <div className="flex -space-x-2">
-                {["S", "T", "A"].map((initial, index) => (
-                  <span
-                    key={initial}
-                    className="grid h-10 w-10 place-items-center rounded-full border-2 border-[#060907] bg-[linear-gradient(145deg,#d9ff57,#32f59a)] text-xs font-bold text-[#07100b] light:border-[#f8fbf9]"
+                {[
+                  { src: "/landing/avatars/avatar-student.png", alt: "Student" },
+                  { src: "/landing/avatars/avatar-teacher.png", alt: "Teacher" },
+                  { src: "/landing/avatars/avatar-admin.png",   alt: "Administrator" },
+                ].map((avatar, index) => (
+                  <div
+                    key={avatar.alt}
+                    className="h-10 w-10 rounded-full border-2 border-[#060907] overflow-hidden light:border-[#f8fbf9] shadow-md"
                     style={{ zIndex: 3 - index }}
                   >
-                    {initial}
-                  </span>
+                    <Image
+                      src={avatar.src}
+                      alt={avatar.alt}
+                      width={40}
+                      height={40}
+                      className="h-full w-full object-cover object-top"
+                    />
+                  </div>
                 ))}
               </div>
               <div>
@@ -410,15 +603,71 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="landing-float relative w-full max-w-[660px]">
-            <div className="landing-orbit absolute -inset-8 rounded-full border border-emerald-300/10 before:absolute before:left-1/2 before:top-0 before:h-2 before:w-2 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)]" />
+          <div className="landing-float relative w-full max-w-[660px] flex items-center justify-center justify-self-center md:justify-self-end">
+            {/* Ambient Hero Vector Glow (Z-0: Behind image) */}
+            <svg className="absolute -inset-12 w-[114%] h-[114%] pointer-events-none z-0" viewBox="0 0 600 500" fill="none">
+              <defs>
+                <filter id="hero-glow-green" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="16" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="hero-glow-pink" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="18" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <linearGradient id="hero-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#32f59a" />
+                  <stop offset="100%" stopColor="#06b6d4" />
+                </linearGradient>
+                <linearGradient id="hero-pink-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#d946ef" />
+                  <stop offset="100%" stopColor="#ef4444" />
+                </linearGradient>
+              </defs>
+
+              {/* Glowing vector paths weaving behind the hero image */}
+              <path
+                d="M 50,250 C 150,150 250,450 350,350 C 450,250 480,100 550,120"
+                fill="none"
+                stroke="url(#hero-green-grad)"
+                strokeWidth="14"
+                strokeLinecap="round"
+                filter="url(#hero-glow-green)"
+                opacity="0.6"
+              />
+              <path
+                d="M 50,250 C 150,150 250,450 350,350 C 450,250 480,100 550,120"
+                fill="none"
+                stroke="#e8ffdb"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                opacity="0.8"
+              />
+
+              {/* Designer nodes & coordinates guides */}
+              <line x1="350" y1="350" x2="310" y2="410" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+              <circle cx="310" cy="410" r="3.5" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
+
+              <circle cx="350" cy="350" r="5" fill="#f59e0b" stroke="white" strokeWidth="1.5" />
+              <circle cx="550" cy="120" r="6" fill="#32f59a" stroke="white" strokeWidth="1.5" />
+            </svg>
+
+            <div className="landing-orbit absolute -inset-8 rounded-full border border-emerald-300/10 before:absolute before:left-1/2 before:top-0 before:h-2 before:w-2 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10" />
             <Image
               src="/landing/mentor-modern-1/hero-image.png"
               alt="Student using Nexora OS for academic work"
               width={720}
               height={620}
               priority
-              className="relative z-10 h-auto w-full"
+              className="relative z-10 h-auto w-full animate-[float_4s_ease-in-out_infinite]"
             />
           </div>
         </div>
@@ -528,77 +777,149 @@ export function LandingPage() {
             title="The tools students use throughout their course"
             detail="Core tools are available now. Modules still in development are clearly marked Coming Soon."
           />
-          {/* Slide Arrow Controls */}
-          <div className="mt-6 flex items-center justify-end gap-3 px-1">
-            <button
-              onClick={() => scroll("left")}
-              disabled={!canScrollLeft}
-              aria-label="Scroll left"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none light:border-emerald-950/10 light:bg-emerald-50/50 light:text-emerald-800 light:hover:bg-[#e8f3ee]"
+          {/* Slider Container with Fades */}
+          <div className="relative mt-8">
+            {/* Left Edge Fade Mask */}
+            <div className="pointer-events-none absolute left-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-r from-[#070d0a]/95 dark:from-[#070d0a]/95 light:from-[#fbfdfb]/95 to-transparent" />
+            
+            {/* Right Edge Fade Mask */}
+            <div className="pointer-events-none absolute right-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-l from-[#050706]/95 dark:from-[#050706]/95 light:from-[#fbfdfb]/95 to-transparent" />
+
+            <div
+              ref={sliderRef}
+              onScroll={handleScroll}
+              onMouseDown={handleMouseDown}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={handleMouseLeave}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+              className="flex gap-5 overflow-x-auto scrollbar-none snap-x snap-mandatory pb-6 cursor-grab active:cursor-grabbing select-none"
             >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => scroll("right")}
-              disabled={!canScrollRight}
-              aria-label="Scroll right"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none light:border-emerald-950/10 light:bg-emerald-50/50 light:text-emerald-800 light:hover:bg-[#e8f3ee]"
-            >
-              <ArrowRight className="h-5 w-5" />
-            </button>
+              {platformAreas.map(({ title, detail, icon: Icon, tone, tools }, index) => {
+                const color = tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ?? "emerald";
+                const style = toolCardStyles[color] ?? toolCardStyles.emerald;
+                const patternIdx = index % 3;
+
+                return (
+                  <article
+                    key={title}
+                    className={`group relative flex w-[310px] sm:w-[350px] shrink-0 snap-start min-h-[250px] flex-col justify-between overflow-hidden rounded-[28px] p-6 transition duration-300 hover:-translate-y-1 ${style.bgClass} ${style.hoverShadow}`}
+                  >
+                    {/* Wavy lines SVG overlay */}
+                    {patternIdx === 0 && (
+                      <svg viewBox="0 0 100 100" fill="none" stroke={style.svgStroke} strokeWidth="3" strokeLinecap="round" className="absolute top-0 right-0 w-24 h-24 pointer-events-none translate-x-3 -translate-y-3">
+                        <path d="M30 20 C40 10, 50 30, 60 20 C70 10, 80 30, 90 20" />
+                        <path d="M25 35 C35 25, 45 45, 55 35 C65 25, 75 45, 85 35" />
+                        <path d="M20 50 C30 40, 40 60, 50 50 C60 40, 70 60, 80 50" />
+                      </svg>
+                    )}
+                    {patternIdx === 1 && (
+                      <svg viewBox="0 0 100 100" fill="none" stroke={style.svgStroke} strokeWidth="2.5" strokeLinecap="round" className="absolute top-0 right-0 w-24 h-24 pointer-events-none translate-x-3 -translate-y-3">
+                        <path d="M50 15 C 65 17, 85 35, 85 55 C 85 70, 68 85, 50 85 C 32 85, 15 70, 15 55 C 15 35, 35 15, 50 15 Z" />
+                        <path d="M50 30 C 60 32, 70 42, 70 55 C 70 64, 58 72, 50 72 C 42 72, 30 64, 30 55 C 30 42, 40 30, 50 30 Z" />
+                        <path d="M50 45 C 54 46, 58 50, 58 55 C 58 59, 54 62, 50 62 C 46 62, 42 59, 42 55 C 42 50, 46 45, 50 45 Z" />
+                      </svg>
+                    )}
+                    {patternIdx === 2 && (
+                      <svg viewBox="0 0 100 100" fill="none" stroke={style.svgStroke} strokeWidth="2.5" strokeLinecap="round" className="absolute top-0 right-0 w-24 h-24 pointer-events-none translate-x-3 -translate-y-3">
+                        <path d="M50 50 A 10 10 0 1 0 60 60 A 20 20 0 1 0 40 70 A 30 30 0 1 0 70 30 A 40 40 0 1 0 10 70" />
+                      </svg>
+                    )}
+
+                    {/* Icon Circle */}
+                    <div className={`relative z-10 flex h-12 w-12 items-center justify-center rounded-full ${style.iconCircleBg}`}>
+                      <Icon className="h-5.5 w-5.5 stroke-[1.8]" />
+                    </div>
+
+                    {/* Card Content */}
+                    <div className="relative z-10 mt-4 flex-1 flex flex-col justify-between">
+                      <div>
+                        <h3 className={`text-2xl font-bold tracking-tight ${style.textClass}`}>
+                          {title}
+                        </h3>
+                        <p className={`mt-1 text-sm leading-5 ${style.textMutedClass}`}>
+                          {detail}
+                        </p>
+
+                        {/* Tool Tags */}
+                        <div className="mt-3 flex flex-wrap gap-1.5">
+                          {tools.map((tool) => (
+                            <span
+                              key={tool}
+                              className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${style.badgeClass}`}
+                            >
+                              {tool}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Footer / Actions */}
+                      <div className="mt-4 pt-3 flex items-center justify-between border-t border-black/5 dark:border-white/5">
+                        <span className={`text-[10px] font-bold uppercase tracking-wider ${style.textClass}`}>
+                          {tools.length} modules
+                        </span>
+                        <Link
+                          href="/login"
+                          className={`inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider ${style.textClass}`}
+                          data-cursor="hover"
+                        >
+                          Explore
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
 
-          <div
-            ref={sliderRef}
-            onScroll={handleScroll}
-            className="mt-6 flex gap-5 overflow-x-auto scrollbar-none snap-x snap-mandatory pb-6"
-          >
-            {platformAreas.map(({ title, detail, icon: Icon, tone, tools }) => (
-              <article
-                key={title}
-                className="group relative flex w-[310px] sm:w-[350px] shrink-0 snap-start h-auto flex-col overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(145deg,rgba(255,255,255,0.055),rgba(255,255,255,0.018))] p-3.5 backdrop-blur-sm transition duration-300 before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-emerald-300/55 before:to-transparent hover:-translate-y-0.5 hover:border-emerald-300/25 hover:shadow-[0_20px_50px_rgba(0,0,0,0.2)] light:border-emerald-950/9 light:bg-[linear-gradient(145deg,rgba(255,255,255,0.96),rgba(241,249,244,0.9))] light:shadow-[0_14px_35px_rgba(31,67,49,0.055)] light:hover:shadow-[0_18px_42px_rgba(31,67,49,0.1)] sm:p-4"
-              >
-                <span
-                  aria-hidden="true"
-                  className={`pointer-events-none absolute right-3 top-3 h-14 w-14 rounded-full bg-gradient-to-tr to-transparent p-[2px] ${cardRingFrom[tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ?? "emerald"] ?? "from-emerald-400/70"}`}
-                >
-                  <span className="block h-full w-full rounded-full bg-[#0b120e]/90 light:bg-white/90" />
+          {/* Next-Gen Slider Control Hub */}
+          <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-white/5 pt-6 sm:flex-row light:border-black/5">
+            {/* Left side: Index counter and Progress bar */}
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-xs font-bold tracking-widest text-slate-500 light:text-slate-400 select-none">
+                <span className="text-[#32f59a] light:text-[#087a55]">
+                  {activeIdx.toString().padStart(2, "0")}
                 </span>
-                <span
-                  aria-hidden="true"
-                  className={`pointer-events-none absolute right-5 top-5 h-6 w-6 animate-[spin_16s_linear_infinite] rounded-full border border-dashed ${cardShape[tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ?? "emerald"] ?? "border-emerald-300/30"}`}
-                >
-                  <span className="block h-full w-full rounded-full" />
-                </span>
-                <span
-                  aria-hidden="true"
-                  className={`pointer-events-none absolute right-[28px] top-[28px] h-1.5 w-1.5 rounded-full ${cardDot[tone.split(" ").find((c) => c.startsWith("bg-"))?.split("-")[1] ?? "emerald"] ?? "bg-emerald-300"}`}
+                <span className="opacity-40"> / </span>
+                <span className="opacity-70">{platformAreas.length.toString().padStart(2, "0")}</span>
+              </span>
+
+              {/* Progress Line */}
+              <div className="relative w-36 h-[2px] rounded-full bg-white/10 dark:bg-white/10 light:bg-black/10 overflow-hidden">
+                <div
+                  className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#32f59a] to-[#d9ff57] transition-all duration-150 ease-out"
+                  style={{ width: `${scrollProgress}%` }}
                 />
-                <span
-                  className={`grid h-10 w-10 place-items-center rounded-xl ${tone}`}
-                >
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                 <h3 className="mt-3 text-base font-semibold">{title}</h3>
-                <p className="mt-1.5 text-sm leading-5 text-slate-400 light:text-slate-600">
-                  {detail}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {tools.map((tool) => (
-                    <span
-                      key={tool}
-                      className="rounded-full border border-white/9 bg-black/15 px-2.5 py-1 text-xs font-medium text-slate-300 light:border-emerald-950/8 light:bg-[#f5f9f6] light:text-slate-700"
-                    >
-                      {tool}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-auto pt-4 flex items-center justify-between border-t border-white/8 text-xs text-slate-400 light:border-emerald-950/8 light:text-slate-600">
-                  <span>{tools.length} tools</span>
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </div>
-              </article>
-            ))}
+              </div>
+            </div>
+
+            {/* Middle: Help text */}
+            <div className="hidden text-[10px] font-semibold uppercase tracking-wider text-slate-500 light:text-slate-400 opacity-60 sm:block">
+              Drag anywhere or scroll to explore tools
+            </div>
+
+            {/* Right side: Arrow buttons */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => scroll("left")}
+                disabled={!canScrollLeft}
+                aria-label="Scroll left"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => scroll("right")}
+                disabled={!canScrollRight}
+                aria-label="Scroll right"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition hover:bg-white/10 disabled:opacity-20 disabled:pointer-events-none light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+              >
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -934,26 +1255,447 @@ export function LandingPage() {
               Explore a demo <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="relative min-h-[360px] overflow-hidden rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_50%_30%,rgba(50,245,154,0.18),transparent_60%),rgba(255,255,255,0.025)] light:border-emerald-950/8 light:bg-[radial-gradient(circle_at_50%_30%,rgba(16,185,129,0.14),transparent_60%),white]">
-            <Image
-              src="/pengu.gif"
-              alt="Nexora guide"
-              width={420}
-              height={420}
-              unoptimized
-              className="absolute bottom-0 left-1/2 h-[340px] w-auto -translate-x-1/2 object-contain"
-            />
-            <div className="absolute left-5 top-5 rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm backdrop-blur-md light:border-emerald-950/8 light:bg-white/80">
-              Student workspace ready
+          {/* Layered Glass Card Container */}
+          <div className="relative w-full flex items-center justify-center min-h-[400px]">
+            {/* 1. Neon Glowing Shapes SVG (Z-0: Behind the glass, bleeds outside bounds) */}
+            <svg className="absolute inset-0 w-[108%] h-[108%] -translate-x-[4%] -translate-y-[4%] pointer-events-none z-0" viewBox="0 0 600 400" fill="none">
+              <defs>
+                <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="14" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <filter id="glow-pink" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="16" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <linearGradient id="neon-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="50%" stopColor="#06b6d4" />
+                  <stop offset="100%" stopColor="#f59e0b" />
+                </linearGradient>
+                <linearGradient id="neon-pink-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ec4899" />
+                  <stop offset="50%" stopColor="#f43f5e" />
+                  <stop offset="100%" stopColor="#d946ef" />
+                </linearGradient>
+              </defs>
+
+              {/* Green tilted square (Left bottom neon) */}
+              <path
+                d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
+                fill="none"
+                stroke="url(#neon-green-grad)"
+                strokeWidth="16"
+                strokeLinecap="round"
+                filter="url(#glow-green)"
+                opacity="0.85"
+              />
+              <path
+                d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
+                fill="none"
+                stroke="#d1fae5"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+
+              {/* Connecting curve loop (Middle neon) */}
+              <path
+                d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
+                fill="none"
+                stroke="url(#neon-pink-grad)"
+                strokeWidth="14"
+                strokeLinecap="round"
+                filter="url(#glow-pink)"
+                opacity="0.8"
+              />
+              <path
+                d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
+                fill="none"
+                stroke="#fce7f3"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
+
+              {/* Clover/Cross Shape (Right side neon) */}
+              <path
+                d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
+                fill="none"
+                stroke="url(#neon-pink-grad)"
+                strokeWidth="22"
+                filter="url(#glow-pink)"
+                opacity="0.9"
+              />
+              <path
+                d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
+                fill="none"
+                stroke="#fff1f2"
+                strokeWidth="4.5"
+              />
+            </svg>
+
+            {/* 2. Glass Card Container (Z-10: Frosted glass sheet that blurs Z-0 neons) */}
+            <div className="relative z-10 w-full min-h-[400px] rounded-[32px] border border-white/20 bg-gradient-to-tr from-white/[0.015] via-white/[0.035] to-white/[0.075] p-8 shadow-[0_30px_100px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col justify-between backdrop-blur-[24px] overflow-hidden light:border-slate-300/30 light:bg-gradient-to-tr light:from-white/40 light:to-white/80 light:shadow-xl">
+              {/* Background canvas grid lines */}
+              <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+
+              {/* Content Layers */}
+              <div className="relative z-10 w-full h-full flex flex-col justify-between flex-1 min-h-[340px]">
+                {/* Top Row: Left Title & Right Japanese Title */}
+                <div className="flex justify-between items-start w-full">
+                  <div>
+                    <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
+                      Nexora <span className="text-[10px] font-mono tracking-widest opacity-40 align-middle ml-1">✦⚪⚪✕</span>
+                      <br />
+                      OS:
+                    </h3>
+                    <p className="mt-3 text-sm font-semibold text-orange-300 tracking-wide light:text-emerald-700">
+                      Connected Student Workspace
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white/95 font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
+                      ネクソラ OS
+                    </h3>
+                    <p className="mt-2 text-xs font-semibold text-white/70 tracking-wide light:text-slate-600">
+                      学術ワークスペース
+                    </p>
+                  </div>
+                </div>
+
+                {/* Bottom Row: Bottom Left Detail & Bottom Right CTA Pill */}
+                <div className="flex justify-between items-end w-full mt-auto relative z-10">
+                  <p className="text-xs sm:text-sm font-semibold text-white/90 light:text-slate-900 max-w-[220px] leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] light:drop-shadow-none">
+                    A premium platform to study, build, and submit your work.
+                  </p>
+
+                  {/* Pill Button "Explore Workspace" */}
+                  <Link
+                    href="/login"
+                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#32f59a] to-[#d9ff57] px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(50,245,154,0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(50,245,154,0.32)] light:from-[#087a55] light:to-[#10b981] light:text-white light:shadow-md"
+                    data-cursor="hover"
+                  >
+                    Explore Workspace
+                    <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            {/* 3. Figma Handles & Cursors Layer (Z-20: Sits on top of the glass card, fully sharp!) */}
+            <div className="absolute inset-0 pointer-events-none z-20 p-4">
+              <div className="relative w-full h-full">
+                {/* Dashed connector lines */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 400" fill="none">
+                  <line x1="150" y1="175" x2="210" y2="125" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                  <circle cx="210" cy="125" r="3.5" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
+
+                  <line x1="270" y1="280" x2="230" y2="340" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                  <rect x="227" y="337" width="6" height="6" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
+
+                  <line x1="420" y1="175" x2="470" y2="235" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3,3" />
+                  <circle cx="470" cy="235" r="3.5" fill="white" stroke="#ef4444" strokeWidth="1.5" />
+                </svg>
+
+                {/* Floating user pill badge 'Submitted!' */}
+                <div className="absolute top-[280px] left-[260px] flex items-center gap-1.5 rounded-full bg-[#087a55] border border-emerald-400/30 px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_4px_15px_rgba(8,122,85,0.4)] backdrop-blur-sm">
+                  <div className="w-4 h-4 rounded-full bg-white/20 overflow-hidden flex items-center justify-center text-[8px] font-bold">
+                    ✓
+                  </div>
+                  <span>Submitted!</span>
+                </div>
+
+                {/* Cursors */}
+                <div className="absolute top-[260px] left-[300px]">
+                  <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
+                    <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
+                  </svg>
+                </div>
+
+                <div className="absolute top-[115px] right-[130px]">
+                  <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
+                    <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* TEAM SECTION */}
+      <section
+        id="team"
+        className="relative overflow-hidden py-24 bg-[radial-gradient(circle_at_50%_35%,rgba(16,185,129,0.06),transparent_50rem),linear-gradient(180deg,#020d0a_0%,#040e0b_100%)] text-white light:bg-[radial-gradient(circle_at_50%_35%,rgba(16,185,129,0.12),transparent_50rem),linear-gradient(180deg,#f4fbf7_0%,#e6f4ed_100%)] light:text-[#0d2a1d]"
+      >
+        <style dangerouslySetInnerHTML={{ __html: `
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+          .font-team-serif {
+            font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+          }
+          #team {
+            --center-card-bg-start: #082219;
+            --center-card-bg-end: #030e0a;
+          }
+          .light #team {
+            --center-card-bg-start: rgba(255, 255, 255, 0.65);
+            --center-card-bg-end: rgba(255, 255, 255, 0.96);
+          }
+        `}} />
+        
+        {/* Ambient background glows */}
+        <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-emerald-950/15 light:bg-emerald-300/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-10 w-96 h-96 rounded-full bg-emerald-950/20 light:bg-emerald-300/15 blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.015] light:opacity-[0.035] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+
+        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
+          {/* Section Header */}
+          <div className="flex items-center justify-center gap-6 mb-20 text-center">
+            {/* Left Ornament */}
+            <div className="hidden sm:block shrink-0">
+              <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0,12 L 80,12" stroke="url(#gold-line-left)" strokeWidth="1" />
+                <path d="M 85,12 L 91,6 L 97,12 L 91,18 Z" fill="url(#gold-grad-ornament)" />
+                <circle cx="91" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
+                <path d="M 103,12 L 107,8 L 111,12 L 107,16 Z" fill="url(#gold-grad-ornament)" />
+                <circle cx="117" cy="12" r="2" fill="url(#gold-grad-ornament)" />
+                <defs>
+                  <linearGradient id="gold-line-left" x1="0" y1="0" x2="80" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="transparent" />
+                    <stop offset="100%" stopColor="#e2c275" />
+                  </linearGradient>
+                  <linearGradient id="gold-grad-ornament" x1="85" y1="6" x2="117" y2="18" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#fdf6db" />
+                    <stop offset="50%" stopColor="#e2c275" />
+                    <stop offset="100%" stopColor="#aa7c11" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+
+            <h2 className="text-4xl sm:text-5xl font-light tracking-wide font-team-serif text-[#fdfbf7] light:text-[#0b2419] drop-shadow-sm select-none">
+              Our Team
+            </h2>
+
+            {/* Right Ornament */}
+            <div className="hidden sm:block shrink-0">
+              <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 120,12 L 40,12" stroke="url(#gold-line-right)" strokeWidth="1" />
+                <path d="M 35,12 L 29,6 L 23,12 L 29,18 Z" fill="url(#gold-grad-ornament)" />
+                <circle cx="29" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
+                <path d="M 17,12 L 13,8 L 9,12 L 13,16 Z" fill="url(#gold-grad-ornament)" />
+                <circle cx="3" cy="12" r="2" fill="url(#gold-grad-ornament)" />
+                <defs>
+                  <linearGradient id="gold-line-right" x1="120" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="transparent" />
+                    <stop offset="100%" stopColor="#e2c275" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
+            
+            {/* Left Column - Kati & Amin */}
+            <div className="flex flex-col gap-8 order-2 md:order-none">
+              
+              {/* Kati Asgari */}
+              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                  <Image
+                    src="/landing/team/kati.png"
+                    alt="Kati Asgari"
+                    fill
+                    sizes="130px"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  Kati Asgari
+                </h3>
+                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  Lead Frontend Engineer
+                </p>
+              </div>
+
+              {/* Amin Sarang */}
+              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                  <Image
+                    src="/landing/team/amin.png"
+                    alt="Amin Sarang"
+                    fill
+                    sizes="130px"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  Amin Sarang
+                </h3>
+                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  Database Architect
+                </p>
+              </div>
+
+            </div>
+
+            {/* Center Column - Featured Mopara Pair Ayat */}
+            <div className="relative w-full max-w-[360px] h-[520px] mx-auto order-1 md:order-none flex flex-col items-center justify-between p-8 pt-16 group">
+              {/* Custom Pointed Arch Background */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#e2c275]/50 light:stroke-[#e2c275]/80" />
+                <defs>
+                  <linearGradient id="center-card-bg-gradient" x1="180" y1="0" x2="180" y2="520" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="var(--center-card-bg-start)" stopOpacity="0.65" />
+                    <stop offset="100%" stopColor="var(--center-card-bg-end)" stopOpacity="0.95" />
+                  </linearGradient>
+                  <linearGradient id="center-gold-border-gradient" x1="0" y1="0" x2="360" y2="520" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#aa7c11" />
+                    <stop offset="25%" stopColor="#e2c275" />
+                    <stop offset="75%" stopColor="#fdf6db" />
+                    <stop offset="100%" stopColor="#aa7c11" />
+                  </linearGradient>
+                </defs>
+              </svg>
+
+              <div className="relative z-10 w-full flex flex-col items-center">
+                {/* Photo */}
+                <div className="relative w-[140px] h-[170px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
+                  <Image
+                    src="/landing/team/user_photo.png"
+                    alt="Mopara Pair Ayat"
+                    fill
+                    sizes="140px"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                {/* Info */}
+                <h3 className="text-2xl font-bold font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-4">
+                  Mopara Pair Ayat
+                </h3>
+                <p className="text-xs text-[#e2c275] light:text-[#8a650c] tracking-wider text-center mt-1.5 uppercase font-semibold">
+                  Lead Creator & Student
+                </p>
+                <p className="text-xs text-slate-300 light:text-[#2d4d3f] leading-relaxed text-center mt-3 px-4 font-light max-w-[280px]">
+                  Lead developer and architect of Nexora OS. Passionate about building seamless, connected academic workspaces.
+                </p>
+
+                {/* Social Links */}
+                <div className="flex items-center justify-center gap-5 mt-3">
+                  <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="LinkedIn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                    </svg>
+                  </a>
+                  <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Facebook">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                    </svg>
+                  </a>
+                  <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Twitter">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              {/* Read More button */}
+              <div className="relative z-10 w-full flex justify-center mt-6 mb-1">
+                <button className="border border-[#e2c275]/50 light:border-[#e2c275]/80 text-white light:text-[#0b2419] font-light tracking-widest text-xs px-8 py-2.5 bg-black/40 light:bg-white/30 hover:bg-[#e2c275] hover:text-black light:hover:text-white transition-all duration-300">
+                  Read More
+                </button>
+              </div>
+            </div>
+
+            {/* Right Column - Afsana & Tomas */}
+            <div className="flex flex-col gap-8 order-3 md:order-none">
+              
+              {/* Afsana Tabassum */}
+              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                  <Image
+                    src="/landing/team/malihe.png"
+                    alt="Afsana Tabassum"
+                    fill
+                    sizes="130px"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  Afsana Tabassum
+                </h3>
+                <p className="text-xs text-[#e2c275]/80 tracking-wider text-center mt-1 uppercase font-semibold">
+                  Lecturer & Project Advisor
+                </p>
+              </div>
+
+              {/* Tomas Ziskos */}
+              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                  <Image
+                    src="/landing/team/tomas.png"
+                    alt="Tomas Ziskos"
+                    fill
+                    sizes="130px"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  Tomas Ziskos
+                </h3>
+                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  UI/UX Designer
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Bottom pulsing arrow indicator */}
+          <div className="flex justify-center mt-16">
+            <a href="#faq" className="group flex items-center justify-center w-11 h-11 rounded-full border border-white/10 light:border-emerald-800/15 hover:border-[#e2c275]/40 light:hover:border-[#e2c275]/60 bg-black/20 light:bg-white/40 hover:bg-emerald-950/30 light:hover:bg-emerald-50/50 transition-all duration-300 select-none cursor-pointer">
+              <svg className="w-5 h-5 text-white/50 light:text-emerald-800/60 group-hover:text-[#e2c275] light:group-hover:text-[#8a650c] transition-colors duration-300 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
+          </div>
+
+        </div>
+      </section>
+
       <section
         id="faq"
-        className="border-y border-white/8 py-14 light:border-emerald-950/8 light:bg-white/55 sm:py-16"
+        className="relative overflow-hidden border-y border-white/8 py-14 light:border-emerald-950/8 light:bg-white/55 sm:py-16"
       >
+        {/* ── Large warm amber sun-like orb — bottom right ── */}
+        <div
+          className="pointer-events-none absolute -bottom-24 -right-24 h-[560px] w-[560px] rounded-full"
+          style={{
+            background: "radial-gradient(circle at center, rgba(251,146,60,0.55) 0%, rgba(245,101,19,0.35) 28%, rgba(217,70,0,0.18) 55%, transparent 75%)",
+            filter: "blur(2px)",
+          }}
+        />
+        {/* Smaller secondary warm glow */}
+        <div
+          className="pointer-events-none absolute -bottom-8 right-32 h-[280px] w-[280px] rounded-full"
+          style={{
+            background: "radial-gradient(circle at center, rgba(251,191,36,0.3) 0%, rgba(245,101,19,0.15) 50%, transparent 70%)",
+            filter: "blur(1px)",
+          }}
+        />
         <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
@@ -1253,8 +1995,9 @@ export function LandingPage() {
             {/* Nav links */}
             <nav className="mt-7 flex flex-wrap gap-x-7 gap-y-2">
               <a href="#" className="footer-nav-link">Home</a>
-              <a href="#platform" className="footer-nav-link">Platform</a>
-              <a href="#workflows" className="footer-nav-link">Workflows</a>
+              <a href="#platform" className="footer-nav-link">Features</a>
+              <a href="#workflows" className="footer-nav-link">How It Works</a>
+              <a href="#team" className="footer-nav-link">Team</a>
               <a href="#roles" className="footer-nav-link">Roles</a>
               <a href="#faq" className="footer-nav-link">FAQ</a>
               <a href="#contact" className="footer-nav-link">Contact Us</a>
@@ -1280,6 +2023,24 @@ export function LandingPage() {
 }
 
 function LandingNav() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const close = () => setMobileOpen(false);
+    window.addEventListener("scroll", close, { passive: true });
+    return () => window.removeEventListener("scroll", close);
+  }, [mobileOpen]);
+
+  const navLinks = [
+    { href: "#about", label: "About" },
+    { href: "#platform", label: "Features" },
+    { href: "#workflows", label: "How It Works" },
+    { href: "#team", label: "Team" },
+    { href: "#faq", label: "FAQ" },
+    { href: "#contact", label: "Contact Us" },
+  ];
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-3 pt-3 sm:px-5 md:px-8">
       <style dangerouslySetInnerHTML={{ __html: `
@@ -1423,6 +2184,29 @@ function LandingNav() {
           transform: scaleX(1);
           transform-origin: bottom left;
         }
+        /* ── Mobile menu drawer ── */
+        .mobile-drawer {
+          overflow: hidden;
+          max-height: 0;
+          opacity: 0;
+          transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.28s ease;
+        }
+        .mobile-drawer.open {
+          max-height: 480px;
+          opacity: 1;
+        }
+        .ham-bar {
+          display: block;
+          width: 20px;
+          height: 2px;
+          border-radius: 2px;
+          background: currentColor;
+          transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+          transform-origin: center;
+        }
+        .ham-open .ham-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        .ham-open .ham-bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .ham-open .ham-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
       ` }} />
       <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(50,245,154,0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(50,245,154,0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-white/75 light:bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(236,253,245,0.62)),rgba(255,255,255,0.68)] light:shadow-[inset_0_1px_0_rgba(255,255,255,0.96),0_14px_38px_rgba(31,67,49,0.11),0_0_28px_rgba(16,185,129,0.06)]">
         <div className="flex shrink-0 items-center">
@@ -1432,30 +2216,9 @@ function LandingNav() {
         </div>
 
         <nav className="hidden items-center gap-6 text-sm lg:flex xl:gap-8">
-          <a
-            href="#about"
-            className="nav-link"
-          >
-            About
-          </a>
-          <a
-            href="#platform"
-            className="nav-link"
-          >
-            Platform
-          </a>
-          <a
-            href="#workflows"
-            className="nav-link"
-          >
-            Workflows
-          </a>
-          <a
-            href="#faq"
-            className="nav-link"
-          >
-            FAQ
-          </a>
+          {navLinks.map((l) => (
+            <a key={l.href} href={l.href} className="nav-link">{l.label}</a>
+          ))}
         </nav>
 
         <div className="flex shrink-0 items-center gap-3">
@@ -1463,20 +2226,46 @@ function LandingNav() {
             <ThemeToggle />
           </div>
 
-          <a
-            href="#contact"
-            className="hk-button"
-          >
-            <span>Contact Us</span>
-          </a>
+          <Link href="/login" className="hk-button hidden sm:inline-flex">
+            <span>Log In</span>
+          </Link>
 
+          {/* Hamburger — only on mobile/tablet < lg */}
+          <button
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((v) => !v)}
+            className={`lg:hidden flex flex-col items-center justify-center gap-[5px] rounded-xl border border-white/12 bg-white/5 p-2.5 text-slate-300 backdrop-blur-sm transition-colors hover:bg-white/10 hover:text-white light:border-slate-200 light:bg-slate-100 light:text-slate-600 light:hover:bg-slate-200 ${mobileOpen ? "ham-open" : ""}`}
+          >
+            <span className="ham-bar" />
+            <span className="ham-bar" />
+            <span className="ham-bar" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile slide-down drawer */}
+      <div className={`mobile-drawer mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-[rgba(6,9,7,0.92)] backdrop-blur-2xl light:border-white/60 light:bg-[rgba(255,255,255,0.95)] lg:hidden ${mobileOpen ? "open" : ""}`}>
+        <nav className="flex flex-col gap-1 px-4 py-4">
+          {navLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-colors hover:bg-white/8 hover:text-white light:text-slate-700 light:hover:bg-slate-100 light:hover:text-slate-900"
+            >
+              {l.label}
+            </a>
+          ))}
+          <div className="my-2 h-px bg-white/8 light:bg-slate-200" />
           <Link
             href="/login"
-            className="nexora-focus inline-flex h-10 items-center justify-center rounded-md border border-emerald-300/15 bg-[#087a55] px-5 text-sm font-semibold !text-white shadow-none hover:bg-[#066b4a] light:bg-[#087a55] light:!text-white light:hover:bg-[#066b4a]"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-emerald-900/30 transition-opacity hover:opacity-90"
           >
-            Log In
+            Log In to Nexora OS →
           </Link>
-        </div>
+        </nav>
       </div>
     </header>
   );
