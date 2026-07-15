@@ -15,6 +15,7 @@ import {
   Send,
   ShieldCheck,
   Sparkles,
+  Search,
   type LucideIcon,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -280,7 +281,7 @@ export function CommandSearch({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       className="nexora-focus hidden h-11 min-w-[280px] max-w-[520px] flex-1 items-center gap-3 rounded-2xl border border-[var(--line)] bg-[rgba(18,24,21,0.68)] px-4 text-left text-sm text-[var(--muted)] shadow-[inset_0_1px_0_rgba(245,247,242,0.06),0_12px_34px_rgba(0,0,0,0.2)] transition hover:border-[color:var(--border-emerald)] hover:bg-[rgba(32,40,35,0.78)] light:border-slate-200 light:bg-white/92 light:text-slate-500 light:shadow-[0_10px_24px_rgba(39,53,86,0.06)] light:hover:border-emerald-100 light:hover:bg-white lg:flex"
     >
-      <Sparkles
+      <Search
         className="h-4 w-4 text-[var(--brand-lime)] light:text-emerald-600"
         aria-hidden="true"
       />
