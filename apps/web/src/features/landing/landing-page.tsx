@@ -1175,18 +1175,17 @@ export function LandingPage() {
         <div className="relative mx-auto grid max-w-7xl gap-10 px-5 md:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
           <div className="max-w-lg">
             <p className="inline-flex rounded-full border border-emerald-300/15 bg-emerald-400/7 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:border-emerald-700/12 light:bg-emerald-50 light:text-emerald-700">
-              About this project
+              Academic Project
             </p>
             <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-              Built as an academic project for real coursework
+              Developed for Academic Coursework
             </h2>
             <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
-              Nexora OS brings coursework, practical development, submission
-              evidence, and feedback into a single working space.
+              Nexora OS bridges the gap between study and practice. It brings assignments, hands-on coding labs, submission evidence, and instructor feedback together into one unified platform.
             </p>
             <div className="mt-6 flex items-center gap-3 text-sm text-slate-400 light:text-slate-600">
               <span className="h-px w-10 bg-emerald-400/70" />
-              Summer 2026 · Academic project
+              Summer 2026 · Academic Submission
             </div>
           </div>
           <dl className="grid border-y border-white/10 sm:grid-cols-2 light:border-emerald-950/10">
@@ -1200,7 +1199,7 @@ export function LandingPage() {
               {
                 label: "Student",
                 value: "Mopara Pair Ayat",
-                note: "IT202510001 · Summer 2026 · Information Technology",
+                note: "IT202510001 · Information Technology",
                 icon: UsersRound,
               },
               {
@@ -1239,20 +1238,19 @@ export function LandingPage() {
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="max-w-lg">
             <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-              Try the workflow
+              Interactive Preview
             </p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Take a look around the student workspace
+              Explore Your Interactive Workspace
             </h2>
             <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
-              Use a demo account to review the dashboard, visit Code Lab, and
-              see which tools are available to each role.
+              Sign in with a demo account to experience the workspace firsthand. Navigating dashboards, running code labs, and tracking submissions has never been easier.
             </p>
             <Link
               href="/login"
               className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl border border-emerald-300/15 bg-[#087a55] px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(5,68,46,0.22)] hover:bg-[#066b4a] light:bg-[#087a55] light:!text-white light:hover:bg-[#066b4a]"
             >
-              Explore a demo <ArrowRight className="h-4 w-4" />
+              Launch Workspace Demo <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
           {/* Layered Glass Card Container */}
@@ -1509,38 +1507,38 @@ export function LandingPage() {
             {/* Left Column - Kati & Amin */}
             <div className="flex flex-col gap-8 order-2 md:order-none">
               
-              {/* Kati Asgari */}
+              {/* Mopara Pair Ayat */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/kati.png"
-                    alt="Kati Asgari"
+                    src="/landing/team/user_photo.png"
+                    alt="Mopara Pair Ayat"
                     fill
                     sizes="130px"
                     className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Kati Asgari
+                  Mopara Pair Ayat
                 </h3>
                 <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
-                  Lead Frontend Engineer
+                  Founder & Lead Developer
                 </p>
               </div>
 
-              {/* Amin Sarang */}
+              {/* Emre Demir */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/amin.png"
-                    alt="Amin Sarang"
+                    src="/landing/team/amin_avatar_v5.png"
+                    alt="Emre Demir"
                     fill
                     sizes="130px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover object-top scale-[1.35] origin-top -translate-y-[24%] transition-transform duration-500 group-hover:scale-[1.42]"
                   />
                 </div>
                 <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Amin Sarang
+                  Emre Demir
                 </h3>
                 <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
                   Database Architect
@@ -1570,25 +1568,25 @@ export function LandingPage() {
 
               <div className="relative z-10 w-full flex flex-col items-center">
                 {/* Photo */}
-                <div className="relative w-[140px] h-[170px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
+                <div className="relative w-[160px] h-[195px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/user_photo.png"
-                    alt="Mopara Pair Ayat"
+                    src="/landing/team/afsana_tabassum_v2.png"
+                    alt="Afsana Tabassum Tamishra"
                     fill
-                    sizes="140px"
+                    sizes="160px"
                     className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
 
                 {/* Info */}
                 <h3 className="text-2xl font-bold font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-4">
-                  Mopara Pair Ayat
+                  Afsana Tabassum Tamishra
                 </h3>
                 <p className="text-xs text-[#e2c275] light:text-[#8a650c] tracking-wider text-center mt-1.5 uppercase font-semibold">
-                  Lead Creator & Student
+                  Lecturer & Project Advisor
                 </p>
                 <p className="text-xs text-slate-300 light:text-[#2d4d3f] leading-relaxed text-center mt-3 px-4 font-light max-w-[280px]">
-                  Lead developer and architect of Nexora OS. Passionate about building seamless, connected academic workspaces.
+                  Lecturer at BITHM College of Professionals. Project advisor and coordinator guiding the design and development of Nexora OS.
                 </p>
 
                 {/* Social Links */}
@@ -1619,44 +1617,44 @@ export function LandingPage() {
               </div>
             </div>
 
-            {/* Right Column - Afsana & Tomas */}
+            {/* Right Column - Mopara Pair Ayat & Tomas */}
             <div className="flex flex-col gap-8 order-3 md:order-none">
               
-              {/* Afsana Tabassum */}
+              {/* Tahmid Chowdhury */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/malihe.png"
-                    alt="Afsana Tabassum"
+                    src="/landing/team/tomas_avatar_v3.png"
+                    alt="Tahmid Chowdhury"
                     fill
                     sizes="130px"
                     className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Afsana Tabassum
-                </h3>
-                <p className="text-xs text-[#e2c275]/80 tracking-wider text-center mt-1 uppercase font-semibold">
-                  Lecturer & Project Advisor
-                </p>
-              </div>
-
-              {/* Tomas Ziskos */}
-              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
-                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
-                  <Image
-                    src="/landing/team/tomas.png"
-                    alt="Tomas Ziskos"
-                    fill
-                    sizes="130px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Tomas Ziskos
+                  Tahmid Chowdhury
                 </h3>
                 <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
                   UI/UX Designer
+                </p>
+              </div>
+
+              {/* Fatima Rahman */}
+              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                  <Image
+                    src="/landing/team/kati_avatar_v2.png"
+                    alt="Fatima Rahman"
+                    fill
+                    sizes="130px"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  Fatima Rahman
+                </h3>
+                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  Lead Frontend Engineer
                 </p>
               </div>
 
