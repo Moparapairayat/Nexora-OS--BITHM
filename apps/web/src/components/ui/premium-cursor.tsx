@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { MousePointer, Zap } from "lucide-react";
 
 export function PremiumCursor() {
-  const [isEpicMode, setIsEpicMode] = useState<boolean>(true);
+  const [isEpicMode, setIsEpicMode] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
 
   // Dragon Mode Refs
@@ -32,8 +32,8 @@ export function PremiumCursor() {
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem("nexora-epic-cursor");
-    if (saved === "off") {
-      setIsEpicMode(false);
+    if (saved === "on") {
+      setIsEpicMode(true);
     }
   }, []);
 
