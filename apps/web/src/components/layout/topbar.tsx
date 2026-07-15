@@ -98,7 +98,7 @@ export function Topbar({
   return (
     <>
       <header className="sticky top-0 z-20 -mx-4 rounded-t-3xl border-b border-[var(--line)] bg-[rgba(5,7,6,0.76)] px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)] backdrop-blur-xl light:rounded-t-[28px] light:border-[color:var(--line)] light:bg-[rgba(250,253,251,0.88)] light:shadow-[0_10px_30px_rgba(31,67,49,0.055)] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex min-h-14 items-center gap-2.5">
+        <div className="flex min-h-14 items-center gap-1.5 sm:gap-2.5">
           <button
             type="button"
             className="nexora-focus rounded-2xl p-2 text-slate-300 transition hover:bg-white/[0.06] light:text-slate-700 light:hover:bg-emerald-50 lg:hidden"

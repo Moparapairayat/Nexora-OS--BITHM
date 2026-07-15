@@ -1171,6 +1171,19 @@ export function LandingPage() {
       </section>
 
       <section id="about" className="relative overflow-hidden py-14 sm:py-16">
+        <style dangerouslySetInnerHTML={{ __html: `
+          #about {
+            position: relative;
+            background: linear-gradient(180deg, rgba(8, 12, 10, 0.88) 0%, rgba(5, 8, 7, 0.95) 100%), url('/landing/footer-bg-brand.png') no-repeat center center / cover;
+            border-top: 1px solid rgba(50,245,154,0.1);
+            border-bottom: 1px solid rgba(50,245,154,0.1);
+          }
+          .light #about {
+            background: linear-gradient(180deg, rgba(250, 253, 251, 0.9) 0%, rgba(243, 248, 245, 0.95) 100%), url('/landing/footer-bg-brand-light.png') no-repeat center center / cover;
+            border-top: 1px solid rgba(16,185,129,0.12);
+            border-bottom: 1px solid rgba(16,185,129,0.12);
+          }
+        ` }} />
         <div className="pointer-events-none absolute -left-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-emerald-500/8 blur-[100px] light:bg-emerald-300/18" />
         <div className="relative mx-auto grid max-w-7xl gap-10 px-5 md:px-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
           <div className="max-w-lg">
@@ -1511,11 +1524,17 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/user_photo.png"
+                    src="/landing/team/user_photo_v3.png"
                     alt="Mopara Pair Ayat"
                     fill
                     sizes="130px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    draggable={false}
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
+                  />
+                  {/* Transparent overlay to prevent right click save */}
+                  <div
+                    className="absolute inset-0 z-10 bg-transparent select-none"
+                    onContextMenu={(e) => e.preventDefault()}
                   />
                 </div>
                 <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
@@ -1530,11 +1549,11 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/amin_avatar_v5.png"
+                    src="/landing/team/emre_avatar_v4.png"
                     alt="Emre Demir"
                     fill
                     sizes="130px"
-                    className="object-cover object-top scale-[1.35] origin-top -translate-y-[24%] transition-transform duration-500 group-hover:scale-[1.42]"
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
@@ -1570,7 +1589,7 @@ export function LandingPage() {
                 {/* Photo */}
                 <div className="relative w-[160px] h-[195px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/afsana_tabassum_v2.png"
+                    src="/landing/team/afsana_tabassum_v4.png"
                     alt="Afsana Tabassum Tamishra"
                     fill
                     sizes="160px"
@@ -1624,7 +1643,7 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/tomas_avatar_v3.png"
+                    src="/landing/team/tomas_avatar_v5.png"
                     alt="Tahmid Chowdhury"
                     fill
                     sizes="130px"
@@ -1643,7 +1662,7 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/kati_avatar_v2.png"
+                    src="/landing/team/kati_avatar_v4.png"
                     alt="Fatima Rahman"
                     fill
                     sizes="130px"
@@ -1834,17 +1853,17 @@ export function LandingPage() {
         <style dangerouslySetInnerHTML={{ __html: `
           .footer-card {
             position: relative;
-            background: linear-gradient(145deg, #0c120e 0%, #080d0a 100%);
-            border: 1px solid rgba(50,245,154,0.12);
+            background: linear-gradient(145deg, rgba(8, 12, 10, 0.85) 0%, rgba(5, 8, 7, 0.96) 100%), url('/landing/footer-bg-brand.png') no-repeat center center / cover;
+            border: 1px solid rgba(50,245,154,0.16);
             border-radius: 20px;
             padding: 0;
             max-width: 1280px; /* Matched to 7xl header width */
             margin: 0 auto;
             overflow: hidden;
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(50,245,154,0.04);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(50,245,154,0.05);
           }
           .light .footer-card {
-            background: linear-gradient(145deg, #ffffff 0%, #f6fbf7 100%);
+            background: linear-gradient(145deg, rgba(250, 253, 251, 0.88) 0%, rgba(243, 248, 245, 0.94) 100%), url('/landing/footer-bg-brand-light.png') no-repeat center center / cover;
             border: 1px solid rgba(16,185,129,0.18);
             box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 20px 48px rgba(16,185,129,0.08);
           }
@@ -2209,7 +2228,7 @@ function LandingNav() {
       <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(50,245,154,0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(50,245,154,0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-white/75 light:bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(236,253,245,0.62)),rgba(255,255,255,0.68)] light:shadow-[inset_0_1px_0_rgba(255,255,255,0.96),0_14px_38px_rgba(31,67,49,0.11),0_0_28px_rgba(16,185,129,0.06)]">
         <div className="flex shrink-0 items-center">
           <Link href="/" aria-label="Nexora OS home">
-            <NexoraLogo size="md" priority className="h-10 w-[158px]" />
+            <NexoraLogo size="md" priority className="h-8 w-[124px] sm:h-10 sm:w-[158px]" />
           </Link>
         </div>
 
@@ -2219,7 +2238,7 @@ function LandingNav() {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           <div>
             <ThemeToggle />
           </div>

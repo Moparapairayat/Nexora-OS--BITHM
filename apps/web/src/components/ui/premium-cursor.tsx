@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Flame } from "lucide-react";
+import { MousePointer, Zap } from "lucide-react";
 
 export function PremiumCursor() {
   const [isEpicMode, setIsEpicMode] = useState<boolean>(true);
@@ -557,77 +557,47 @@ export function PremiumCursor() {
       )}
 
       {/* ── FLOATING TOGGLE SWITCH WIDGET ─────────────────────────────────── */}
-      <div
-        className="fixed bottom-6 right-6 z-[9999999] pointer-events-auto hidden md:flex flex-col gap-1.5 p-1.5 rounded-2xl border backdrop-blur-xl transition-all duration-300 shadow-xl bg-black/40 light:bg-white/85 border-white/10 light:border-black/10 shadow-black/10 dark:shadow-black/40"
+      {/* ── FLOATING TOGGLE SWITCH WIDGET (SWITCH SLIDER STYLE) ───────────── */}
+      <button
+        onClick={toggleMode}
+        type="button"
+        title={isEpicMode ? "Switch to Classic Cursor (Off)" : "Switch to Epic Cursor (On)"}
+        className="fixed bottom-6 right-6 z-[9999999] pointer-events-auto hidden md:flex h-[32px] w-[58px] items-center rounded-full border backdrop-blur-xl transition-all duration-300 shadow-xl bg-black/40 light:bg-white/85 border-white/10 light:border-black/10 shadow-black/10 dark:shadow-black/40 hover:scale-105 active:scale-95 group/cursor-toggle"
         style={{
           borderColor: isEpicMode 
-            ? "rgba(249, 115, 22, 0.25)" 
+            ? "rgba(249, 115, 22, 0.4)" 
             : "var(--cursor-ring-color)",
+          boxShadow: isEpicMode
+            ? "0 0 20px rgba(249, 115, 22, 0.12), 0 8px 30px rgba(0,0,0,0.3)"
+            : "0 0 20px rgba(50, 245, 154, 0.12), 0 8px 30px rgba(0,0,0,0.3)",
         }}
+        data-cursor="hover"
       >
-        {/* Tiny subtle section label */}
-        <div className="px-2 pt-0.5 pb-0 text-[9px] font-bold tracking-widest text-slate-500 light:text-slate-400 uppercase select-none opacity-80">
-          Cursor Style
-        </div>
-        
-        {/* Segmented Switch Group */}
-        <div className="relative flex items-center p-0.5 bg-black/20 dark:bg-black/35 light:bg-black/5 rounded-xl border border-white/5 light:border-black/5">
-          {/* Moving background pill */}
-          <div
-            className="absolute top-0.5 bottom-0.5 rounded-[10px] transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]"
-            style={{
-              left: isEpicMode ? "50%" : "2px",
-              width: "calc(50% - 2px)",
-              background: isEpicMode
-                ? "linear-gradient(135deg, rgba(249, 115, 22, 0.15) 0%, rgba(234, 88, 12, 0.08) 100%)"
-                : "var(--cursor-ring-color)",
-              border: isEpicMode
-                ? "1px solid rgba(249, 115, 22, 0.3)"
-                : "1px solid var(--cursor-ring-color)",
-            }}
-          />
-          
-          {/* Classic Mode Button */}
-          <button
-            onClick={() => isEpicMode && toggleMode()}
-            className={`relative flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all duration-300 select-none ${
-              !isEpicMode
-                ? "text-[var(--cursor-accent-color)] font-bold"
-                : "text-slate-400 light:text-slate-500 hover:text-slate-200 light:hover:text-slate-800"
-            }`}
-            style={{ width: "86px" }}
-            data-cursor="hover"
-          >
-            <Sparkles 
-              className={`w-3.5 h-3.5 transition-transform duration-300 ${!isEpicMode ? "scale-110" : "scale-100"}`} 
+        {/* Sliding Knob */}
+        <div
+          className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 shadow-md ${
+            isEpicMode 
+              ? "translate-x-[26px] bg-orange-500/10 border border-orange-500/30" 
+              : "translate-x-[4px] bg-[rgba(50,245,154,0.1)] border border-[rgba(50,245,154,0.25)]"
+          }`}
+        >
+          {isEpicMode ? (
+            <Zap 
+              className="w-3.5 h-3.5 text-orange-500 light:text-orange-600 transition-transform duration-300 group-hover/cursor-toggle:scale-110"
               style={{
-                filter: !isEpicMode ? "drop-shadow(0 0 4px var(--cursor-accent-color))" : "none"
+                filter: "drop-shadow(0 0 3px rgba(249,115,22,0.8))"
               }}
             />
-            <span>Classic</span>
-          </button>
-
-          {/* Epic Mode Button */}
-          <button
-            onClick={() => !isEpicMode && toggleMode()}
-            className={`relative flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-[10px] text-xs font-semibold transition-all duration-300 select-none ${
-              isEpicMode
-                ? "text-orange-500 light:text-orange-600 font-bold"
-                : "text-slate-400 light:text-slate-500 hover:text-slate-200 light:hover:text-slate-800"
-            }`}
-            style={{ width: "86px" }}
-            data-cursor="hover"
-          >
-            <Flame 
-              className={`w-3.5 h-3.5 transition-transform duration-300 ${isEpicMode ? "scale-110 rotate-3" : "scale-100"}`}
+          ) : (
+            <MousePointer 
+              className="w-3.5 h-3.5 text-[var(--cursor-accent-color)] transition-transform duration-300 group-hover/cursor-toggle:scale-110"
               style={{
-                filter: isEpicMode ? "drop-shadow(0 0 5px rgba(249,115,22,0.8))" : "none"
+                filter: "drop-shadow(0 0 3px var(--cursor-accent-color))"
               }}
             />
-            <span>Epic</span>
-          </button>
+          )}
         </div>
-      </div>
+      </button>
     </>
   );
 }

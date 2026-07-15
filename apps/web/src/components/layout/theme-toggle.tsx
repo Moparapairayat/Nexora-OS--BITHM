@@ -1,6 +1,6 @@
 "use client";
 
-import { GraduationCap, Moon } from "lucide-react";
+import { Sun, Moon } from "lucide-react";
 import { useEffect, useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -41,21 +41,51 @@ export function ThemeToggle() {
     window.dispatchEvent(new Event("nexora-theme-change"));
   }
 
-  const Icon = isLight ? Moon : GraduationCap;
   const label = isLight
     ? "Switch to Premium Dark mode"
     : "Switch to Academic Light mode";
 
   return (
-    <Button
+    <button
       type="button"
-      variant="ghost"
-      className="h-10 w-10 px-0 rounded-xl border border-white/12 bg-white/[0.045] hover:bg-white/[0.08] transition-all duration-200 light:border-emerald-950/10 light:bg-white light:hover:bg-emerald-50 text-slate-300 light:text-slate-700 hover:text-white light:hover:text-emerald-900"
+      className="flex h-[32px] w-[58px] items-center rounded-full border backdrop-blur-xl transition-all duration-300 shadow-xl bg-black/40 light:bg-white/85 border-white/10 light:border-black/10 shadow-black/10 dark:shadow-black/40 hover:scale-105 active:scale-95 group/theme-toggle"
+      style={{
+        borderColor: isLight
+          ? "rgba(16, 185, 129, 0.3)"
+          : "rgba(50, 245, 154, 0.3)",
+        boxShadow: isLight
+          ? "0 0 20px rgba(16, 185, 129, 0.08), 0 8px 30px rgba(0,0,0,0.15)"
+          : "0 0 20px rgba(50, 245, 154, 0.08), 0 8px 30px rgba(0,0,0,0.25)",
+      }}
       onClick={toggleTheme}
       aria-label={label}
       title={label}
+      data-cursor="hover"
     >
-      <Icon className="h-4.5 w-4.5" aria-hidden="true" />
-    </Button>
+      {/* Sliding Knob */}
+      <div
+        className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 shadow-md ${
+          !isLight 
+            ? "translate-x-[26px] bg-[rgba(50,245,154,0.1)] border border-[rgba(50,245,154,0.25)]" 
+            : "translate-x-[4px] bg-amber-500/10 border border-amber-500/30"
+        }`}
+      >
+        {!isLight ? (
+          <Moon 
+            className="w-3.5 h-3.5 text-[var(--cursor-accent-color)] transition-transform duration-300 group-hover/theme-toggle:scale-110"
+            style={{
+              filter: "drop-shadow(0 0 3px var(--cursor-accent-color))"
+            }}
+          />
+        ) : (
+          <Sun 
+            className="w-3.5 h-3.5 text-amber-500 light:text-amber-600 transition-transform duration-300 group-hover/theme-toggle:scale-110"
+            style={{
+              filter: "drop-shadow(0 0 3px rgba(245,158,11,0.8))"
+            }}
+          />
+        )}
+      </div>
+    </button>
   );
 }
