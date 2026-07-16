@@ -1055,6 +1055,34 @@ export function PandaCTA() {
           pointer-events: none; 
         }
 
+        @media (max-width: 1100px) {
+          .mascot-container {
+            right: -180px;
+            width: 420px;
+            height: 420px;
+            top: -80px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          #contact {
+            padding-top: 240px !important;
+            padding-bottom: 80px !important;
+          }
+          .mascot-container {
+            position: absolute;
+            top: -200px;
+            left: 50%;
+            right: auto;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+          }
+          .contact-card {
+            padding: 35px 24px;
+          }
+        }
+
         .mascot-svg {
           width: 100%;
           height: 100%;
