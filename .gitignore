@@ -51,3 +51,7 @@ postgres-data/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Temporary files
+.tmp-responsive/
+
