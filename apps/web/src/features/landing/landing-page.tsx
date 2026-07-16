@@ -418,9 +418,24 @@ export function LandingPage() {
   const isDown = useRef(false);
   const startX = useRef(0);
   const scrollLeftVal = useRef(0);
+  const [downloadStates, setDownloadStates] = useState<Record<string, string>>({});
 
+  const handleDownloadSimulate = (platform: string) => {
+    if (downloadStates[platform]) return;
 
+    setDownloadStates(prev => ({ ...prev, [platform]: "Downloading..." }));
 
+    setTimeout(() => {
+      setDownloadStates(prev => ({ ...prev, [platform]: "Completed" }));
+      setTimeout(() => {
+        setDownloadStates(prev => {
+          const updated = { ...prev };
+          delete updated[platform];
+          return updated;
+        });
+      }, 3000);
+    }, 2000);
+  };
   // Safe-scrolling helpers to temporarily bypass CSS scroll snap conflicts
   const safeScroll = (amount: number) => {
     const slider = sliderRef.current;
@@ -578,7 +593,7 @@ export function LandingPage() {
                 {[
                   { src: "/landing/avatars/avatar-student.png", alt: "Student" },
                   { src: "/landing/avatars/avatar-teacher.png", alt: "Teacher" },
-                  { src: "/landing/avatars/avatar-admin.png",   alt: "Administrator" },
+                  { src: "/landing/avatars/avatar-admin.png", alt: "Administrator" },
                 ].map((avatar, index) => (
                   <div
                     key={avatar.alt}
@@ -606,61 +621,6 @@ export function LandingPage() {
           </div>
 
           <div className="landing-float relative w-full max-w-[660px] flex items-center justify-center justify-self-center md:justify-self-end">
-            {/* Ambient Hero Vector Glow (Z-0: Behind image) */}
-            <svg className="absolute -inset-12 w-[114%] h-[114%] pointer-events-none z-0" viewBox="0 0 600 500" fill="none">
-              <defs>
-                <filter id="hero-glow-green" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="16" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <filter id="hero-glow-pink" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="18" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <linearGradient id="hero-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#32f59a" />
-                  <stop offset="100%" stopColor="#06b6d4" />
-                </linearGradient>
-                <linearGradient id="hero-pink-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#d946ef" />
-                  <stop offset="100%" stopColor="#ef4444" />
-                </linearGradient>
-              </defs>
-
-              {/* Glowing vector paths weaving behind the hero image */}
-              <path
-                d="M 50,250 C 150,150 250,450 350,350 C 450,250 480,100 550,120"
-                fill="none"
-                stroke="url(#hero-green-grad)"
-                strokeWidth="14"
-                strokeLinecap="round"
-                filter="url(#hero-glow-green)"
-                opacity="0.6"
-              />
-              <path
-                d="M 50,250 C 150,150 250,450 350,350 C 450,250 480,100 550,120"
-                fill="none"
-                stroke="#e8ffdb"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                opacity="0.8"
-              />
-
-              {/* Designer nodes & coordinates guides */}
-              <line x1="350" y1="350" x2="310" y2="410" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
-              <circle cx="310" cy="410" r="3.5" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
-
-              <circle cx="350" cy="350" r="5" fill="#f59e0b" stroke="white" strokeWidth="1.5" />
-              <circle cx="550" cy="120" r="6" fill="#32f59a" stroke="white" strokeWidth="1.5" />
-            </svg>
 
             <div className="landing-orbit absolute -inset-8 rounded-full border border-emerald-300/10 before:absolute before:left-1/2 before:top-0 before:h-2 before:w-2 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10" />
             <Image
@@ -783,7 +743,7 @@ export function LandingPage() {
           <div className="relative mt-8">
             {/* Left Edge Fade Mask */}
             <div className="pointer-events-none absolute left-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-r from-[#070d0a]/95 dark:from-[#070d0a]/95 light:from-[#fbfdfb]/95 to-transparent" />
-            
+
             {/* Right Edge Fade Mask */}
             <div className="pointer-events-none absolute right-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-l from-[#050706]/95 dark:from-[#050706]/95 light:from-[#fbfdfb]/95 to-transparent" />
 
@@ -1173,7 +1133,8 @@ export function LandingPage() {
       </section>
 
       <section id="about" className="relative overflow-hidden py-14 sm:py-16">
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           #about {
             position: relative;
             background: linear-gradient(180deg, rgba(8, 12, 10, 0.88) 0%, rgba(5, 8, 7, 0.95) 100%), url('/landing/footer-bg-brand.png') no-repeat center center / cover;
@@ -1449,7 +1410,8 @@ export function LandingPage() {
         id="team"
         className="relative overflow-hidden py-24 bg-[radial-gradient(circle_at_50%_35%,rgba(16,185,129,0.06),transparent_50rem),linear-gradient(180deg,#020d0a_0%,#040e0b_100%)] text-white light:bg-[radial-gradient(circle_at_50%_35%,rgba(16,185,129,0.12),transparent_50rem),linear-gradient(180deg,#f4fbf7_0%,#e6f4ed_100%)] light:text-[#0d2a1d]"
       >
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
           .font-team-serif {
             font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
@@ -1463,7 +1425,7 @@ export function LandingPage() {
             --center-card-bg-end: rgba(255, 255, 255, 0.96);
           }
         `}} />
-        
+
         {/* Ambient background glows */}
         <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-emerald-950/15 light:bg-emerald-300/10 blur-3xl pointer-events-none" />
         <div className="absolute bottom-1/4 right-10 w-96 h-96 rounded-full bg-emerald-950/20 light:bg-emerald-300/15 blur-3xl pointer-events-none" />
@@ -1518,10 +1480,10 @@ export function LandingPage() {
 
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
-            
+
             {/* Left Column - Kati & Amin */}
             <div className="flex flex-col gap-8 order-2 md:order-none">
-              
+
               {/* Mopara Pair Ayat */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
@@ -1614,17 +1576,17 @@ export function LandingPage() {
                 <div className="flex items-center justify-center gap-5 mt-3">
                   <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="LinkedIn">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                     </svg>
                   </a>
                   <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Facebook">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
+                      <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
                     </svg>
                   </a>
                   <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Twitter">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                      <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
                     </svg>
                   </a>
                 </div>
@@ -1640,7 +1602,7 @@ export function LandingPage() {
 
             {/* Right Column - Mopara Pair Ayat & Tomas */}
             <div className="flex flex-col gap-8 order-3 md:order-none">
-              
+
               {/* Tahmid Chowdhury */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
@@ -1774,13 +1736,12 @@ export function LandingPage() {
                 className="border-b border-white/10 px-6 py-5 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0 light:border-emerald-950/10"
               >
                 <div
-                  className={`h-1 w-12 rounded-full ${
-                    index === 0
+                  className={`h-1 w-12 rounded-full ${index === 0
                       ? "bg-emerald-400"
                       : index === 1
                         ? "bg-violet-400"
                         : "bg-amber-400"
-                  }`}
+                    }`}
                 />
                 <div className="pt-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300 light:text-emerald-700">
@@ -1849,10 +1810,198 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Desktop App Download Section */}
+      <section id="download" className="relative px-5 py-16 md:px-8 sm:py-24 overflow-hidden border-t border-white/8 light:border-emerald-950/8 bg-[#0b0d14] light:bg-[#f1f6f3]">
+        {/* Glow ambient effects */}
+        <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="relative mx-auto max-w-7xl">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
+              Desktop Experience
+            </p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-white via-slate-200 to-emerald-400 light:from-slate-950 light:via-slate-800 light:to-emerald-700 bg-clip-text text-transparent">
+              Nexora OS for Desktop
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
+              Get the native experience with faster loading, dedicated workspaces, custom shortcuts, and native notification system for your academic activities.
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+            {/* Windows Card */}
+            <div
+              onClick={() => handleDownloadSimulate("Windows")}
+              className="group cursor-pointer relative rounded-3xl border border-white/[0.05] light:border-slate-200 bg-gradient-to-br from-[#111422]/90 to-[#0a0d16]/90 light:bg-none light:bg-white p-6 transition-all duration-300 hover:border-emerald-500/30 light:hover:border-emerald-600/20 hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.05)] light:hover:shadow-[0_20px_40px_rgba(16,185,129,0.06)]"
+            >
+              {/* Premium Inner Glow on Hover */}
+              <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Card Header */}
+              <div className="flex items-start justify-between">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400 light:bg-blue-500/5 light:text-blue-600 group-hover:bg-blue-500/20 group-hover:text-blue-300 light:group-hover:bg-blue-500/15 light:group-hover:text-blue-700 transition-all duration-300">
+                  {/* Custom Windows SVG */}
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM10.8 1.95L24 0v11.55H10.8V1.95zM10.8 12.45H24v11.55l-13.2-1.95v-9.6z" />
+                  </svg>
+                </div>
+                <span className="rounded-full bg-white/[0.03] border border-white/[0.05] light:bg-slate-100 light:border-transparent px-2.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-emerald-400 light:text-emerald-700">
+                  Coming Soon
+                </span>
+              </div>
+
+              {/* Card Body */}
+              <div className="mt-4">
+                <h3 className="text-lg font-bold text-white light:text-slate-900 group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors duration-300">
+                  Windows App
+                </h3>
+                <p className="mt-1 text-[11px] text-slate-500 light:text-slate-400">
+                  SHA-256 Verified • 84.2 MB
+                </p>
+                <p className="mt-2.5 text-xs leading-relaxed text-slate-400 light:text-slate-600">
+                  Run Nexora OS natively on Windows. Includes auto-updates, dedicated system tray icon, and advanced GPU acceleration.
+                </p>
+              </div>
+
+              {/* Action Button */}
+              <div className="mt-5 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-300 light:text-slate-700 group-hover:text-white light:group-hover:text-emerald-700 transition-colors duration-300">
+                  {downloadStates["Windows"] || "Download .exe"}
+                </span>
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 light:bg-slate-100 text-white light:text-slate-800 group-hover:bg-emerald-400 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all duration-300">
+                  {downloadStates["Windows"] === "Downloading..." ? (
+                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  ) : downloadStates["Windows"] === "Completed" ? (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 group-hover:text-black" />
+                  ) : (
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* macOS Card */}
+            <div
+              onClick={() => handleDownloadSimulate("macOS")}
+              className="group cursor-pointer relative rounded-3xl border border-white/[0.05] light:border-slate-200 bg-gradient-to-br from-[#111422]/90 to-[#0a0d16]/90 light:bg-none light:bg-white p-6 transition-all duration-300 hover:border-emerald-500/30 light:hover:border-emerald-600/20 hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.05)] light:hover:shadow-[0_20px_40px_rgba(16,185,129,0.06)]"
+            >
+              {/* Premium Inner Glow on Hover */}
+              <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Card Header */}
+              <div className="flex items-start justify-between">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-500/10 text-slate-300 light:bg-slate-500/5 light:text-slate-600 group-hover:bg-slate-500/20 group-hover:text-white light:group-hover:bg-slate-500/15 light:group-hover:text-slate-900 transition-all duration-300">
+                  {/* Custom macOS Apple SVG */}
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
+                  </svg>
+                </div>
+                <span className="rounded-full bg-white/[0.03] border border-white/[0.05] light:bg-slate-100 light:border-transparent px-2.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-emerald-400 light:text-emerald-700">
+                  Coming Soon
+                </span>
+              </div>
+
+              {/* Card Body */}
+              <div className="mt-4">
+                <h3 className="text-lg font-bold text-white light:text-slate-900 group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors duration-300">
+                  macOS App
+                </h3>
+                <p className="mt-1 text-[11px] text-slate-500 light:text-slate-400">
+                  Apple Silicon & Intel • 92.6 MB
+                </p>
+                <p className="mt-2.5 text-xs leading-relaxed text-slate-400 light:text-slate-600">
+                  Optimized for Apple processors. Seamless integration with macOS dock, system shortcuts, and native Dark Mode tracking.
+                </p>
+              </div>
+
+              {/* Action Button */}
+              <div className="mt-5 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-300 light:text-slate-700 group-hover:text-white light:group-hover:text-emerald-700 transition-colors duration-300">
+                  {downloadStates["macOS"] || "Download .dmg"}
+                </span>
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 light:bg-slate-100 text-white light:text-slate-800 group-hover:bg-emerald-400 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all duration-300">
+                  {downloadStates["macOS"] === "Downloading..." ? (
+                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  ) : downloadStates["macOS"] === "Completed" ? (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 group-hover:text-black" />
+                  ) : (
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Linux Card */}
+            <div
+              onClick={() => handleDownloadSimulate("Linux")}
+              className="group cursor-pointer relative rounded-3xl border border-white/[0.05] light:border-slate-200 bg-gradient-to-br from-[#111422]/90 to-[#0a0d16]/90 light:bg-none light:bg-white p-6 transition-all duration-300 hover:border-emerald-500/30 light:hover:border-emerald-600/20 hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.05)] light:hover:shadow-[0_20px_40px_rgba(16,185,129,0.06)]"
+            >
+              {/* Premium Inner Glow on Hover */}
+              <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Card Header */}
+              <div className="flex items-start justify-between">
+                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-400 light:bg-amber-500/5 light:text-amber-600 group-hover:bg-amber-500/20 group-hover:text-amber-300 light:group-hover:bg-amber-500/15 light:group-hover:text-amber-700 transition-all duration-300">
+                  {/* Custom Linux Terminal SVG */}
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="4 17 10 11 4 5" />
+                    <line x1="12" y1="19" x2="20" y2="19" />
+                  </svg>
+                </div>
+                <span className="rounded-full bg-white/[0.03] border border-white/[0.05] light:bg-slate-100 light:border-transparent px-2.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-emerald-400 light:text-emerald-700">
+                  Coming Soon
+                </span>
+              </div>
+
+              {/* Card Body */}
+              <div className="mt-4">
+                <h3 className="text-lg font-bold text-white light:text-slate-900 group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors duration-300">
+                  Linux App
+                </h3>
+                <p className="mt-1 text-[11px] text-slate-500 light:text-slate-450">
+                  AppImage & .deb • 89.1 MB
+                </p>
+                <p className="mt-2.5 text-xs leading-relaxed text-slate-400 light:text-slate-600">
+                  Highly portable and sandboxed packaging for Unix environments. Compatible with Ubuntu, Debian, Arch, and Fedora.
+                </p>
+              </div>
+
+              {/* Action Button */}
+              <div className="mt-5 flex items-center justify-between">
+                <span className="text-xs font-semibold text-slate-300 light:text-slate-750 group-hover:text-white light:group-hover:text-emerald-700 transition-colors duration-300">
+                  {downloadStates["Linux"] || "Download .AppImage"}
+                </span>
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 light:bg-slate-100 text-white light:text-slate-800 group-hover:bg-emerald-400 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all duration-300">
+                  {downloadStates["Linux"] === "Downloading..." ? (
+                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  ) : downloadStates["Linux"] === "Completed" ? (
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 group-hover:text-black" />
+                  ) : (
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <PandaCTA />
 
       <footer className="px-5 py-12 md:px-8 bg-[#0b0d14] light:bg-[#f1f6f3]">
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           .footer-card {
             position: relative;
             background: linear-gradient(145deg, rgba(8, 12, 10, 0.85) 0%, rgba(5, 8, 7, 0.96) 100%), url('/landing/footer-bg-brand.png') no-repeat center center / cover;
@@ -1979,7 +2128,7 @@ export function LandingPage() {
                 <div className="mt-4">
                   <span className="footer-bithm-badge">
                     <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                      <circle cx="4" cy="4" r="3" fill="#32f59a" className="light:fill-[#059669]"/>
+                      <circle cx="4" cy="4" r="3" fill="#32f59a" className="light:fill-[#059669]" />
                     </svg>
                     Built for BITHM
                   </span>
@@ -1990,22 +2139,22 @@ export function LandingPage() {
               <div className="flex shrink-0 items-center gap-2">
                 <a href="#" aria-label="Facebook" className="footer-social-icon">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                   </svg>
                 </a>
                 <a href="#" aria-label="X / Twitter" className="footer-social-icon">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                   </svg>
                 </a>
                 <a href="#" aria-label="Instagram" className="footer-social-icon">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                   </svg>
                 </a>
                 <a href="#" aria-label="LinkedIn" className="footer-social-icon">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" />
                   </svg>
                 </a>
               </div>
@@ -2062,7 +2211,8 @@ function LandingNav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-3 pt-3 sm:px-5 md:px-8">
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .hk-button {
           position: relative;
           display: inline-flex;
