@@ -1674,7 +1674,7 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/user_photo_v3.png"
+                    src="/landing/team/user_photo.png"
                     alt="Mopara Pair Ayat"
                     fill
                     sizes="130px"
@@ -1699,7 +1699,7 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/emre_avatar_v4.png"
+                    src="/landing/team/emre_avatar.png"
                     alt="Emre Demir"
                     fill
                     sizes="130px"
@@ -1739,7 +1739,7 @@ export function LandingPage() {
                 {/* Photo */}
                 <div className="relative w-[160px] h-[195px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/afsana_tabassum_v4.png"
+                    src="/landing/team/afsana_tabassum.png"
                     alt="Afsana Tabassum Tamishra"
                     fill
                     sizes="160px"
@@ -1793,7 +1793,7 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/tomas_avatar_v5.png"
+                    src="/landing/team/tomas_avatar.png"
                     alt="Tahmid Chowdhury"
                     fill
                     sizes="130px"
@@ -1812,7 +1812,7 @@ export function LandingPage() {
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
-                    src="/landing/team/kati_avatar_v4.png"
+                    src="/landing/team/kati_avatar.png"
                     alt="Fatima Rahman"
                     fill
                     sizes="130px"
