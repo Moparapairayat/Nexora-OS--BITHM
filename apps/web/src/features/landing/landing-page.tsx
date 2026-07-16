@@ -812,7 +812,7 @@ export function LandingPage() {
 
             <div className="landing-orbit absolute -inset-8 rounded-full border border-emerald-300/10 before:absolute before:left-1/2 before:top-0 before:h-2 before:w-2 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10" />
             <Image
-              src="/landing/mentor-modern-1/hero-image.png"
+              src="/landing/mentor-modern/hero-image.png"
               alt="Student using Nexora OS for academic work"
               width={720}
               height={620}
@@ -835,14 +835,14 @@ export function LandingPage() {
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-4">
             {[
-              "/landing/mentor-modern-1/logos/bithm-logo.png",
-              "/landing/mentor-modern-1/logos/othm-logo.png",
-              "/landing/mentor-modern-1/logos/bithm-shield-logo.png",
-              "/landing/mentor-modern-1/logos/standard-logo.png",
-              "/landing/mentor-modern-1/logos/logo-4.png",
-              "/landing/mentor-modern-1/logos/logo-8.png",
-              "/landing/mentor-modern-1/logos/logo-6.png",
-              "/landing/mentor-modern-1/logos/logo-7.png",
+              "/landing/mentor-modern/logos/bithm-logo.png",
+              "/landing/mentor-modern/logos/othm-logo.png",
+              "/landing/mentor-modern/logos/bithm-shield-logo.png",
+              "/landing/mentor-modern/logos/standard-logo.png",
+              "/landing/mentor-modern/logos/logo-4.png",
+              "/landing/mentor-modern/logos/logo-8.png",
+              "/landing/mentor-modern/logos/logo-6.png",
+              "/landing/mentor-modern/logos/logo-7.png",
             ].map((src, index) => {
               const isBithmText = src.includes("bithm-logo.png");
               const isBithmShield = src.includes("bithm-shield-logo.png");
@@ -1122,7 +1122,7 @@ export function LandingPage() {
 
       <section
         id="workflows"
-        className="relative overflow-hidden border-y border-white/8 bg-[url('/landing/mentor-modern-1/bg-line.png')] bg-cover bg-center py-14 light:border-emerald-950/8 sm:py-16"
+        className="relative overflow-hidden border-y border-white/8 bg-[url('/landing/mentor-modern/bg-line.png')] bg-cover bg-center py-14 light:border-emerald-950/8 sm:py-16"
       >
         <div className="absolute inset-0 bg-[#07100b]/88 light:bg-[#f2f8f4]/88" />
         <div className="nexora-flow-line pointer-events-none absolute -left-[8%] top-[24%] h-[300px] w-[112%] -rotate-[7deg]" />
@@ -1168,7 +1168,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[url('/landing/mentor-modern-1/bg-line.png')] bg-cover bg-center py-14 sm:py-16">
+      <section className="relative overflow-hidden bg-[url('/landing/mentor-modern/bg-line.png')] bg-cover bg-center py-14 sm:py-16">
         <div className="absolute inset-0 bg-[#060907]/90 light:bg-[#f8fbf9]/91" />
         <div className="nexora-flow-line pointer-events-none absolute -right-[14%] bottom-[-18%] h-[340px] w-[86%] rotate-[16deg] opacity-80" />
         <div className="absolute right-[8%] top-10 h-72 w-72 rounded-full bg-emerald-500/13 blur-[110px]" />
@@ -1876,7 +1876,7 @@ export function LandingPage() {
               currently available.
             </p>
             <Image
-              src="/landing/mentor-modern-1/faqs.png"
+              src="/landing/mentor-modern/faqs.png"
               alt="Student reviewing common questions"
               width={360}
               height={300}
@@ -1982,7 +1982,7 @@ export function LandingPage() {
 
       <section id="demo" className="px-5 py-14 md:px-8 sm:py-16">
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] border border-emerald-200/20 bg-[linear-gradient(125deg,#075c42_0%,#07865a_52%,#0aa66e_100%)] px-6 py-14 text-center shadow-[0_30px_90px_rgba(4,96,65,0.3)] sm:px-10">
-          <div className="absolute inset-0 bg-[url('/landing/mentor-modern-1/cta-bg-vector.png')] bg-cover bg-center opacity-35" />
+          <div className="absolute inset-0 bg-[url('/landing/mentor-modern/cta-bg-vector.png')] bg-cover bg-center opacity-35" />
           <div className="relative mx-auto max-w-2xl">
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
               Explore Nexora OS with a demo account
