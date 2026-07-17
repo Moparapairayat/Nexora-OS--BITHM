@@ -662,7 +662,7 @@ export function LandingPage() {
         </div>
 
         {/* Dual Infinite Marquee Ribbon (Branded & Frameless) */}
-        <div className="relative w-full h-[130px] mt-8 overflow-hidden select-none pointer-events-none z-20">
+        <div className="relative w-full h-[90px] sm:h-[130px] mt-6 sm:mt-8 overflow-hidden select-none pointer-events-none z-20">
           <style dangerouslySetInnerHTML={{
             __html: `
             @keyframes marquee-ltr {
@@ -685,17 +685,25 @@ export function LandingPage() {
             }
             .marquee-ribbon-dark {
               transform: rotate(-2.5deg) scale(1.05);
-              box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+              box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             }
             .marquee-ribbon-light {
               transform: rotate(2.5deg) scale(1.05);
-              box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+              box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            }
+            @media (min-width: 640px) {
+              .marquee-ribbon-dark {
+                box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+              }
+              .marquee-ribbon-light {
+                box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+              }
             }
           `}} />
           
           {/* Ribbon 1: Dark (on top) - Rich Deep Brand Green with Neon Text */}
-          <div className="marquee-ribbon-dark absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-4 bg-[#0a1b13] light:bg-[#f0f9f4] z-10 flex items-center overflow-hidden">
-            <div className="animate-marquee-ltr flex items-center whitespace-nowrap gap-12 text-[11px] sm:text-xs font-black tracking-[0.2em] text-[#32f59a] light:text-[#065f46] uppercase">
+          <div className="marquee-ribbon-dark absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-[#0a1b13] light:bg-[#f0f9f4] z-10 flex items-center overflow-hidden">
+            <div className="animate-marquee-ltr flex items-center whitespace-nowrap gap-6 sm:gap-12 text-[9px] sm:text-xs font-black tracking-[0.2em] text-[#32f59a] light:text-[#065f46] uppercase">
               {Array(2).fill([
                 "Student Workspace",
                 "Code Lab Workspace",
@@ -706,17 +714,17 @@ export function LandingPage() {
                 "Integrity Verification",
                 "Instructor Feedback"
               ]).flat().map((word, i) => (
-                <span key={i} className="flex items-center gap-12">
+                <span key={i} className="flex items-center gap-6 sm:gap-12">
                   <span>{word}</span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#d9ff57] light:bg-[#059669] shadow-[0_0_8px_rgba(217,255,87,0.7)] light:shadow-[0_0_8px_rgba(5,150,105,0.4)]" />
+                  <span className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-[#d9ff57] light:bg-[#059669] shadow-[0_0_8px_rgba(217,255,87,0.7)] light:shadow-[0_0_8px_rgba(5,150,105,0.4)]" />
                 </span>
               ))}
             </div>
           </div>
 
           {/* Ribbon 2: Light (underneath) - High-Impact Neon Green with Dark Text */}
-          <div className="marquee-ribbon-light absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-4 bg-[#32f59a] light:bg-[#087a55] z-0 flex items-center overflow-hidden">
-            <div className="animate-marquee-rtl flex items-center whitespace-nowrap gap-12 text-[11px] sm:text-xs font-black tracking-[0.2em] text-[#031d11] light:text-white uppercase">
+          <div className="marquee-ribbon-light absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-[#32f59a] light:bg-[#087a55] z-0 flex items-center overflow-hidden">
+            <div className="animate-marquee-rtl flex items-center whitespace-nowrap gap-6 sm:gap-12 text-[9px] sm:text-xs font-black tracking-[0.2em] text-[#031d11] light:text-white uppercase">
               {Array(2).fill([
                 "Interactive Preview",
                 "Integrity Protocol",
@@ -727,9 +735,9 @@ export function LandingPage() {
                 "Coursework Verification",
                 "Faculty Review"
               ]).flat().map((word, i) => (
-                <span key={i} className="flex items-center gap-12">
+                <span key={i} className="flex items-center gap-6 sm:gap-12">
                   <span>{word}</span>
-                  <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+                  <span className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
                 </span>
               ))}
             </div>
