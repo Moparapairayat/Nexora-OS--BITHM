@@ -647,10 +647,10 @@ export function LandingPage() {
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-4">
             {[
-              "/landing/mentor-modern/logos/bithm-logo.png",
+              "/landing/mentor-modern/logos/bithm-logo.png?v=3",
               "/landing/mentor-modern/logos/othm-logo.png",
-              "/landing/mentor-modern/logos/bithm-shield-logo.png",
-              "/landing/mentor-modern/logos/standard-logo.png",
+              "/landing/mentor-modern/logos/bithm-shield-logo.png?v=3",
+              "/landing/mentor-modern/logos/standard-logo.png?v=3",
               "/landing/mentor-modern/logos/koc.png",
             ].map((src, index) => {
               const isBithmText = src.includes("bithm-logo.png");
@@ -664,15 +664,20 @@ export function LandingPage() {
               let pxClass = "px-4 py-2";
 
               if (isBithmText) {
-                containerClass = "w-[320px] h-12";
+                containerClass = "w-[360px] h-14";
+                pxClass = "px-3 py-0.5";
               } else if (isBithmShield) {
-                containerClass = "w-[150px] h-12";
+                containerClass = "w-[160px] h-14";
+                pxClass = "px-3 py-0.5";
               } else if (isOthm) {
-                containerClass = "w-[160px] h-12";
+                containerClass = "w-[120px] h-12";
+                pxClass = "px-3 py-1";
               } else if (isStandard) {
-                containerClass = "w-[300px] h-16";
+                containerClass = "w-[210px] h-12";
+                pxClass = "px-3 py-1";
               } else if (isKoc) {
-                containerClass = "w-[200px] h-12";
+                containerClass = "w-[190px] h-12";
+                pxClass = "px-2 py-0.5";
               } else if (isEastTexas) {
                 containerClass = "w-[240px] h-12";
                 pxClass = "px-2 py-1";
