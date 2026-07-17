@@ -25,9 +25,9 @@ export const metadata: Metadata = {
   description:
     "BITHM's platform for assignments, labs, coding projects, feedback, and academic administration.",
   icons: {
-    icon: nexoraLogoSrc,
-    shortcut: nexoraLogoSrc,
-    apple: nexoraLogoSrc,
+    icon: "/brand/nexora-os-icon.png",
+    shortcut: "/favicon.ico",
+    apple: "/brand/nexora-os-icon.png",
   },
   openGraph: {
     title: "Nexora OS",
