@@ -651,12 +651,13 @@ export function LandingPage() {
               "/landing/mentor-modern/logos/othm-logo.png",
               "/landing/mentor-modern/logos/bithm-shield-logo.png",
               "/landing/mentor-modern/logos/standard-logo.png",
-              "/landing/mentor-modern/logos/logo-6.png",
+              "/landing/mentor-modern/logos/koc.png",
             ].map((src, index) => {
               const isBithmText = src.includes("bithm-logo.png");
               const isBithmShield = src.includes("bithm-shield-logo.png");
               const isOthm = src.includes("othm-logo.png");
               const isStandard = src.includes("standard-logo.png");
+              const isKoc = src.includes("koc.png");
               const isEastTexas = src.includes("logo-4.png");
 
               let containerClass = "w-[130px] h-12";
@@ -669,7 +670,9 @@ export function LandingPage() {
               } else if (isOthm) {
                 containerClass = "w-[160px] h-12";
               } else if (isStandard) {
-                containerClass = "w-[260px] h-14";
+                containerClass = "w-[300px] h-16";
+              } else if (isKoc) {
+                containerClass = "w-[200px] h-12";
               } else if (isEastTexas) {
                 containerClass = "w-[240px] h-12";
                 pxClass = "px-2 py-1";
