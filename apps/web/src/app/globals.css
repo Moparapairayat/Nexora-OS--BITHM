@@ -448,6 +448,10 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   /* Default theme values (Emerald) */
   --theme-accent-primary: #32f59a;
   --theme-accent-secondary: #d9ff57;
+  --theme-accent-solid: #087a55;
+  --theme-accent-solid-hover: #066b4a;
+  --theme-accent-primary-rgb-raw: 50, 245, 154;
+  --theme-accent-secondary-rgb-raw: 217, 255, 87;
   --theme-emerald-50: #ecfdf5;
   --theme-emerald-100: #d1fae5;
   --theme-emerald-200: #a7f3d0;
@@ -466,6 +470,10 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
 html.theme-purple {
   --theme-accent-primary: #a855f7;
   --theme-accent-secondary: #6366f1;
+  --theme-accent-solid: #7c3aed;
+  --theme-accent-solid-hover: #6d28d9;
+  --theme-accent-primary-rgb-raw: 168, 85, 247;
+  --theme-accent-secondary-rgb-raw: 99, 102, 241;
   --theme-emerald-50: #faf5ff;
   --theme-emerald-100: #f3e8ff;
   --theme-emerald-200: #e9d5ff;
@@ -484,6 +492,10 @@ html.theme-purple {
 html.theme-amber {
   --theme-accent-primary: #fb923c;
   --theme-accent-secondary: #fcd34d;
+  --theme-accent-solid: #ea580c;
+  --theme-accent-solid-hover: #c2410c;
+  --theme-accent-primary-rgb-raw: 251, 146, 60;
+  --theme-accent-secondary-rgb-raw: 252, 211, 77;
   --theme-emerald-50: #fffbeb;
   --theme-emerald-100: #fef3c7;
   --theme-emerald-200: #fde68a;
@@ -502,6 +514,10 @@ html.theme-amber {
 html.theme-rose {
   --theme-accent-primary: #f43f5e;
   --theme-accent-secondary: #ec4899;
+  --theme-accent-solid: #db2777;
+  --theme-accent-solid-hover: #be185d;
+  --theme-accent-primary-rgb-raw: 244, 63, 94;
+  --theme-accent-secondary-rgb-raw: 236, 72, 153;
   --theme-emerald-50: #fff1f2;
   --theme-emerald-100: #ffe4e6;
   --theme-emerald-200: #fecdd3;
@@ -525,6 +541,8 @@ html.theme-rose {
   /* Custom dynamic theme color definitions */
   --color-accent-primary: var(--theme-accent-primary);
   --color-accent-secondary: var(--theme-accent-secondary);
+  --color-accent-solid: var(--theme-accent-solid);
+  --color-accent-solid-hover: var(--theme-accent-solid-hover);
   --color-emerald-50: var(--theme-emerald-50);
   --color-emerald-100: var(--theme-emerald-100);
   --color-emerald-200: var(--theme-emerald-200);

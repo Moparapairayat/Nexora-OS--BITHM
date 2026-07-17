@@ -551,7 +551,7 @@ export function LandingPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_15%_10%,rgba(167,139,250,0.06),transparent_35%),radial-gradient(circle_at_85%_15%,rgba(52,211,153,0.09),transparent_35%),radial-gradient(circle_at_80%_45%,rgba(110,231,183,0.05),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f6faf7_55%,#fafdfb_100%)] light:text-[#15251f]">
+    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(var(--theme-accent-primary-rgb-raw),0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_15%_10%,rgba(167,139,250,0.06),transparent_35%),radial-gradient(circle_at_85%_15%,rgba(52,211,153,0.09),transparent_35%),radial-gradient(circle_at_80%_45%,rgba(110,231,183,0.05),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f6faf7_55%,#fafdfb_100%)] light:text-[#15251f]">
       <div className="absolute inset-0 bg-dot-grid pointer-events-none z-0" />
       <LandingNav />
 
@@ -583,10 +583,10 @@ export function LandingPage() {
 
             <div className="relative mt-8 flex flex-wrap items-center gap-4 z-10">
               <div className="relative inline-block">
-                <div className="pointer-events-none absolute top-1/2 -left-6 h-[72px] w-[72px] -translate-y-1/2 rounded-full bg-[#167553]/16 blur-[24px]" />
+                <div className="pointer-events-none absolute top-1/2 -left-6 h-[72px] w-[72px] -translate-y-1/2 rounded-full bg-accent-solid/16 blur-[24px]" />
                 <Link
                   href="/login"
-                  className="relative z-10 inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-emerald-300/15 bg-[#087a55] px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(5,68,46,0.22)] hover:bg-[#066b4a] light:bg-[#087a55] light:!text-white light:hover:bg-[#066b4a]"
+                  className="relative z-10 inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-emerald-300/15 bg-accent-solid px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(var(--theme-emerald-rgb-raw),0.22)] hover:bg-accent-solid-hover light:bg-accent-solid light:!text-white light:hover:bg-accent-solid-hover"
                 >
                   Login
                   <ArrowRight className="h-4 w-4" />
@@ -782,7 +782,7 @@ export function LandingPage() {
           </div>
 
           {/* Ribbon 2: Light (underneath) - High-Impact Neon Green with Dark Text */}
-          <div className="marquee-ribbon-light absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-accent-primary light:bg-[#087a55] z-0 flex items-center overflow-hidden">
+          <div className="marquee-ribbon-light absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-accent-primary light:bg-accent-solid z-0 flex items-center overflow-hidden">
             <div className="animate-marquee-rtl flex items-center whitespace-nowrap gap-6 sm:gap-12 text-[9px] sm:text-xs font-black tracking-[0.2em] text-[#031d11] light:text-white uppercase">
               {Array(2).fill([
                 "Interactive Preview",
@@ -940,7 +940,7 @@ export function LandingPage() {
             {/* Left side: Index counter and Progress bar */}
             <div className="flex items-center gap-4">
               <span className="font-mono text-xs font-bold tracking-widest text-slate-500 light:text-slate-400 select-none">
-                <span className="text-accent-primary light:text-[#087a55]">
+                <span className="text-accent-primary light:text-accent-solid">
                   {activeIdx.toString().padStart(2, "0")}
                 </span>
                 <span className="opacity-40"> / </span>
@@ -968,7 +968,7 @@ export function LandingPage() {
                     }}
                     aria-label={`Go to slide ${dotIdx + 1}`}
                     className={`h-1.5 rounded-full transition-all duration-300 ${activeIdx === dotIdx + 1
-                        ? "w-4 bg-accent-primary light:bg-[#087a55]"
+                        ? "w-4 bg-accent-primary light:bg-accent-solid"
                         : "w-1.5 bg-white/20 hover:bg-white/40 light:bg-black/10 light:hover:bg-black/25"
                       }`}
                   />
@@ -1551,7 +1551,7 @@ export function LandingPage() {
               </p>
               <Link
                 href="/login"
-                className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl border border-emerald-300/15 bg-[#087a55] px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(5,68,46,0.22)] hover:bg-[#066b4a] light:bg-[#087a55] light:!text-white light:hover:bg-[#066b4a]"
+                className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl border border-emerald-300/15 bg-accent-solid px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(var(--theme-emerald-rgb-raw),0.22)] hover:bg-accent-solid-hover light:bg-accent-solid light:!text-white light:hover:bg-accent-solid-hover"
               >
                 Launch Workspace Demo <ArrowRight className="h-4 w-4" />
               </Link>
@@ -1684,7 +1684,7 @@ export function LandingPage() {
                     {/* Pill Button "Explore Workspace" */}
                     <Link
                       href="/login"
-                      className="flex items-center gap-2 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(var(--theme-emerald-rgb-raw),0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(var(--theme-emerald-rgb-raw),0.32)] light:from-[#087a55] light:to-[#10b981] light:text-white light:shadow-md"
+                      className="flex items-center gap-2 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(var(--theme-emerald-rgb-raw),0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(var(--theme-emerald-rgb-raw),0.32)] light:from-accent-solid light:to-accent-primary light:text-white light:shadow-md"
                       data-cursor="hover"
                     >
                       Explore Workspace
@@ -1710,7 +1710,7 @@ export function LandingPage() {
                   </svg>
 
                   {/* Floating user pill badge 'Submitted!' */}
-                  <div className="absolute top-[280px] left-[260px] flex items-center gap-1.5 rounded-full bg-[#087a55] border border-emerald-400/30 px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_4px_15px_rgba(8,122,85,0.4)] backdrop-blur-sm">
+                  <div className="absolute top-[280px] left-[260px] flex items-center gap-1.5 rounded-full bg-accent-solid border border-emerald-400/30 px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_4px_15px_rgba(var(--theme-emerald-rgb-raw),0.4)] backdrop-blur-sm">
                     <div className="w-4 h-4 rounded-full bg-white/20 overflow-hidden flex items-center justify-center text-[8px] font-bold">
                       ✓
                     </div>
@@ -1749,15 +1749,15 @@ export function LandingPage() {
           }
           #team {
             background: linear-gradient(180deg, rgba(8, 12, 10, 0.88) 0%, rgba(5, 8, 7, 0.95) 100%), url('/landing/footer-bg-brand.png') no-repeat center center / cover;
-            border-top: 1px solid rgba(50,245,154,0.1);
-            border-bottom: 1px solid rgba(50,245,154,0.1);
+            border-top: 1px solid rgba(var(--theme-accent-primary-rgb-raw),0.1);
+            border-bottom: 1px solid rgba(var(--theme-accent-primary-rgb-raw),0.1);
             --center-card-bg-start: #082219;
             --center-card-bg-end: #030e0a;
           }
           .light #team {
             background: linear-gradient(180deg, rgba(250, 253, 251, 0.9) 0%, rgba(243, 248, 245, 0.95) 100%), url('/landing/footer-bg-brand-light.png') no-repeat center center / cover;
-            border-top: 1px solid rgba(16,185,129,0.12);
-            border-bottom: 1px solid rgba(16,185,129,0.12);
+            border-top: 1px solid rgba(var(--theme-emerald-rgb-raw),0.12);
+            border-bottom: 1px solid rgba(var(--theme-emerald-rgb-raw),0.12);
             --center-card-bg-start: rgba(255, 255, 255, 0.65);
             --center-card-bg-end: rgba(255, 255, 255, 0.96);
           }
@@ -2069,7 +2069,7 @@ export function LandingPage() {
 
 
       <section className="relative overflow-hidden border-y border-white/8 py-12 light:border-emerald-950/8 sm:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_50%,rgba(50,245,154,0.1),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(67,56,202,0.08),transparent_28%)] light:bg-[radial-gradient(circle_at_72%_50%,rgba(16,185,129,0.12),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(99,102,241,0.06),transparent_28%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_50%,rgba(var(--theme-accent-primary-rgb-raw),0.1),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(67,56,202,0.08),transparent_28%)] light:bg-[radial-gradient(circle_at_72%_50%,rgba(var(--theme-emerald-rgb-raw),0.12),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(99,102,241,0.06),transparent_28%)]" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="max-w-lg">
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
@@ -2284,18 +2284,18 @@ export function LandingPage() {
           .footer-card {
             position: relative;
             background: linear-gradient(145deg, rgba(8, 12, 10, 0.85) 0%, rgba(5, 8, 7, 0.96) 100%), url('/landing/footer-bg-brand.png') no-repeat center center / cover;
-            border: 1px solid rgba(50,245,154,0.16);
+            border: 1px solid rgba(var(--theme-accent-primary-rgb-raw),0.16);
             border-radius: 20px;
             padding: 0;
             max-width: 1280px; /* Matched to 7xl header width */
             margin: 0 auto;
             overflow: hidden;
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(50,245,154,0.05);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(var(--theme-accent-primary-rgb-raw),0.05);
           }
           .light .footer-card {
             background: linear-gradient(145deg, rgba(250, 253, 251, 0.88) 0%, rgba(243, 248, 245, 0.94) 100%), url('/landing/footer-bg-brand-light.png') no-repeat center center / cover;
-            border: 1px solid rgba(16,185,129,0.18);
-            box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 20px 48px rgba(16,185,129,0.08);
+            border: 1px solid rgba(var(--theme-emerald-rgb-raw),0.18);
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.02), 0 20px 48px rgba(var(--theme-emerald-rgb-raw),0.08);
           }
           .footer-card-inner {
             padding: 24px 20px 20px; /* Small screen padding */
@@ -2307,10 +2307,10 @@ export function LandingPage() {
           }
           .footer-accent-bar {
             height: 2px;
-            background: linear-gradient(90deg, transparent 0%, rgba(50,245,154,0.7) 30%, rgba(217,255,87,0.6) 65%, transparent 100%);
+            background: linear-gradient(90deg, transparent 0%, rgba(var(--theme-accent-primary-rgb-raw),0.7) 30%, rgba(var(--theme-accent-secondary-rgb-raw),0.6) 65%, transparent 100%);
           }
           .light .footer-accent-bar {
-            background: linear-gradient(90deg, transparent 0%, rgba(16,185,129,0.5) 30%, rgba(5,150,105,0.4) 65%, transparent 100%);
+            background: linear-gradient(90deg, transparent 0%, rgba(var(--theme-emerald-rgb-raw),0.5) 30%, rgba(var(--theme-accent-secondary-rgb-raw),0.4) 65%, transparent 100%);
           }
           .footer-social-icon {
             display: inline-flex;
@@ -2355,7 +2355,7 @@ export function LandingPage() {
             margin: 24px 0 20px;
           }
           .light .footer-divider {
-            border-top-color: rgba(16,185,129,0.12);
+            border-top-color: rgba(var(--theme-emerald-rgb-raw),0.12);
           }
           
           .footer-bithm-badge {
@@ -2366,14 +2366,14 @@ export function LandingPage() {
             font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: rgba(50,245,154,0.55);
-            border: 1px solid rgba(50,245,154,0.15);
-            border-radius: 999px;
+            color: rgba(var(--theme-accent-primary-rgb-raw),0.55);
+            border: 1px solid rgba(var(--theme-accent-primary-rgb-raw),0.15);
+            border-radius: 99px;
             padding: 3px 10px;
           }
           .light .footer-bithm-badge {
             color: #047857;
-            border-color: rgba(16,185,129,0.25);
+            border-color: rgba(var(--theme-emerald-rgb-raw),0.25);
           }
           .footer-logo-container img {
             mix-blend-mode: screen;
@@ -2700,7 +2700,7 @@ function LandingNav() {
         .ham-open .ham-bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .ham-open .ham-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
       ` }} />
-      <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(50,245,154,0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(50,245,154,0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-white/75 light:bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(236,253,245,0.62)),rgba(255,255,255,0.68)] light:shadow-[inset_0_1px_0_rgba(255,255,255,0.96),0_14px_38px_rgba(31,67,49,0.11),0_0_28px_rgba(16,185,129,0.06)]">
+      <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(var(--theme-accent-primary-rgb-raw),0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(var(--theme-accent-primary-rgb-raw),0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-white/75 light:bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(236,253,245,0.62)),rgba(255,255,255,0.68)] light:shadow-[inset_0_1px_0_rgba(255,255,255,0.96),0_14px_38px_rgba(31,67,49,0.11),0_0_28px_rgba(var(--theme-emerald-rgb-raw),0.06)]">
         <div className="flex shrink-0 items-center">
           <Link href="/" aria-label="Nexora OS home">
             <NexoraLogo size="md" priority className="h-8 w-[124px] sm:h-10 sm:w-[158px]" />
