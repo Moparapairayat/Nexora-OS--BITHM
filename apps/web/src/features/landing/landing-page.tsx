@@ -595,7 +595,7 @@ export function LandingPage() {
       </section>
 
       {/* PARTNERS SECTION */}
-      <section className="relative z-10 border-b border-white/8 py-10 light:border-emerald-950/8 light:bg-white/30">
+      <section className="relative z-10 overflow-hidden py-10 light:bg-white/30">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="flex items-center gap-4">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent light:via-slate-200" />
@@ -660,12 +660,87 @@ export function LandingPage() {
             })}
           </div>
         </div>
+
+        {/* Dual Infinite Marquee Ribbon (Branded & Frameless) */}
+        <div className="relative w-full h-[130px] mt-8 overflow-hidden select-none pointer-events-none z-20">
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            @keyframes marquee-ltr {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            @keyframes marquee-rtl {
+              0% { transform: translateX(-50%); }
+              100% { transform: translateX(0); }
+            }
+            .animate-marquee-ltr {
+              display: flex;
+              width: max-content;
+              animation: marquee-ltr 28s linear infinite;
+            }
+            .animate-marquee-rtl {
+              display: flex;
+              width: max-content;
+              animation: marquee-rtl 28s linear infinite;
+            }
+            .marquee-ribbon-dark {
+              transform: rotate(-2.5deg) scale(1.05);
+              box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            }
+            .marquee-ribbon-light {
+              transform: rotate(2.5deg) scale(1.05);
+              box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            }
+          `}} />
+          
+          {/* Ribbon 1: Dark (on top) - Rich Deep Brand Green with Neon Text */}
+          <div className="marquee-ribbon-dark absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-4 bg-[#0a1b13] light:bg-[#f0f9f4] z-10 flex items-center overflow-hidden">
+            <div className="animate-marquee-ltr flex items-center whitespace-nowrap gap-12 text-[11px] sm:text-xs font-black tracking-[0.2em] text-[#32f59a] light:text-[#065f46] uppercase">
+              {Array(2).fill([
+                "Student Workspace",
+                "Code Lab Workspace",
+                "Academic Shield Scan",
+                "Evidence Submission",
+                "Gradebook Analytics",
+                "Syllabus Tracker",
+                "Integrity Verification",
+                "Instructor Feedback"
+              ]).flat().map((word, i) => (
+                <span key={i} className="flex items-center gap-12">
+                  <span>{word}</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#d9ff57] light:bg-[#059669] shadow-[0_0_8px_rgba(217,255,87,0.7)] light:shadow-[0_0_8px_rgba(5,150,105,0.4)]" />
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Ribbon 2: Light (underneath) - High-Impact Neon Green with Dark Text */}
+          <div className="marquee-ribbon-light absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-4 bg-[#32f59a] light:bg-[#087a55] z-0 flex items-center overflow-hidden">
+            <div className="animate-marquee-rtl flex items-center whitespace-nowrap gap-12 text-[11px] sm:text-xs font-black tracking-[0.2em] text-[#031d11] light:text-white uppercase">
+              {Array(2).fill([
+                "Interactive Preview",
+                "Integrity Protocol",
+                "Submission Ledger",
+                "Academic Partner",
+                "Enrollment Management",
+                "System Diagnostics",
+                "Coursework Verification",
+                "Faculty Review"
+              ]).flat().map((word, i) => (
+                <span key={i} className="flex items-center gap-12">
+                  <span>{word}</span>
+                  <span className="w-2.5 h-2.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.6)]" />
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
 
       <section
         id="platform"
-        className="relative z-10 overflow-hidden border-t border-white/8 py-14 light:border-emerald-950/8 sm:py-16"
+        className="relative z-10 overflow-hidden py-14 sm:py-16"
       >
         <div className="absolute -left-32 top-24 h-80 w-80 rounded-full bg-emerald-500/9 blur-[120px]" />
         <div className="absolute -right-32 bottom-16 h-80 w-80 rounded-full bg-emerald-500/10 blur-[120px]" />
@@ -978,6 +1053,7 @@ export function LandingPage() {
             </div>
           </div>
         </div>
+
       </section>
 
       <section
@@ -1185,10 +1261,10 @@ export function LandingPage() {
         <div className="mx-auto max-w-7xl relative">
           {/* Outer card */}
           <div className="relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
-            
+
             {/* Subtle grid pattern specifically inside the card */}
-            <div className="absolute inset-0 opacity-[0.03] light:opacity-[0.06] pointer-events-none mix-blend-overlay" 
-              style={{ backgroundImage: "linear-gradient(to right, #10b981 1px, transparent 1px), linear-gradient(to bottom, #10b981 1px, transparent 1px)", backgroundSize: "20px 20px" }} 
+            <div className="absolute inset-0 opacity-[0.03] light:opacity-[0.06] pointer-events-none mix-blend-overlay"
+              style={{ backgroundImage: "linear-gradient(to right, #10b981 1px, transparent 1px), linear-gradient(to bottom, #10b981 1px, transparent 1px)", backgroundSize: "20px 20px" }}
             />
 
             {/* Glowing spot lights */}
@@ -1215,7 +1291,7 @@ export function LandingPage() {
                   {/* Badge */}
                   <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 light:border-emerald-700/20 bg-emerald-500/5 light:bg-emerald-50/70 px-3.5 py-1.5 mb-8">
                     <svg className="w-3.5 h-3.5 text-emerald-400 light:text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
                     </svg>
                     <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700">Official Coursework</span>
                   </div>
@@ -1256,7 +1332,7 @@ export function LandingPage() {
                 <div className="mt-10 flex items-center gap-3 text-sm text-slate-500 light:text-slate-500">
                   <div className="w-8 h-8 rounded-lg bg-emerald-500/10 light:bg-emerald-50 flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/>
+                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
                     </svg>
                   </div>
                   <div>
@@ -1275,7 +1351,7 @@ export function LandingPage() {
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 22h18M6 18V9M10 18V9M14 18V9M18 18V9M2 9l10-6 10 6"/>
+                        <path d="M3 22h18M6 18V9M10 18V9M14 18V9M18 18V9M2 9l10-6 10 6" />
                       </svg>
                     </div>
                     {/* Small tag icon for metadata */}
@@ -1293,7 +1369,7 @@ export function LandingPage() {
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
                       </svg>
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 light:text-emerald-600/60">Profile</span>
@@ -1310,7 +1386,7 @@ export function LandingPage() {
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
                       </svg>
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 light:text-emerald-600/60">Faculty</span>
@@ -1327,7 +1403,7 @@ export function LandingPage() {
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                       </svg>
                     </div>
                     <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 light:text-emerald-600/60">Module</span>
@@ -1942,7 +2018,7 @@ export function LandingPage() {
                 {/* Desktop Store Badges */}
                 <div className="mt-6 flex flex-wrap items-center gap-2.5">
                   {/* Windows Badge */}
-                  <div 
+                  <div
                     onClick={() => handleDownloadSimulate("Windows")}
                     className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
                   >
@@ -1956,7 +2032,7 @@ export function LandingPage() {
                   </div>
 
                   {/* macOS Badge */}
-                  <div 
+                  <div
                     onClick={() => handleDownloadSimulate("macOS")}
                     className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
                   >
@@ -1970,7 +2046,7 @@ export function LandingPage() {
                   </div>
 
                   {/* Linux Badge */}
-                  <div 
+                  <div
                     onClick={() => handleDownloadSimulate("Linux")}
                     className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
                   >
@@ -1994,11 +2070,11 @@ export function LandingPage() {
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
                       <span>
-                        {downloadStates["Windows"] 
-                          ? `Windows App: ${downloadStates["Windows"]}` 
-                          : downloadStates["macOS"] 
-                          ? `macOS App: ${downloadStates["macOS"]}` 
-                          : `Linux App: ${downloadStates["Linux"]}`}
+                        {downloadStates["Windows"]
+                          ? `Windows App: ${downloadStates["Windows"]}`
+                          : downloadStates["macOS"]
+                            ? `macOS App: ${downloadStates["macOS"]}`
+                            : `Linux App: ${downloadStates["Linux"]}`}
                       </span>
                     </div>
                   </div>
@@ -2022,7 +2098,7 @@ export function LandingPage() {
                 {/* Mobile Store Badges */}
                 <div className="mt-6 flex flex-wrap items-center gap-2.5">
                   {/* App Store Badge */}
-                  <div 
+                  <div
                     onClick={() => handleDownloadSimulate("iOS")}
                     className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
                   >
@@ -2036,15 +2112,15 @@ export function LandingPage() {
                   </div>
 
                   {/* Google Play Badge */}
-                  <div 
+                  <div
                     onClick={() => handleDownloadSimulate("Android")}
                     className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
                   >
                     <svg className="h-5.5 w-5.5" viewBox="0 0 24 24" fill="none">
-                      <path d="M3 3.2c-.2.2-.3.5-.3.9v15.8c0 .4.1.7.3.9l.1.1 8.9-8.9V11.8L3.1 3.1l-.1.1z" fill="#3BCCFF"/>
-                      <path d="M15.8 15.9l-3.5-3.5v-.2l3.5-3.5.1.1 4.2 2.4c1.2.7 1.2 1.8 0 2.5l-4.2 2.4-.1.3z" fill="#FFC729"/>
-                      <path d="M15.9 15.8L12.3 12.2 3.1 21.4c.4.4 1 .4 1.6.1l11.2-5.7z" fill="#FF3A44"/>
-                      <path d="M15.9 8.2L4.7 1.8c-.6-.3-1.2-.3-1.6.1L12.3 12l3.6-3.8z" fill="#00E676"/>
+                      <path d="M3 3.2c-.2.2-.3.5-.3.9v15.8c0 .4.1.7.3.9l.1.1 8.9-8.9V11.8L3.1 3.1l-.1.1z" fill="#3BCCFF" />
+                      <path d="M15.8 15.9l-3.5-3.5v-.2l3.5-3.5.1.1 4.2 2.4c1.2.7 1.2 1.8 0 2.5l-4.2 2.4-.1.3z" fill="#FFC729" />
+                      <path d="M15.9 15.8L12.3 12.2 3.1 21.4c.4.4 1 .4 1.6.1l11.2-5.7z" fill="#FF3A44" />
+                      <path d="M15.9 8.2L4.7 1.8c-.6-.3-1.2-.3-1.6.1L12.3 12l3.6-3.8z" fill="#00E676" />
                     </svg>
                     <div className="flex flex-col items-start leading-none">
                       <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">GET IT ON</span>
@@ -2250,7 +2326,7 @@ export function LandingPage() {
             {/* Bottom: copyright | tagline */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-center sm:text-left">
               <p className="text-xs text-slate-500">
-                © 2026 Nexora OS · BITHM. All Rights Reserved.
+                © 2026 Nexora OS · BITHM. All Rights Reserved. <span className="mx-1">·</span> Developed by <span className="text-emerald-400 font-semibold">Mopara Pair Ayat</span>
               </p>
               <span className="text-xs text-slate-600">Designed for students. Built for institutions.</span>
             </div>
