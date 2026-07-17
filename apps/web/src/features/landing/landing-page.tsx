@@ -1816,186 +1816,151 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* Desktop App Download Section */}
       <section id="download" className="relative px-5 py-16 md:px-8 sm:py-24 overflow-hidden border-t border-white/8 light:border-emerald-950/8 bg-[#0b0d14] light:bg-[#f1f6f3]">
         {/* Glow ambient effects */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="relative mx-auto max-w-7xl">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-              Desktop Experience
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-r from-white via-slate-200 to-emerald-400 light:from-slate-950 light:via-slate-800 light:to-emerald-700 bg-clip-text text-transparent">
-              Nexora OS for Desktop
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
-              Get the native experience with faster loading, dedicated workspaces, custom shortcuts, and native notification system for your academic activities.
-            </p>
-          </div>
-
-          <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
-            {/* Windows Card */}
-            <div
-              onClick={() => handleDownloadSimulate("Windows")}
-              className="group cursor-pointer relative rounded-3xl border border-white/[0.05] light:border-slate-200 bg-gradient-to-br from-[#111422]/90 to-[#0a0d16]/90 light:bg-none light:bg-white p-6 transition-all duration-300 hover:border-emerald-500/30 light:hover:border-emerald-600/20 hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.05)] light:hover:shadow-[0_20px_40px_rgba(16,185,129,0.06)]"
-            >
-              {/* Premium Inner Glow on Hover */}
-              <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-              {/* Card Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-500/10 text-blue-400 light:bg-blue-500/5 light:text-blue-600 group-hover:bg-blue-500/20 group-hover:text-blue-300 light:group-hover:bg-blue-500/15 light:group-hover:text-blue-700 transition-all duration-300">
-                  {/* Custom Windows SVG */}
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM10.8 1.95L24 0v11.55H10.8V1.95zM10.8 12.45H24v11.55l-13.2-1.95v-9.6z" />
-                  </svg>
-                </div>
-                <span className="rounded-full bg-white/[0.03] border border-white/[0.05] light:bg-slate-100 light:border-transparent px-2.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-emerald-400 light:text-emerald-700">
-                  Coming Soon
-                </span>
-              </div>
-
-              {/* Card Body */}
-              <div className="mt-4">
-                <h3 className="text-lg font-bold text-white light:text-slate-900 group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors duration-300">
-                  Windows App
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Desktop Card */}
+            <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10">
+              <div className="flex-1">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
+                  Desktop Experience
+                </p>
+                <h3 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl text-white light:text-slate-900">
+                  Nexora OS for Desktop
                 </h3>
-                <p className="mt-1 text-[11px] text-slate-500 light:text-slate-400">
-                  SHA-256 Verified • 84.2 MB
+                <p className="mt-4 text-sm leading-relaxed text-slate-400 light:text-slate-600">
+                  Run Nexora OS natively on your computer with custom shortcuts, background sync, and deep system integration.
                 </p>
-                <p className="mt-2.5 text-xs leading-relaxed text-slate-400 light:text-slate-600">
-                  Run Nexora OS natively on Windows. Includes auto-updates, dedicated system tray icon, and advanced GPU acceleration.
-                </p>
-              </div>
 
-              {/* Action Button */}
-              <div className="mt-5 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300 light:text-slate-700 group-hover:text-white light:group-hover:text-emerald-700 transition-colors duration-300">
-                  {downloadStates["Windows"] || "Download .exe"}
-                </span>
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 light:bg-slate-100 text-white light:text-slate-800 group-hover:bg-emerald-400 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all duration-300">
-                  {downloadStates["Windows"] === "Downloading..." ? (
-                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                {/* Desktop Store Badges */}
+                <div className="mt-6 flex flex-wrap items-center gap-2.5">
+                  {/* Windows Badge */}
+                  <div 
+                    onClick={() => handleDownloadSimulate("Windows")}
+                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                  >
+                    <svg className="h-5.5 w-5.5 fill-[#00ADEF]" viewBox="0 0 24 24">
+                      <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM10.8 1.95L24 0v11.55H10.8V1.95zM10.8 12.45H24v11.55l-13.2-1.95v-9.6z" />
                     </svg>
-                  ) : downloadStates["Windows"] === "Completed" ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 group-hover:text-black" />
-                  ) : (
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  )}
+                    <div className="flex flex-col items-start leading-none">
+                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
+                      <span className="text-xs font-extrabold mt-0.5">Windows</span>
+                    </div>
+                  </div>
+
+                  {/* macOS Badge */}
+                  <div 
+                    onClick={() => handleDownloadSimulate("macOS")}
+                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                  >
+                    <svg className="h-5.5 w-5.5 fill-current" viewBox="0 0 24 24">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
+                    </svg>
+                    <div className="flex flex-col items-start leading-none">
+                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
+                      <span className="text-xs font-extrabold mt-0.5">macOS</span>
+                    </div>
+                  </div>
+
+                  {/* Linux Badge */}
+                  <div 
+                    onClick={() => handleDownloadSimulate("Linux")}
+                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                  >
+                    <svg className="h-5.5 w-5.5 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                      <polyline points="4 17 10 11 4 5" />
+                      <line x1="12" y1="19" x2="20" y2="19" />
+                    </svg>
+                    <div className="flex flex-col items-start leading-none">
+                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
+                      <span className="text-xs font-extrabold mt-0.5">Linux</span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Download State Loader Indicator */}
+                {(downloadStates["Windows"] || downloadStates["macOS"] || downloadStates["Linux"]) && (
+                  <div className="mt-5 flex justify-start">
+                    <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20 animate-pulse">
+                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      <span>
+                        {downloadStates["Windows"] 
+                          ? `Windows App: ${downloadStates["Windows"]}` 
+                          : downloadStates["macOS"] 
+                          ? `macOS App: ${downloadStates["macOS"]}` 
+                          : `Linux App: ${downloadStates["Linux"]}`}
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* macOS Card */}
-            <div
-              onClick={() => handleDownloadSimulate("macOS")}
-              className="group cursor-pointer relative rounded-3xl border border-white/[0.05] light:border-slate-200 bg-gradient-to-br from-[#111422]/90 to-[#0a0d16]/90 light:bg-none light:bg-white p-6 transition-all duration-300 hover:border-emerald-500/30 light:hover:border-emerald-600/20 hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.05)] light:hover:shadow-[0_20px_40px_rgba(16,185,129,0.06)]"
-            >
-              {/* Premium Inner Glow on Hover */}
-              <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-              {/* Card Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-500/10 text-slate-300 light:bg-slate-500/5 light:text-slate-600 group-hover:bg-slate-500/20 group-hover:text-white light:group-hover:bg-slate-500/15 light:group-hover:text-slate-900 transition-all duration-300">
-                  {/* Custom macOS Apple SVG */}
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
-                  </svg>
-                </div>
-                <span className="rounded-full bg-white/[0.03] border border-white/[0.05] light:bg-slate-100 light:border-transparent px-2.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-emerald-400 light:text-emerald-700">
-                  Coming Soon
-                </span>
-              </div>
-
-              {/* Card Body */}
-              <div className="mt-4">
-                <h3 className="text-lg font-bold text-white light:text-slate-900 group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors duration-300">
-                  macOS App
+            {/* Mobile Card */}
+            <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10">
+              <div className="flex-1">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
+                  Mobile Experience
+                </p>
+                <h3 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl text-white light:text-slate-900">
+                  Nexora OS for Mobile
                 </h3>
-                <p className="mt-1 text-[11px] text-slate-500 light:text-slate-400">
-                  Apple Silicon & Intel • 92.6 MB
+                <p className="mt-4 text-sm leading-relaxed text-slate-400 light:text-slate-600">
+                  Stay connected on the go. Access your class feeds, track schedules, submit assignments, and chat with peers instantly.
                 </p>
-                <p className="mt-2.5 text-xs leading-relaxed text-slate-400 light:text-slate-600">
-                  Optimized for Apple processors. Seamless integration with macOS dock, system shortcuts, and native Dark Mode tracking.
-                </p>
-              </div>
 
-              {/* Action Button */}
-              <div className="mt-5 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300 light:text-slate-700 group-hover:text-white light:group-hover:text-emerald-700 transition-colors duration-300">
-                  {downloadStates["macOS"] || "Download .dmg"}
-                </span>
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 light:bg-slate-100 text-white light:text-slate-800 group-hover:bg-emerald-400 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all duration-300">
-                  {downloadStates["macOS"] === "Downloading..." ? (
-                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                {/* Mobile Store Badges */}
+                <div className="mt-6 flex flex-wrap items-center gap-2.5">
+                  {/* App Store Badge */}
+                  <div 
+                    onClick={() => handleDownloadSimulate("iOS")}
+                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                  >
+                    <svg className="h-5.5 w-5.5 fill-current" viewBox="0 0 24 24">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
                     </svg>
-                  ) : downloadStates["macOS"] === "Completed" ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 group-hover:text-black" />
-                  ) : (
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  )}
-                </div>
-              </div>
-            </div>
+                    <div className="flex flex-col items-start leading-none">
+                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download on the</span>
+                      <span className="text-xs font-extrabold mt-0.5">App Store</span>
+                    </div>
+                  </div>
 
-            {/* Linux Card */}
-            <div
-              onClick={() => handleDownloadSimulate("Linux")}
-              className="group cursor-pointer relative rounded-3xl border border-white/[0.05] light:border-slate-200 bg-gradient-to-br from-[#111422]/90 to-[#0a0d16]/90 light:bg-none light:bg-white p-6 transition-all duration-300 hover:border-emerald-500/30 light:hover:border-emerald-600/20 hover:-translate-y-1 hover:shadow-[0_30px_60px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.05)] light:hover:shadow-[0_20px_40px_rgba(16,185,129,0.06)]"
-            >
-              {/* Premium Inner Glow on Hover */}
-              <div className="absolute inset-0 -z-10 rounded-3xl bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-              {/* Card Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-400 light:bg-amber-500/5 light:text-amber-600 group-hover:bg-amber-500/20 group-hover:text-amber-300 light:group-hover:bg-amber-500/15 light:group-hover:text-amber-700 transition-all duration-300">
-                  {/* Custom Linux Terminal SVG */}
-                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="4 17 10 11 4 5" />
-                    <line x1="12" y1="19" x2="20" y2="19" />
-                  </svg>
-                </div>
-                <span className="rounded-full bg-white/[0.03] border border-white/[0.05] light:bg-slate-100 light:border-transparent px-2.5 py-0.5 text-[9px] uppercase tracking-wider font-semibold text-emerald-400 light:text-emerald-700">
-                  Coming Soon
-                </span>
-              </div>
-
-              {/* Card Body */}
-              <div className="mt-4">
-                <h3 className="text-lg font-bold text-white light:text-slate-900 group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors duration-300">
-                  Linux App
-                </h3>
-                <p className="mt-1 text-[11px] text-slate-500 light:text-slate-450">
-                  AppImage & .deb • 89.1 MB
-                </p>
-                <p className="mt-2.5 text-xs leading-relaxed text-slate-400 light:text-slate-600">
-                  Highly portable and sandboxed packaging for Unix environments. Compatible with Ubuntu, Debian, Arch, and Fedora.
-                </p>
-              </div>
-
-              {/* Action Button */}
-              <div className="mt-5 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300 light:text-slate-750 group-hover:text-white light:group-hover:text-emerald-700 transition-colors duration-300">
-                  {downloadStates["Linux"] || "Download .AppImage"}
-                </span>
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/5 light:bg-slate-100 text-white light:text-slate-800 group-hover:bg-emerald-400 group-hover:text-black group-hover:shadow-[0_0_15px_rgba(52,211,153,0.3)] transition-all duration-300">
-                  {downloadStates["Linux"] === "Downloading..." ? (
-                    <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  {/* Google Play Badge */}
+                  <div 
+                    onClick={() => handleDownloadSimulate("Android")}
+                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                  >
+                    <svg className="h-5.5 w-5.5" viewBox="0 0 24 24" fill="none">
+                      <path d="M3 3.2c-.2.2-.3.5-.3.9v15.8c0 .4.1.7.3.9l.1.1 8.9-8.9V11.8L3.1 3.1l-.1.1z" fill="#3BCCFF"/>
+                      <path d="M15.8 15.9l-3.5-3.5v-.2l3.5-3.5.1.1 4.2 2.4c1.2.7 1.2 1.8 0 2.5l-4.2 2.4-.1.3z" fill="#FFC729"/>
+                      <path d="M15.9 15.8L12.3 12.2 3.1 21.4c.4.4 1 .4 1.6.1l11.2-5.7z" fill="#FF3A44"/>
+                      <path d="M15.9 8.2L4.7 1.8c-.6-.3-1.2-.3-1.6.1L12.3 12l3.6-3.8z" fill="#00E676"/>
                     </svg>
-                  ) : downloadStates["Linux"] === "Completed" ? (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 group-hover:text-black" />
-                  ) : (
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  )}
+                    <div className="flex flex-col items-start leading-none">
+                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">GET IT ON</span>
+                      <span className="text-xs font-extrabold mt-0.5">Google Play</span>
+                    </div>
+                  </div>
                 </div>
+
+                {(downloadStates["iOS"] || downloadStates["Android"]) && (
+                  <div className="mt-5 flex justify-start">
+                    <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20 animate-pulse">
+                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      <span>{downloadStates["iOS"] ? `iOS App: ${downloadStates["iOS"]}` : `Android App: ${downloadStates["Android"]}`}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -2209,6 +2174,7 @@ function LandingNav() {
     { href: "#about", label: "About" },
     { href: "#platform", label: "Features" },
     { href: "#workflows", label: "How It Works" },
+    { href: "#download", label: "Download" },
     { href: "#team", label: "Team" },
     { href: "#faq", label: "FAQ" },
     { href: "#contact", label: "Contact Us" },
