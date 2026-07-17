@@ -8,7 +8,6 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
-  CheckCircle2,
   Code2,
   Database,
   FileCheck2,
@@ -241,57 +240,7 @@ const latestAreas = [
   },
 ];
 
-const platformNotes = [
-  {
-    category: "Student Workflow",
-    title: "Visualizing Deadlines & Tasks",
-    detail:
-      "A unified dashboard tracks current tasks, submissions, and teacher feedback, keeping students updated without the hassle of searching.",
-  },
-  {
-    category: "Hands-On Learning",
-    title: "Linking Code to Reports",
-    detail:
-      "Seamlessly connect practical lab work to final reports, allowing students to import live coding outcomes directly into their academic evidence.",
-  },
-  {
-    category: "Transparent Progress",
-    title: "Clear Development Roadmap",
-    detail:
-      "Always know what features are fully functional and what modules are coming next, separating active learning tools from upcoming releases.",
-  },
-];
 
-const workJourney = [
-  {
-    step: "01",
-    title: "Understand the brief",
-    detail: "Keep requirements, deadlines, and expected evidence together.",
-    icon: BookOpen,
-    accent: "from-violet-400 to-fuchsia-400",
-  },
-  {
-    step: "02",
-    title: "Build the work",
-    detail: "Write the report, complete the lab, or develop the project.",
-    icon: Layers3,
-    accent: "from-cyan-400 to-emerald-400",
-  },
-  {
-    step: "03",
-    title: "Check the evidence",
-    detail: "Review code, sources, files, and submission requirements.",
-    icon: ShieldCheck,
-    accent: "from-amber-300 to-lime-400",
-  },
-  {
-    step: "04",
-    title: "Submit with confidence",
-    detail: "Send the final work and follow feedback from one clear view.",
-    icon: CheckCircle2,
-    accent: "from-emerald-400 to-lime-300",
-  },
-];
 
 const faqs = [
   {
@@ -703,34 +652,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative z-10 overflow-hidden pb-8 pt-14">
-        <div className="absolute left-1/2 top-0 h-40 w-[70%] -translate-x-1/2 rounded-full bg-emerald-400/8 blur-3xl light:bg-emerald-300/15" />
-        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-            The academic workflow, from start to finish
-          </p>
-          <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-            {[
-              "Assignments",
-              "Lab work",
-              "Code projects",
-              "Feedback",
-              "Integrity",
-              "Administration",
-            ].map((item, index) => (
-              <div
-                key={item}
-                className="flex min-h-14 items-center gap-2.5 rounded-xl border border-white/8 bg-white/[0.025] px-3 text-sm font-medium text-slate-300 light:border-emerald-950/8 light:bg-white light:text-slate-700 light:shadow-sm"
-              >
-                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-emerald-400/10 text-[10px] font-bold text-emerald-300 light:bg-emerald-100 light:text-emerald-700">
-                  {index + 1}
-                </span>
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section
         id="platform"
@@ -891,51 +812,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative z-10 overflow-hidden px-5 py-14 md:px-8 sm:py-16">
-        <div className="absolute left-1/2 top-1/2 h-72 w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/8 blur-[100px] light:bg-emerald-300/20" />
-        <div className="relative mx-auto max-w-7xl border-y border-white/10 py-8 light:border-emerald-950/10">
-          <div className="grid gap-7 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
-            <div>
-              <span className="inline-flex rounded-full border border-emerald-300/20 bg-emerald-400/8 px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-emerald-300 light:border-emerald-700/15 light:bg-emerald-50 light:text-emerald-700">
-                How the work moves
-              </span>
-              <h2 className="mt-4 max-w-md text-3xl font-bold tracking-tight sm:text-4xl">
-                From the first brief to final feedback
-              </h2>
-              <p className="mt-4 max-w-lg text-sm leading-7 text-slate-400 light:text-slate-600">
-                Each stage stays easy to follow, so students can see what is
-                ready, what needs attention, and what comes next.
-              </p>
-            </div>
-            <div className="grid sm:grid-cols-2">
-              {workJourney.map(
-                ({ step, title, detail, icon: Icon, accent }) => (
-                  <article
-                    key={step}
-                    className="group relative border-b border-white/8 p-4 odd:sm:border-r light:border-emerald-950/8"
-                  >
-                    <div
-                      className={`absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r ${accent}`}
-                    />
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold tracking-[0.16em] text-slate-500">
-                        STEP {step}
-                      </span>
-                      <span className="grid h-9 w-9 place-items-center rounded-full border border-emerald-300/15 text-emerald-300 transition duration-300 group-hover:-rotate-6 group-hover:scale-110 light:border-emerald-700/15 light:text-emerald-700">
-                        <Icon className="h-4 w-4" />
-                      </span>
-                    </div>
-                    <h3 className="mt-5 font-semibold">{title}</h3>
-                    <p className="mt-1.5 text-sm leading-5 text-slate-400 light:text-slate-600">
-                      {detail}
-                    </p>
-                  </article>
-                ),
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section
         id="workflows"
@@ -1726,44 +1602,6 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden py-14 sm:py-16">
-        <div className="absolute -right-28 top-16 h-80 w-80 rounded-full bg-emerald-500/8 blur-[120px]" />
-        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-          <SectionHeading
-            eyebrow="From Nexora OS"
-            title="Decisions behind the platform"
-            detail="The project follows a few simple principles drawn from day-to-day academic work."
-          />
-          <div className="mt-10 grid lg:grid-cols-3">
-            {platformNotes.map(({ category, title, detail }, index) => (
-              <article
-                key={title}
-                className="border-b border-white/10 px-6 py-5 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0 light:border-emerald-950/10"
-              >
-                <div
-                  className={`h-1 w-12 rounded-full ${index === 0
-                    ? "bg-emerald-400"
-                    : index === 1
-                      ? "bg-violet-400"
-                      : "bg-amber-400"
-                    }`}
-                />
-                <div className="pt-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300 light:text-emerald-700">
-                    {category}
-                  </p>
-                  <h3 className="mt-3 text-xl font-semibold leading-7">
-                    {title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-400 light:text-slate-600">
-                    {detail}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="relative overflow-hidden border-y border-white/8 py-12 light:border-emerald-950/8 sm:py-16">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_50%,rgba(50,245,154,0.1),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(67,56,202,0.08),transparent_28%)] light:bg-[radial-gradient(circle_at_72%_50%,rgba(16,185,129,0.12),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(99,102,241,0.06),transparent_28%)]" />
