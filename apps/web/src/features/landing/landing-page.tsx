@@ -651,10 +651,7 @@ export function LandingPage() {
               "/landing/mentor-modern/logos/othm-logo.png",
               "/landing/mentor-modern/logos/bithm-shield-logo.png",
               "/landing/mentor-modern/logos/standard-logo.png",
-              "/landing/mentor-modern/logos/logo-4.png",
-              "/landing/mentor-modern/logos/logo-8.png",
               "/landing/mentor-modern/logos/logo-6.png",
-              "/landing/mentor-modern/logos/logo-7.png",
             ].map((src, index) => {
               const isBithmText = src.includes("bithm-logo.png");
               const isBithmShield = src.includes("bithm-shield-logo.png");
@@ -1737,10 +1734,10 @@ export function LandingPage() {
               >
                 <div
                   className={`h-1 w-12 rounded-full ${index === 0
-                      ? "bg-emerald-400"
-                      : index === 1
-                        ? "bg-violet-400"
-                        : "bg-amber-400"
+                    ? "bg-emerald-400"
+                    : index === 1
+                      ? "bg-violet-400"
+                      : "bg-amber-400"
                     }`}
                 />
                 <div className="pt-5">
