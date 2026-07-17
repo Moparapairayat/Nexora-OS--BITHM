@@ -822,7 +822,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative z-10 overflow-hidden py-24 bg-[#070d0a] light:bg-white border-y border-white/5 light:border-slate-100">
+      <section id="how-it-works" className="relative z-10 overflow-hidden py-24 bg-[#070d0a] light:bg-white border-y border-white/5 light:border-slate-100">
         <div className="absolute top-[20%] right-[-10%] h-[400px] w-[400px] rounded-full bg-emerald-500/5 dark:bg-emerald-500/5 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[10%] left-[-10%] h-[400px] w-[400px] rounded-full bg-cyan-500/5 dark:bg-cyan-500/3 blur-[120px] pointer-events-none" />
 
@@ -1974,7 +1974,7 @@ export function LandingPage() {
 
       <PandaCTA />
 
-      <footer className="px-5 py-12 md:px-8 bg-[#0b0d14] light:bg-[#f1f6f3]">
+      <footer id="contact" className="px-5 py-12 md:px-8 bg-[#0b0d14] light:bg-[#f1f6f3]">
         <style dangerouslySetInnerHTML={{
           __html: `
           .footer-card {
@@ -2139,7 +2139,7 @@ export function LandingPage() {
             <nav className="mt-7 flex flex-wrap gap-x-7 gap-y-2">
               <a href="#" className="footer-nav-link">Home</a>
               <a href="#platform" className="footer-nav-link">Features</a>
-              <a href="#workflows" className="footer-nav-link">How It Works</a>
+              <a href="#how-it-works" className="footer-nav-link">How It Works</a>
               <a href="#team" className="footer-nav-link">Team</a>
               <a href="#roles" className="footer-nav-link">Roles</a>
               <a href="#faq" className="footer-nav-link">FAQ</a>
@@ -2178,7 +2178,7 @@ function LandingNav() {
   const navLinks = [
     { href: "#about", label: "About" },
     { href: "#platform", label: "Features" },
-    { href: "#workflows", label: "How It Works" },
+    { href: "#how-it-works", label: "How It Works" },
     { href: "#download", label: "Download" },
     { href: "#team", label: "Team" },
     { href: "#faq", label: "FAQ" },
