@@ -363,14 +363,14 @@ export function PremiumCursor() {
       {/* ── CSS Variable Styles ────────────────────────────────────────────── */}
       <style>{`
         :root {
-          --cursor-accent-color: #32f59a;
-          --cursor-dot-color: #32f59a;
-          --cursor-ring-color: rgba(50, 245, 154, 0.45);
+          --cursor-accent-color: var(--theme-accent-primary);
+          --cursor-dot-color: var(--theme-accent-primary);
+          --cursor-ring-color: rgba(var(--theme-emerald-rgb-raw), 0.45);
         }
         html.light {
-          --cursor-accent-color: #059669;
-          --cursor-dot-color: #059669;
-          --cursor-ring-color: rgba(5, 150, 105, 0.40);
+          --cursor-accent-color: var(--theme-accent-primary);
+          --cursor-dot-color: var(--theme-accent-primary);
+          --cursor-ring-color: rgba(var(--theme-emerald-rgb-raw), 0.40);
         }
       `}</style>
 

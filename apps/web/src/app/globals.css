@@ -428,13 +428,13 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   --line-strong: rgba(50, 245, 154, 0.28);
   --border-emerald: rgba(50, 245, 154, 0.28);
   --border-lime: rgba(217, 255, 87, 0.32);
-  --brand-cyan: #32f59a;
-  --brand-emerald: #6cf6b3;
+  --brand-cyan: var(--theme-accent-primary);
+  --brand-emerald: var(--theme-emerald-300);
   --brand-amber: #ffb45a;
   --brand-rose: #ff8f80;
-  --brand-violet: #d9ff57;
+  --brand-violet: var(--theme-accent-secondary);
   --brand-blue: #8a5f3d;
-  --brand-lime: #d9ff57;
+  --brand-lime: var(--theme-accent-secondary);
   --accent-bronze: #8a5f3d;
   --chart-grid: rgba(108, 246, 179, 0.09);
   --chart-muted: #6e7a72;
@@ -444,6 +444,76 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   --shadow-command:
     0 26px 90px rgba(0, 0, 0, 0.52), 0 0 70px rgba(50, 245, 154, 0.08);
   --radius-command: 14px;
+
+  /* Default theme values (Emerald) */
+  --theme-accent-primary: #32f59a;
+  --theme-accent-secondary: #d9ff57;
+  --theme-emerald-50: #f0fdf4;
+  --theme-emerald-100: #dcfce7;
+  --theme-emerald-200: #bbf7d0;
+  --theme-emerald-300: #86efac;
+  --theme-emerald-400: #4ade80;
+  --theme-emerald-500: #22c55e;
+  --theme-emerald-600: #16a34a;
+  --theme-emerald-700: #15803d;
+  --theme-emerald-800: #166534;
+  --theme-emerald-900: #14532d;
+  --theme-emerald-950: #052e16;
+  --theme-emerald-rgb-raw: 34, 197, 94;
+}
+
+/* Cyber Purple Accent Theme Override */
+html.theme-purple {
+  --theme-accent-primary: #a855f7;
+  --theme-accent-secondary: #6366f1;
+  --theme-emerald-50: #faf5ff;
+  --theme-emerald-100: #f3e8ff;
+  --theme-emerald-200: #e9d5ff;
+  --theme-emerald-300: #d8b4fe;
+  --theme-emerald-400: #c084fc;
+  --theme-emerald-500: #a855f7;
+  --theme-emerald-600: #9333ea;
+  --theme-emerald-700: #7e22ce;
+  --theme-emerald-800: #6b21a8;
+  --theme-emerald-900: #581c87;
+  --theme-emerald-950: #3b0764;
+  --theme-emerald-rgb-raw: 168, 85, 247;
+}
+
+/* Amber Gold Accent Theme Override */
+html.theme-amber {
+  --theme-accent-primary: #fb923c;
+  --theme-accent-secondary: #fcd34d;
+  --theme-emerald-50: #fffbeb;
+  --theme-emerald-100: #fef3c7;
+  --theme-emerald-200: #fde68a;
+  --theme-emerald-300: #fcd34d;
+  --theme-emerald-400: #fbbf24;
+  --theme-emerald-500: #f59e0b;
+  --theme-emerald-600: #d97706;
+  --theme-emerald-700: #b45309;
+  --theme-emerald-800: #92400e;
+  --theme-emerald-900: #78350f;
+  --theme-emerald-950: #451a03;
+  --theme-emerald-rgb-raw: 245, 158, 11;
+}
+
+/* Liquid Rose Accent Theme Override */
+html.theme-rose {
+  --theme-accent-primary: #f43f5e;
+  --theme-accent-secondary: #ec4899;
+  --theme-emerald-50: #fff1f2;
+  --theme-emerald-100: #ffe4e6;
+  --theme-emerald-200: #fecdd3;
+  --theme-emerald-300: #fda4af;
+  --theme-emerald-400: #fb7185;
+  --theme-emerald-500: #f43f5e;
+  --theme-emerald-600: #e11d48;
+  --theme-emerald-700: #be123c;
+  --theme-emerald-800: #9f1239;
+  --theme-emerald-900: #881337;
+  --theme-emerald-950: #4c0519;
+  --theme-emerald-rgb-raw: 244, 63, 94;
 }
 
 @theme inline {
@@ -451,6 +521,22 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   --color-foreground: var(--foreground);
   --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+
+  /* Custom dynamic theme color definitions */
+  --color-accent-primary: var(--theme-accent-primary);
+  --color-accent-secondary: var(--theme-accent-secondary);
+  --color-emerald-50: var(--theme-emerald-50);
+  --color-emerald-100: var(--theme-emerald-100);
+  --color-emerald-200: var(--theme-emerald-200);
+  --color-emerald-300: var(--theme-emerald-300);
+  --color-emerald-400: var(--theme-emerald-400);
+  --color-emerald-500: var(--theme-emerald-500);
+  --color-emerald-600: var(--theme-emerald-600);
+  --color-emerald-700: var(--theme-emerald-700);
+  --color-emerald-800: var(--theme-emerald-800);
+  --color-emerald-900: var(--theme-emerald-900);
+  --color-emerald-950: var(--theme-emerald-950);
+  --color-emerald-rgb-raw: var(--theme-emerald-rgb-raw);
 }
 
 html.light {

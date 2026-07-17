@@ -26,6 +26,7 @@ import {
 
 import { NexoraLogo } from "@/components/brand/nexora-logo";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { AccentPicker } from "@/components/layout/accent-picker";
 import { DemoLoginButtons } from "@/features/auth/demo-login-buttons";
 import { PandaCTA } from "@/components/ui/panda-cta";
 
@@ -364,6 +365,59 @@ const toolCardStyles: Record<string, {
   },
 };
 
+function ScrollReveal({
+  children,
+  delay = 0,
+  duration = 0.6,
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  duration?: number;
+  className?: string;
+}) {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateY(0)" : "translateY(24px)",
+        transition: `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function LandingPage() {
   const sliderRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -516,7 +570,7 @@ export function LandingPage() {
             </div>
             <h1 className="text-balance text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-5xl lg:text-[54px] text-white light:text-slate-800">
               A practical place to{" "}
-              <span className="bg-gradient-to-r from-[#d9ff57] to-[#32f59a] bg-clip-text text-transparent light:from-emerald-700 light:to-emerald-500">
+              <span className="bg-gradient-to-r from-accent-secondary to-accent-primary bg-clip-text text-transparent light:from-emerald-700 light:to-emerald-500">
                 study, build, and submit
               </span>{" "}
               your work.
@@ -707,7 +761,7 @@ export function LandingPage() {
           
           {/* Ribbon 1: Dark (on top) - Rich Deep Brand Green with Neon Text */}
           <div className="marquee-ribbon-dark absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-[#0a1b13] light:bg-[#f0f9f4] z-10 flex items-center overflow-hidden">
-            <div className="animate-marquee-ltr flex items-center whitespace-nowrap gap-6 sm:gap-12 text-[9px] sm:text-xs font-black tracking-[0.2em] text-[#32f59a] light:text-[#065f46] uppercase">
+            <div className="animate-marquee-ltr flex items-center whitespace-nowrap gap-6 sm:gap-12 text-[9px] sm:text-xs font-black tracking-[0.2em] text-accent-primary light:text-[#065f46] uppercase">
               {Array(2).fill([
                 "Student Workspace",
                 "Code Lab Workspace",
@@ -720,14 +774,14 @@ export function LandingPage() {
               ]).flat().map((word, i) => (
                 <span key={i} className="flex items-center gap-6 sm:gap-12">
                   <span>{word}</span>
-                  <span className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-[#d9ff57] light:bg-[#059669] shadow-[0_0_8px_rgba(217,255,87,0.7)] light:shadow-[0_0_8px_rgba(5,150,105,0.4)]" />
+                  <span className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-accent-secondary light:bg-[#059669] shadow-[0_0_8px_rgba(var(--theme-emerald-rgb-raw),0.7)] light:shadow-[0_0_8px_rgba(5,150,105,0.4)]" />
                 </span>
               ))}
             </div>
           </div>
 
           {/* Ribbon 2: Light (underneath) - High-Impact Neon Green with Dark Text */}
-          <div className="marquee-ribbon-light absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-[#32f59a] light:bg-[#087a55] z-0 flex items-center overflow-hidden">
+          <div className="marquee-ribbon-light absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-accent-primary light:bg-[#087a55] z-0 flex items-center overflow-hidden">
             <div className="animate-marquee-rtl flex items-center whitespace-nowrap gap-6 sm:gap-12 text-[9px] sm:text-xs font-black tracking-[0.2em] text-[#031d11] light:text-white uppercase">
               {Array(2).fill([
                 "Interactive Preview",
@@ -885,7 +939,7 @@ export function LandingPage() {
             {/* Left side: Index counter and Progress bar */}
             <div className="flex items-center gap-4">
               <span className="font-mono text-xs font-bold tracking-widest text-slate-500 light:text-slate-400 select-none">
-                <span className="text-[#32f59a] light:text-[#087a55]">
+                <span className="text-accent-primary light:text-[#087a55]">
                   {activeIdx.toString().padStart(2, "0")}
                 </span>
                 <span className="opacity-40"> / </span>
@@ -895,7 +949,7 @@ export function LandingPage() {
               {/* Progress Line */}
               <div className="relative w-36 h-[2px] rounded-full bg-white/10 dark:bg-white/10 light:bg-black/10 overflow-hidden">
                 <div
-                  className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#32f59a] to-[#d9ff57] transition-all duration-150 ease-out"
+                  className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-accent-primary to-accent-secondary transition-all duration-150 ease-out"
                   style={{ width: `${scrollProgress}%` }}
                 />
               </div>
@@ -914,7 +968,7 @@ export function LandingPage() {
                     aria-label={`Go to slide ${dotIdx + 1}`}
                     className={`h-1.5 rounded-full transition-all duration-300 ${
                       activeIdx === dotIdx + 1
-                        ? "w-4 bg-[#32f59a] light:bg-[#087a55]"
+                        ? "w-4 bg-accent-primary light:bg-[#087a55]"
                         : "w-1.5 bg-white/20 hover:bg-white/40 light:bg-black/10 light:hover:bg-black/25"
                     }`}
                   />
@@ -957,7 +1011,7 @@ export function LandingPage() {
         <div className="relative mx-auto max-w-6xl px-5 md:px-8">
           {/* Header */}
           <div className="text-center mb-20 select-none">
-            <p className="font-handwriting text-3xl text-[#32f59a] light:text-emerald-600 tracking-normal italic normal-case">
+            <p className="font-handwriting text-3xl text-accent-primary light:text-emerald-600 tracking-normal italic normal-case">
               Simple Steps
             </p>
             <h2 className="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight text-white light:text-slate-900">
@@ -1046,7 +1100,7 @@ export function LandingPage() {
               <div className="absolute left-[31px] top-6 bottom-6 w-[1.5px] bg-slate-800 light:bg-slate-250" />
 
               {/* Thick active bar indicating active Step 1 */}
-              <div className="absolute left-[30px] top-6 h-[85px] w-[3.5px] bg-[#32f59a] light:bg-slate-900 rounded-full" />
+              <div className="absolute left-[30px] top-6 h-[85px] w-[3.5px] bg-accent-primary light:bg-slate-900 rounded-full" />
 
               <div className="flex flex-col gap-12">
                 {/* Step 1 */}
@@ -1484,25 +1538,29 @@ export function LandingPage() {
       <section className="relative overflow-hidden py-14 sm:py-16">
         <div className="absolute left-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-amber-200/8 blur-[110px] light:bg-amber-200/35" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="max-w-lg">
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-              Interactive Preview
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Explore Your Interactive Workspace
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
-              Sign in with a demo account to experience the workspace firsthand. Navigating dashboards, running code labs, and tracking submissions has never been easier.
-            </p>
-            <Link
-              href="/login"
-              className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl border border-emerald-300/15 bg-[#087a55] px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(5,68,46,0.22)] hover:bg-[#066b4a] light:bg-[#087a55] light:!text-white light:hover:bg-[#066b4a]"
-            >
-              Launch Workspace Demo <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-          {/* Layered Glass Card Container */}
-          <div className="relative w-full flex items-center justify-center min-h-[400px]">
+          <ScrollReveal>
+            <div className="max-w-lg">
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
+                Interactive Preview
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                Explore Your Interactive Workspace
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
+                Sign in with a demo account to experience the workspace firsthand. Navigating dashboards, running code labs, and tracking submissions has never been easier.
+              </p>
+              <Link
+                href="/login"
+                className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl border border-emerald-300/15 bg-[#087a55] px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(5,68,46,0.22)] hover:bg-[#066b4a] light:bg-[#087a55] light:!text-white light:hover:bg-[#066b4a]"
+              >
+                Launch Workspace Demo <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </ScrollReveal>
+          
+          <ScrollReveal delay={150} className="w-full">
+            {/* Layered Glass Card Container */}
+            <div className="relative w-full flex items-center justify-center min-h-[400px]">
             {/* 1. Neon Glowing Shapes SVG (Z-0: Behind the glass, bleeds outside bounds) */}
             <svg className="absolute inset-0 w-[108%] h-[108%] -translate-x-[4%] -translate-y-[4%] pointer-events-none z-0" viewBox="0 0 600 400" fill="none">
               <defs>
@@ -1626,7 +1684,7 @@ export function LandingPage() {
                   {/* Pill Button "Explore Workspace" */}
                   <Link
                     href="/login"
-                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#32f59a] to-[#d9ff57] px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(50,245,154,0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(50,245,154,0.32)] light:from-[#087a55] light:to-[#10b981] light:text-white light:shadow-md"
+                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(var(--theme-emerald-rgb-raw),0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(var(--theme-emerald-rgb-raw),0.32)] light:from-[#087a55] light:to-[#10b981] light:text-white light:shadow-md"
                     data-cursor="hover"
                   >
                     Explore Workspace
@@ -1674,6 +1732,7 @@ export function LandingPage() {
               </div>
             </div>
           </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -1711,56 +1770,59 @@ export function LandingPage() {
 
         <div className="relative mx-auto max-w-7xl px-5 md:px-8">
           {/* Section Header */}
-          <div className="flex items-center justify-center gap-6 mb-20 text-center">
-            {/* Left Ornament */}
-            <div className="hidden sm:block shrink-0">
-              <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0,12 L 80,12" stroke="url(#gold-line-left)" strokeWidth="1" />
-                <path d="M 85,12 L 91,6 L 97,12 L 91,18 Z" fill="url(#gold-grad-ornament)" />
-                <circle cx="91" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
-                <path d="M 103,12 L 107,8 L 111,12 L 107,16 Z" fill="url(#gold-grad-ornament)" />
-                <circle cx="117" cy="12" r="2" fill="url(#gold-grad-ornament)" />
-                <defs>
-                  <linearGradient id="gold-line-left" x1="0" y1="0" x2="80" y2="0" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="transparent" />
-                    <stop offset="100%" stopColor="#e2c275" />
-                  </linearGradient>
-                  <linearGradient id="gold-grad-ornament" x1="85" y1="6" x2="117" y2="18" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#fdf6db" />
-                    <stop offset="50%" stopColor="#e2c275" />
-                    <stop offset="100%" stopColor="#aa7c11" />
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
+          <ScrollReveal>
+            <div className="flex items-center justify-center gap-6 mb-20 text-center">
+              {/* Left Ornament */}
+              <div className="hidden sm:block shrink-0">
+                <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M 0,12 L 80,12" stroke="url(#gold-line-left)" strokeWidth="1" />
+                  <path d="M 85,12 L 91,6 L 97,12 L 91,18 Z" fill="url(#gold-grad-ornament)" />
+                  <circle cx="91" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
+                  <path d="M 103,12 L 107,8 L 111,12 L 107,16 Z" fill="url(#gold-grad-ornament)" />
+                  <circle cx="117" cy="12" r="2" fill="url(#gold-grad-ornament)" />
+                  <defs>
+                    <linearGradient id="gold-line-left" x1="0" y1="0" x2="80" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="transparent" />
+                      <stop offset="100%" stopColor="#e2c275" />
+                    </linearGradient>
+                    <linearGradient id="gold-grad-ornament" x1="85" y1="6" x2="117" y2="18" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#fdf6db" />
+                      <stop offset="50%" stopColor="#e2c275" />
+                      <stop offset="100%" stopColor="#aa7c11" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
 
-            <h2 className="text-4xl sm:text-5xl font-light tracking-wide font-team-serif text-[#fdfbf7] light:text-[#0b2419] drop-shadow-sm select-none">
-              Our Team
-            </h2>
+              <h2 className="text-4xl sm:text-5xl font-light tracking-wide font-team-serif text-[#fdfbf7] light:text-[#0b2419] drop-shadow-sm select-none">
+                Our Team
+              </h2>
 
-            {/* Right Ornament */}
-            <div className="hidden sm:block shrink-0">
-              <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 120,12 L 40,12" stroke="url(#gold-line-right)" strokeWidth="1" />
-                <path d="M 35,12 L 29,6 L 23,12 L 29,18 Z" fill="url(#gold-grad-ornament)" />
-                <circle cx="29" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
-                <path d="M 17,12 L 13,8 L 9,12 L 13,16 Z" fill="url(#gold-grad-ornament)" />
-                <circle cx="3" cy="12" r="2" fill="url(#gold-grad-ornament)" />
-                <defs>
-                  <linearGradient id="gold-line-right" x1="120" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="transparent" />
-                    <stop offset="100%" stopColor="#e2c275" />
-                  </linearGradient>
-                </defs>
-              </svg>
+              {/* Right Ornament */}
+              <div className="hidden sm:block shrink-0">
+                <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M 120,12 L 40,12" stroke="url(#gold-line-right)" strokeWidth="1" />
+                  <path d="M 35,12 L 29,6 L 23,12 L 29,18 Z" fill="url(#gold-grad-ornament)" />
+                  <circle cx="29" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
+                  <path d="M 17,12 L 13,8 L 9,12 L 13,16 Z" fill="url(#gold-grad-ornament)" />
+                  <circle cx="3" cy="12" r="2" fill="url(#gold-grad-ornament)" />
+                  <defs>
+                    <linearGradient id="gold-line-right" x1="120" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="transparent" />
+                      <stop offset="100%" stopColor="#e2c275" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-6xl mx-auto">
 
             {/* Left Column - Kati & Amin */}
-            <div className="flex flex-col gap-8 order-2 md:order-none">
+            <ScrollReveal delay={0} className="h-full flex flex-col">
+              <div className="flex flex-col gap-8 order-2 md:order-none w-full">
 
               {/* Mopara Pair Ayat */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
@@ -1805,11 +1867,12 @@ export function LandingPage() {
                   Database Architect
                 </p>
               </div>
-
             </div>
+          </ScrollReveal>
 
             {/* Center Column - Featured Mopara Pair Ayat */}
-            <div className="relative w-full max-w-[360px] h-[520px] mx-auto order-1 md:order-none flex flex-col items-center justify-between p-8 pt-16 group">
+            <ScrollReveal delay={150} className="h-full flex flex-col justify-center">
+              <div className="relative w-full max-w-[360px] h-[520px] mx-auto order-1 md:order-none flex flex-col items-center justify-between p-8 pt-16 group">
               {/* Custom Pointed Arch Background */}
               <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#e2c275]/50 light:stroke-[#e2c275]/80" />
@@ -1877,9 +1940,11 @@ export function LandingPage() {
                 </button>
               </div>
             </div>
+          </ScrollReveal>
 
             {/* Right Column - Mopara Pair Ayat & Tomas */}
-            <div className="flex flex-col gap-8 order-3 md:order-none">
+            <ScrollReveal delay={300} className="h-full flex flex-col">
+              <div className="flex flex-col gap-8 order-3 md:order-none w-full">
 
               {/* Taen Ahammed */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
@@ -1918,8 +1983,8 @@ export function LandingPage() {
                   Lead Frontend Engineer
                 </p>
               </div>
-
             </div>
+          </ScrollReveal>
 
           </div>
 
@@ -1956,26 +2021,29 @@ export function LandingPage() {
           }}
         />
         <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-              Questions
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              A few things to know before signing in
-            </h2>
-            <p className="mt-4 max-w-md text-sm leading-7 text-slate-400 light:text-slate-600">
-              These answers explain how Nexora is organized and which tools are
-              currently available.
-            </p>
-            <Image
-              src="/landing/mentor-modern/faqs.png"
-              alt="Student reviewing common questions"
-              width={360}
-              height={300}
-              className="mx-auto mt-8 h-auto w-full max-w-[300px]"
-            />
-          </div>
-          <div className="grid content-start gap-3">
+          <ScrollReveal>
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
+                Questions
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+                A few things to know before signing in
+              </h2>
+              <p className="mt-4 max-w-md text-sm leading-7 text-slate-400 light:text-slate-600">
+                These answers explain how Nexora is organized and which tools are
+                currently available.
+              </p>
+              <Image
+                src="/landing/mentor-modern/faqs.png"
+                alt="Student reviewing common questions"
+                width={360}
+                height={300}
+                className="mx-auto mt-8 h-auto w-full max-w-[300px]"
+              />
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={150} className="grid content-start gap-3">
             {faqs.map(({ question, answer }, index) => (
               <details
                 key={question}
@@ -1995,7 +2063,7 @@ export function LandingPage() {
                 </p>
               </details>
             ))}
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -2059,8 +2127,9 @@ export function LandingPage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {/* Desktop Card */}
-            <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10">
-              <div className="flex-1">
+            <ScrollReveal className="h-full flex flex-col">
+              <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10 w-full h-full">
+                <div className="flex-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
                   Desktop Experience
                 </p>
@@ -2137,10 +2206,12 @@ export function LandingPage() {
                 )}
               </div>
             </div>
+          </ScrollReveal>
 
             {/* Mobile Card */}
-            <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10">
-              <div className="flex-1">
+            <ScrollReveal delay={150} className="h-full flex flex-col">
+              <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10 w-full h-full">
+                <div className="flex-1">
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
                   Mobile Experience
                 </p>
@@ -2198,11 +2269,14 @@ export function LandingPage() {
                 )}
               </div>
             </div>
+          </ScrollReveal>
           </div>
         </div>
       </section>
 
-      <PandaCTA />
+      <ScrollReveal>
+        <PandaCTA />
+      </ScrollReveal>
 
       <footer id="contact" className="px-5 py-12 md:px-8 bg-[#0b0d14] light:bg-[#f1f6f3]">
         <style dangerouslySetInnerHTML={{
@@ -2254,9 +2328,9 @@ export function LandingPage() {
             color: rgba(15,23,42,0.55);
           }
           .footer-social-icon:hover {
-            border-color: rgba(50,245,154,0.5);
-            color: #32f59a;
-            background: rgba(50,245,154,0.06);
+            border-color: rgba(var(--theme-emerald-rgb-raw),0.5);
+            color: var(--theme-accent-primary);
+            background: rgba(var(--theme-emerald-rgb-raw),0.06);
           }
           .light .footer-social-icon:hover {
             border-color: rgba(16,185,129,0.6);
@@ -2272,7 +2346,7 @@ export function LandingPage() {
           .light .footer-nav-link {
             color: rgba(15,23,42,0.6);
           }
-          .footer-nav-link:hover { color: #32f59a; }
+          .footer-nav-link:hover { color: var(--theme-accent-primary); }
           .light .footer-nav-link:hover { color: #059669; }
           
           .footer-divider {
@@ -2333,7 +2407,7 @@ export function LandingPage() {
                 <div className="mt-4">
                   <span className="footer-bithm-badge">
                     <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
-                      <circle cx="4" cy="4" r="3" fill="#32f59a" className="light:fill-[#059669]" />
+                      <circle cx="4" cy="4" r="3" fill="var(--theme-accent-primary)" className="light:fill-[#059669]" />
                     </svg>
                     Built for BITHM
                   </span>
@@ -2456,7 +2530,7 @@ function LandingNav() {
     <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-3 pt-3 sm:px-5 md:px-8">
       {/* Viewport Scroll Progress Bar */}
       <div 
-        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#32f59a] to-[#d9ff57] light:from-[#059669] light:to-[#10b981] z-[100] origin-left transition-all duration-75"
+        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-accent-primary to-accent-secondary light:from-[#059669] light:to-[#10b981] z-[100] origin-left transition-all duration-75"
         style={{ width: `${pageScrollProgress}%` }}
       />
       
@@ -2492,7 +2566,7 @@ function LandingNav() {
           width: 220%;
           height: auto;
           border-radius: 50%;
-          background: conic-gradient(#32f59a 0%, #000 15%, #9333ea 50%, #32f59a 100%);
+          background: conic-gradient(var(--theme-accent-primary) 0%, #000 15%, var(--theme-accent-secondary) 50%, var(--theme-accent-primary) 100%);
           animation: spin linear 3s infinite;
           transform: translate(-50%, -50%);
           transition: filter 0.4s ease;
@@ -2549,7 +2623,7 @@ function LandingNav() {
         }
         .hk-button:hover span {
           letter-spacing: 0.08em;
-          text-shadow: 0 0 8px rgba(50, 245, 154, 0.6);
+          text-shadow: 0 0 8px rgba(var(--theme-emerald-rgb-raw), 0.6);
         }
 
         .hk-button:active {
@@ -2557,7 +2631,7 @@ function LandingNav() {
         }
 
         .hk-button:focus-visible {
-          outline: 2px solid #32f59a;
+          outline: 2px solid var(--theme-accent-primary);
           outline-offset: 4px;
         }
 
@@ -2585,7 +2659,7 @@ function LandingNav() {
           height: 2px;
           bottom: 0;
           left: 0;
-          background: linear-gradient(90deg, #32f59a, #d9ff57);
+          background: linear-gradient(90deg, var(--theme-accent-primary), var(--theme-accent-secondary));
           transform-origin: bottom right;
           transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
         }
@@ -2646,6 +2720,9 @@ function LandingNav() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
+          <div>
+            <AccentPicker />
+          </div>
           <div>
             <ThemeToggle />
           </div>
