@@ -1313,7 +1313,7 @@ export function LandingPage() {
       <section className="relative pt-32 pb-14 xl:py-14 px-5 md:px-8 bg-[#070d0a] light:bg-[#f6faf7]">
         <div className="mx-auto max-w-7xl relative">
           {/* Outer card */}
-          <div className="relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
+          <div className="group/coursework relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
 
             {/* Subtle grid pattern specifically inside the card */}
             <div className="absolute inset-0 opacity-[0.03] light:opacity-[0.06] pointer-events-none mix-blend-overlay"
@@ -1351,15 +1351,18 @@ export function LandingPage() {
 
                   {/* Premium Seal / Badge Symbol */}
                   <div className="relative flex items-center gap-4 mb-8">
-                    <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-emerald-500/5 light:bg-emerald-50 border border-emerald-500/20 light:border-emerald-700/15 shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+                    <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-emerald-500/5 light:bg-emerald-50 border border-emerald-500/20 light:border-emerald-700/15 shadow-[0_0_15px_rgba(16,185,129,0.05)] overflow-hidden">
+                      {/* Metallic Sheen Overlay */}
+                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 light:via-white/60 to-transparent -translate-x-[150%] -skew-x-[25deg] transition-transform duration-1000 ease-out group-hover/coursework:translate-x-[150%] pointer-events-none" />
+                      
                       {/* Laurel Wreath Certificate SVG */}
-                      <svg className="w-10 h-10 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <svg className="w-10 h-10 text-emerald-400 light:text-emerald-600 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M6 3a9 9 0 0 1 8.7 7M18 3a9 9 0 0 0-8.7 7M12 7v10M9 14l3 3 3-3" />
                         <circle cx="12" cy="17" r="1" fill="currentColor" />
                         <path d="M5.5 10a7 7 0 0 0 6.5 6 7 7 0 0 0 6.5-6" />
                       </svg>
                       {/* Small floating pulse dot */}
-                      <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 light:bg-emerald-600 border-2 border-[#0d1f18] light:border-white shadow-[0_0_8px_rgba(52,211,153,0.6)] animate-pulse" />
+                      <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 light:bg-emerald-600 border-2 border-[#0d1f18] light:border-white shadow-[0_0_8px_rgba(52,211,153,0.6)] animate-pulse z-20" />
                     </div>
                     <div>
                       <p className="text-[11px] font-medium tracking-wide text-slate-400 light:text-slate-500">Nexora Integrity Protocol</p>

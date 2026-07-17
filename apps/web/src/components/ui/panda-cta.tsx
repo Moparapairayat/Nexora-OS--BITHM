@@ -132,6 +132,7 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
     const stateVals = {
       headRot: 0,
       eyeScaleY: 1,
+      eyeLeftWinkScaleY: 1,
       pupilX: 0,
       armRot: 0,
       armHangingRot: 0,
@@ -531,6 +532,64 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       lastMouseTime = performance.now();
     }
 
+    let winking = false;
+    async function winkLeftEye() {
+      if (winking || state !== "AWAKE") return;
+      winking = true;
+      // Close left eye quickly
+      await animateProp("eyeLeftWinkScaleY", 0.08, 120, easeOutCubic);
+      await sleepDelay(100);
+      // Open left eye back up
+      await animateProp("eyeLeftWinkScaleY", 1, 150, easeInOutCubic);
+      winking = false;
+    }
+
+    let bouncing = false;
+    async function playBounceSequence() {
+      if (bouncing || state !== "AWAKE") return;
+      bouncing = true;
+      state = "BOUNCING";
+      cancelAllAnimations();
+      
+      const earL = select("#ear-left");
+      const earR = select("#ear-right");
+      if (earL) {
+        earL.classList.remove("wiggle-left");
+        void earL.offsetWidth; // Trigger reflow
+        earL.classList.add("wiggle-left");
+      }
+      if (earR) {
+        earR.classList.remove("wiggle-right");
+        void earR.offsetWidth; // Trigger reflow
+        earR.classList.add("wiggle-right");
+      }
+
+      await Promise.all([
+        animateProp("bodyScaleY", 0.88, 100, easeOutCubic),
+        animateProp("bodyScaleX", 1.05, 100, easeOutCubic),
+        animateProp("fallY", 10, 100, easeOutCubic)
+      ]);
+      await Promise.all([
+        animateProp("bodyScaleY", 1.08, 120, easeOutCubic),
+        animateProp("bodyScaleX", 0.95, 120, easeOutCubic),
+        animateProp("fallY", -14, 120, easeOutCubic)
+      ]);
+      await Promise.all([
+        animateProp("bodyScaleY", 1, 300, easeOutElastic),
+        animateProp("bodyScaleX", 1, 300, easeOutElastic),
+        animateProp("fallY", 0, 300, easeOutElastic)
+      ]);
+
+      setTimeout(() => {
+        earL?.classList.remove("wiggle-left");
+        earR?.classList.remove("wiggle-right");
+      }, 400);
+
+      state = "AWAKE";
+      bouncing = false;
+      lastMouseTime = performance.now();
+    }
+
     function handleInputFocus(e: FocusEvent) {
       const el = e.target as HTMLElement;
       const rect = el.getBoundingClientRect();
@@ -649,14 +708,23 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       const target = e.target as SVGElement;
       if (target.id === "hit-nose") playSneezeSequence();
       else if (target.id === "hit-belly") playGiggleSequence();
+      else {
+        // Any click outside nose/belly triggers wiggling ears & head bounce
+        playBounceSequence();
+      }
     };
 
     const onPandaDblClick = () => {
       playWaveSequence();
     };
 
+    const onMascotMouseEnter = () => {
+      winkLeftEye();
+    };
+
     pandaCharacter.addEventListener("click", onPandaClick);
     pandaCharacter.addEventListener("dblclick", onPandaDblClick);
+    mascotContainer.addEventListener("mouseenter", onMascotMouseEnter);
 
     // Exposé submit trigger to window scope for react form submission
     (window as any).triggerPandaSubmitSequence = () => {
@@ -728,7 +796,8 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       if (dom.bamboo) dom.bamboo.style.transform = `rotate(${breath.bambooRot + stateVals.bambooProceduralBending}deg)`;
       
       const eyeScale = `scaleY(${stateVals.eyeScaleY})`;
-      if (dom.eyeLeftInner) dom.eyeLeftInner.style.transform = eyeScale;
+      const eyeLeftScale = `scaleY(${stateVals.eyeScaleY * stateVals.eyeLeftWinkScaleY})`;
+      if (dom.eyeLeftInner) dom.eyeLeftInner.style.transform = eyeLeftScale;
       if (dom.eyeRightInner) dom.eyeRightInner.style.transform = eyeScale;
       
       const pupilTrans = `translateX(${stateVals.pupilX}px)`;
@@ -843,6 +912,7 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       });
       pandaCharacter.removeEventListener("click", onPandaClick);
       pandaCharacter.removeEventListener("dblclick", onPandaDblClick);
+      mascotContainer.removeEventListener("mouseenter", onMascotMouseEnter);
     };
   }, []);
 
@@ -1211,8 +1281,33 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
           box-shadow: 0 10px 25px rgba(16, 185, 129, 0.22) !important;
         }
         
+        
         :global(.light) .submit-btn:hover {
           box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3) !important;
+        }
+
+        /* ── Mascot Ear Wiggle Keyframes & Classes ── */
+        @keyframes wiggle-ear-left {
+          0% { transform: rotate(0deg); }
+          25% { transform: rotate(-10deg); }
+          50% { transform: rotate(8deg); }
+          75% { transform: rotate(-5deg); }
+          100% { transform: rotate(0deg); }
+        }
+        @keyframes wiggle-ear-right {
+          0% { transform: rotate(0deg); }
+          25% { transform: rotate(10deg); }
+          50% { transform: rotate(-8deg); }
+          75% { transform: rotate(5deg); }
+          100% { transform: rotate(0deg); }
+        }
+        .wiggle-left {
+          animation: wiggle-ear-left 0.4s ease-in-out;
+          transform-origin: 220px 160px;
+        }
+        .wiggle-right {
+          animation: wiggle-ear-right 0.4s ease-in-out;
+          transform-origin: 380px 135px;
         }
       `}</style>
 
