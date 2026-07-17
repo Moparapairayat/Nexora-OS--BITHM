@@ -1182,7 +1182,7 @@ export function LandingPage() {
 
       {/* ACADEMIC COURSEWORK SECTION */}
       <section className="relative py-14 px-5 md:px-8 bg-[#070d0a] light:bg-[#f6faf7]">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl relative">
           {/* Outer card */}
           <div className="relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
             
@@ -1342,6 +1342,9 @@ export function LandingPage() {
               </div>
             </div>
           </div>
+
+          {/* Hanging interactive Panda mascot, synced to track user cursor */}
+          <PandaCTA mascotOnly className="absolute top-[-100px] right-[-280px] hidden xl:block" />
         </div>
       </section>
 

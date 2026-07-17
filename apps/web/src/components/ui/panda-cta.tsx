@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
-export function PandaCTA() {
+export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: boolean; className?: string } = {}) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [submitBtnText, setSubmitBtnText] = useState("Send Message");
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);
@@ -884,13 +884,26 @@ export function PandaCTA() {
   const selectField = (selector: string) => rootRef.current?.querySelector(selector) as HTMLElement | null;
 
   return (
-    <section id="contact" className="relative w-full min-h-screen py-24 flex items-center justify-center bg-[#0b0d14] overflow-hidden" ref={rootRef}>
+    <section 
+      id={mascotOnly ? undefined : "contact"} 
+      className={mascotOnly ? `absolute pointer-events-none z-10 ${className}` : "relative w-full min-h-screen py-24 flex items-center justify-center bg-[#0b0d14] overflow-hidden"} 
+      ref={rootRef}
+      style={mascotOnly ? { width: 450, height: 450 } : undefined}
+    >
       {/* Scope embedded styles natively to this component */}
       <style jsx global>{`
         /* Spotlight Layer Variables */
         :root {
           --spotlight-color: rgba(255, 228, 180, 0.08);
           --spotlight-fade: rgba(255, 228, 180, 0.02);
+        }
+
+        .mascot-only-container {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          z-index: 10;
+          pointer-events: none;
         }
 
         .contact-container {
@@ -1203,46 +1216,48 @@ export function PandaCTA() {
         }
       `}</style>
 
-      <main className="contact-container">
+      <main className={mascotOnly ? "relative w-full h-full" : "contact-container"}>
         
         {/* Premium Ambient Spotlight Layer */}
-        <div className="ambient-spotlight"></div>
+        {!mascotOnly && <div className="ambient-spotlight"></div>}
 
         {/* UI Card */}
-        <div className="contact-card">
-          <div className="contact-header">
-            <h2>Get in touch with us</h2>
-            <p>Have a question about Nexora OS or BITHM? <br />We&apos;d love to hear from you.</p>
+        {!mascotOnly && (
+          <div className="contact-card">
+            <div className="contact-header">
+              <h2>Get in touch with us</h2>
+              <p>Have a question about Nexora OS or BITHM? <br />We&apos;d love to hear from you.</p>
+            </div>
+            
+            <form id="contact-form" onSubmit={(e) => e.preventDefault()}>
+              <div className="form-group">
+                <label htmlFor="input-name">Name</label>
+                <input type="text" className="form-control" placeholder="Your full name" id="input-name" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="input-email">Email</label>
+                <input type="email" className="form-control" placeholder="your@email.com" id="input-email" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="message-input">Message</label>
+                <textarea id="message-input" className="form-control" placeholder="How can we help you? Ask about the platform, enrollment, features..."></textarea>
+              </div>
+              <button 
+                type="button" 
+                className="submit-btn" 
+                id="submit-btn"
+                onClick={handleFormSubmit}
+                disabled={submitBtnDisabled}
+                style={submitBtnBg ? { background: submitBtnBg } : undefined}
+              >
+                {submitBtnText}
+              </button>
+            </form>
           </div>
-          
-          <form id="contact-form" onSubmit={(e) => e.preventDefault()}>
-            <div className="form-group">
-              <label htmlFor="input-name">Name</label>
-              <input type="text" className="form-control" placeholder="Your full name" id="input-name" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="input-email">Email</label>
-              <input type="email" className="form-control" placeholder="your@email.com" id="input-email" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="message-input">Message</label>
-              <textarea id="message-input" className="form-control" placeholder="How can we help you? Ask about the platform, enrollment, features..."></textarea>
-            </div>
-            <button 
-              type="button" 
-              className="submit-btn" 
-              id="submit-btn"
-              onClick={handleFormSubmit}
-              disabled={submitBtnDisabled}
-              style={submitBtnBg ? { background: submitBtnBg } : undefined}
-            >
-              {submitBtnText}
-            </button>
-          </form>
-        </div>
+        )}
 
         {/* Mascot SVG Structure */}
-        <div className="mascot-container" id="mascot-container">
+        <div className={mascotOnly ? "mascot-only-container" : "mascot-container"} id="mascot-container">
           <svg className="mascot-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="bamboo-grad" x1="0%" y1="0%" x2="20%" y2="100%">
