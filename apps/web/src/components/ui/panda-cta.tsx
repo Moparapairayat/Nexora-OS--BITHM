@@ -888,7 +888,7 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       id={mascotOnly ? undefined : "contact"} 
       className={mascotOnly ? `absolute pointer-events-none z-10 ${className}` : "relative w-full min-h-screen py-24 flex items-center justify-center bg-[#0b0d14] overflow-hidden"} 
       ref={rootRef}
-      style={mascotOnly ? { width: 450, height: 450 } : undefined}
+      style={undefined}
     >
       {/* Scope embedded styles natively to this component */}
       <style jsx global>{`
