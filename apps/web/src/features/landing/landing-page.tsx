@@ -8,6 +8,8 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
+  ChevronLeft,
+  ChevronRight,
   Code2,
   Database,
   FileCheck2,
@@ -761,12 +763,32 @@ export function LandingPage() {
             detail="Core tools are available now. Modules still in development are clearly marked Coming Soon."
           />
           {/* Slider Container with Fades */}
-          <div className="relative mt-8">
+          <div className="relative mt-8 group/slider">
             {/* Left Edge Fade Mask */}
             <div className="pointer-events-none absolute left-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-r from-[#070d0a]/95 dark:from-[#070d0a]/95 light:from-[#fbfdfb]/95 to-transparent" />
 
             {/* Right Edge Fade Mask */}
             <div className="pointer-events-none absolute right-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-l from-[#050706]/95 dark:from-[#050706]/95 light:from-[#fbfdfb]/95 to-transparent" />
+
+            {/* Floating Left Button */}
+            <button
+              onClick={() => scroll("left")}
+              disabled={!canScrollLeft}
+              aria-label="Scroll left"
+              className="absolute left-6 top-[calc(50%-12px)] -translate-y-1/2 z-30 hidden lg:flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-[#070d0a]/60 text-slate-200 backdrop-blur-md shadow-lg transition-all duration-300 opacity-0 group-hover/slider:opacity-100 hover:scale-110 hover:bg-[#070d0a]/80 active:scale-95 disabled:opacity-0 disabled:pointer-events-none light:border-black/5 light:bg-white/60 light:text-slate-800 light:hover:bg-white/80 pointer-events-auto"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+
+            {/* Floating Right Button */}
+            <button
+              onClick={() => scroll("right")}
+              disabled={!canScrollRight}
+              aria-label="Scroll right"
+              className="absolute right-6 top-[calc(50%-12px)] -translate-y-1/2 z-30 hidden lg:flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-[#070d0a]/60 text-slate-200 backdrop-blur-md shadow-lg transition-all duration-300 opacity-0 group-hover/slider:opacity-100 hover:scale-110 hover:bg-[#070d0a]/80 active:scale-95 disabled:opacity-0 disabled:pointer-events-none light:border-black/5 light:bg-white/60 light:text-slate-800 light:hover:bg-white/80 pointer-events-auto"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
 
             <div
               ref={sliderRef}
@@ -876,6 +898,27 @@ export function LandingPage() {
                   className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#32f59a] to-[#d9ff57] transition-all duration-150 ease-out"
                   style={{ width: `${scrollProgress}%` }}
                 />
+              </div>
+
+              {/* Progress Dots Indicator */}
+              <div className="hidden items-center gap-1.5 ml-2 md:flex">
+                {platformAreas.map((_, dotIdx) => (
+                  <button
+                    key={dotIdx}
+                    onClick={() => {
+                      if (sliderRef.current) {
+                        const cardWidth = 350 + 20; // card + gap
+                        safeScrollTo(dotIdx * cardWidth);
+                      }
+                    }}
+                    aria-label={`Go to slide ${dotIdx + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      activeIdx === dotIdx + 1
+                        ? "w-4 bg-[#32f59a] light:bg-[#087a55]"
+                        : "w-1.5 bg-white/20 hover:bg-white/40 light:bg-black/10 light:hover:bg-black/25"
+                    }`}
+                  />
+                ))}
               </div>
             </div>
 
@@ -1835,19 +1878,19 @@ export function LandingPage() {
             {/* Right Column - Mopara Pair Ayat & Tomas */}
             <div className="flex flex-col gap-8 order-3 md:order-none">
 
-              {/* Tahmid Chowdhury */}
+              {/* Taen Ahammed */}
               <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                 <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                   <Image
                     src="/landing/team/tomas_avatar.png"
-                    alt="Tahmid Chowdhury"
+                    alt="Taen Ahammed"
                     fill
                     sizes="130px"
                     className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Tahmid Chowdhury
+                  Taen Ahammed
                 </h3>
                 <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
                   UI/UX Designer
