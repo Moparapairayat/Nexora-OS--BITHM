@@ -448,18 +448,18 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   /* Default theme values (Emerald) */
   --theme-accent-primary: #32f59a;
   --theme-accent-secondary: #d9ff57;
-  --theme-emerald-50: #f0fdf4;
-  --theme-emerald-100: #dcfce7;
-  --theme-emerald-200: #bbf7d0;
-  --theme-emerald-300: #86efac;
-  --theme-emerald-400: #4ade80;
-  --theme-emerald-500: #22c55e;
-  --theme-emerald-600: #16a34a;
-  --theme-emerald-700: #15803d;
-  --theme-emerald-800: #166534;
-  --theme-emerald-900: #14532d;
-  --theme-emerald-950: #052e16;
-  --theme-emerald-rgb-raw: 34, 197, 94;
+  --theme-emerald-50: #ecfdf5;
+  --theme-emerald-100: #d1fae5;
+  --theme-emerald-200: #a7f3d0;
+  --theme-emerald-300: #6ee7b7;
+  --theme-emerald-400: #34d399;
+  --theme-emerald-500: #10b981;
+  --theme-emerald-600: #059669;
+  --theme-emerald-700: #047857;
+  --theme-emerald-800: #065f46;
+  --theme-emerald-900: #064e3b;
+  --theme-emerald-950: #022c22;
+  --theme-emerald-rgb-raw: 16, 185, 129;
 }
 
 /* Cyber Purple Accent Theme Override */

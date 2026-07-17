@@ -29,6 +29,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { AccentPicker } from "@/components/layout/accent-picker";
 import { DemoLoginButtons } from "@/features/auth/demo-login-buttons";
 import { PandaCTA } from "@/components/ui/panda-cta";
+import { PandaChat } from "@/components/ui/panda-chat";
 
 const cardShape: Record<string, string> = {
   violet: "border-violet-300/30",
@@ -758,7 +759,7 @@ export function LandingPage() {
               }
             }
           `}} />
-          
+
           {/* Ribbon 1: Dark (on top) - Rich Deep Brand Green with Neon Text */}
           <div className="marquee-ribbon-dark absolute inset-x-0 top-1/2 -translate-y-1/2 w-[110%] -left-[5%] py-2.5 sm:py-4 bg-[#0a1b13] light:bg-[#f0f9f4] z-10 flex items-center overflow-hidden">
             <div className="animate-marquee-ltr flex items-center whitespace-nowrap gap-6 sm:gap-12 text-[9px] sm:text-xs font-black tracking-[0.2em] text-accent-primary light:text-[#065f46] uppercase">
@@ -966,11 +967,10 @@ export function LandingPage() {
                       }
                     }}
                     aria-label={`Go to slide ${dotIdx + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      activeIdx === dotIdx + 1
+                    className={`h-1.5 rounded-full transition-all duration-300 ${activeIdx === dotIdx + 1
                         ? "w-4 bg-accent-primary light:bg-[#087a55]"
                         : "w-1.5 bg-white/20 hover:bg-white/40 light:bg-black/10 light:hover:bg-black/25"
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
@@ -1408,7 +1408,7 @@ export function LandingPage() {
                     <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-emerald-500/5 light:bg-emerald-50 border border-emerald-500/20 light:border-emerald-700/15 shadow-[0_0_15px_rgba(16,185,129,0.05)] overflow-hidden">
                       {/* Metallic Sheen Overlay */}
                       <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 light:via-white/60 to-transparent -translate-x-[150%] -skew-x-[25deg] transition-transform duration-1000 ease-out group-hover/coursework:translate-x-[150%] pointer-events-none" />
-                      
+
                       {/* Laurel Wreath Certificate SVG */}
                       <svg className="w-10 h-10 text-emerald-400 light:text-emerald-600 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M6 3a9 9 0 0 1 8.7 7M18 3a9 9 0 0 0-8.7 7M12 7v10M9 14l3 3 3-3" />
@@ -1557,181 +1557,181 @@ export function LandingPage() {
               </Link>
             </div>
           </ScrollReveal>
-          
+
           <ScrollReveal delay={150} className="w-full">
             {/* Layered Glass Card Container */}
             <div className="relative w-full flex items-center justify-center min-h-[400px]">
-            {/* 1. Neon Glowing Shapes SVG (Z-0: Behind the glass, bleeds outside bounds) */}
-            <svg className="absolute inset-0 w-[108%] h-[108%] -translate-x-[4%] -translate-y-[4%] pointer-events-none z-0" viewBox="0 0 600 400" fill="none">
-              <defs>
-                <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="14" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <filter id="glow-pink" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="16" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-                <linearGradient id="neon-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22c55e" />
-                  <stop offset="50%" stopColor="#06b6d4" />
-                  <stop offset="100%" stopColor="#f59e0b" />
-                </linearGradient>
-                <linearGradient id="neon-pink-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ec4899" />
-                  <stop offset="50%" stopColor="#f43f5e" />
-                  <stop offset="100%" stopColor="#d946ef" />
-                </linearGradient>
-              </defs>
+              {/* 1. Neon Glowing Shapes SVG (Z-0: Behind the glass, bleeds outside bounds) */}
+              <svg className="absolute inset-0 w-[108%] h-[108%] -translate-x-[4%] -translate-y-[4%] pointer-events-none z-0" viewBox="0 0 600 400" fill="none">
+                <defs>
+                  <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="14" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <filter id="glow-pink" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="16" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <linearGradient id="neon-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#22c55e" />
+                    <stop offset="50%" stopColor="#06b6d4" />
+                    <stop offset="100%" stopColor="#f59e0b" />
+                  </linearGradient>
+                  <linearGradient id="neon-pink-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#ec4899" />
+                    <stop offset="50%" stopColor="#f43f5e" />
+                    <stop offset="100%" stopColor="#d946ef" />
+                  </linearGradient>
+                </defs>
 
-              {/* Green tilted square (Left bottom neon) */}
-              <path
-                d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
-                fill="none"
-                stroke="url(#neon-green-grad)"
-                strokeWidth="16"
-                strokeLinecap="round"
-                filter="url(#glow-green)"
-                opacity="0.85"
-              />
-              <path
-                d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
-                fill="none"
-                stroke="#d1fae5"
-                strokeWidth="4"
-                strokeLinecap="round"
-              />
+                {/* Green tilted square (Left bottom neon) */}
+                <path
+                  d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
+                  fill="none"
+                  stroke="url(#neon-green-grad)"
+                  strokeWidth="16"
+                  strokeLinecap="round"
+                  filter="url(#glow-green)"
+                  opacity="0.85"
+                />
+                <path
+                  d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
+                  fill="none"
+                  stroke="#d1fae5"
+                  strokeWidth="4"
+                  strokeLinecap="round"
+                />
 
-              {/* Connecting curve loop (Middle neon) */}
-              <path
-                d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
-                fill="none"
-                stroke="url(#neon-pink-grad)"
-                strokeWidth="14"
-                strokeLinecap="round"
-                filter="url(#glow-pink)"
-                opacity="0.8"
-              />
-              <path
-                d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
-                fill="none"
-                stroke="#fce7f3"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-              />
+                {/* Connecting curve loop (Middle neon) */}
+                <path
+                  d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
+                  fill="none"
+                  stroke="url(#neon-pink-grad)"
+                  strokeWidth="14"
+                  strokeLinecap="round"
+                  filter="url(#glow-pink)"
+                  opacity="0.8"
+                />
+                <path
+                  d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
+                  fill="none"
+                  stroke="#fce7f3"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                />
 
-              {/* Clover/Cross Shape (Right side neon) */}
-              <path
-                d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
-                fill="none"
-                stroke="url(#neon-pink-grad)"
-                strokeWidth="22"
-                filter="url(#glow-pink)"
-                opacity="0.9"
-              />
-              <path
-                d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
-                fill="none"
-                stroke="#fff1f2"
-                strokeWidth="4.5"
-              />
-            </svg>
+                {/* Clover/Cross Shape (Right side neon) */}
+                <path
+                  d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
+                  fill="none"
+                  stroke="url(#neon-pink-grad)"
+                  strokeWidth="22"
+                  filter="url(#glow-pink)"
+                  opacity="0.9"
+                />
+                <path
+                  d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
+                  fill="none"
+                  stroke="#fff1f2"
+                  strokeWidth="4.5"
+                />
+              </svg>
 
-            {/* 2. Glass Card Container (Z-10: Frosted glass sheet that blurs Z-0 neons) */}
-            <div className="relative z-10 w-full min-h-[400px] rounded-[32px] border border-white/20 bg-gradient-to-tr from-white/[0.015] via-white/[0.035] to-white/[0.075] p-8 shadow-[0_30px_100px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col justify-between backdrop-blur-[24px] overflow-hidden light:border-slate-300/30 light:bg-gradient-to-tr light:from-white/40 light:to-white/80 light:shadow-xl">
-              {/* Background canvas grid lines */}
-              <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
+              {/* 2. Glass Card Container (Z-10: Frosted glass sheet that blurs Z-0 neons) */}
+              <div className="relative z-10 w-full min-h-[400px] rounded-[32px] border border-white/20 bg-gradient-to-tr from-white/[0.015] via-white/[0.035] to-white/[0.075] p-8 shadow-[0_30px_100px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col justify-between backdrop-blur-[24px] overflow-hidden light:border-slate-300/30 light:bg-gradient-to-tr light:from-white/40 light:to-white/80 light:shadow-xl">
+                {/* Background canvas grid lines */}
+                <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
 
-              {/* Content Layers */}
-              <div className="relative z-10 w-full h-full flex flex-col justify-between flex-1 min-h-[340px]">
-                {/* Top Row: Left Title & Right Japanese Title */}
-                <div className="flex justify-between items-start w-full">
-                  <div>
-                    <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
-                      Nexora <span className="text-[10px] font-mono tracking-widest opacity-40 align-middle ml-1">✦⚪⚪✕</span>
-                      <br />
-                      OS:
-                    </h3>
-                    <p className="mt-3 text-sm font-semibold text-orange-300 tracking-wide light:text-emerald-700">
-                      Connected Student Workspace
-                    </p>
+                {/* Content Layers */}
+                <div className="relative z-10 w-full h-full flex flex-col justify-between flex-1 min-h-[340px]">
+                  {/* Top Row: Left Title & Right Japanese Title */}
+                  <div className="flex justify-between items-start w-full">
+                    <div>
+                      <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
+                        Nexora <span className="text-[10px] font-mono tracking-widest opacity-40 align-middle ml-1">✦⚪⚪✕</span>
+                        <br />
+                        OS:
+                      </h3>
+                      <p className="mt-3 text-sm font-semibold text-orange-300 tracking-wide light:text-emerald-700">
+                        Connected Student Workspace
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white/95 font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
+                        ネクソラ OS
+                      </h3>
+                      <p className="mt-2 text-xs font-semibold text-white/70 tracking-wide light:text-slate-600">
+                        学術ワークスペース
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="text-right">
-                    <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white/95 font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
-                      ネクソラ OS
-                    </h3>
-                    <p className="mt-2 text-xs font-semibold text-white/70 tracking-wide light:text-slate-600">
-                      学術ワークスペース
+                  {/* Bottom Row: Bottom Left Detail & Bottom Right CTA Pill */}
+                  <div className="flex justify-between items-end w-full mt-auto relative z-10">
+                    <p className="text-xs sm:text-sm font-semibold text-white/90 light:text-slate-900 max-w-[220px] leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] light:drop-shadow-none">
+                      A premium platform to study, build, and submit your work.
                     </p>
+
+                    {/* Pill Button "Explore Workspace" */}
+                    <Link
+                      href="/login"
+                      className="flex items-center gap-2 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(var(--theme-emerald-rgb-raw),0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(var(--theme-emerald-rgb-raw),0.32)] light:from-[#087a55] light:to-[#10b981] light:text-white light:shadow-md"
+                      data-cursor="hover"
+                    >
+                      Explore Workspace
+                      <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
+                    </Link>
                   </div>
                 </div>
+              </div>
 
-                {/* Bottom Row: Bottom Left Detail & Bottom Right CTA Pill */}
-                <div className="flex justify-between items-end w-full mt-auto relative z-10">
-                  <p className="text-xs sm:text-sm font-semibold text-white/90 light:text-slate-900 max-w-[220px] leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] light:drop-shadow-none">
-                    A premium platform to study, build, and submit your work.
-                  </p>
+              {/* 3. Figma Handles & Cursors Layer (Z-20: Sits on top of the glass card, fully sharp!) */}
+              <div className="absolute inset-0 pointer-events-none z-20 p-4">
+                <div className="relative w-full h-full">
+                  {/* Dashed connector lines */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 400" fill="none">
+                    <line x1="150" y1="175" x2="210" y2="125" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                    <circle cx="210" cy="125" r="3.5" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
 
-                  {/* Pill Button "Explore Workspace" */}
-                  <Link
-                    href="/login"
-                    className="flex items-center gap-2 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(var(--theme-emerald-rgb-raw),0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(var(--theme-emerald-rgb-raw),0.32)] light:from-[#087a55] light:to-[#10b981] light:text-white light:shadow-md"
-                    data-cursor="hover"
-                  >
-                    Explore Workspace
-                    <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
-                  </Link>
+                    <line x1="270" y1="280" x2="230" y2="340" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
+                    <rect x="227" y="337" width="6" height="6" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
+
+                    <line x1="420" y1="175" x2="470" y2="235" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3,3" />
+                    <circle cx="470" cy="235" r="3.5" fill="white" stroke="#ef4444" strokeWidth="1.5" />
+                  </svg>
+
+                  {/* Floating user pill badge 'Submitted!' */}
+                  <div className="absolute top-[280px] left-[260px] flex items-center gap-1.5 rounded-full bg-[#087a55] border border-emerald-400/30 px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_4px_15px_rgba(8,122,85,0.4)] backdrop-blur-sm">
+                    <div className="w-4 h-4 rounded-full bg-white/20 overflow-hidden flex items-center justify-center text-[8px] font-bold">
+                      ✓
+                    </div>
+                    <span>Submitted!</span>
+                  </div>
+
+                  {/* Cursors */}
+                  <div className="absolute top-[260px] left-[300px]">
+                    <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
+                      <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
+                    </svg>
+                  </div>
+
+                  <div className="absolute top-[115px] right-[130px]">
+                    <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
+                      <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
-
-            {/* 3. Figma Handles & Cursors Layer (Z-20: Sits on top of the glass card, fully sharp!) */}
-            <div className="absolute inset-0 pointer-events-none z-20 p-4">
-              <div className="relative w-full h-full">
-                {/* Dashed connector lines */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 400" fill="none">
-                  <line x1="150" y1="175" x2="210" y2="125" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
-                  <circle cx="210" cy="125" r="3.5" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
-
-                  <line x1="270" y1="280" x2="230" y2="340" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
-                  <rect x="227" y="337" width="6" height="6" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
-
-                  <line x1="420" y1="175" x2="470" y2="235" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3,3" />
-                  <circle cx="470" cy="235" r="3.5" fill="white" stroke="#ef4444" strokeWidth="1.5" />
-                </svg>
-
-                {/* Floating user pill badge 'Submitted!' */}
-                <div className="absolute top-[280px] left-[260px] flex items-center gap-1.5 rounded-full bg-[#087a55] border border-emerald-400/30 px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_4px_15px_rgba(8,122,85,0.4)] backdrop-blur-sm">
-                  <div className="w-4 h-4 rounded-full bg-white/20 overflow-hidden flex items-center justify-center text-[8px] font-bold">
-                    ✓
-                  </div>
-                  <span>Submitted!</span>
-                </div>
-
-                {/* Cursors */}
-                <div className="absolute top-[260px] left-[300px]">
-                  <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
-                    <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
-                  </svg>
-                </div>
-
-                <div className="absolute top-[115px] right-[130px]">
-                  <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
-                    <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
           </ScrollReveal>
         </div>
       </section>
@@ -1824,167 +1824,167 @@ export function LandingPage() {
             <ScrollReveal delay={0} className="h-full flex flex-col">
               <div className="flex flex-col gap-8 order-2 md:order-none w-full">
 
-              {/* Mopara Pair Ayat */}
-              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
-                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5">
-                  <Image
-                    src="/landing/team/ayat.png"
-                    alt="Mopara Pair Ayat"
-                    fill
-                    sizes="130px"
-                    draggable={false}
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
-                  />
-                  {/* Transparent overlay to prevent right click save */}
-                  <div
-                    className="absolute inset-0 z-10 bg-transparent select-none"
-                    onContextMenu={(e) => e.preventDefault()}
-                  />
+                {/* Mopara Pair Ayat */}
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5">
+                    <Image
+                      src="/landing/team/ayat.png"
+                      alt="Mopara Pair Ayat"
+                      fill
+                      sizes="130px"
+                      draggable={false}
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
+                    />
+                    {/* Transparent overlay to prevent right click save */}
+                    <div
+                      className="absolute inset-0 z-10 bg-transparent select-none"
+                      onContextMenu={(e) => e.preventDefault()}
+                    />
+                  </div>
+                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                    Mopara Pair Ayat
+                  </h3>
+                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                    Founder & Lead Developer
+                  </p>
                 </div>
-                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Mopara Pair Ayat
-                </h3>
-                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
-                  Founder & Lead Developer
-                </p>
-              </div>
 
-              {/* Emre Demir */}
-              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
-                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
-                  <Image
-                    src="/landing/team/emre_avatar.png"
-                    alt="Emre Demir"
-                    fill
-                    sizes="130px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
+                {/* Emre Demir */}
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                    <Image
+                      src="/landing/team/emre_avatar.png"
+                      alt="Emre Demir"
+                      fill
+                      sizes="130px"
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                    Emre Demir
+                  </h3>
+                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                    Database Architect
+                  </p>
                 </div>
-                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Emre Demir
-                </h3>
-                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
-                  Database Architect
-                </p>
               </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
 
             {/* Center Column - Featured Mopara Pair Ayat */}
             <ScrollReveal delay={150} className="h-full flex flex-col justify-center">
               <div className="relative w-full max-w-[360px] h-[520px] mx-auto order-1 md:order-none flex flex-col items-center justify-between p-8 pt-16 group">
-              {/* Custom Pointed Arch Background */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#e2c275]/50 light:stroke-[#e2c275]/80" />
-                <defs>
-                  <linearGradient id="center-card-bg-gradient" x1="180" y1="0" x2="180" y2="520" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="var(--center-card-bg-start)" stopOpacity="0.65" />
-                    <stop offset="100%" stopColor="var(--center-card-bg-end)" stopOpacity="0.95" />
-                  </linearGradient>
-                  <linearGradient id="center-gold-border-gradient" x1="0" y1="0" x2="360" y2="520" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#aa7c11" />
-                    <stop offset="25%" stopColor="#e2c275" />
-                    <stop offset="75%" stopColor="#fdf6db" />
-                    <stop offset="100%" stopColor="#aa7c11" />
-                  </linearGradient>
-                </defs>
-              </svg>
+                {/* Custom Pointed Arch Background */}
+                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#e2c275]/50 light:stroke-[#e2c275]/80" />
+                  <defs>
+                    <linearGradient id="center-card-bg-gradient" x1="180" y1="0" x2="180" y2="520" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="var(--center-card-bg-start)" stopOpacity="0.65" />
+                      <stop offset="100%" stopColor="var(--center-card-bg-end)" stopOpacity="0.95" />
+                    </linearGradient>
+                    <linearGradient id="center-gold-border-gradient" x1="0" y1="0" x2="360" y2="520" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#aa7c11" />
+                      <stop offset="25%" stopColor="#e2c275" />
+                      <stop offset="75%" stopColor="#fdf6db" />
+                      <stop offset="100%" stopColor="#aa7c11" />
+                    </linearGradient>
+                  </defs>
+                </svg>
 
-              <div className="relative z-10 w-full flex flex-col items-center">
-                {/* Photo */}
-                <div className="relative w-[160px] h-[195px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
-                  <Image
-                    src="/landing/team/afsana_tabassum.png"
-                    alt="Afsana Tabassum Tamishra"
-                    fill
-                    sizes="160px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
+                <div className="relative z-10 w-full flex flex-col items-center">
+                  {/* Photo */}
+                  <div className="relative w-[160px] h-[195px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
+                    <Image
+                      src="/landing/team/afsana_tabassum.png"
+                      alt="Afsana Tabassum Tamishra"
+                      fill
+                      sizes="160px"
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  {/* Info */}
+                  <h3 className="text-2xl font-bold font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-4">
+                    Afsana Tabassum Tamishra
+                  </h3>
+                  <p className="text-xs text-[#e2c275] light:text-[#8a650c] tracking-wider text-center mt-1.5 uppercase font-semibold">
+                    Lecturer & Project Advisor
+                  </p>
+                  <p className="text-xs text-slate-300 light:text-[#2d4d3f] leading-relaxed text-center mt-3 px-4 font-light max-w-[280px]">
+                    Lecturer at BITHM College of Professionals. Project advisor and coordinator guiding the design and development of Nexora OS.
+                  </p>
+
+                  {/* Social Links */}
+                  <div className="flex items-center justify-center gap-5 mt-3">
+                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="LinkedIn">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                      </svg>
+                    </a>
+                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Facebook">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                      </svg>
+                    </a>
+                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Twitter">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
 
-                {/* Info */}
-                <h3 className="text-2xl font-bold font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-4">
-                  Afsana Tabassum Tamishra
-                </h3>
-                <p className="text-xs text-[#e2c275] light:text-[#8a650c] tracking-wider text-center mt-1.5 uppercase font-semibold">
-                  Lecturer & Project Advisor
-                </p>
-                <p className="text-xs text-slate-300 light:text-[#2d4d3f] leading-relaxed text-center mt-3 px-4 font-light max-w-[280px]">
-                  Lecturer at BITHM College of Professionals. Project advisor and coordinator guiding the design and development of Nexora OS.
-                </p>
-
-                {/* Social Links */}
-                <div className="flex items-center justify-center gap-5 mt-3">
-                  <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="LinkedIn">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                    </svg>
-                  </a>
-                  <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Facebook">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                    </svg>
-                  </a>
-                  <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Twitter">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                    </svg>
-                  </a>
+                {/* Read More button */}
+                <div className="relative z-10 w-full flex justify-center mt-6 mb-1">
+                  <button className="border border-[#e2c275]/50 light:border-[#e2c275]/80 text-white light:text-[#0b2419] font-light tracking-widest text-xs px-8 py-2.5 bg-black/40 light:bg-white/30 hover:bg-[#e2c275] hover:text-black light:hover:text-white transition-all duration-300">
+                    Read More
+                  </button>
                 </div>
               </div>
-
-              {/* Read More button */}
-              <div className="relative z-10 w-full flex justify-center mt-6 mb-1">
-                <button className="border border-[#e2c275]/50 light:border-[#e2c275]/80 text-white light:text-[#0b2419] font-light tracking-widest text-xs px-8 py-2.5 bg-black/40 light:bg-white/30 hover:bg-[#e2c275] hover:text-black light:hover:text-white transition-all duration-300">
-                  Read More
-                </button>
-              </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
 
             {/* Right Column - Mopara Pair Ayat & Tomas */}
             <ScrollReveal delay={300} className="h-full flex flex-col">
               <div className="flex flex-col gap-8 order-3 md:order-none w-full">
 
-              {/* Taen Ahammed */}
-              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
-                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
-                  <Image
-                    src="/landing/team/tomas_avatar.png"
-                    alt="Taen Ahammed"
-                    fill
-                    sizes="130px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
+                {/* Taen Ahammed */}
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                    <Image
+                      src="/landing/team/tomas_avatar.png"
+                      alt="Taen Ahammed"
+                      fill
+                      sizes="130px"
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                    Taen Ahammed
+                  </h3>
+                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                    UI/UX Designer
+                  </p>
                 </div>
-                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Taen Ahammed
-                </h3>
-                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
-                  UI/UX Designer
-                </p>
-              </div>
 
-              {/* Fatima Rahman */}
-              <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
-                <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
-                  <Image
-                    src="/landing/team/kati_avatar.png"
-                    alt="Fatima Rahman"
-                    fill
-                    sizes="130px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                  />
+                {/* Fatima Rahman */}
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
+                    <Image
+                      src="/landing/team/kati_avatar.png"
+                      alt="Fatima Rahman"
+                      fill
+                      sizes="130px"
+                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                    Fatima Rahman
+                  </h3>
+                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                    Lead Frontend Engineer
+                  </p>
                 </div>
-                <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
-                  Fatima Rahman
-                </h3>
-                <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
-                  Lead Frontend Engineer
-                </p>
               </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
 
           </div>
 
@@ -2130,146 +2130,146 @@ export function LandingPage() {
             <ScrollReveal className="h-full flex flex-col">
               <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10 w-full h-full">
                 <div className="flex-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
-                  Desktop Experience
-                </p>
-                <h3 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl text-white light:text-slate-900">
-                  Nexora OS for Desktop
-                </h3>
-                <p className="mt-4 text-sm leading-relaxed text-slate-400 light:text-slate-600">
-                  Run Nexora OS natively on your computer with custom shortcuts, background sync, and deep system integration.
-                </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
+                    Desktop Experience
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl text-white light:text-slate-900">
+                    Nexora OS for Desktop
+                  </h3>
+                  <p className="mt-4 text-sm leading-relaxed text-slate-400 light:text-slate-600">
+                    Run Nexora OS natively on your computer with custom shortcuts, background sync, and deep system integration.
+                  </p>
 
-                {/* Desktop Store Badges */}
-                <div className="mt-6 flex flex-wrap items-center gap-2.5">
-                  {/* Windows Badge */}
-                  <div
-                    onClick={() => handleDownloadSimulate("Windows")}
-                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
-                  >
-                    <svg className="h-5.5 w-5.5 fill-[#00ADEF]" viewBox="0 0 24 24">
-                      <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM10.8 1.95L24 0v11.55H10.8V1.95zM10.8 12.45H24v11.55l-13.2-1.95v-9.6z" />
-                    </svg>
-                    <div className="flex flex-col items-start leading-none">
-                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
-                      <span className="text-xs font-extrabold mt-0.5">Windows</span>
-                    </div>
-                  </div>
-
-                  {/* macOS Badge */}
-                  <div
-                    onClick={() => handleDownloadSimulate("macOS")}
-                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
-                  >
-                    <svg className="h-5.5 w-5.5 fill-current" viewBox="0 0 24 24">
-                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
-                    </svg>
-                    <div className="flex flex-col items-start leading-none">
-                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
-                      <span className="text-xs font-extrabold mt-0.5">macOS</span>
-                    </div>
-                  </div>
-
-                  {/* Linux Badge */}
-                  <div
-                    onClick={() => handleDownloadSimulate("Linux")}
-                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
-                  >
-                    <svg className="h-5.5 w-5.5 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                      <polyline points="4 17 10 11 4 5" />
-                      <line x1="12" y1="19" x2="20" y2="19" />
-                    </svg>
-                    <div className="flex flex-col items-start leading-none">
-                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
-                      <span className="text-xs font-extrabold mt-0.5">Linux</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Download State Loader Indicator */}
-                {(downloadStates["Windows"] || downloadStates["macOS"] || downloadStates["Linux"]) && (
-                  <div className="mt-5 flex justify-start">
-                    <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20 animate-pulse">
-                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  {/* Desktop Store Badges */}
+                  <div className="mt-6 flex flex-wrap items-center gap-2.5">
+                    {/* Windows Badge */}
+                    <div
+                      onClick={() => handleDownloadSimulate("Windows")}
+                      className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                    >
+                      <svg className="h-5.5 w-5.5 fill-[#00ADEF]" viewBox="0 0 24 24">
+                        <path d="M0 3.449L9.75 2.1v9.45H0V3.449zM0 12.45h9.75v9.45L0 20.551v-8.1zM10.8 1.95L24 0v11.55H10.8V1.95zM10.8 12.45H24v11.55l-13.2-1.95v-9.6z" />
                       </svg>
-                      <span>
-                        {downloadStates["Windows"]
-                          ? `Windows App: ${downloadStates["Windows"]}`
-                          : downloadStates["macOS"]
-                            ? `macOS App: ${downloadStates["macOS"]}`
-                            : `Linux App: ${downloadStates["Linux"]}`}
-                      </span>
+                      <div className="flex flex-col items-start leading-none">
+                        <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
+                        <span className="text-xs font-extrabold mt-0.5">Windows</span>
+                      </div>
+                    </div>
+
+                    {/* macOS Badge */}
+                    <div
+                      onClick={() => handleDownloadSimulate("macOS")}
+                      className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                    >
+                      <svg className="h-5.5 w-5.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
+                      </svg>
+                      <div className="flex flex-col items-start leading-none">
+                        <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
+                        <span className="text-xs font-extrabold mt-0.5">macOS</span>
+                      </div>
+                    </div>
+
+                    {/* Linux Badge */}
+                    <div
+                      onClick={() => handleDownloadSimulate("Linux")}
+                      className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                    >
+                      <svg className="h-5.5 w-5.5 stroke-current fill-none" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                        <polyline points="4 17 10 11 4 5" />
+                        <line x1="12" y1="19" x2="20" y2="19" />
+                      </svg>
+                      <div className="flex flex-col items-start leading-none">
+                        <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download for</span>
+                        <span className="text-xs font-extrabold mt-0.5">Linux</span>
+                      </div>
                     </div>
                   </div>
-                )}
+
+                  {/* Download State Loader Indicator */}
+                  {(downloadStates["Windows"] || downloadStates["macOS"] || downloadStates["Linux"]) && (
+                    <div className="mt-5 flex justify-start">
+                      <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20 animate-pulse">
+                        <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        <span>
+                          {downloadStates["Windows"]
+                            ? `Windows App: ${downloadStates["Windows"]}`
+                            : downloadStates["macOS"]
+                              ? `macOS App: ${downloadStates["macOS"]}`
+                              : `Linux App: ${downloadStates["Linux"]}`}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
 
             {/* Mobile Card */}
             <ScrollReveal delay={150} className="h-full flex flex-col">
               <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10 w-full h-full">
                 <div className="flex-1">
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
-                  Mobile Experience
-                </p>
-                <h3 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl text-white light:text-slate-900">
-                  Nexora OS for Mobile
-                </h3>
-                <p className="mt-4 text-sm leading-relaxed text-slate-400 light:text-slate-600">
-                  Stay connected on the go. Access your class feeds, track schedules, submit assignments, and chat with peers instantly.
-                </p>
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
+                    Mobile Experience
+                  </p>
+                  <h3 className="mt-3 text-2xl font-bold tracking-tight sm:text-3xl text-white light:text-slate-900">
+                    Nexora OS for Mobile
+                  </h3>
+                  <p className="mt-4 text-sm leading-relaxed text-slate-400 light:text-slate-600">
+                    Stay connected on the go. Access your class feeds, track schedules, submit assignments, and chat with peers instantly.
+                  </p>
 
-                {/* Mobile Store Badges */}
-                <div className="mt-6 flex flex-wrap items-center gap-2.5">
-                  {/* App Store Badge */}
-                  <div
-                    onClick={() => handleDownloadSimulate("iOS")}
-                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
-                  >
-                    <svg className="h-5.5 w-5.5 fill-current" viewBox="0 0 24 24">
-                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
-                    </svg>
-                    <div className="flex flex-col items-start leading-none">
-                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download on the</span>
-                      <span className="text-xs font-extrabold mt-0.5">App Store</span>
-                    </div>
-                  </div>
-
-                  {/* Google Play Badge */}
-                  <div
-                    onClick={() => handleDownloadSimulate("Android")}
-                    className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
-                  >
-                    <svg className="h-5.5 w-5.5" viewBox="0 0 24 24" fill="none">
-                      <path d="M3 3.2c-.2.2-.3.5-.3.9v15.8c0 .4.1.7.3.9l.1.1 8.9-8.9V11.8L3.1 3.1l-.1.1z" fill="#3BCCFF" />
-                      <path d="M15.8 15.9l-3.5-3.5v-.2l3.5-3.5.1.1 4.2 2.4c1.2.7 1.2 1.8 0 2.5l-4.2 2.4-.1.3z" fill="#FFC729" />
-                      <path d="M15.9 15.8L12.3 12.2 3.1 21.4c.4.4 1 .4 1.6.1l11.2-5.7z" fill="#FF3A44" />
-                      <path d="M15.9 8.2L4.7 1.8c-.6-.3-1.2-.3-1.6.1L12.3 12l3.6-3.8z" fill="#00E676" />
-                    </svg>
-                    <div className="flex flex-col items-start leading-none">
-                      <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">GET IT ON</span>
-                      <span className="text-xs font-extrabold mt-0.5">Google Play</span>
-                    </div>
-                  </div>
-                </div>
-
-                {(downloadStates["iOS"] || downloadStates["Android"]) && (
-                  <div className="mt-5 flex justify-start">
-                    <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20 animate-pulse">
-                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  {/* Mobile Store Badges */}
+                  <div className="mt-6 flex flex-wrap items-center gap-2.5">
+                    {/* App Store Badge */}
+                    <div
+                      onClick={() => handleDownloadSimulate("iOS")}
+                      className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                    >
+                      <svg className="h-5.5 w-5.5 fill-current" viewBox="0 0 24 24">
+                        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.22.67-2.94 1.51-.64.73-1.2 1.87-1.05 2.98 1.12.09 2.27-.58 3-1.43z" />
                       </svg>
-                      <span>{downloadStates["iOS"] ? `iOS App: ${downloadStates["iOS"]}` : `Android App: ${downloadStates["Android"]}`}</span>
+                      <div className="flex flex-col items-start leading-none">
+                        <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">Download on the</span>
+                        <span className="text-xs font-extrabold mt-0.5">App Store</span>
+                      </div>
+                    </div>
+
+                    {/* Google Play Badge */}
+                    <div
+                      onClick={() => handleDownloadSimulate("Android")}
+                      className="flex items-center gap-2.5 px-4 py-2 bg-white light:bg-slate-950 hover:bg-slate-50 light:hover:bg-[#1e2439] text-slate-900 light:text-white border border-slate-200 light:border-white/10 hover:border-emerald-500/30 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-md cursor-pointer select-none"
+                    >
+                      <svg className="h-5.5 w-5.5" viewBox="0 0 24 24" fill="none">
+                        <path d="M3 3.2c-.2.2-.3.5-.3.9v15.8c0 .4.1.7.3.9l.1.1 8.9-8.9V11.8L3.1 3.1l-.1.1z" fill="#3BCCFF" />
+                        <path d="M15.8 15.9l-3.5-3.5v-.2l3.5-3.5.1.1 4.2 2.4c1.2.7 1.2 1.8 0 2.5l-4.2 2.4-.1.3z" fill="#FFC729" />
+                        <path d="M15.9 15.8L12.3 12.2 3.1 21.4c.4.4 1 .4 1.6.1l11.2-5.7z" fill="#FF3A44" />
+                        <path d="M15.9 8.2L4.7 1.8c-.6-.3-1.2-.3-1.6.1L12.3 12l3.6-3.8z" fill="#00E676" />
+                      </svg>
+                      <div className="flex flex-col items-start leading-none">
+                        <span className="text-[7.5px] uppercase tracking-wider text-slate-500 light:text-slate-400 font-bold">GET IT ON</span>
+                        <span className="text-xs font-extrabold mt-0.5">Google Play</span>
+                      </div>
                     </div>
                   </div>
-                )}
+
+                  {(downloadStates["iOS"] || downloadStates["Android"]) && (
+                    <div className="mt-5 flex justify-start">
+                      <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20 animate-pulse">
+                        <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        <span>{downloadStates["iOS"] ? `iOS App: ${downloadStates["iOS"]}` : `Android App: ${downloadStates["Android"]}`}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -2464,7 +2464,7 @@ export function LandingPage() {
         </div>
       </footer>
 
-
+      <PandaChat />
     </main>
   );
 }
@@ -2485,7 +2485,7 @@ function LandingNav() {
       // 2. Scroll spy to detect active section
       const sections = ["about", "platform", "how-it-works", "download", "team", "faq", "contact"];
       let currentSection = "";
-      
+
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -2496,14 +2496,14 @@ function LandingNav() {
           }
         }
       }
-      
+
       setActiveSection(currentSection || "#about");
     };
 
     window.addEventListener("scroll", handlePageScroll, { passive: true });
     // Run initial execution to set active section immediately
     handlePageScroll();
-    
+
     return () => {
       window.removeEventListener("scroll", handlePageScroll);
     };
@@ -2529,11 +2529,11 @@ function LandingNav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-3 pt-3 sm:px-5 md:px-8">
       {/* Viewport Scroll Progress Bar */}
-      <div 
+      <div
         className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-accent-primary to-accent-secondary light:from-[#059669] light:to-[#10b981] z-[100] origin-left transition-all duration-75"
         style={{ width: `${pageScrollProgress}%` }}
       />
-      
+
       <style dangerouslySetInnerHTML={{
         __html: `
         .hk-button {
@@ -2709,9 +2709,9 @@ function LandingNav() {
 
         <nav className="hidden items-center gap-6 text-sm lg:flex xl:gap-8">
           {navLinks.map((l) => (
-            <a 
-              key={l.href} 
-              href={l.href} 
+            <a
+              key={l.href}
+              href={l.href}
               className={`nav-link ${activeSection === l.href ? "active" : ""}`}
             >
               {l.label}
@@ -2753,11 +2753,10 @@ function LandingNav() {
               key={l.href}
               href={l.href}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                activeSection === l.href 
-                  ? "bg-emerald-500/10 text-[#32f59a] light:bg-emerald-50 light:text-[#065f46]" 
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${activeSection === l.href
+                  ? "bg-emerald-500/10 text-[#32f59a] light:bg-emerald-50 light:text-[#065f46]"
                   : "text-slate-300 hover:bg-white/8 hover:text-white light:text-slate-700 light:hover:bg-slate-100 light:hover:text-slate-900"
-              }`}
+                }`}
             >
               {l.label}
             </a>

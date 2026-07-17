@@ -562,7 +562,7 @@ export function PremiumCursor() {
         onClick={toggleMode}
         type="button"
         title={isEpicMode ? "Switch to Classic Cursor (Off)" : "Switch to Epic Cursor (On)"}
-        className="fixed bottom-6 right-6 z-[9999999] pointer-events-auto hidden md:flex h-[32px] w-[58px] items-center rounded-full border backdrop-blur-xl transition-all duration-300 shadow-xl bg-black/40 light:bg-white/85 border-white/10 light:border-black/10 shadow-black/10 dark:shadow-black/40 hover:scale-105 active:scale-95 group/cursor-toggle"
+        className="fixed bottom-6 left-6 z-[9999999] pointer-events-auto hidden md:flex h-[32px] w-[58px] items-center rounded-full border backdrop-blur-xl transition-all duration-300 shadow-xl bg-black/40 light:bg-white/85 border-white/10 light:border-black/10 shadow-black/10 dark:shadow-black/40 hover:scale-105 active:scale-95 group/cursor-toggle"
         style={{
           borderColor: isEpicMode 
             ? "rgba(249, 115, 22, 0.4)" 
