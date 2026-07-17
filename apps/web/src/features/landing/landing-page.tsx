@@ -684,18 +684,20 @@ export function LandingPage() {
               animation: marquee-rtl 28s linear infinite;
             }
             .marquee-ribbon-dark {
-              transform: rotate(-2.5deg) scale(1.05);
+              transform: rotate(-5deg) scale(1.05);
               box-shadow: 0 8px 20px rgba(0,0,0,0.3);
             }
             .marquee-ribbon-light {
-              transform: rotate(2.5deg) scale(1.05);
+              transform: rotate(5deg) scale(1.05);
               box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             }
             @media (min-width: 640px) {
               .marquee-ribbon-dark {
+                transform: rotate(-2.5deg) scale(1.05);
                 box-shadow: 0 15px 35px rgba(0,0,0,0.5);
               }
               .marquee-ribbon-light {
+                transform: rotate(2.5deg) scale(1.05);
                 box-shadow: 0 15px 35px rgba(0,0,0,0.2);
               }
             }
