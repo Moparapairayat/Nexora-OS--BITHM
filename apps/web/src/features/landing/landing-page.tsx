@@ -499,7 +499,7 @@ export function LandingPage() {
       <LandingNav />
 
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
+      <section id="about" className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
         <div className="nexora-brand-arc pointer-events-none absolute -left-[500px] top-[-120px] h-[620px] w-[620px] -rotate-12 opacity-75 sm:-left-[455px]" />
         <div className="nexora-brand-arc pointer-events-none absolute -right-[540px] bottom-[-150px] h-[680px] w-[680px] rotate-[148deg] opacity-65 sm:-right-[490px]" />
         <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/10" />
@@ -2351,6 +2351,43 @@ export function LandingPage() {
 
 function LandingNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [pageScrollProgress, setPageScrollProgress] = useState(0);
+  const [activeSection, setActiveSection] = useState("#about");
+
+  useEffect(() => {
+    const handlePageScroll = () => {
+      // 1. Calculate vertical page scroll progress percentage
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      setPageScrollProgress(progress);
+
+      // 2. Scroll spy to detect active section
+      const sections = ["about", "platform", "how-it-works", "download", "team", "faq", "contact"];
+      let currentSection = "";
+      
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          // Detect active section if top is above 35% of viewport height
+          if (rect.top <= window.innerHeight * 0.35) {
+            currentSection = `#${sectionId}`;
+          }
+        }
+      }
+      
+      setActiveSection(currentSection || "#about");
+    };
+
+    window.addEventListener("scroll", handlePageScroll, { passive: true });
+    // Run initial execution to set active section immediately
+    handlePageScroll();
+    
+    return () => {
+      window.removeEventListener("scroll", handlePageScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -2371,6 +2408,12 @@ function LandingNav() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-3 pt-3 sm:px-5 md:px-8">
+      {/* Viewport Scroll Progress Bar */}
+      <div 
+        className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#32f59a] to-[#d9ff57] light:from-[#059669] light:to-[#10b981] z-[100] origin-left transition-all duration-75"
+        style={{ width: `${pageScrollProgress}%` }}
+      />
+      
       <style dangerouslySetInnerHTML={{
         __html: `
         .hk-button {
@@ -2503,13 +2546,13 @@ function LandingNav() {
         .light .nav-link::after {
           background: linear-gradient(90deg, #059669, #10b981);
         }
-        .nav-link:hover {
+        .nav-link:hover, .nav-link.active {
           color: #ffffff;
         }
-        .light .nav-link:hover {
+        .light .nav-link:hover, .light .nav-link.active {
           color: #064e3b;
         }
-        .nav-link:hover::after {
+        .nav-link:hover::after, .nav-link.active::after {
           transform: scaleX(1);
           transform-origin: bottom left;
         }
@@ -2546,7 +2589,13 @@ function LandingNav() {
 
         <nav className="hidden items-center gap-6 text-sm lg:flex xl:gap-8">
           {navLinks.map((l) => (
-            <a key={l.href} href={l.href} className="nav-link">{l.label}</a>
+            <a 
+              key={l.href} 
+              href={l.href} 
+              className={`nav-link ${activeSection === l.href ? "active" : ""}`}
+            >
+              {l.label}
+            </a>
           ))}
         </nav>
 
@@ -2581,7 +2630,11 @@ function LandingNav() {
               key={l.href}
               href={l.href}
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-300 transition-colors hover:bg-white/8 hover:text-white light:text-slate-700 light:hover:bg-slate-100 light:hover:text-slate-900"
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+                activeSection === l.href 
+                  ? "bg-emerald-500/10 text-[#32f59a] light:bg-emerald-50 light:text-[#065f46]" 
+                  : "text-slate-300 hover:bg-white/8 hover:text-white light:text-slate-700 light:hover:bg-slate-100 light:hover:text-slate-900"
+              }`}
             >
               {l.label}
             </a>
