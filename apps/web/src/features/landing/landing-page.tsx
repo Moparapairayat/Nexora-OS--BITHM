@@ -17,6 +17,9 @@ import {
   ShieldCheck,
   UserCog,
   UsersRound,
+  Pill,
+  Scan,
+  MessageSquare,
 } from "lucide-react";
 
 import { NexoraLogo } from "@/components/brand/nexora-logo";
@@ -188,6 +191,8 @@ const workflows = [
     label: "Review · Improve · Resubmit",
   },
 ];
+
+
 
 const roleCards = [
   {
@@ -489,15 +494,16 @@ export function LandingPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_10%_7%,rgba(139,92,246,0.08),transparent_24%),radial-gradient(circle_at_88%_14%,rgba(16,185,129,0.12),transparent_28%),linear-gradient(180deg,#fbfdfb_0%,#eff8f3_48%,#f8fbf9_100%)] light:text-[#15251f]">
+    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_15%_10%,rgba(167,139,250,0.06),transparent_35%),radial-gradient(circle_at_85%_15%,rgba(52,211,153,0.09),transparent_35%),radial-gradient(circle_at_80%_45%,rgba(110,231,183,0.05),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f6faf7_55%,#fafdfb_100%)] light:text-[#15251f]">
+      <div className="absolute inset-0 bg-dot-grid pointer-events-none z-0" />
       <LandingNav />
 
       {/* HERO SECTION */}
       <section className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
         <div className="nexora-brand-arc pointer-events-none absolute -left-[500px] top-[-120px] h-[620px] w-[620px] -rotate-12 opacity-75 sm:-left-[455px]" />
         <div className="nexora-brand-arc pointer-events-none absolute -right-[540px] bottom-[-150px] h-[680px] w-[680px] rotate-[148deg] opacity-65 sm:-right-[490px]" />
-        <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/5" />
-        <div className="pointer-events-none absolute -right-20 bottom-10 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/15 blur-[130px] light:bg-emerald-400/8" />
+        <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/10" />
+        <div className="pointer-events-none absolute -right-20 bottom-10 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/15 blur-[130px] light:bg-emerald-500/12" />
 
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 md:grid-cols-2 items-center gap-10 px-5 md:px-8 lg:gap-16">
           <div className="relative w-full max-w-[560px]">
@@ -569,7 +575,11 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="landing-float relative w-full max-w-[660px] flex items-center justify-center justify-self-center md:justify-self-end">
+          <div className="landing-float relative w-full max-w-[660px] flex items-center justify-center justify-self-center md:justify-self-end select-none">
+            {/* Giant Background Text */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/20 dark:text-white/15 light:text-slate-900/10 text-[6.5rem] sm:text-[9.5rem] md:text-[8rem] lg:text-[11.5rem] uppercase pointer-events-none transition-all duration-300">
+              NEXORA
+            </div>
 
             <div className="landing-orbit absolute -inset-8 rounded-full border border-emerald-300/10 before:absolute before:left-1/2 before:top-0 before:h-2 before:w-2 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10" />
             <Image
@@ -578,7 +588,7 @@ export function LandingPage() {
               width={720}
               height={620}
               priority
-              className="relative z-10 h-auto w-full animate-[float_4s_ease-in-out_infinite]"
+              className="relative z-20 h-auto w-full animate-[float_4s_ease-in-out_infinite]"
             />
           </div>
         </div>
@@ -812,6 +822,163 @@ export function LandingPage() {
         </div>
       </section>
 
+      <section className="relative z-10 overflow-hidden py-24 bg-[#070d0a] light:bg-white border-y border-white/5 light:border-slate-100">
+        <div className="absolute top-[20%] right-[-10%] h-[400px] w-[400px] rounded-full bg-emerald-500/5 dark:bg-emerald-500/5 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[10%] left-[-10%] h-[400px] w-[400px] rounded-full bg-cyan-500/5 dark:bg-cyan-500/3 blur-[120px] pointer-events-none" />
+
+        <div className="relative mx-auto max-w-6xl px-5 md:px-8">
+          {/* Header */}
+          <div className="text-center mb-20 select-none">
+            <p className="font-handwriting text-3xl text-[#32f59a] light:text-emerald-600 tracking-normal italic normal-case">
+              Simple Steps
+            </p>
+            <h2 className="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight text-white light:text-slate-900">
+              How it works
+            </h2>
+            <p className="mt-4 text-sm sm:text-base text-slate-400 light:text-slate-505 max-w-md mx-auto leading-relaxed">
+              No confusion or delays. Just a clear, reliable path to submission.
+            </p>
+          </div>
+
+          {/* Grid Layout */}
+          <div className="grid gap-20 lg:grid-cols-2 items-center">
+            {/* Left side: Interactive Mockup / Image */}
+            <div className="relative flex justify-center lg:justify-start select-none">
+              {/* Giant Background Text */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/[0.04] light:text-slate-200/50 text-[7rem] sm:text-[9rem] uppercase pointer-events-none transition-all duration-300">
+                STUDY
+              </div>
+
+              {/* Main portrait frame */}
+              <div className="relative z-10 w-[320px] h-[320px] sm:w-[380px] sm:h-[380px] rounded-[32px] overflow-hidden shadow-2xl border-4 border-slate-800/80 light:border-slate-50">
+                <Image
+                  src="/landing/student_desk_portrait.png"
+                  alt="Student using Nexora OS"
+                  fill
+                  className="object-cover object-center select-none"
+                  draggable={false}
+                />
+              </div>
+
+              {/* Overlay Mockup card */}
+              <div className="absolute bottom-[-30px] right-[-10px] sm:right-[-35px] z-20 w-[230px] sm:w-[250px] rounded-3xl border border-slate-800 light:border-slate-100 bg-[#0f1914]/95 light:bg-white/95 p-5 shadow-[0_25px_60px_rgba(0,0,0,0.15)] backdrop-blur-md">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-800/60 light:border-slate-100">
+                  <span className="text-[11px] font-bold text-slate-200 light:text-slate-850">Academic Units</span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                </div>
+
+                <div className="mt-3 grid grid-cols-4 gap-2">
+                  {[...Array(8)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl bg-slate-900 light:bg-slate-50 p-1.5 border border-slate-800/40 light:border-slate-100/50"
+                    >
+                      {/* Image placeholder */}
+                      <div className="h-7 rounded-lg bg-slate-850 light:bg-slate-200/65 flex items-center justify-center">
+                        <div className="h-3 w-3 rounded-full bg-[#10b981]/25 flex items-center justify-center">
+                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                        </div>
+                      </div>
+                      {/* Mock text lines */}
+                      <div className="mt-2 space-y-1">
+                        <div className="h-1.5 w-10 rounded bg-slate-700 light:bg-slate-300/80" />
+                        <div className="h-1 w-6 rounded bg-slate-700 light:bg-slate-200/80" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 h-5 rounded-lg bg-slate-800/80 light:bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500 light:text-slate-400 uppercase tracking-widest select-none">
+                  View All Units
+                </div>
+              </div>
+
+              {/* Tooltip Badge & Curved Arrow */}
+              <div className="absolute bottom-[75px] right-[135px] sm:right-[155px] z-30 select-none">
+                <div className="bg-[#a3e635] text-slate-950 font-bold px-3 py-1.5 rounded-xl text-[10px] shadow-lg border border-[#bef264]">
+                  Launch OS
+                </div>
+                <svg
+                  className="absolute top-7 left-14 w-10 h-10 text-[#a3e635] light:text-slate-900"
+                  viewBox="0 0 40 40"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                >
+                  <path d="M5,5 Q20,5 24,24" />
+                  <path d="M18,22 L24,24 L26,18" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Right side: Steps timeline */}
+            <div className="relative pl-16">
+              {/* Continuous vertical timeline divider line */}
+              <div className="absolute left-[31px] top-6 bottom-6 w-[1.5px] bg-slate-800 light:bg-slate-250" />
+
+              {/* Thick active bar indicating active Step 1 */}
+              <div className="absolute left-[30px] top-6 h-[85px] w-[3.5px] bg-[#32f59a] light:bg-slate-900 rounded-full" />
+
+              <div className="flex flex-col gap-12">
+                {/* Step 1 */}
+                <div className="relative flex items-start gap-5 group">
+                  {/* Icon */}
+                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#d2f785] text-slate-950 border border-[#c3ed6f] shadow-md transition duration-300 group-hover:scale-105">
+                    <Pill className="h-6 w-6 stroke-[1.8]" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-1.5 pt-1.5 flex-1">
+                    <h3 className="text-lg font-bold text-white light:text-slate-900 transition duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                      Select Coursework Unit
+                    </h3>
+                    <p className="text-sm leading-relaxed text-slate-400 light:text-slate-505 max-w-md">
+                      Choose an active coursework brief, practical lab task, or unit syllabus from your student dashboard.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 2 */}
+                <div className="relative flex items-start gap-5 group">
+                  {/* Icon */}
+                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-slate-200 border border-slate-800 light:bg-white light:text-slate-800 light:border-slate-200 shadow-md transition duration-300 group-hover:scale-105">
+                    <Scan className="h-6 w-6 stroke-[1.8]" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-1.5 pt-1.5 flex-1">
+                    <h3 className="text-lg font-bold text-white light:text-slate-900 transition duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                      Build & Verify Evidence
+                    </h3>
+                    <p className="text-sm leading-relaxed text-slate-400 light:text-slate-555 max-w-md">
+                      Write code inside the Code Lab workspace, create database ERDs, and scan drafts using AcademicShield.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="relative flex items-start gap-5 group">
+                  {/* Icon */}
+                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-slate-200 border border-slate-800 light:bg-white light:text-slate-800 light:border-slate-200 shadow-md transition duration-300 group-hover:scale-105">
+                    <MessageSquare className="h-6 w-6 stroke-[1.8]" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-1.5 pt-1.5 flex-1">
+                    <h3 className="text-lg font-bold text-white light:text-slate-900 transition duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
+                      Submit & Receive Feedback
+                    </h3>
+                    <p className="text-sm leading-relaxed text-slate-400 light:text-slate-555 max-w-md">
+                      Directly submit your coursework, check integrity flags, and view real-time grading and feedback from your instructors.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section
         id="workflows"

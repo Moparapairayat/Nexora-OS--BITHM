@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+.font-handwriting {
+  font-family: var(--font-caveat), cursive;
+}
+
+.bg-dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+
+.light .bg-dot-grid {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.025) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+
 @custom-variant light (&:where(.light, .light *));
 
 @keyframes nexora-loader {
@@ -75,8 +89,12 @@
 }
 
 .light .nexora-brand-arc {
-  opacity: 0.42;
-  filter: drop-shadow(0 0 28px rgba(20, 120, 78, 0.08));
+  opacity: 0.92;
+  border-color: rgba(16, 185, 129, 0.32);
+  border-right-color: rgba(163, 230, 53, 0.45);
+  border-bottom-color: rgba(52, 211, 153, 0.45);
+  border-left-color: rgba(16, 185, 129, 0.2);
+  filter: drop-shadow(0 4px 30px rgba(16, 185, 129, 0.08));
 }
 
 .nexora-flow-line {
