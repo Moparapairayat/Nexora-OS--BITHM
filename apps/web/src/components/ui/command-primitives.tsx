@@ -23,7 +23,7 @@ import type { ReactNode } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { AppRole, Tone } from "@/lib/mock-data";
+import type { AppRole, Tone } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
 const roleTone: Record<AppRole, Tone> = {

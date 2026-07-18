@@ -20,7 +20,7 @@ import {
   isRoleRouteAllowed,
   roleDashboards,
   type AppRole,
-} from "@/lib/mock-data";
+} from "@/data/dashboard.mock";
 
 export function ModulePage({ role, slug }: { role: AppRole; slug: string[] }) {
   const requestedHref = `/${role}/${slug.join("/")}`;

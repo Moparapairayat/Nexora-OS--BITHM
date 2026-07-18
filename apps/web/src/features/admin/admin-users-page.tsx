@@ -20,8 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PenguinLoadingSpinner } from "@/components/ui/loading-spinner";
-import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/workflow-api";
-import { roleDashboards, type AppRole, type Tone } from "@/lib/mock-data";
+import { apiDelete, apiGet, apiPatch, apiPost } from "@/services/api-client";
+import { roleDashboards, type AppRole, type Tone } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
 type AdminUserRole = "STUDENT" | "TEACHER" | "ADMIN";
@@ -434,7 +434,7 @@ export function AdminUsersPage({ role }: { role: AppRole }) {
           </div>
         )}
 
-            <div className="grid gap-5 lg:grid-cols-[minmax(280px,420px)_minmax(0,1fr)]">
+        <div className="grid gap-5 lg:grid-cols-[minmax(280px,420px)_minmax(0,1fr)]">
           <UserFormPanel
             form={form}
             setForm={setForm}

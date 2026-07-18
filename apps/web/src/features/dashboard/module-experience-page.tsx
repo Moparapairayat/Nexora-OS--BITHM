@@ -31,8 +31,8 @@ import {
   SkillScoreCard,
 } from "@/components/ui/command-primitives";
 import { Badge } from "@/components/ui/badge";
-import type { AppRole, Tone } from "@/lib/mock-data";
-import { roleDashboards } from "@/lib/mock-data";
+import type { AppRole, Tone } from "@/data/dashboard.mock";
+import { roleDashboards } from "@/data/dashboard.mock";
 import { titleFromSlug } from "@/lib/utils";
 
 const moduleCopy: Record<

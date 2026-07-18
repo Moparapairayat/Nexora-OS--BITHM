@@ -53,7 +53,7 @@ export function AccentPicker() {
 
   const applyTheme = (themeId: string) => {
     const root = document.documentElement;
-    
+
     // Remove all existing theme classes
     THEMES.forEach((t) => {
       if (t.id !== "emerald") {
@@ -76,7 +76,7 @@ export function AccentPicker() {
   };
 
   return (
-    <div 
+    <div
       className="flex items-center gap-1.5 rounded-full border border-white/10 light:border-black/10 bg-black/30 light:bg-white/70 px-2 py-1 backdrop-blur-md shadow-lg"
       title="Choose Accent Glow Theme"
     >

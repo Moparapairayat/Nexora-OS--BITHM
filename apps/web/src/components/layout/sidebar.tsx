@@ -15,7 +15,7 @@ import { iconMap } from "@/components/layout/icon-map";
 import { NexoraLogo } from "@/components/brand/nexora-logo";
 import { RoleBadge } from "@/components/ui/command-primitives";
 import { cn } from "@/lib/utils";
-import type { AppRole, NavGroup, NavItem } from "@/lib/mock-data";
+import type { AppRole, NavGroup, NavItem } from "@/data/dashboard.mock";
 
 const collapsedRoleClass: Record<AppRole, string> = {
   student:

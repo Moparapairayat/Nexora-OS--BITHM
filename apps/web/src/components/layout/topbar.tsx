@@ -24,7 +24,7 @@ import {
   RoleBadge,
 } from "@/components/ui/command-primitives";
 import { Button } from "@/components/ui/button";
-import type { AppRole } from "@/lib/mock-data";
+import type { AppRole } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
 const workspaceLabel: Record<AppRole, string> = {

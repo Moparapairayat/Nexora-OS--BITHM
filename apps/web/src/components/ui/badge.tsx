@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import type { Tone } from "@/lib/mock-data";
+import type { Tone } from "@/data/dashboard.mock";
 
 const toneClass: Record<Tone, string> = {
   cyan: "border-[color:var(--border-lime)] bg-[rgba(217,255,87,0.10)] text-[var(--brand-lime)] shadow-[0_0_24px_rgba(217,255,87,0.13)] light:border-cyan-500/20 light:bg-cyan-50 light:text-cyan-700",

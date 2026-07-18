@@ -50,9 +50,9 @@ import {
   type CodeRunnerLanguage,
   type CodeRunnerTestResult,
 } from "@/lib/code-runner/code-runner";
-import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/workflow-api";
+import { apiDelete, apiGet, apiPatch, apiPost } from "@/services/api-client";
 import { PenguinLoadingSpinner } from "@/components/ui/loading-spinner";
-import { roleDashboards, type AppRole } from "@/lib/mock-data";
+import { roleDashboards, type AppRole } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
 // ---------- Reusable design tokens (light-mode Code Lab) ----------

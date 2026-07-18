@@ -8,7 +8,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { BrandedBackground } from "@/components/brand/branded-background";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { roleDashboards, type AppRole, type Tone } from "@/lib/mock-data";
+import { roleDashboards, type AppRole, type Tone } from "@/data/dashboard.mock";
 
 export type ComingSoonSection =
   | "Academic Work"

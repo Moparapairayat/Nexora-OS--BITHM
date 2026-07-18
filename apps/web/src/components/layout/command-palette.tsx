@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { iconMap } from "@/components/layout/icon-map";
 import { Badge } from "@/components/ui/badge";
-import { roleDashboards, type AppRole, type Tone } from "@/lib/mock-data";
+import { roleDashboards, type AppRole, type Tone } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
 const roleMeta: Record<AppRole, { label: string; tone: Tone }> = {

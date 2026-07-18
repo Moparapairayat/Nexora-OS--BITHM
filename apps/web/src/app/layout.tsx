@@ -56,8 +56,6 @@ export const viewport: Viewport = {
   ],
 };
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -72,7 +70,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Script
           id="nexora-theme-init"
-          src="/theme-init.js"
+          src="/scripts/theme-init.js"
           strategy="beforeInteractive"
         />
         <PremiumCursor />

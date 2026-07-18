@@ -4,7 +4,7 @@ import { useEffect, useState, useSyncExternalStore } from "react";
 
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
-import type { AppRole, NavGroup, NavItem } from "@/lib/mock-data";
+import type { AppRole, NavGroup, NavItem } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
 const laptopQuery = "(min-width: 1280px) and (max-width: 1535px)";

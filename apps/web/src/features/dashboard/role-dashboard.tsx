@@ -52,8 +52,8 @@ import {
   writingRiskDisclaimer,
   type AppRole,
   type RoleDashboardData,
-} from "@/lib/mock-data";
-import { apiGet } from "@/lib/workflow-api";
+} from "@/data/dashboard.mock";
+import { apiGet } from "@/services/api-client";
 
 const ThroughputChart = dynamic(
   () =>

@@ -5,7 +5,7 @@ import { ArrowRight, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { apiPost } from "@/lib/workflow-api";
+import { apiPost } from "@/services/api-client";
 import { cn } from "@/lib/utils";
 
 type DemoRole = "student" | "teacher" | "admin";

@@ -17,7 +17,7 @@ import {
 } from "@/features/auth/auth-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { apiPost } from "@/lib/workflow-api";
+import { apiPost } from "@/services/api-client";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email address."),

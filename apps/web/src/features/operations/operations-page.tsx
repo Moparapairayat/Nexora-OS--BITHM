@@ -29,8 +29,8 @@ import type {
   DeploymentChecklistItem,
   ProductionServiceState,
 } from "@nexora/types";
-import type { AppRole, Tone } from "@/lib/mock-data";
-import { roleDashboards } from "@/lib/mock-data";
+import type { AppRole, Tone } from "@/data/dashboard.mock";
+import { roleDashboards } from "@/data/dashboard.mock";
 
 export function OperationsPage({ role }: { role: AppRole }) {
   const data = roleDashboards.admin;

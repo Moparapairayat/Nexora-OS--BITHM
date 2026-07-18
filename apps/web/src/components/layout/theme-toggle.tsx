@@ -65,23 +65,23 @@ export function ThemeToggle() {
       {/* Sliding Knob */}
       <div
         className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 shadow-md ${
-          !isLight 
-            ? "translate-x-[26px] bg-[rgba(50,245,154,0.1)] border border-[rgba(50,245,154,0.25)]" 
+          !isLight
+            ? "translate-x-[26px] bg-[rgba(50,245,154,0.1)] border border-[rgba(50,245,154,0.25)]"
             : "translate-x-[4px] bg-amber-500/10 border border-amber-500/30"
         }`}
       >
         {!isLight ? (
-          <Moon 
+          <Moon
             className="w-3.5 h-3.5 text-[var(--cursor-accent-color)] transition-transform duration-300 group-hover/theme-toggle:scale-110"
             style={{
-              filter: "drop-shadow(0 0 3px var(--cursor-accent-color))"
+              filter: "drop-shadow(0 0 3px var(--cursor-accent-color))",
             }}
           />
         ) : (
-          <Sun 
+          <Sun
             className="w-3.5 h-3.5 text-amber-500 light:text-amber-600 transition-transform duration-300 group-hover/theme-toggle:scale-110"
             style={{
-              filter: "drop-shadow(0 0 3px rgba(245,158,11,0.8))"
+              filter: "drop-shadow(0 0 3px rgba(245,158,11,0.8))",
             }}
           />
         )}

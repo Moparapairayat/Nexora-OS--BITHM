@@ -6,4 +6,4 @@ try {
   if (storedAccent && storedAccent !== "emerald") {
     document.documentElement.classList.add("theme-" + storedAccent);
   }
-} catch (_) {}
+} catch {}

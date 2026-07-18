@@ -46,9 +46,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FieldLabel, inputClass } from "@/components/ui/form-field";
-import type { AppRole, Tone } from "@/lib/mock-data";
-import { roleDashboards } from "@/lib/mock-data";
-import { apiGet, apiPost } from "@/lib/workflow-api";
+import type { AppRole, Tone } from "@/data/dashboard.mock";
+import { roleDashboards } from "@/data/dashboard.mock";
+import { apiGet, apiPost } from "@/services/api-client";
 import { cn } from "@/lib/utils";
 
 type AcademicShieldMode = "student" | "teacher" | "admin";

@@ -54,9 +54,9 @@ import {
   type Relationship,
   type Table,
 } from "@/features/database-visualizer/schema-data";
-import { roleDashboards, type AppRole } from "@/lib/mock-data";
+import { roleDashboards, type AppRole } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
-import { apiPost } from "@/lib/workflow-api";
+import { apiPost } from "@/services/api-client";
 
 const panel =
   "rounded-[22px] border border-white/10 bg-[rgba(18,24,21,0.78)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200/80 light:bg-white light:shadow-[0_18px_52px_rgba(33,45,74,0.08)]";
