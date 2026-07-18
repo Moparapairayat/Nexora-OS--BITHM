@@ -106,7 +106,7 @@ export function PandaChat() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
+    <div className="fixed bottom-3 right-3 z-50 font-sans sm:bottom-6 sm:right-6">
       <style>{`
         @keyframes blink {
           0%, 100% { transform: scaleY(1); }
@@ -153,7 +153,7 @@ export function PandaChat() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="penguin-btn flex h-20 w-20 md:h-24 md:w-24 items-center justify-center relative bg-transparent border-none outline-none"
+          className="penguin-btn relative flex h-16 w-16 items-center justify-center border-none bg-transparent outline-none sm:h-20 sm:w-20 md:h-24 md:w-24"
           aria-label="Open helper chat"
           data-cursor="hover"
         >
@@ -186,7 +186,7 @@ export function PandaChat() {
 
       {/* ── Expanded Chat Window ── */}
       {isOpen && (
-        <div className="w-[360px] sm:w-[380px] h-[500px] flex flex-col rounded-3xl border border-white/15 light:border-black/10 bg-white/[0.04] light:bg-white/45 backdrop-blur-3xl shadow-[0_24px_60px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.1)] light:shadow-[0_20px_50px_rgba(16,185,129,0.05),inset_0_1px_1px_rgba(255,255,255,0.4)] overflow-hidden transition-all duration-350 transform origin-bottom-right">
+        <div className="flex h-[min(500px,calc(100vh-1.5rem))] w-[calc(100vw-1.5rem)] max-w-[380px] origin-bottom-right transform flex-col overflow-hidden rounded-3xl border border-white/15 bg-white/[0.04] shadow-[0_24px_60px_rgba(0,0,0,0.45),inset_0_1px_1px_rgba(255,255,255,0.1)] backdrop-blur-3xl transition-all duration-350 light:border-black/10 light:bg-white/45 light:shadow-[0_20px_50px_rgba(16,185,129,0.05),inset_0_1px_1px_rgba(255,255,255,0.4)]">
           {/* Header Block */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/5 light:border-black/5 bg-gradient-to-r from-accent-primary/10 to-transparent z-10">
             <div className="flex items-center gap-3">
