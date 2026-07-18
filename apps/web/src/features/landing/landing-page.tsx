@@ -17,11 +17,7 @@ import {
   GraduationCap,
   Layers3,
   ShieldCheck,
-  UserCog,
   UsersRound,
-  Pill,
-  Scan,
-  MessageSquare,
 } from "lucide-react";
 
 import { NexoraLogo } from "@/components/brand/nexora-logo";
@@ -198,27 +194,6 @@ const workflows = [
 ];
 
 
-
-const roleCards = [
-  {
-    title: "Students",
-    detail: "Complete coursework and code projects, then follow feedback.",
-    icon: GraduationCap,
-    tone: "bg-emerald-500/10 text-emerald-300 light:bg-emerald-50 light:text-emerald-700",
-  },
-  {
-    title: "Teachers",
-    detail: "Review submissions, oversee lab work, and give useful feedback.",
-    icon: UsersRound,
-    tone: "bg-cyan-500/10 text-cyan-300 light:bg-cyan-50 light:text-cyan-700",
-  },
-  {
-    title: "Administrators",
-    detail: "Manage users, courses, permissions, and day-to-day operations.",
-    icon: UserCog,
-    tone: "bg-violet-500/10 text-violet-300 light:bg-violet-50 light:text-violet-700",
-  },
-];
 
 const latestAreas = [
   {
@@ -719,7 +694,7 @@ export function LandingPage() {
                 return (
                   <article
                     key={title}
-                    className={`group relative flex w-[310px] sm:w-[350px] shrink-0 snap-start min-h-[250px] flex-col justify-between overflow-hidden rounded-[28px] p-6 transition duration-300 hover:-translate-y-1 ${style.bgClass} ${style.hoverShadow}`}
+                    className={`group relative flex w-[310px] sm:w-[350px] shrink-0 snap-start min-h-[250px] flex-col justify-between overflow-hidden rounded-[24px] p-6 transition duration-300 hover:-translate-y-0.5 ${style.bgClass} ${style.hoverShadow}`}
                   >
                     {/* Wavy lines SVG overlay */}
                     {patternIdx === 0 && (
@@ -860,366 +835,160 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="relative z-10 overflow-hidden py-24 bg-[#070d0a] light:bg-white border-y border-white/5 light:border-slate-100">
-        <div className="absolute top-[20%] right-[-10%] h-[400px] w-[400px] rounded-full bg-emerald-500/5 dark:bg-emerald-500/5 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-[10%] left-[-10%] h-[400px] w-[400px] rounded-full bg-cyan-500/5 dark:bg-cyan-500/3 blur-[120px] pointer-events-none" />
-
-        <div className="relative mx-auto max-w-6xl px-5 md:px-8">
-          {/* Header */}
-          <div className="text-center mb-20 select-none">
-            <p className="font-handwriting text-3xl text-accent-primary light:text-emerald-600 tracking-normal italic normal-case">
-              Simple Steps
-            </p>
-            <h2 className="mt-2 text-4xl sm:text-5xl font-extrabold tracking-tight text-white light:text-slate-900">
-              How it works
-            </h2>
-            <p className="mt-4 text-sm sm:text-base text-slate-400 light:text-slate-505 max-w-md mx-auto leading-relaxed">
-              No confusion or delays. Just a clear, reliable path to submission.
-            </p>
-          </div>
-
-          {/* Grid Layout */}
-          <div className="grid gap-20 lg:grid-cols-2 items-center">
-            {/* Left side: Interactive Mockup / Image */}
-            <div className="relative flex justify-center lg:justify-start select-none">
-              {/* Giant Background Text */}
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/[0.04] light:text-slate-200/50 text-[7rem] sm:text-[9rem] uppercase pointer-events-none transition-all duration-300">
-                STUDY
-              </div>
-
-              {/* Main portrait frame */}
-              <div className="relative z-10 w-[320px] h-[320px] sm:w-[380px] sm:h-[380px] rounded-[32px] overflow-hidden shadow-2xl border-4 border-slate-800/80 light:border-slate-50">
-                <Image
-                  src="/landing/student_desk_portrait.png"
-                  alt="Student using Nexora OS"
-                  fill
-                  className="object-cover object-center select-none"
-                  draggable={false}
-                />
-              </div>
-
-              {/* Overlay Mockup card */}
-              <div className="absolute bottom-[-30px] right-[-10px] sm:right-[-35px] z-20 w-[230px] sm:w-[250px] rounded-3xl border border-slate-800 light:border-slate-100 bg-[#0f1914]/95 light:bg-white/95 p-5 shadow-[0_25px_60px_rgba(0,0,0,0.15)] backdrop-blur-md">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-800/60 light:border-slate-100">
-                  <span className="text-[11px] font-bold text-slate-200 light:text-slate-850">Academic Units</span>
-                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                </div>
-
-                <div className="mt-3 grid grid-cols-4 gap-2">
-                  {[...Array(8)].map((_, i) => (
-                    <div
-                      key={i}
-                      className="rounded-xl bg-slate-900 light:bg-slate-50 p-1.5 border border-slate-800/40 light:border-slate-100/50"
-                    >
-                      {/* Image placeholder */}
-                      <div className="h-7 rounded-lg bg-slate-850 light:bg-slate-200/65 flex items-center justify-center">
-                        <div className="h-3 w-3 rounded-full bg-[#10b981]/25 flex items-center justify-center">
-                          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                        </div>
-                      </div>
-                      {/* Mock text lines */}
-                      <div className="mt-2 space-y-1">
-                        <div className="h-1.5 w-10 rounded bg-slate-700 light:bg-slate-300/80" />
-                        <div className="h-1 w-6 rounded bg-slate-700 light:bg-slate-200/80" />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-4 h-5 rounded-lg bg-slate-800/80 light:bg-slate-100 flex items-center justify-center text-[9px] font-bold text-slate-500 light:text-slate-400 uppercase tracking-widest select-none">
-                  View All Units
-                </div>
-              </div>
-
-              {/* Tooltip Badge & Curved Arrow */}
-              <div className="absolute bottom-[75px] right-[135px] sm:right-[155px] z-30 select-none">
-                <div className="bg-[#a3e635] text-slate-950 font-bold px-3 py-1.5 rounded-xl text-[10px] shadow-lg border border-[#bef264]">
-                  Launch OS
-                </div>
-                <svg
-                  className="absolute top-7 left-14 w-10 h-10 text-[#a3e635] light:text-slate-900"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                >
-                  <path d="M5,5 Q20,5 24,24" />
-                  <path d="M18,22 L24,24 L26,18" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Right side: Steps timeline */}
-            <div className="relative pl-16">
-              {/* Continuous vertical timeline divider line */}
-              <div className="absolute left-[31px] top-6 bottom-6 w-[1.5px] bg-slate-800 light:bg-slate-250" />
-
-              {/* Thick active bar indicating active Step 1 */}
-              <div className="absolute left-[30px] top-6 h-[85px] w-[3.5px] bg-accent-primary light:bg-slate-900 rounded-full" />
-
-              <div className="flex flex-col gap-12">
-                {/* Step 1 */}
-                <div className="relative flex items-start gap-5 group">
-                  {/* Icon */}
-                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#d2f785] text-slate-950 border border-[#c3ed6f] shadow-md transition duration-300 group-hover:scale-105">
-                    <Pill className="h-6 w-6 stroke-[1.8]" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="space-y-1.5 pt-1.5 flex-1">
-                    <h3 className="text-lg font-bold text-white light:text-slate-900 transition duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                      Select Coursework Unit
-                    </h3>
-                    <p className="text-sm leading-relaxed text-slate-400 light:text-slate-505 max-w-md">
-                      Choose an active coursework brief, practical lab task, or unit syllabus from your student dashboard.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 2 */}
-                <div className="relative flex items-start gap-5 group">
-                  {/* Icon */}
-                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-slate-200 border border-slate-800 light:bg-white light:text-slate-800 light:border-slate-200 shadow-md transition duration-300 group-hover:scale-105">
-                    <Scan className="h-6 w-6 stroke-[1.8]" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="space-y-1.5 pt-1.5 flex-1">
-                    <h3 className="text-lg font-bold text-white light:text-slate-900 transition duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                      Build & Verify Evidence
-                    </h3>
-                    <p className="text-sm leading-relaxed text-slate-400 light:text-slate-555 max-w-md">
-                      Write code inside the Code Lab workspace, create database ERDs, and scan drafts using AcademicShield.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Step 3 */}
-                <div className="relative flex items-start gap-5 group">
-                  {/* Icon */}
-                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-slate-200 border border-slate-800 light:bg-white light:text-slate-800 light:border-slate-200 shadow-md transition duration-300 group-hover:scale-105">
-                    <MessageSquare className="h-6 w-6 stroke-[1.8]" />
-                  </div>
-
-                  {/* Content */}
-                  <div className="space-y-1.5 pt-1.5 flex-1">
-                    <h3 className="text-lg font-bold text-white light:text-slate-900 transition duration-200 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
-                      Submit & Receive Feedback
-                    </h3>
-                    <p className="text-sm leading-relaxed text-slate-400 light:text-slate-555 max-w-md">
-                      Directly submit your coursework, check integrity flags, and view real-time grading and feedback from your instructors.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </section>
 
       <section
-        id="workflows"
-        className="relative overflow-hidden border-y border-white/8 bg-[url('/landing/mentor-modern/bg-line.png')] bg-cover bg-center py-14 light:border-emerald-950/8 sm:py-16"
+        id="how-it-works"
+        className="relative overflow-hidden border-y border-white/8 bg-[#050b08] px-5 py-16 light:border-emerald-950/8 light:bg-[#f3f8f5] md:px-8 sm:py-20"
       >
-        <div className="absolute inset-0 bg-[#07100b]/88 light:bg-[#f2f8f4]/88" />
-        <div className="nexora-flow-line pointer-events-none absolute -left-[8%] top-[24%] h-[300px] w-[112%] -rotate-[7deg]" />
-        <div className="pointer-events-none absolute left-[16%] top-[20%] h-56 w-56 rounded-full bg-violet-500/8 blur-[90px] light:bg-violet-500/22" />
-        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-          <SectionHeading
-            eyebrow="Core workflows"
-            title="A straightforward path from task to submission"
-            detail="Keep the steps, files, feedback, and status of each piece of work together."
-          />
-          <div className="mt-10 grid lg:grid-cols-3">
-            {workflows.map(({ title, detail, icon: Icon, label }) => (
-              <article
+        <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-[70%] -translate-x-1/2 rounded-full bg-emerald-500/8 blur-[130px] light:bg-emerald-300/16" />
+
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[30px] border border-emerald-300/12 bg-[linear-gradient(135deg,#0b2b21_0%,#072018_58%,#06140f_100%)] shadow-[0_26px_70px_rgba(0,0,0,0.28)] light:border-emerald-950/10 light:bg-[linear-gradient(135deg,#ffffff_0%,#edf8f1_58%,#e4f2ea_100%)] light:shadow-[0_22px_55px_rgba(25,80,53,0.11)]">
+          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border-[42px] border-emerald-300/6 light:border-emerald-700/5" />
+          <div className="pointer-events-none absolute left-[42%] top-[-15%] h-72 w-72 rounded-full bg-emerald-400/8 blur-[100px] light:bg-emerald-300/16" />
+
+          <div className="relative grid items-center lg:grid-cols-[0.96fr_1.04fr]">
+            <div className="flex flex-col justify-center px-7 py-10 sm:px-11 sm:py-14 lg:px-14 lg:py-16">
+              <div className="flex items-center gap-3">
+                <span className="h-px w-9 bg-emerald-300/70 light:bg-emerald-700/55" />
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300 light:text-emerald-700">
+                  Core workflows
+                </p>
+              </div>
+
+              <h2 className="mt-6 max-w-xl text-balance text-4xl font-semibold leading-[1.04] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+                A clear path from task brief to final submission.
+              </h2>
+              <p className="mt-5 max-w-lg text-sm leading-7 text-emerald-50/70 sm:text-base light:text-slate-600">
+                Keep the brief, practical work, evidence, and feedback connected so you always know what to work on next.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-emerald-100/75 light:text-emerald-900/70">
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 light:bg-emerald-600" />
+                  Coursework
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 light:bg-cyan-600" />
+                  Practical labs
+                </span>
+                <span className="inline-flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-300 light:bg-amber-600" />
+                  Instructor feedback
+                </span>
+              </div>
+            </div>
+
+            <div className="relative flex min-h-[350px] items-center justify-center overflow-hidden px-5 pb-4 sm:min-h-[430px] sm:px-10 lg:min-h-[500px] lg:px-8 lg:pb-0">
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/10 light:border-emerald-700/8" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[52%] w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-300/7 blur-3xl light:bg-emerald-400/10" />
+              <Image
+                src="/landing/workflows/academic-workspace-cutout.png"
+                alt="Laptop, study notes, books, and coursework folder"
+                width={1536}
+                height={1024}
+                sizes="(min-width: 1024px) 48vw, 92vw"
+                className="relative z-10 h-auto w-full max-w-[720px] object-contain drop-shadow-[0_26px_32px_rgba(0,0,0,0.25)] light:drop-shadow-[0_22px_28px_rgba(25,75,50,0.16)]"
+              />
+              <div className="absolute bottom-7 right-6 z-20 max-w-[210px] border-l-2 border-emerald-300 bg-[#09271e]/88 px-4 py-3 text-xs leading-5 text-emerald-50/80 shadow-lg backdrop-blur-md sm:right-10 light:border-emerald-600 light:bg-white/88 light:text-slate-600">
+                <span className="mb-1 block font-semibold text-emerald-300 light:text-emerald-700">
+                  One connected workspace
+                </span>
+                Notes, practical work, and submissions stay in context.
+              </div>
+            </div>
+          </div>
+
+          <ol className="relative grid border-t border-white/10 md:grid-cols-3 light:border-emerald-950/10">
+            {workflows.map(({ title, detail, icon: Icon, label }, index) => (
+              <li
                 key={title}
-                className="group border-b border-white/10 px-5 py-7 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0 light:border-emerald-950/10"
+                className="group grid grid-cols-[2.5rem_1fr] gap-4 border-b border-white/10 px-6 py-7 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 sm:px-8 light:border-emerald-950/10"
               >
-                <div className="grid h-12 w-12 place-items-center rounded-full border border-emerald-300/20 bg-emerald-400/6 light:border-emerald-700/15 light:bg-emerald-50">
-                  <Icon className="h-5 w-5 text-emerald-300 transition duration-300 group-hover:scale-110 light:text-emerald-700" />
-                </div>
-                <div className="pt-5">
-                  <p className="flex items-center gap-2 text-xs text-emerald-300 light:text-emerald-700">
-                    <UsersRound className="h-3.5 w-3.5" /> {label}
-                  </p>
-                  <h3 className="mt-3 text-base font-semibold">{title}</h3>
-                  <p className="mt-2 text-sm leading-5 text-slate-400 light:text-slate-600">
+                <span className="grid h-10 w-10 place-items-center rounded-full border border-emerald-300/18 bg-emerald-300/7 text-xs font-bold text-emerald-200 light:border-emerald-700/15 light:bg-emerald-50 light:text-emerald-700">
+                  0{index + 1}
+                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <Icon className="h-3.5 w-3.5 text-emerald-300 light:text-emerald-700" />
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-200/60 light:text-emerald-800/65">
+                      {label}
+                    </p>
+                  </div>
+                  <h3 className="mt-2 text-base font-semibold text-white light:text-slate-900">
+                    {title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-emerald-50/62 light:text-slate-600">
                     {detail}
                   </p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className="text-sm font-semibold text-emerald-300 light:text-emerald-700">
-                      Nexora module
-                    </span>
-                    <Link
-                      href="/login"
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-slate-300 hover:text-emerald-300 light:text-slate-600 light:hover:text-emerald-700"
-                    >
-                      View access <ArrowRight className="h-3 w-3" />
-                    </Link>
-                  </div>
                 </div>
-              </article>
+              </li>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-[url('/landing/mentor-modern/bg-line.png')] bg-cover bg-center py-14 sm:py-16">
-        <div className="absolute inset-0 bg-[#060907]/90 light:bg-[#f8fbf9]/91" />
-        <div className="nexora-flow-line pointer-events-none absolute -right-[14%] bottom-[-18%] h-[340px] w-[86%] rotate-[16deg] opacity-80" />
-        <div className="absolute right-[8%] top-10 h-72 w-72 rounded-full bg-emerald-500/13 blur-[110px]" />
-        <div className="absolute bottom-4 left-[8%] h-72 w-72 rounded-full bg-cyan-500/8 blur-[110px]" />
-        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-          <SectionHeading
-            eyebrow="Inside the platform"
-            title="Start with the tools available today"
-            detail="These areas are ready to use. Planned modules remain clearly separated until they are complete."
-          />
-          <div className="mt-10 grid border-y border-white/10 md:grid-cols-2 xl:grid-cols-4 light:border-emerald-950/10">
-            {latestAreas.map(({ label, title, detail, icon: Icon }) => (
-              <article
-                key={title}
-                className="group border-b border-white/10 p-5 md:odd:border-r xl:border-b-0 xl:border-r xl:last:border-r-0 light:border-emerald-950/10"
-              >
-                <div className="grid h-11 w-11 place-items-center rounded-full border border-emerald-300/15 text-emerald-300 light:border-emerald-700/15 light:text-emerald-700">
-                  <Icon className="h-5 w-5 text-emerald-300 transition group-hover:scale-110 light:text-emerald-700" />
-                </div>
-                <p className="mt-5 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-300 light:text-emerald-700">
-                  {label}
-                </p>
-                <h3 className="mt-2 text-lg font-semibold">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-400 light:text-slate-600">
-                  {detail}
-                </p>
-              </article>
-            ))}
-          </div>
-          <div className="mt-8 flex items-center justify-between">
-            <div className="flex gap-2">
-              <span className="h-2 w-5 rounded-full bg-emerald-400" />
-              <span className="h-2 w-2 rounded-full bg-slate-600" />
-              <span className="h-2 w-2 rounded-full bg-slate-600" />
+      <section className="relative overflow-hidden border-y border-white/8 bg-[#07100b] px-5 py-16 light:border-emerald-950/8 light:bg-[#f5f8f6] md:px-8 sm:py-24">
+        <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-emerald-500/7 blur-[110px] light:bg-emerald-300/14" />
+
+        <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
+          <div className="lg:sticky lg:top-32 lg:self-start">
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-emerald-300/65 light:bg-emerald-700/50" />
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300 light:text-emerald-700">
+                Available now
+              </p>
             </div>
+            <h2 className="mt-5 max-w-xl text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+              Start with the tools available today
+            </h2>
+            <p className="mt-5 max-w-md text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
+              Open the working modules now. Features still in development remain clearly marked until they are ready.
+            </p>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-300 light:text-emerald-700"
+              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-emerald-200 transition-colors hover:text-white light:text-emerald-700 light:hover:text-emerald-900"
             >
-              Open the platform <ArrowRight className="h-4 w-4" />
+              Open Nexora OS <ArrowRight className="h-4 w-4" />
             </Link>
+          </div>
+
+          <div className="border-y border-white/12 light:border-emerald-950/12">
+            {latestAreas.map(({ label, title, detail, icon: Icon }, index) => (
+              <article
+                key={title}
+                className={`group grid gap-4 py-7 sm:grid-cols-[3rem_1fr_auto] sm:items-center sm:gap-5 sm:py-8 ${
+                  index !== latestAreas.length - 1
+                    ? "border-b border-white/10 light:border-emerald-950/10"
+                    : ""
+                }`}
+              >
+                <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-emerald-200 transition-colors group-hover:border-emerald-300/30 group-hover:bg-emerald-300/6 light:border-emerald-950/10 light:text-emerald-700 light:group-hover:border-emerald-700/25 light:group-hover:bg-emerald-50">
+                  <Icon className="h-5 w-5" />
+                </div>
+
+                <div>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <h3 className="text-lg font-semibold text-white light:text-slate-900">{title}</h3>
+                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-300/65 light:text-emerald-700/70">
+                      {label}
+                    </span>
+                  </div>
+                  <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400 light:text-slate-600">{detail}</p>
+                </div>
+
+                <Link
+                  href="/login"
+                  aria-label={`Open ${title}`}
+                  className="inline-flex h-9 w-9 items-center justify-center justify-self-start rounded-full text-slate-500 transition-all hover:bg-emerald-300/8 hover:text-emerald-200 sm:justify-self-end light:text-slate-400 light:hover:bg-emerald-50 light:hover:text-emerald-700"
+                >
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </article>
+            ))}
           </div>
         </div>
       </section>
 
-      <section
-        id="roles"
-        className="mx-auto max-w-7xl px-5 py-14 md:px-8 sm:py-16"
-      >
-        <SectionHeading
-          eyebrow="Built for your institution"
-          title="A workspace that reflects each role"
-          detail="Students, teachers, and administrators use the same system with the controls relevant to their work."
-        />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {/* Card 1: Students */}
-          <Link
-            href="/login"
-            className="group relative flex min-h-[280px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#FED97B] p-8 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(254,217,123,0.22)]"
-          >
-            {/* Wavy lines SVG overlay */}
-            <svg viewBox="0 0 100 100" fill="none" stroke="rgba(120,80,20,0.18)" strokeWidth="3" strokeLinecap="round" className="absolute top-0 right-0 w-32 h-32 pointer-events-none translate-x-4 -translate-y-4">
-              <path d="M30 20 C40 10, 50 30, 60 20 C70 10, 80 30, 90 20" />
-              <path d="M25 35 C35 25, 45 45, 55 35 C65 25, 75 45, 85 35" />
-              <path d="M20 50 C30 40, 40 60, 50 50 C60 40, 70 60, 80 50" />
-            </svg>
-
-            {/* Icon inside circle */}
-            <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-black/7 text-amber-950">
-              <GraduationCap className="h-6 w-6 stroke-[1.8]" />
-            </div>
-
-            {/* Card Content */}
-            <div className="relative z-10 mt-8">
-              <h3 className="text-2xl font-bold text-amber-950 tracking-tight">
-                Students
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-amber-900/80 font-medium">
-                Complete coursework and code projects, then follow feedback in real-time.
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-950">
-                Sign in
-                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-            </div>
-          </Link>
-
-          {/* Card 2: Teachers */}
-          <Link
-            href="/login"
-            className="group relative flex min-h-[280px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#6355E6] p-8 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(99,85,230,0.28)]"
-          >
-            {/* Topographic contour lines SVG overlay */}
-            <svg viewBox="0 0 100 100" fill="none" stroke="rgba(255,255,255,0.22)" strokeWidth="2.5" strokeLinecap="round" className="absolute top-0 right-0 w-32 h-32 pointer-events-none translate-x-4 -translate-y-4">
-              <path d="M50 15 C 65 17, 85 35, 85 55 C 85 70, 68 85, 50 85 C 32 85, 15 70, 15 55 C 15 35, 35 15, 50 15 Z" />
-              <path d="M50 30 C 60 32, 70 42, 70 55 C 70 64, 58 72, 50 72 C 42 72, 30 64, 30 55 C 30 42, 40 30, 50 30 Z" />
-              <path d="M50 45 C 54 46, 58 50, 58 55 C 58 59, 54 62, 50 62 C 46 62, 42 59, 42 55 C 42 50, 46 45, 50 45 Z" />
-            </svg>
-
-            {/* Icon inside circle */}
-            <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-white/12 text-white">
-              <UsersRound className="h-6 w-6 stroke-[1.8]" />
-            </div>
-
-            {/* Card Content */}
-            <div className="relative z-10 mt-8">
-              <h3 className="text-2xl font-bold text-white tracking-tight">
-                Teachers
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-purple-100/80 font-medium">
-                Review submissions, oversee lab work, and give useful feedback.
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-white">
-                Sign in
-                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-            </div>
-          </Link>
-
-          {/* Card 3: Administrators */}
-          <Link
-            href="/login"
-            className="group relative flex min-h-[280px] flex-col justify-between overflow-hidden rounded-[28px] bg-[#E5DBFF] p-8 transition duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(229,219,255,0.32)]"
-          >
-            {/* Swirl/spiral line SVG overlay */}
-            <svg viewBox="0 0 100 100" fill="none" stroke="rgba(110,80,200,0.18)" strokeWidth="2.5" strokeLinecap="round" className="absolute top-0 right-0 w-32 h-32 pointer-events-none translate-x-4 -translate-y-4">
-              <path d="M50 50 A 10 10 0 1 0 60 60 A 20 20 0 1 0 40 70 A 30 30 0 1 0 70 30 A 40 40 0 1 0 10 70" />
-            </svg>
-
-            {/* Icon inside circle */}
-            <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-full bg-black/6 text-violet-950">
-              <UserCog className="h-6 w-6 stroke-[1.8]" />
-            </div>
-
-            {/* Card Content */}
-            <div className="relative z-10 mt-8">
-              <h3 className="text-2xl font-bold text-violet-950 tracking-tight">
-                Administrators
-              </h3>
-              <p className="mt-2 text-sm leading-6 text-violet-900/80 font-medium">
-                Manage users, courses, permissions, and day-to-day college operations.
-              </p>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-violet-950">
-                Sign in
-                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      {/* ACADEMIC COURSEWORK SECTION */}
       <section className="relative pt-32 pb-14 xl:py-14 px-5 md:px-8 bg-[#070d0a] light:bg-[#f6faf7]">
         <div className="mx-auto max-w-7xl relative">
           {/* Outer card */}
@@ -1309,11 +1078,11 @@ export function LandingPage() {
                 </div>
               </div>
 
-              {/* RIGHT PANEL — Premium Information Cards */}
-              <div className="p-8 sm:p-10 grid grid-cols-1 sm:grid-cols-2 gap-5 bg-black/10 light:bg-slate-50/30">
+              {/* RIGHT PANEL — Academic details, grouped without nested cards */}
+              <div className="grid grid-cols-1 bg-black/10 sm:grid-cols-2 light:bg-slate-50/30">
 
                 {/* Institution */}
-                <div className="group rounded-2xl border border-emerald-500/10 light:border-slate-200/80 bg-[#11241c]/40 light:bg-white p-6 flex flex-col justify-between hover:border-emerald-500/30 light:hover:border-emerald-400/50 hover:shadow-[0_8px_30px_rgba(16,185,129,0.04)] light:hover:shadow-[0_8px_30px_rgba(16,185,129,0.03)] hover:-translate-y-0.5 transition-all duration-300">
+                <div className="group border-b border-emerald-500/10 px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] sm:border-r light:border-slate-200/80 light:hover:bg-emerald-50/60">
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -1331,7 +1100,7 @@ export function LandingPage() {
                 </div>
 
                 {/* Student */}
-                <div className="group rounded-2xl border border-emerald-500/10 light:border-slate-200/80 bg-[#11241c]/40 light:bg-white p-6 flex flex-col justify-between hover:border-emerald-500/30 light:hover:border-emerald-400/50 hover:shadow-[0_8px_30px_rgba(16,185,129,0.04)] light:hover:shadow-[0_8px_30px_rgba(16,185,129,0.03)] hover:-translate-y-0.5 transition-all duration-300">
+                <div className="group border-b border-emerald-500/10 px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] light:border-slate-200/80 light:hover:bg-emerald-50/60">
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -1348,7 +1117,7 @@ export function LandingPage() {
                 </div>
 
                 {/* Instructor */}
-                <div className="group rounded-2xl border border-emerald-500/10 light:border-slate-200/80 bg-[#11241c]/40 light:bg-white p-6 flex flex-col justify-between hover:border-emerald-500/30 light:hover:border-emerald-400/50 hover:shadow-[0_8px_30px_rgba(16,185,129,0.04)] light:hover:shadow-[0_8px_30px_rgba(16,185,129,0.03)] hover:-translate-y-0.5 transition-all duration-300">
+                <div className="group border-b border-emerald-500/10 px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] sm:border-r sm:border-b-0 light:border-slate-200/80 light:hover:bg-emerald-50/60">
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -1365,7 +1134,7 @@ export function LandingPage() {
                 </div>
 
                 {/* Course */}
-                <div className="group rounded-2xl border border-emerald-500/10 light:border-slate-200/80 bg-[#11241c]/40 light:bg-white p-6 flex flex-col justify-between hover:border-emerald-500/30 light:hover:border-emerald-400/50 hover:shadow-[0_8px_30px_rgba(16,185,129,0.04)] light:hover:shadow-[0_8px_30px_rgba(16,185,129,0.03)] hover:-translate-y-0.5 transition-all duration-300">
+                <div className="group px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] light:hover:bg-emerald-50/60">
                   <div className="flex items-start justify-between">
                     <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
                       <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -1391,208 +1160,6 @@ export function LandingPage() {
       </section>
 
 
-      <section className="relative overflow-hidden py-14 sm:py-16">
-        <div className="absolute left-[5%] top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-amber-200/8 blur-[110px] light:bg-amber-200/35" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr]">
-          <ScrollReveal>
-            <div className="max-w-lg">
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-                Interactive Preview
-              </p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-                Explore Your Interactive Workspace
-              </h2>
-              <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
-                Sign in with a demo account to experience the workspace firsthand. Navigating dashboards, running code labs, and tracking submissions has never been easier.
-              </p>
-              <Link
-                href="/login"
-                className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl border border-emerald-300/15 bg-accent-solid px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(var(--theme-emerald-rgb-raw),0.22)] hover:bg-accent-solid-hover light:bg-accent-solid light:!text-white light:hover:bg-accent-solid-hover"
-              >
-                Launch Workspace Demo <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={150} className="w-full">
-            {/* Layered Glass Card Container */}
-            <div className="relative w-full flex items-center justify-center min-h-[400px]">
-              {/* 1. Neon Glowing Shapes SVG (Z-0: Behind the glass, bleeds outside bounds) */}
-              <svg className="absolute inset-0 w-[108%] h-[108%] -translate-x-[4%] -translate-y-[4%] pointer-events-none z-0" viewBox="0 0 600 400" fill="none">
-                <defs>
-                  <filter id="glow-green" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="14" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                  <filter id="glow-pink" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="16" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                  <linearGradient id="neon-green-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#22c55e" />
-                    <stop offset="50%" stopColor="#06b6d4" />
-                    <stop offset="100%" stopColor="#f59e0b" />
-                  </linearGradient>
-                  <linearGradient id="neon-pink-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#ec4899" />
-                    <stop offset="50%" stopColor="#f43f5e" />
-                    <stop offset="100%" stopColor="#d946ef" />
-                  </linearGradient>
-                </defs>
-
-                {/* Green tilted square (Left bottom neon) */}
-                <path
-                  d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
-                  fill="none"
-                  stroke="url(#neon-green-grad)"
-                  strokeWidth="16"
-                  strokeLinecap="round"
-                  filter="url(#glow-green)"
-                  opacity="0.85"
-                />
-                <path
-                  d="M 60,220 C 60,175 110,145 150,175 C 190,205 180,275 150,285 C 120,295 60,255 60,220 Z"
-                  fill="none"
-                  stroke="#d1fae5"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-
-                {/* Connecting curve loop (Middle neon) */}
-                <path
-                  d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
-                  fill="none"
-                  stroke="url(#neon-pink-grad)"
-                  strokeWidth="14"
-                  strokeLinecap="round"
-                  filter="url(#glow-pink)"
-                  opacity="0.8"
-                />
-                <path
-                  d="M 150,175 C 230,145 190,320 270,280 C 320,250 320,165 400,185"
-                  fill="none"
-                  stroke="#fce7f3"
-                  strokeWidth="3.5"
-                  strokeLinecap="round"
-                />
-
-                {/* Clover/Cross Shape (Right side neon) */}
-                <path
-                  d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
-                  fill="none"
-                  stroke="url(#neon-pink-grad)"
-                  strokeWidth="22"
-                  filter="url(#glow-pink)"
-                  opacity="0.9"
-                />
-                <path
-                  d="M 420,175 C 380,95 460,95 420,175 C 500,135 500,215 420,175 C 460,255 380,255 420,175 C 340,215 340,135 420,175 Z"
-                  fill="none"
-                  stroke="#fff1f2"
-                  strokeWidth="4.5"
-                />
-              </svg>
-
-              {/* 2. Glass Card Container (Z-10: Frosted glass sheet that blurs Z-0 neons) */}
-              <div className="relative z-10 w-full min-h-[400px] rounded-[32px] border border-white/20 bg-gradient-to-tr from-white/[0.015] via-white/[0.035] to-white/[0.075] p-8 shadow-[0_30px_100px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.2)] flex flex-col justify-between backdrop-blur-[24px] overflow-hidden light:border-slate-300/30 light:bg-gradient-to-tr light:from-white/40 light:to-white/80 light:shadow-xl">
-                {/* Background canvas grid lines */}
-                <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "16px 16px" }} />
-
-                {/* Content Layers */}
-                <div className="relative z-10 w-full h-full flex flex-col justify-between flex-1 min-h-[340px]">
-                  {/* Top Row: Left Title & Right Japanese Title */}
-                  <div className="flex justify-between items-start w-full">
-                    <div>
-                      <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
-                        Nexora <span className="text-[10px] font-mono tracking-widest opacity-40 align-middle ml-1">✦⚪⚪✕</span>
-                        <br />
-                        OS:
-                      </h3>
-                      <p className="mt-3 text-sm font-semibold text-orange-300 tracking-wide light:text-emerald-700">
-                        Connected Student Workspace
-                      </p>
-                    </div>
-
-                    <div className="text-right">
-                      <h3 className="text-4xl sm:text-5xl font-bold tracking-tight text-white/95 font-sans drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)] light:text-slate-900 light:drop-shadow-none">
-                        ネクソラ OS
-                      </h3>
-                      <p className="mt-2 text-xs font-semibold text-white/70 tracking-wide light:text-slate-600">
-                        学術ワークスペース
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Bottom Row: Bottom Left Detail & Bottom Right CTA Pill */}
-                  <div className="flex justify-between items-end w-full mt-auto relative z-10">
-                    <p className="text-xs sm:text-sm font-semibold text-white/90 light:text-slate-900 max-w-[220px] leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] light:drop-shadow-none">
-                      A premium platform to study, build, and submit your work.
-                    </p>
-
-                    {/* Pill Button "Explore Workspace" */}
-                    <Link
-                      href="/login"
-                      className="flex items-center gap-2 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary px-5 py-2.5 text-xs font-bold text-[#050706] shadow-[0_8px_20px_rgba(var(--theme-emerald-rgb-raw),0.22)] transition duration-300 hover:scale-[1.03] hover:shadow-[0_8px_25px_rgba(var(--theme-emerald-rgb-raw),0.32)] light:from-accent-solid light:to-accent-primary light:text-white light:shadow-md"
-                      data-cursor="hover"
-                    >
-                      Explore Workspace
-                      <ArrowRight className="h-3.5 w-3.5 stroke-[2.5]" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* 3. Figma Handles & Cursors Layer (Z-20: Sits on top of the glass card, fully sharp!) */}
-              <div className="absolute inset-0 pointer-events-none z-20 p-4">
-                <div className="relative w-full h-full">
-                  {/* Dashed connector lines */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 400" fill="none">
-                    <line x1="150" y1="175" x2="210" y2="125" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
-                    <circle cx="210" cy="125" r="3.5" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
-
-                    <line x1="270" y1="280" x2="230" y2="340" stroke="#3b82f6" strokeWidth="1.5" strokeDasharray="3,3" />
-                    <rect x="227" y="337" width="6" height="6" fill="white" stroke="#3b82f6" strokeWidth="1.5" />
-
-                    <line x1="420" y1="175" x2="470" y2="235" stroke="#ef4444" strokeWidth="1.5" strokeDasharray="3,3" />
-                    <circle cx="470" cy="235" r="3.5" fill="white" stroke="#ef4444" strokeWidth="1.5" />
-                  </svg>
-
-                  {/* Floating user pill badge 'Submitted!' */}
-                  <div className="absolute top-[280px] left-[260px] flex items-center gap-1.5 rounded-full bg-accent-solid border border-emerald-400/30 px-2.5 py-1 text-[11px] font-bold text-white shadow-[0_4px_15px_rgba(var(--theme-emerald-rgb-raw),0.4)] backdrop-blur-sm">
-                    <div className="w-4 h-4 rounded-full bg-white/20 overflow-hidden flex items-center justify-center text-[8px] font-bold">
-                      ✓
-                    </div>
-                    <span>Submitted!</span>
-                  </div>
-
-                  {/* Cursors */}
-                  <div className="absolute top-[260px] left-[300px]">
-                    <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
-                      <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
-                    </svg>
-                  </div>
-
-                  <div className="absolute top-[115px] right-[130px]">
-                    <svg className="w-5 h-5 text-white filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" viewBox="0 0 24 24" fill="none">
-                      <path d="M4.5 3V18.5L9.8 13.5H18.5L4.5 3Z" fill="black" stroke="white" strokeWidth="1.5" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* TEAM SECTION */}
       <section
         id="team"
         className="relative overflow-hidden py-24 text-white light:text-[#0d2a1d]"
@@ -1600,7 +1167,7 @@ export function LandingPage() {
         <style dangerouslySetInnerHTML={{
           __html: `
           @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-          .font-team-serif {
+          .font-sans {
             font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
           }
           #team {
@@ -1639,18 +1206,18 @@ export function LandingPage() {
                   <defs>
                     <linearGradient id="gold-line-left" x1="0" y1="0" x2="80" y2="0" gradientUnits="userSpaceOnUse">
                       <stop offset="0%" stopColor="transparent" />
-                      <stop offset="100%" stopColor="#e2c275" />
+                      <stop offset="100%" stopColor="#6ee7b7" />
                     </linearGradient>
                     <linearGradient id="gold-grad-ornament" x1="85" y1="6" x2="117" y2="18" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#fdf6db" />
-                      <stop offset="50%" stopColor="#e2c275" />
-                      <stop offset="100%" stopColor="#aa7c11" />
+                      <stop offset="0%" stopColor="#d1fae5" />
+                      <stop offset="50%" stopColor="#6ee7b7" />
+                      <stop offset="100%" stopColor="#059669" />
                     </linearGradient>
                   </defs>
                 </svg>
               </div>
 
-              <h2 className="text-4xl sm:text-5xl font-light tracking-wide font-team-serif text-[#fdfbf7] light:text-[#0b2419] drop-shadow-sm select-none">
+              <h2 className="text-4xl sm:text-5xl font-semibold tracking-[-0.04em] font-sans text-[#f8fffb] light:text-[#0b2419] drop-shadow-sm select-none">
                 Our Team
               </h2>
 
@@ -1665,7 +1232,7 @@ export function LandingPage() {
                   <defs>
                     <linearGradient id="gold-line-right" x1="120" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
                       <stop offset="0%" stopColor="transparent" />
-                      <stop offset="100%" stopColor="#e2c275" />
+                      <stop offset="100%" stopColor="#6ee7b7" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -1681,7 +1248,7 @@ export function LandingPage() {
               <div className="flex flex-col gap-8 order-2 md:order-none w-full">
 
                 {/* Mopara Pair Ayat */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5">
                     <Image
                       src="/landing/team/ayat.png"
@@ -1697,16 +1264,16 @@ export function LandingPage() {
                       onContextMenu={(e) => e.preventDefault()}
                     />
                   </div>
-                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
                     Mopara Pair Ayat
                   </h3>
-                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
                     Founder & Lead Developer
                   </p>
                 </div>
 
                 {/* Emre Demir */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                     <Image
                       src="/landing/team/emre_avatar.png"
@@ -1716,10 +1283,10 @@ export function LandingPage() {
                       className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
                     Emre Demir
                   </h3>
-                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
                     Database Architect
                   </p>
                 </div>
@@ -1731,17 +1298,17 @@ export function LandingPage() {
               <div className="relative w-full max-w-[360px] h-[520px] mx-auto order-1 md:order-none flex flex-col items-center justify-between p-8 pt-16 group">
                 {/* Custom Pointed Arch Background */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#e2c275]/50 light:stroke-[#e2c275]/80" />
+                  <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#6ee7b7]/50 light:stroke-[#6ee7b7]/80" />
                   <defs>
                     <linearGradient id="center-card-bg-gradient" x1="180" y1="0" x2="180" y2="520" gradientUnits="userSpaceOnUse">
                       <stop offset="0%" stopColor="var(--center-card-bg-start)" stopOpacity="0.65" />
                       <stop offset="100%" stopColor="var(--center-card-bg-end)" stopOpacity="0.95" />
                     </linearGradient>
                     <linearGradient id="center-gold-border-gradient" x1="0" y1="0" x2="360" y2="520" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#aa7c11" />
-                      <stop offset="25%" stopColor="#e2c275" />
-                      <stop offset="75%" stopColor="#fdf6db" />
-                      <stop offset="100%" stopColor="#aa7c11" />
+                      <stop offset="0%" stopColor="#059669" />
+                      <stop offset="25%" stopColor="#6ee7b7" />
+                      <stop offset="75%" stopColor="#d1fae5" />
+                      <stop offset="100%" stopColor="#059669" />
                     </linearGradient>
                   </defs>
                 </svg>
@@ -1759,10 +1326,10 @@ export function LandingPage() {
                   </div>
 
                   {/* Info */}
-                  <h3 className="text-2xl font-bold font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-4">
+                  <h3 className="text-2xl font-bold font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-4">
                     Afsana Tabassum Tamishra
                   </h3>
-                  <p className="text-xs text-[#e2c275] light:text-[#8a650c] tracking-wider text-center mt-1.5 uppercase font-semibold">
+                  <p className="text-xs text-[#6ee7b7] light:text-[#047857] tracking-wider text-center mt-1.5 uppercase font-semibold">
                     Lecturer & Project Advisor
                   </p>
                   <p className="text-xs text-slate-300 light:text-[#2d4d3f] leading-relaxed text-center mt-3 px-4 font-light max-w-[280px]">
@@ -1771,17 +1338,17 @@ export function LandingPage() {
 
                   {/* Social Links */}
                   <div className="flex items-center justify-center gap-5 mt-3">
-                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="LinkedIn">
+                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#6ee7b7] light:hover:text-[#047857] transition-colors duration-300" aria-label="LinkedIn">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
                       </svg>
                     </a>
-                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Facebook">
+                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#6ee7b7] light:hover:text-[#047857] transition-colors duration-300" aria-label="Facebook">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
                       </svg>
                     </a>
-                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#e2c275] light:hover:text-[#8a650c] transition-colors duration-300" aria-label="Twitter">
+                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#6ee7b7] light:hover:text-[#047857] transition-colors duration-300" aria-label="Twitter">
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
                       </svg>
@@ -1791,7 +1358,7 @@ export function LandingPage() {
 
                 {/* Read More button */}
                 <div className="relative z-10 w-full flex justify-center mt-6 mb-1">
-                  <button className="border border-[#e2c275]/50 light:border-[#e2c275]/80 text-white light:text-[#0b2419] font-light tracking-widest text-xs px-8 py-2.5 bg-black/40 light:bg-white/30 hover:bg-[#e2c275] hover:text-black light:hover:text-white transition-all duration-300">
+                  <button className="border border-[#6ee7b7]/50 light:border-[#6ee7b7]/80 text-white light:text-[#0b2419] font-light tracking-widest text-xs px-8 py-2.5 bg-black/40 light:bg-white/30 hover:bg-[#6ee7b7] hover:text-black light:hover:text-white transition-all duration-300">
                     Read More
                   </button>
                 </div>
@@ -1803,7 +1370,7 @@ export function LandingPage() {
               <div className="flex flex-col gap-8 order-3 md:order-none w-full">
 
                 {/* Taen Ahammed */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                     <Image
                       src="/landing/team/tomas_avatar.png"
@@ -1813,16 +1380,16 @@ export function LandingPage() {
                       className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
                     Taen Ahammed
                   </h3>
-                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
                     UI/UX Designer
                   </p>
                 </div>
 
                 {/* Fatima Rahman */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[28px] rounded-t-[100px] border border-[#e2c275]/10 light:border-[#e2c275]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#e2c275]/35 light:hover:border-[#e2c275]/60 hover:shadow-[0_15px_30px_rgba(226,194,117,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                     <Image
                       src="/landing/team/kati_avatar.png"
@@ -1832,10 +1399,10 @@ export function LandingPage() {
                       className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
-                  <h3 className="text-xl font-medium font-team-serif text-[#fdfbf7] light:text-[#0b2419] tracking-wide text-center mt-5">
+                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
                     Fatima Rahman
                   </h3>
-                  <p className="text-xs text-[#e2c275]/80 light:text-[#8a650c] tracking-wider text-center mt-1 uppercase font-semibold">
+                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
                     Lead Frontend Engineer
                   </p>
                 </div>
@@ -1846,8 +1413,8 @@ export function LandingPage() {
 
           {/* Bottom pulsing arrow indicator */}
           <div className="flex justify-center mt-16">
-            <a href="#faq" className="group flex items-center justify-center w-11 h-11 rounded-full border border-white/10 light:border-emerald-800/15 hover:border-[#e2c275]/40 light:hover:border-[#e2c275]/60 bg-black/20 light:bg-white/40 hover:bg-emerald-950/30 light:hover:bg-emerald-50/50 transition-all duration-300 select-none cursor-pointer">
-              <svg className="w-5 h-5 text-white/50 light:text-emerald-800/60 group-hover:text-[#e2c275] light:group-hover:text-[#8a650c] transition-colors duration-300 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <a href="#faq" className="group flex items-center justify-center w-11 h-11 rounded-full border border-white/10 light:border-emerald-800/15 hover:border-[#6ee7b7]/40 light:hover:border-[#6ee7b7]/60 bg-black/20 light:bg-white/40 hover:bg-emerald-950/30 light:hover:bg-emerald-50/50 transition-all duration-300 select-none cursor-pointer">
+              <svg className="w-5 h-5 text-white/50 light:text-emerald-800/60 group-hover:text-[#6ee7b7] light:group-hover:text-[#047857] transition-colors duration-300 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </a>
@@ -1924,41 +1491,9 @@ export function LandingPage() {
       </section>
 
 
-      <section className="relative overflow-hidden border-y border-white/8 py-12 light:border-emerald-950/8 sm:py-16">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_50%,rgba(var(--theme-accent-primary-rgb-raw),0.1),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(67,56,202,0.08),transparent_28%)] light:bg-[radial-gradient(circle_at_72%_50%,rgba(var(--theme-emerald-rgb-raw),0.12),transparent_30%),radial-gradient(circle_at_30%_50%,rgba(99,102,241,0.06),transparent_28%)]" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="max-w-lg">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-              One shared workspace
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Academic work is easier when its parts stay together
-            </h2>
-            <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
-              Nexora keeps tools, roles, evidence, and feedback within the same
-              academic workspace.
-            </p>
-          </div>
-
-          <div className="relative mx-auto h-[310px] w-full max-w-[560px] overflow-hidden sm:h-[360px]">
-            <div className="nexora-capsule left-[4%] top-[22%] w-28 -rotate-[34deg] bg-[linear-gradient(90deg,#086d70,#20b99b)]" />
-            <div className="nexora-capsule bottom-[21%] left-[10%] w-36 -rotate-[30deg] bg-[linear-gradient(90deg,#4338a8,#25b99b)]" />
-            <div className="nexora-capsule right-[5%] top-[27%] w-32 -rotate-[28deg] bg-[linear-gradient(90deg,#176f50,#b5db42)]" />
-            <div className="nexora-capsule bottom-[17%] right-[12%] w-24 rotate-[28deg] bg-[linear-gradient(90deg,#5b3da5,#198e70)]" />
-            <div className="nexora-system-orb absolute left-1/2 top-1/2 grid h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 place-items-center sm:h-[250px] sm:w-[250px]">
-              <div className="relative z-10 rounded-2xl border border-white/12 bg-[#050806]/78 px-5 py-4 text-center shadow-2xl backdrop-blur-xl">
-                <NexoraLogo size="sm" className="mx-auto h-8 w-[126px]" />
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-200">
-                  Connected workspace
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       <section id="demo" className="px-5 py-14 md:px-8 sm:py-16">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] border border-accent-primary/15 bg-gradient-to-br from-accent-solid via-accent-solid to-accent-primary/20 px-6 py-14 text-center shadow-[0_30px_90px_rgba(var(--theme-accent-primary-rgb-raw),0.25)] sm:px-10">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[28px] border border-accent-primary/15 bg-gradient-to-br from-accent-solid via-accent-solid to-accent-primary/20 px-6 py-14 text-center shadow-[0_24px_64px_rgba(var(--theme-accent-primary-rgb-raw),0.18)] sm:px-10">
           <div className="absolute inset-0 bg-[url('/landing/mentor-modern/cta-bg-vector.png')] bg-cover bg-center opacity-35" />
           <div className="relative mx-auto max-w-2xl">
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
@@ -1975,7 +1510,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="download" className="relative px-5 py-16 md:px-8 sm:py-24 overflow-hidden border-t border-white/8 light:border-emerald-950/8 bg-[#0b0d14] light:bg-[#f1f6f3]">
+      <section id="download" className="relative px-5 py-16 md:px-8 sm:py-24 overflow-hidden border-t border-white/8 light:border-emerald-950/8 bg-[#07100b] light:bg-[#f1f6f3]">
         {/* Glow ambient effects */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -2134,7 +1669,7 @@ export function LandingPage() {
         <PandaCTA />
       </ScrollReveal>
 
-      <footer id="contact" className="px-5 py-12 md:px-8 bg-[#0b0d14] light:bg-[#f1f6f3]">
+      <footer id="contact" className="px-5 py-12 md:px-8 bg-[#07100b] light:bg-[#f1f6f3]">
         <style dangerouslySetInnerHTML={{
           __html: `
           .footer-card {
@@ -2338,7 +1873,7 @@ export function LandingPage() {
                     <a href="#platform" className="footer-nav-link block">Features</a>
                   </li>
                   <li>
-                    <a href="#roles" className="footer-nav-link block">Workspaces & Roles</a>
+                    <a href="#demo" className="footer-nav-link block">Workspaces & Roles</a>
                   </li>
                 </ul>
               </div>
