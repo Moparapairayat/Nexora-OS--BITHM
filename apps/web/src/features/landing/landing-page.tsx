@@ -2787,7 +2787,7 @@ function LandingNav() {
           text-decoration: none;
           padding: 6px 0;
           font-weight: 500;
-          transition: color 0.3s ease;
+          transition: color 0.25s ease;
         }
         .light .nav-link {
           color: #475569;
@@ -2805,13 +2805,13 @@ function LandingNav() {
           transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
         }
         .light .nav-link::after {
-          background: linear-gradient(90deg, #059669, #10b981);
+          background: linear-gradient(90deg, var(--theme-accent-solid), var(--theme-accent-primary));
         }
         .nav-link:hover, .nav-link.active {
-          color: #ffffff;
+          color: var(--theme-accent-primary);
         }
         .light .nav-link:hover, .light .nav-link.active {
-          color: #064e3b;
+          color: var(--theme-accent-solid);
         }
         .nav-link:hover::after, .nav-link.active::after {
           transform: scaleX(1);
@@ -2822,11 +2822,15 @@ function LandingNav() {
           overflow: hidden;
           max-height: 0;
           opacity: 0;
-          transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.28s ease;
+          transform: translateY(-10px) scale(0.97);
+          transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1), 
+                      opacity 0.28s ease, 
+                      transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         .mobile-drawer.open {
-          max-height: 480px;
+          max-height: 520px;
           opacity: 1;
+          transform: translateY(0) scale(1);
         }
         .ham-bar {
           display: block;
@@ -2840,6 +2844,25 @@ function LandingNav() {
         .ham-open .ham-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
         .ham-open .ham-bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .ham-open .ham-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+        
+        /* ── Navbar Hover Glow ── */
+        .command-border {
+          transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+        .command-border:hover {
+          border-color: rgba(var(--theme-accent-primary-rgb-raw), 0.25);
+          box-shadow: 
+            inset 0 1px 0 rgba(255,255,255,0.08),
+            0 16px 46px rgba(0,0,0,0.28),
+            0 0 40px rgba(var(--theme-accent-primary-rgb-raw), 0.08);
+        }
+        .light .command-border:hover {
+          border-color: rgba(var(--theme-accent-primary-rgb-raw), 0.35);
+          box-shadow: 
+            inset 0 1px 0 rgba(255,255,255,0.96),
+            0 14px 38px rgba(31,67,49,0.14),
+            0 0 32px rgba(var(--theme-accent-primary-rgb-raw), 0.08);
+        }
       ` }} />
       <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(var(--theme-accent-primary-rgb-raw),0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(var(--theme-accent-primary-rgb-raw),0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-white/75 light:bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(236,253,245,0.62)),rgba(255,255,255,0.68)] light:shadow-[inset_0_1px_0_rgba(255,255,255,0.96),0_14px_38px_rgba(31,67,49,0.11),0_0_28px_rgba(var(--theme-emerald-rgb-raw),0.06)]">
         <div className="flex shrink-0 items-center">
