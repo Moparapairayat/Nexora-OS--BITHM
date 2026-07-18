@@ -557,8 +557,8 @@ export function LandingPage() {
 
       {/* HERO SECTION */}
       <section id="about" className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
-        <div className="nexora-brand-arc pointer-events-none absolute -left-[500px] top-[-120px] h-[620px] w-[620px] -rotate-12 opacity-75 sm:-left-[455px]" />
-        <div className="nexora-brand-arc pointer-events-none absolute -right-[540px] bottom-[-150px] h-[680px] w-[680px] rotate-[148deg] opacity-65 sm:-right-[490px]" />
+        <div className="nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75" />
+        <div className="nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65" />
         <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/10" />
         <div className="pointer-events-none absolute -right-20 bottom-10 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/15 blur-[130px] light:bg-emerald-500/12" />
 
@@ -1380,14 +1380,14 @@ export function LandingPage() {
 
             {/* Ribbon Badge: VERIFIED */}
             <div className="absolute top-0 right-0 w-32 h-32 overflow-hidden pointer-events-none z-20">
-              <div className="absolute top-6 -right-8 w-32 py-1 bg-gradient-to-r from-emerald-500 to-teal-500 light:from-emerald-600 light:to-teal-600 text-center text-[10px] font-bold uppercase tracking-wider text-white shadow-md transform rotate-45 border-y border-white/10 select-none">
+              <div className="absolute top-6 -right-8 w-32 py-1 bg-gradient-to-r from-accent-primary to-accent-secondary light:from-accent-solid light:to-accent-primary text-center text-[10px] font-bold uppercase tracking-wider text-white shadow-md transform rotate-45 border-y border-white/10 select-none">
                 Verified
               </div>
             </div>
 
             {/* Subtle background watermark */}
             <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-              <div className="absolute -bottom-8 -right-8 text-[11rem] font-black tracking-tighter text-emerald-500/[0.015] light:text-emerald-700/[0.03] uppercase leading-none">OS</div>
+              <div className="absolute -bottom-8 -right-8 text-[11rem] font-black tracking-tighter text-accent-primary/[0.015] light:text-accent-solid/[0.03] uppercase leading-none">OS</div>
             </div>
 
             <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0">
@@ -1430,7 +1430,7 @@ export function LandingPage() {
                   </h2>
 
                   {/* Emerald gradient underline bar */}
-                  <div className="mt-5 w-14 h-[4px] rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 light:from-emerald-600 light:to-teal-500" />
+                  <div className="mt-5 w-14 h-[4px] rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary light:from-accent-solid light:to-accent-primary" />
 
                   {/* Description */}
                   <p className="mt-6 text-sm leading-relaxed text-slate-400 light:text-slate-600 max-w-md">
@@ -2102,7 +2102,7 @@ export function LandingPage() {
       </section>
 
       <section id="demo" className="px-5 py-14 md:px-8 sm:py-16">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] border border-emerald-200/20 bg-[linear-gradient(125deg,#075c42_0%,#07865a_52%,#0aa66e_100%)] px-6 py-14 text-center shadow-[0_30px_90px_rgba(4,96,65,0.3)] sm:px-10">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] border border-accent-primary/15 bg-gradient-to-br from-accent-solid via-accent-solid to-accent-primary/20 px-6 py-14 text-center shadow-[0_30px_90px_rgba(var(--theme-accent-primary-rgb-raw),0.25)] sm:px-10">
           <div className="absolute inset-0 bg-[url('/landing/mentor-modern/cta-bg-vector.png')] bg-cover bg-center opacity-35" />
           <div className="relative mx-auto max-w-2xl">
             <h2 className="text-3xl font-bold text-white sm:text-4xl">
@@ -2321,41 +2321,73 @@ export function LandingPage() {
             border-radius: 50%;
             border: 1px solid rgba(255,255,255,0.10);
             color: rgba(255,255,255,0.45);
-            transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
           }
           .light .footer-social-icon {
             border-color: rgba(15,23,42,0.12);
             color: rgba(15,23,42,0.55);
           }
           .footer-social-icon:hover {
-            border-color: rgba(var(--theme-emerald-rgb-raw),0.5);
+            border-color: rgba(var(--theme-accent-primary-rgb-raw), 0.5);
             color: var(--theme-accent-primary);
-            background: rgba(var(--theme-emerald-rgb-raw),0.06);
+            background: rgba(var(--theme-accent-primary-rgb-raw), 0.08);
+            box-shadow: 0 0 12px rgba(var(--theme-accent-primary-rgb-raw), 0.25);
+            transform: translateY(-2px);
           }
           .light .footer-social-icon:hover {
-            border-color: rgba(16,185,129,0.6);
-            color: #059669;
-            background: rgba(16,185,129,0.05);
+            border-color: rgba(var(--theme-accent-primary-rgb-raw), 0.6);
+            color: var(--theme-accent-solid);
+            background: rgba(var(--theme-accent-primary-rgb-raw), 0.06);
+            box-shadow: 0 0 12px rgba(var(--theme-accent-primary-rgb-raw), 0.2);
+            transform: translateY(-2px);
           }
           .footer-nav-link {
             font-size: 13px;
             color: rgba(255,255,255,0.4);
-            transition: color 0.18s ease;
+            transition: color 0.25s ease, text-shadow 0.25s ease, padding-left 0.25s ease;
             text-decoration: none;
           }
           .light .footer-nav-link {
             color: rgba(15,23,42,0.6);
           }
-          .footer-nav-link:hover { color: var(--theme-accent-primary); }
-          .light .footer-nav-link:hover { color: #059669; }
+          .footer-nav-link:hover { 
+            color: var(--theme-accent-primary); 
+            text-shadow: 0 0 8px rgba(var(--theme-accent-primary-rgb-raw), 0.4);
+            padding-left: 2px;
+          }
+          .light .footer-nav-link:hover { 
+            color: var(--theme-accent-solid); 
+            text-shadow: none;
+            padding-left: 2px;
+          }
           
           .footer-divider {
+            height: 1px;
             border: none;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            margin: 24px 0 20px;
+            background: linear-gradient(90deg, 
+              rgba(255,255,255,0.02) 0%, 
+              rgba(var(--theme-accent-primary-rgb-raw), 0.15) 50%, 
+              rgba(255,255,255,0.02) 100%
+            );
+            margin: 32px 0 20px;
           }
           .light .footer-divider {
-            border-top-color: rgba(var(--theme-emerald-rgb-raw),0.12);
+            background: linear-gradient(90deg, 
+              rgba(15,23,42,0.02) 0%, 
+              rgba(var(--theme-accent-primary-rgb-raw), 0.18) 50%, 
+              rgba(15,23,42,0.02) 100%
+            );
+          }
+          
+          .footer-column-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: rgba(255,255,255,0.75);
+          }
+          .light .footer-column-title {
+            color: rgba(15,23,42,0.8);
           }
           
           .footer-bithm-badge {
@@ -2375,6 +2407,25 @@ export function LandingPage() {
             color: #047857;
             border-color: rgba(var(--theme-emerald-rgb-raw),0.25);
           }
+          .footer-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(52, 211, 153, 0.7);
+            border: 1px solid rgba(52, 211, 153, 0.15);
+            border-radius: 99px;
+            padding: 3px 10px;
+            background: rgba(52, 211, 153, 0.03);
+          }
+          .light .footer-status-badge {
+            color: #059669;
+            border-color: rgba(5, 150, 105, 0.2);
+            background: rgba(5, 150, 105, 0.02);
+          }
           .footer-logo-container img {
             mix-blend-mode: screen;
             filter: brightness(1.1) saturate(1.5);
@@ -2389,66 +2440,131 @@ export function LandingPage() {
           <div className="footer-accent-bar" />
 
           <div className="footer-card-inner">
-            {/* Top row: Brand | Social icons */}
-            <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-
-              {/* Brand mark — actual logo image with blend mode container */}
-              <div className="max-w-xs">
+            {/* Grid layout for brand and link columns */}
+            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+              {/* Brand column - spans 2 columns on larger screens */}
+              <div className="lg:col-span-2 md:col-span-2 sm:col-span-2">
                 <div className="footer-logo-container">
                   <NexoraLogo
                     size="md"
                     className="h-11 w-[168px]"
                   />
                 </div>
-                <p className="mt-4 text-sm leading-6 text-slate-400 light:text-slate-600">
+                <p className="mt-4 text-sm leading-6 text-slate-400 light:text-slate-600 max-w-sm">
                   Assignments, lab work, coding tools, feedback, and course
                   administration — all in one place.
                 </p>
-                <div className="mt-4">
+                <div className="mt-4 flex flex-wrap gap-2">
                   <span className="footer-bithm-badge">
                     <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
                       <circle cx="4" cy="4" r="3" fill="var(--theme-accent-primary)" className="light:fill-[#059669]" />
                     </svg>
                     Built for BITHM
                   </span>
+                  <span className="footer-status-badge">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    All services online
+                  </span>
                 </div>
               </div>
 
-              {/* Social icons */}
-              <div className="flex shrink-0 items-center gap-2">
-                <a href="#" aria-label="Facebook" className="footer-social-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                  </svg>
-                </a>
-                <a href="#" aria-label="X / Twitter" className="footer-social-icon">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </a>
-                <a href="#" aria-label="Instagram" className="footer-social-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                  </svg>
-                </a>
-                <a href="#" aria-label="LinkedIn" className="footer-social-icon">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" />
-                  </svg>
-                </a>
+              {/* Column 2: Platform */}
+              <div>
+                <h3 className="footer-column-title">Platform</h3>
+                <ul className="mt-4 space-y-2.5">
+                  <li>
+                    <a href="#" className="footer-nav-link block">Home</a>
+                  </li>
+                  <li>
+                    <a href="#platform" className="footer-nav-link block">Features</a>
+                  </li>
+                  <li>
+                    <a href="#roles" className="footer-nav-link block">Workspaces & Roles</a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Column 3: Resources */}
+              <div>
+                <h3 className="footer-column-title">Resources</h3>
+                <ul className="mt-4 space-y-2.5">
+                  <li>
+                    <a href="#how-it-works" className="footer-nav-link block">How It Works</a>
+                  </li>
+                  <li>
+                    <a href="#faq" className="footer-nav-link block">FAQs</a>
+                  </li>
+                  <li>
+                    <a href="#team" className="footer-nav-link block">Meet The Team</a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Column 4: Connect */}
+              <div>
+                <h3 className="footer-column-title">Connect</h3>
+                <ul className="mt-4 space-y-2.5">
+                  <li>
+                    <a href="#contact" className="footer-nav-link block">Contact Us</a>
+                  </li>
+                </ul>
+                <div className="mt-5 flex items-center gap-2">
+                  <a href="#" aria-label="Facebook" className="footer-social-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                    </svg>
+                  </a>
+                  <a href="#" aria-label="X / Twitter" className="footer-social-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  </a>
+                  <a href="#" aria-label="Instagram" className="footer-social-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                    </svg>
+                  </a>
+                  <a href="#" aria-label="LinkedIn" className="footer-social-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              {/* Column 5: Stay Updated */}
+              <div>
+                <h3 className="footer-column-title">Stay Updated</h3>
+                <p className="mt-4 text-xs leading-5 text-slate-400 light:text-slate-600">
+                  Subscribe to receive platform news and local updates.
+                </p>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    alert("Thank you for subscribing to Nexora OS updates!");
+                    (e.target as HTMLFormElement).reset();
+                  }}
+                  className="mt-4 flex gap-1.5"
+                >
+                  <input
+                    type="email"
+                    required
+                    placeholder="Your email..."
+                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white placeholder-slate-500 outline-none transition focus:border-[var(--theme-accent-primary)]/50 focus:bg-white/8 light:border-slate-200 light:bg-slate-50 light:text-slate-900 light:placeholder-slate-400 light:focus:border-emerald-500/50 light:focus:bg-white"
+                  />
+                  <button
+                    type="submit"
+                    className="flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-3.5 py-1.5 text-xs font-bold text-white transition hover:opacity-90 active:scale-95 shadow-md"
+                    aria-label="Subscribe"
+                  >
+                    Join
+                  </button>
+                </form>
               </div>
             </div>
-
-            {/* Nav links */}
-            <nav className="mt-7 flex flex-wrap gap-x-7 gap-y-2">
-              <a href="#" className="footer-nav-link">Home</a>
-              <a href="#platform" className="footer-nav-link">Features</a>
-              <a href="#how-it-works" className="footer-nav-link">How It Works</a>
-              <a href="#team" className="footer-nav-link">Team</a>
-              <a href="#roles" className="footer-nav-link">Roles</a>
-              <a href="#faq" className="footer-nav-link">FAQ</a>
-              <a href="#contact" className="footer-nav-link">Contact Us</a>
-            </nav>
 
             {/* Divider */}
             <hr className="footer-divider" />
@@ -2458,7 +2574,32 @@ export function LandingPage() {
               <p className="text-xs text-slate-500">
                 © 2026 Nexora OS · BITHM. All Rights Reserved. <span className="mx-1">·</span> Developed by <span className="text-emerald-400 font-semibold">Mopara Pair Ayat</span>
               </p>
-              <span className="text-xs text-slate-600">Designed for students. Built for institutions.</span>
+              
+              <div className="flex items-center justify-center gap-4 sm:justify-end">
+                <span className="text-xs text-slate-650 light:text-slate-600">Designed for students. Built for institutions.</span>
+                
+                {/* Back to top button */}
+                <button
+                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                  className="group/totop flex h-7 w-7 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-400 transition-all duration-300 hover:border-[var(--theme-accent-primary)]/50 hover:bg-[rgba(var(--theme-accent-primary-rgb-raw),0.08)] hover:text-white hover:scale-105 active:scale-95 light:border-slate-200 light:bg-slate-50 light:text-slate-600 light:hover:border-emerald-500/50 light:hover:bg-emerald-50 light:hover:text-emerald-700 shadow-md"
+                  title="Scroll to Top"
+                  aria-label="Scroll to Top"
+                >
+                  <svg 
+                    width="12" 
+                    height="12" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="3" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    className="transition-transform duration-300 group-hover/totop:-translate-y-0.5"
+                  >
+                    <path d="m18 15-6-6-6 6"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
