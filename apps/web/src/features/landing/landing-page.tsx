@@ -387,14 +387,14 @@ export function LandingPage() {
       <LandingNav />
 
       {/* HERO SECTION */}
-      <section id="about" className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
-        <div className="nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75" />
-        <div className="nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65" />
+      <section id="about" className="landing-hero relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
+        <div className="landing-hero-arc-left nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75" />
+        <div className="landing-hero-arc-right nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65" />
         <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/10" />
         <div className="pointer-events-none absolute -right-20 bottom-10 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/15 blur-[130px] light:bg-emerald-500/12" />
 
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 md:grid-cols-2 items-center gap-10 px-5 md:px-8 lg:gap-16">
-          <div className="relative w-full max-w-[560px]">
+          <div className="landing-hero-copy relative w-full max-w-[560px]">
             <div className="mb-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300 shadow-[0_2px_10px_rgba(16,185,129,0.05)] light:border-emerald-600/15 light:bg-emerald-50 light:text-emerald-700">
                 Nexora OS · BITHM Academic Platform
@@ -431,7 +431,7 @@ export function LandingPage() {
               </a>
             </div>
 
-            <div className="mt-12 flex items-center gap-4 text-sm text-slate-400 light:text-slate-600">
+            <div className="mt-10 flex items-center gap-4 text-sm text-slate-400 light:text-slate-600">
               <div className="flex -space-x-2">
                 {[
                   { src: "/landing/avatars/avatar-student.png", alt: "Student" },
@@ -463,7 +463,7 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="landing-float relative w-full max-w-[660px] flex items-center justify-center justify-self-center md:justify-self-end select-none">
+          <div className="landing-hero-visual landing-float relative w-full max-w-[660px] flex items-center justify-center justify-self-center md:justify-self-end select-none">
             {/* Giant Background Text */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/20 dark:text-white/15 light:text-slate-900/10 text-[6.5rem] sm:text-[9.5rem] md:text-[8rem] lg:text-[11.5rem] uppercase pointer-events-none transition-all duration-300">
               NEXORA
@@ -483,7 +483,7 @@ export function LandingPage() {
       </section>
 
       {/* PARTNERS SECTION */}
-      <section className="relative z-10 overflow-hidden py-10 light:bg-white/30">
+      <section className="relative z-10 overflow-hidden py-10 light:bg-[#fcfdfc]">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="flex items-center gap-4">
             <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-transparent light:via-slate-200" />
@@ -638,7 +638,7 @@ export function LandingPage() {
 
       <section
         id="platform"
-        className="relative z-10 overflow-hidden py-14 sm:py-16"
+        className="relative z-10 overflow-hidden py-20 light:bg-[#f3f7f4] sm:py-24"
       >
         <div className="absolute -left-32 top-24 h-80 w-80 rounded-full bg-emerald-500/9 blur-[120px]" />
         <div className="absolute -right-32 bottom-16 h-80 w-80 rounded-full bg-emerald-500/10 blur-[120px]" />
@@ -649,12 +649,12 @@ export function LandingPage() {
             detail="Core tools are available now. Modules still in development are clearly marked Coming Soon."
           />
           {/* Slider Container with Fades */}
-          <div className="relative mt-8 group/slider">
+          <div className="relative mt-10 group/slider">
             {/* Left Edge Fade Mask */}
-            <div className="pointer-events-none absolute left-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-r from-[#070d0a]/95 dark:from-[#070d0a]/95 light:from-[#fbfdfb]/95 to-transparent" />
+            <div className="pointer-events-none absolute left-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-r from-[#070d0a]/95 dark:from-[#070d0a]/95 light:from-[#f3f7f4]/95 to-transparent" />
 
             {/* Right Edge Fade Mask */}
-            <div className="pointer-events-none absolute right-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-l from-[#050706]/95 dark:from-[#050706]/95 light:from-[#fbfdfb]/95 to-transparent" />
+            <div className="pointer-events-none absolute right-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-l from-[#050706]/95 dark:from-[#050706]/95 light:from-[#f3f7f4]/95 to-transparent" />
 
             {/* Floating Left Button */}
             <button
@@ -838,7 +838,7 @@ export function LandingPage() {
 
       <section
         id="how-it-works"
-        className="relative overflow-hidden border-y border-white/8 bg-[#050b08] px-5 py-16 light:border-emerald-950/8 light:bg-[#f3f8f5] md:px-8 sm:py-20"
+        className="relative overflow-hidden border-y border-white/8 bg-[#050b08] px-5 py-20 light:border-emerald-950/8 light:bg-[#eaf3ee] md:px-8 sm:py-24"
       >
         <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-[70%] -translate-x-1/2 rounded-full bg-emerald-500/8 blur-[130px] light:bg-emerald-300/16" />
 
@@ -855,10 +855,10 @@ export function LandingPage() {
                 </p>
               </div>
 
-              <h2 className="mt-6 max-w-xl text-balance text-4xl font-semibold leading-[1.04] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+              <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.04] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
                 A clear path from task brief to final submission.
               </h2>
-              <p className="mt-5 max-w-lg text-sm leading-7 text-emerald-50/70 sm:text-base light:text-slate-600">
+              <p className="mt-4 max-w-lg text-sm leading-7 text-emerald-50/70 sm:text-base light:text-slate-600">
                 Keep the brief, practical work, evidence, and feedback connected so you always know what to work on next.
               </p>
 
@@ -927,7 +927,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden border-y border-white/8 bg-[#07100b] px-5 py-16 light:border-emerald-950/8 light:bg-[#f5f8f6] md:px-8 sm:py-24">
+      <section className="relative overflow-hidden border-y border-white/8 bg-[#07100b] px-5 py-20 light:border-emerald-950/8 light:bg-white md:px-8 sm:py-24">
         <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-emerald-500/7 blur-[110px] light:bg-emerald-300/14" />
 
         <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
@@ -938,10 +938,10 @@ export function LandingPage() {
                 Available now
               </p>
             </div>
-            <h2 className="mt-5 max-w-xl text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+            <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
               Start with the tools available today
             </h2>
-            <p className="mt-5 max-w-md text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
+            <p className="mt-4 max-w-md text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
               Open the working modules now. Features still in development remain clearly marked until they are ready.
             </p>
             <Link
@@ -989,7 +989,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section className="relative pt-32 pb-14 xl:py-14 px-5 md:px-8 bg-[#070d0a] light:bg-[#f6faf7]">
+      <section className="relative px-5 pb-20 pt-28 md:px-8 xl:py-24 bg-[#070d0a] light:bg-[#f0f6f2]">
         <div className="mx-auto max-w-7xl relative">
           {/* Outer card */}
           <div className="group/coursework relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
@@ -1178,25 +1178,50 @@ export function LandingPage() {
             --center-card-bg-end: #030e0a;
           }
           .light #team {
-            background: linear-gradient(180deg, rgba(250, 253, 251, 0.9) 0%, rgba(243, 248, 245, 0.95) 100%), url('/landing/footer-bg-brand-light.png') no-repeat center center / cover;
-            border-top: 1px solid rgba(var(--theme-emerald-rgb-raw),0.12);
-            border-bottom: 1px solid rgba(var(--theme-emerald-rgb-raw),0.12);
-            --center-card-bg-start: rgba(255, 255, 255, 0.65);
-            --center-card-bg-end: rgba(255, 255, 255, 0.96);
+            background:
+              radial-gradient(circle at 50% 34%, rgba(16, 185, 129, 0.09), transparent 31%),
+              radial-gradient(circle at 7% 82%, rgba(110, 231, 183, 0.07), transparent 24%),
+              linear-gradient(180deg, #ffffff 0%, #f6faf8 52%, #ffffff 100%);
+            border-top: 1px solid rgba(15, 70, 45, 0.1);
+            border-bottom: 1px solid rgba(15, 70, 45, 0.1);
+            --center-card-bg-start: #ffffff;
+            --center-card-bg-end: #f2f8f4;
+          }
+          .light #team .team-profile-card {
+            background: #ffffff;
+            border-color: rgba(15, 70, 45, 0.11);
+            box-shadow: 0 12px 30px rgba(25, 75, 50, 0.06);
+            backdrop-filter: none;
+          }
+          .light #team .team-profile-card:hover {
+            border-color: rgba(5, 150, 105, 0.24);
+            box-shadow: 0 16px 36px rgba(25, 75, 50, 0.09);
+          }
+          .light #team .team-ornament {
+            opacity: 0.45;
+          }
+          .light #team .team-center-shell {
+            filter: drop-shadow(0 14px 28px rgba(25, 75, 50, 0.07));
+          }
+          .light #team .font-sans {
+            font-family: inherit;
+          }
+          .light #team .team-dot-grid {
+            background-image: radial-gradient(rgba(5, 150, 105, 0.12) 1px, transparent 1px) !important;
           }
         `}} />
 
         {/* Ambient background glows */}
-        <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-emerald-950/15 light:bg-emerald-300/10 blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-10 w-96 h-96 rounded-full bg-emerald-950/20 light:bg-emerald-300/15 blur-3xl pointer-events-none" />
-        <div className="absolute inset-0 opacity-[0.015] light:opacity-[0.035] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+        <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-emerald-950/15 light:bg-transparent blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 right-10 w-96 h-96 rounded-full bg-emerald-950/20 light:bg-transparent blur-3xl pointer-events-none" />
+        <div className="team-dot-grid absolute inset-0 opacity-[0.015] light:opacity-[0.012] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
 
         <div className="relative mx-auto max-w-7xl px-5 md:px-8">
           {/* Section Header */}
           <ScrollReveal>
-            <div className="flex items-center justify-center gap-6 mb-20 text-center">
+            <div className="mb-12 flex items-center justify-center gap-6 text-center">
               {/* Left Ornament */}
-              <div className="hidden sm:block shrink-0">
+              <div className="team-ornament hidden shrink-0 sm:block">
                 <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M 0,12 L 80,12" stroke="url(#gold-line-left)" strokeWidth="1" />
                   <path d="M 85,12 L 91,6 L 97,12 L 91,18 Z" fill="url(#gold-grad-ornament)" />
@@ -1222,7 +1247,7 @@ export function LandingPage() {
               </h2>
 
               {/* Right Ornament */}
-              <div className="hidden sm:block shrink-0">
+              <div className="team-ornament hidden shrink-0 sm:block">
                 <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M 120,12 L 40,12" stroke="url(#gold-line-right)" strokeWidth="1" />
                   <path d="M 35,12 L 29,6 L 23,12 L 29,18 Z" fill="url(#gold-grad-ornament)" />
@@ -1248,7 +1273,7 @@ export function LandingPage() {
               <div className="flex flex-col gap-8 order-2 md:order-none w-full">
 
                 {/* Mopara Pair Ayat */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5">
                     <Image
                       src="/landing/team/ayat.png"
@@ -1273,7 +1298,7 @@ export function LandingPage() {
                 </div>
 
                 {/* Emre Demir */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                     <Image
                       src="/landing/team/emre_avatar.png"
@@ -1295,7 +1320,7 @@ export function LandingPage() {
 
             {/* Center Column - Featured Mopara Pair Ayat */}
             <ScrollReveal delay={150} className="h-full flex flex-col justify-center">
-              <div className="relative w-full max-w-[360px] h-[520px] mx-auto order-1 md:order-none flex flex-col items-center justify-between p-8 pt-16 group">
+              <div className="team-center-shell relative order-1 mx-auto flex h-[592px] w-full max-w-[360px] flex-col items-center justify-between px-8 pb-9 pt-16 md:order-none group">
                 {/* Custom Pointed Arch Background */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#6ee7b7]/50 light:stroke-[#6ee7b7]/80" />
@@ -1357,8 +1382,8 @@ export function LandingPage() {
                 </div>
 
                 {/* Read More button */}
-                <div className="relative z-10 w-full flex justify-center mt-6 mb-1">
-                  <button className="border border-[#6ee7b7]/50 light:border-[#6ee7b7]/80 text-white light:text-[#0b2419] font-light tracking-widest text-xs px-8 py-2.5 bg-black/40 light:bg-white/30 hover:bg-[#6ee7b7] hover:text-black light:hover:text-white transition-all duration-300">
+                <div className="relative z-10 mt-5 flex w-full justify-center">
+                  <button className="border border-[#6ee7b7]/50 bg-black/40 px-8 py-2.5 text-xs font-medium tracking-widest text-white transition-colors duration-300 hover:bg-[#6ee7b7] hover:text-black light:border-emerald-700/25 light:bg-white light:text-[#0b2419] light:shadow-[0_8px_20px_rgba(25,75,50,0.07)] light:hover:bg-emerald-700 light:hover:text-white">
                     Read More
                   </button>
                 </div>
@@ -1370,7 +1395,7 @@ export function LandingPage() {
               <div className="flex flex-col gap-8 order-3 md:order-none w-full">
 
                 {/* Taen Ahammed */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                     <Image
                       src="/landing/team/tomas_avatar.png"
@@ -1389,7 +1414,7 @@ export function LandingPage() {
                 </div>
 
                 {/* Fatima Rahman */}
-                <div className="group relative flex flex-col items-center p-6 pt-8 rounded-[24px] border border-[#6ee7b7]/10 light:border-[#6ee7b7]/25 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 light:from-white/65 light:to-white/95 backdrop-blur-md hover:border-[#6ee7b7]/35 light:hover:border-[#6ee7b7]/60 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)] light:hover:shadow-[0_15px_30px_rgba(16,185,129,0.05)] transition-all duration-500">
+                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
                   <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
                     <Image
                       src="/landing/team/kati_avatar.png"
@@ -1412,7 +1437,7 @@ export function LandingPage() {
           </div>
 
           {/* Bottom pulsing arrow indicator */}
-          <div className="flex justify-center mt-16">
+          <div className="mt-12 flex justify-center">
             <a href="#faq" className="group flex items-center justify-center w-11 h-11 rounded-full border border-white/10 light:border-emerald-800/15 hover:border-[#6ee7b7]/40 light:hover:border-[#6ee7b7]/60 bg-black/20 light:bg-white/40 hover:bg-emerald-950/30 light:hover:bg-emerald-50/50 transition-all duration-300 select-none cursor-pointer">
               <svg className="w-5 h-5 text-white/50 light:text-emerald-800/60 group-hover:text-[#6ee7b7] light:group-hover:text-[#047857] transition-colors duration-300 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -1425,11 +1450,11 @@ export function LandingPage() {
 
       <section
         id="faq"
-        className="relative overflow-hidden border-y border-white/8 py-14 light:border-emerald-950/8 light:bg-white/55 sm:py-16"
+        className="relative overflow-hidden border-y border-white/8 py-20 light:border-emerald-950/8 light:bg-[#f4f7f5] sm:py-24"
       >
         {/* ── Large warm amber sun-like orb — bottom right ── */}
         <div
-          className="pointer-events-none absolute -bottom-24 -right-24 h-[560px] w-[560px] rounded-full"
+          className="pointer-events-none absolute -bottom-24 -right-24 h-[560px] w-[560px] rounded-full light:hidden"
           style={{
             background: "radial-gradient(circle at center, rgba(251,146,60,0.55) 0%, rgba(245,101,19,0.35) 28%, rgba(217,70,0,0.18) 55%, transparent 75%)",
             filter: "blur(2px)",
@@ -1437,12 +1462,13 @@ export function LandingPage() {
         />
         {/* Smaller secondary warm glow */}
         <div
-          className="pointer-events-none absolute -bottom-8 right-32 h-[280px] w-[280px] rounded-full"
+          className="pointer-events-none absolute -bottom-8 right-32 h-[280px] w-[280px] rounded-full light:hidden"
           style={{
             background: "radial-gradient(circle at center, rgba(251,191,36,0.3) 0%, rgba(245,101,19,0.15) 50%, transparent 70%)",
             filter: "blur(1px)",
           }}
         />
+        <div className="pointer-events-none absolute -bottom-32 -right-20 hidden h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.14)_0%,rgba(110,231,183,0.07)_42%,transparent_72%)] light:block" />
         <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
           <ScrollReveal>
             <div>
@@ -1492,7 +1518,7 @@ export function LandingPage() {
 
 
 
-      <section id="demo" className="px-5 py-14 md:px-8 sm:py-16">
+      <section id="demo" className="px-5 py-20 light:bg-[#f4f7f5] md:px-8 sm:py-24">
         <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[28px] border border-accent-primary/15 bg-gradient-to-br from-accent-solid via-accent-solid to-accent-primary/20 px-6 py-14 text-center shadow-[0_24px_64px_rgba(var(--theme-accent-primary-rgb-raw),0.18)] sm:px-10">
           <div className="absolute inset-0 bg-[url('/landing/mentor-modern/cta-bg-vector.png')] bg-cover bg-center opacity-35" />
           <div className="relative mx-auto max-w-2xl">
@@ -1510,7 +1536,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="download" className="relative px-5 py-16 md:px-8 sm:py-24 overflow-hidden border-t border-white/8 light:border-emerald-950/8 bg-[#07100b] light:bg-[#f1f6f3]">
+      <section id="download" className="relative px-5 py-16 md:px-8 sm:py-24 overflow-hidden border-t border-white/8 light:border-emerald-950/8 bg-[#07100b] light:bg-[#eef3f0]">
         {/* Glow ambient effects */}
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -1669,7 +1695,7 @@ export function LandingPage() {
         <PandaCTA />
       </ScrollReveal>
 
-      <footer id="contact" className="px-5 py-12 md:px-8 bg-[#07100b] light:bg-[#f1f6f3]">
+      <footer id="contact" className="px-5 py-12 md:px-8 bg-[#07100b] light:bg-[#e5eee8]">
         <style dangerouslySetInnerHTML={{
           __html: `
           .footer-card {

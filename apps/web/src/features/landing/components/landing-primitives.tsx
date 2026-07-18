@@ -64,7 +64,7 @@ export function SectionHeading({ eyebrow, title, detail }: SectionHeadingProps) 
       <p className="inline-flex rounded-full border border-emerald-300/15 bg-emerald-400/7 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:border-emerald-700/12 light:bg-emerald-50 light:text-emerald-700">
         {eyebrow}
       </p>
-      <h2 className="mt-3 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
+      <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
         {title}
       </h2>
       <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
