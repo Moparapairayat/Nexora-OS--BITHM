@@ -268,7 +268,7 @@ export function LandingNav() {
           </Link>
         </div>
 
-        <nav className="hidden items-center text-sm xl:flex xl:gap-5 2xl:gap-8">
+        <nav className="hidden items-center gap-5 text-sm xl:flex 2xl:gap-8">
           {navLinks.map((l) => (
             <a
               key={l.href}
@@ -288,7 +288,7 @@ export function LandingNav() {
             <ThemeToggle />
           </div>
 
-          <Link href="/login" className="hk-button hidden sm:inline-flex">
+          <Link href="/login" className="hk-button !hidden sm:!inline-flex">
             <span>Log In</span>
           </Link>
 

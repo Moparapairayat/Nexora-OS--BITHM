@@ -387,14 +387,14 @@ export function LandingPage() {
       <LandingNav />
 
       {/* HERO SECTION */}
-      <section id="about" className="landing-hero relative overflow-hidden pb-14 pt-28 sm:pb-16 sm:pt-32 lg:pb-20 lg:pt-36">
+      <section id="about" className="relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
         <div className="landing-hero-arc-left nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75" />
         <div className="landing-hero-arc-right nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65" />
         <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/10" />
         <div className="pointer-events-none absolute -right-20 bottom-10 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/15 blur-[130px] light:bg-emerald-500/12" />
 
-        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-9 px-5 md:px-8 lg:grid-cols-2 lg:gap-16">
-          <div className="landing-hero-copy relative w-full max-w-[560px]">
+        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 md:grid-cols-2 md:px-8 lg:gap-16">
+          <div className="relative w-full max-w-[560px]">
             <div className="mb-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300 shadow-[0_2px_10px_rgba(16,185,129,0.05)] light:border-emerald-600/15 light:bg-emerald-50 light:text-emerald-700">
                 Nexora OS · BITHM Academic Platform
@@ -463,7 +463,7 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="landing-hero-visual landing-float relative flex w-full max-w-[560px] select-none items-center justify-center justify-self-center sm:max-w-[620px] lg:max-w-[660px] lg:justify-self-end">
+          <div className="landing-float relative flex w-full max-w-[660px] select-none items-center justify-center justify-self-center md:justify-self-end">
             {/* Giant Background Text */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/20 dark:text-white/15 light:text-slate-900/10 text-[6.5rem] sm:text-[9.5rem] md:text-[8rem] lg:text-[11.5rem] uppercase pointer-events-none transition-all duration-300">
               NEXORA
@@ -507,26 +507,26 @@ export function LandingPage() {
               const isKoc = src.includes("koc.png");
               const isEastTexas = src.includes("logo-4.png");
 
-              let containerClass = "h-12 w-[calc(50%-0.375rem)] max-w-[130px]";
+              let containerClass = "w-[130px] h-12";
               let pxClass = "px-4 py-2";
 
               if (isBithmText) {
                 containerClass = "h-14 w-full max-w-[360px]";
                 pxClass = "px-3 py-0.5";
               } else if (isBithmShield) {
-                containerClass = "h-14 w-[calc(50%-0.375rem)] max-w-[160px]";
+                containerClass = "w-[160px] h-14";
                 pxClass = "px-3 py-0.5";
               } else if (isOthm) {
-                containerClass = "h-12 w-[calc(50%-0.375rem)] max-w-[120px]";
+                containerClass = "w-[120px] h-12";
                 pxClass = "px-3 py-1";
               } else if (isStandard) {
-                containerClass = "h-12 w-[calc(50%-0.375rem)] max-w-[210px]";
+                containerClass = "w-[210px] h-12";
                 pxClass = "px-3 py-1";
               } else if (isKoc) {
-                containerClass = "h-12 w-[calc(50%-0.375rem)] max-w-[190px]";
+                containerClass = "w-[190px] h-12";
                 pxClass = "px-2 py-0.5";
               } else if (isEastTexas) {
-                containerClass = "h-12 w-[calc(50%-0.375rem)] max-w-[240px]";
+                containerClass = "w-[240px] h-12";
                 pxClass = "px-2 py-1";
               }
 
@@ -651,10 +651,10 @@ export function LandingPage() {
           {/* Slider Container with Fades */}
           <div className="relative mt-10 group/slider">
             {/* Left Edge Fade Mask */}
-            <div className="pointer-events-none absolute bottom-6 left-0 top-0 z-20 w-8 bg-gradient-to-r from-[#070d0a]/95 to-transparent sm:w-16 dark:from-[#070d0a]/95 light:from-[#f3f7f4]/95" />
+            <div className="pointer-events-none absolute left-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-r from-[#070d0a]/95 dark:from-[#070d0a]/95 light:from-[#f3f7f4]/95 to-transparent" />
 
             {/* Right Edge Fade Mask */}
-            <div className="pointer-events-none absolute bottom-6 right-0 top-0 z-20 w-8 bg-gradient-to-l from-[#050706]/95 to-transparent sm:w-16 dark:from-[#050706]/95 light:from-[#f3f7f4]/95" />
+            <div className="pointer-events-none absolute right-0 bottom-6 top-0 z-20 w-16 bg-gradient-to-l from-[#050706]/95 dark:from-[#050706]/95 light:from-[#f3f7f4]/95 to-transparent" />
 
             {/* Floating Left Button */}
             <button
@@ -694,7 +694,7 @@ export function LandingPage() {
                 return (
                   <article
                     key={title}
-                    className={`group relative flex min-h-[250px] w-[calc(100vw-2.5rem)] max-w-[310px] shrink-0 snap-start flex-col justify-between overflow-hidden rounded-[24px] p-5 transition duration-300 hover:-translate-y-0.5 sm:w-[350px] sm:max-w-none sm:p-6 ${style.bgClass} ${style.hoverShadow}`}
+                    className={`group relative flex w-[310px] sm:w-[350px] shrink-0 snap-start min-h-[250px] flex-col justify-between overflow-hidden rounded-[24px] p-6 transition duration-300 hover:-translate-y-0.5 ${style.bgClass} ${style.hoverShadow}`}
                   >
                     {/* Wavy lines SVG overlay */}
                     {patternIdx === 0 && (
@@ -842,7 +842,7 @@ export function LandingPage() {
       >
         <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-[70%] -translate-x-1/2 rounded-full bg-emerald-500/8 blur-[130px] light:bg-emerald-300/16" />
 
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[24px] border border-emerald-300/12 bg-[linear-gradient(135deg,#0b2b21_0%,#072018_58%,#06140f_100%)] shadow-[0_26px_70px_rgba(0,0,0,0.28)] sm:rounded-[30px] light:border-emerald-950/10 light:bg-[linear-gradient(135deg,#ffffff_0%,#edf8f1_58%,#e4f2ea_100%)] light:shadow-[0_22px_55px_rgba(25,80,53,0.11)]">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[30px] border border-emerald-300/12 bg-[linear-gradient(135deg,#0b2b21_0%,#072018_58%,#06140f_100%)] shadow-[0_26px_70px_rgba(0,0,0,0.28)] light:border-emerald-950/10 light:bg-[linear-gradient(135deg,#ffffff_0%,#edf8f1_58%,#e4f2ea_100%)] light:shadow-[0_22px_55px_rgba(25,80,53,0.11)]">
           <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border-[42px] border-emerald-300/6 light:border-emerald-700/5" />
           <div className="pointer-events-none absolute left-[42%] top-[-15%] h-72 w-72 rounded-full bg-emerald-400/8 blur-[100px] light:bg-emerald-300/16" />
 
@@ -855,7 +855,7 @@ export function LandingPage() {
                 </p>
               </div>
 
-              <h2 className="mt-4 max-w-xl text-balance text-3xl font-semibold leading-[1.04] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+              <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.04] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
                 A clear path from task brief to final submission.
               </h2>
               <p className="mt-4 max-w-lg text-sm leading-7 text-emerald-50/70 sm:text-base light:text-slate-600">
@@ -878,7 +878,7 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="relative flex min-h-[320px] items-center justify-center overflow-hidden px-4 pb-4 sm:min-h-[430px] sm:px-10 lg:min-h-[500px] lg:px-8 lg:pb-0">
+            <div className="relative flex min-h-[350px] items-center justify-center overflow-hidden px-5 pb-4 sm:min-h-[430px] sm:px-10 lg:min-h-[500px] lg:px-8 lg:pb-0">
               <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/10 light:border-emerald-700/8" />
               <div className="pointer-events-none absolute left-1/2 top-1/2 h-[52%] w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-300/7 blur-3xl light:bg-emerald-400/10" />
               <Image
@@ -889,7 +889,7 @@ export function LandingPage() {
                 sizes="(min-width: 1024px) 48vw, 92vw"
                 className="relative z-10 h-auto w-full max-w-[720px] object-contain drop-shadow-[0_26px_32px_rgba(0,0,0,0.25)] light:drop-shadow-[0_22px_28px_rgba(25,75,50,0.16)]"
               />
-              <div className="absolute bottom-5 right-4 z-20 max-w-[180px] border-l-2 border-emerald-300 bg-[#09271e]/88 px-3 py-2.5 text-[11px] leading-5 text-emerald-50/80 shadow-lg backdrop-blur-md sm:bottom-7 sm:right-10 sm:max-w-[210px] sm:px-4 sm:py-3 sm:text-xs light:border-emerald-600 light:bg-white/88 light:text-slate-600">
+              <div className="absolute bottom-7 right-6 z-20 max-w-[210px] border-l-2 border-emerald-300 bg-[#09271e]/88 px-4 py-3 text-xs leading-5 text-emerald-50/80 shadow-lg backdrop-blur-md sm:right-10 light:border-emerald-600 light:bg-white/88 light:text-slate-600">
                 <span className="mb-1 block font-semibold text-emerald-300 light:text-emerald-700">
                   One connected workspace
                 </span>
@@ -902,7 +902,7 @@ export function LandingPage() {
             {workflows.map(({ title, detail, icon: Icon, label }, index) => (
               <li
                 key={title}
-                className="group grid grid-cols-[2.5rem_1fr] gap-4 border-b border-white/10 px-5 py-7 last:border-b-0 sm:px-8 md:border-b-0 md:border-r md:last:border-r-0 light:border-emerald-950/10"
+                className="group grid grid-cols-[2.5rem_1fr] gap-4 border-b border-white/10 px-6 py-7 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 sm:px-8 light:border-emerald-950/10"
               >
                 <span className="grid h-10 w-10 place-items-center rounded-full border border-emerald-300/18 bg-emerald-300/7 text-xs font-bold text-emerald-200 light:border-emerald-700/15 light:bg-emerald-50 light:text-emerald-700">
                   0{index + 1}
@@ -938,7 +938,7 @@ export function LandingPage() {
                 Available now
               </p>
             </div>
-            <h2 className="mt-4 max-w-xl text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+            <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
               Start with the tools available today
             </h2>
             <p className="mt-4 max-w-md text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
@@ -956,7 +956,7 @@ export function LandingPage() {
             {latestAreas.map(({ label, title, detail, icon: Icon }, index) => (
               <article
                 key={title}
-                className={`group grid grid-cols-[2.75rem_minmax(0,1fr)_2.25rem] items-start gap-3 py-6 sm:grid-cols-[3rem_1fr_auto] sm:items-center sm:gap-5 sm:py-8 ${
+                className={`group grid gap-4 py-7 sm:grid-cols-[3rem_1fr_auto] sm:items-center sm:gap-5 sm:py-8 ${
                   index !== latestAreas.length - 1
                     ? "border-b border-white/10 light:border-emerald-950/10"
                     : ""
@@ -979,7 +979,7 @@ export function LandingPage() {
                 <Link
                   href="/login"
                   aria-label={`Open ${title}`}
-                  className="inline-flex h-9 w-9 items-center justify-center justify-self-end rounded-full text-slate-500 transition-all hover:bg-emerald-300/8 hover:text-emerald-200 light:text-slate-400 light:hover:bg-emerald-50 light:hover:text-emerald-700"
+                  className="inline-flex h-9 w-9 items-center justify-center justify-self-start rounded-full text-slate-500 transition-all hover:bg-emerald-300/8 hover:text-emerald-200 sm:justify-self-end light:text-slate-400 light:hover:bg-emerald-50 light:hover:text-emerald-700"
                 >
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Link>
@@ -992,7 +992,7 @@ export function LandingPage() {
       <section className="relative px-5 pb-20 pt-28 md:px-8 xl:py-24 bg-[#070d0a] light:bg-[#f0f6f2]">
         <div className="mx-auto max-w-7xl relative">
           {/* Outer card */}
-          <div className="group/coursework relative overflow-hidden rounded-[24px] border border-emerald-500/15 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 shadow-[0_20px_50px_rgba(4,20,13,0.4)] backdrop-blur-md sm:rounded-3xl light:border-emerald-700/20 light:from-white light:to-[#f0f9f4] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
+          <div className="group/coursework relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
 
             {/* Subtle grid pattern specifically inside the card */}
             <div className="absolute inset-0 opacity-[0.03] light:opacity-[0.06] pointer-events-none mix-blend-overlay"
@@ -1018,7 +1018,7 @@ export function LandingPage() {
             <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0">
 
               {/* LEFT PANEL - Credentials Presentation */}
-              <div className="flex flex-col justify-between border-b border-emerald-500/10 p-6 sm:p-12 lg:border-b-0 lg:border-r light:border-emerald-700/10">
+              <div className="p-8 sm:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-emerald-500/10 light:border-emerald-700/10">
                 <div>
                   {/* Badge */}
                   <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 light:border-emerald-700/20 bg-emerald-500/5 light:bg-emerald-50/70 px-3.5 py-1.5 mb-8">
@@ -1064,7 +1064,7 @@ export function LandingPage() {
                 </div>
 
                 {/* Footer status row */}
-                <div className="mt-10 flex items-start gap-3 text-sm text-slate-500 sm:items-center light:text-slate-500">
+                <div className="mt-10 flex items-center gap-3 text-sm text-slate-500 light:text-slate-500">
                   <div className="w-8 h-8 rounded-lg bg-emerald-500/10 light:bg-emerald-50 flex items-center justify-center shrink-0">
                     <svg className="w-4 h-4 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
@@ -1269,8 +1269,8 @@ export function LandingPage() {
           <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 lg:grid-cols-3">
 
             {/* Left Column - Kati & Amin */}
-            <ScrollReveal delay={0} className="order-2 flex h-full flex-col lg:order-none">
-              <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-1">
+            <ScrollReveal delay={0} className="h-full flex flex-col">
+              <div className="flex flex-col gap-8 order-2 md:order-none w-full">
 
                 {/* Mopara Pair Ayat */}
                 <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
@@ -1319,8 +1319,8 @@ export function LandingPage() {
             </ScrollReveal>
 
             {/* Center Column - Featured Mopara Pair Ayat */}
-            <ScrollReveal delay={150} className="order-1 flex h-full flex-col justify-center lg:order-none">
-              <div className="team-center-shell group relative mx-auto flex h-[560px] w-full max-w-[360px] flex-col items-center justify-between px-6 pb-8 pt-14 sm:h-[592px] sm:px-8 sm:pb-9 sm:pt-16">
+            <ScrollReveal delay={150} className="h-full flex flex-col justify-center">
+              <div className="team-center-shell relative order-1 mx-auto flex h-[592px] w-full max-w-[360px] flex-col items-center justify-between px-8 pb-9 pt-16 md:order-none group">
                 {/* Custom Pointed Arch Background */}
                 <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#6ee7b7]/50 light:stroke-[#6ee7b7]/80" />
@@ -1391,8 +1391,8 @@ export function LandingPage() {
             </ScrollReveal>
 
             {/* Right Column - Mopara Pair Ayat & Tomas */}
-            <ScrollReveal delay={300} className="order-3 flex h-full flex-col lg:order-none">
-              <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-1">
+            <ScrollReveal delay={300} className="h-full flex flex-col">
+              <div className="flex flex-col gap-8 order-3 md:order-none w-full">
 
                 {/* Taen Ahammed */}
                 <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
@@ -1541,11 +1541,11 @@ export function LandingPage() {
         <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {/* Desktop Card */}
             <ScrollReveal className="h-full flex flex-col">
-              <div className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 p-6 shadow-2xl sm:p-8 md:p-10 light:border-slate-200/80 light:from-white light:to-slate-50/80">
+              <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10 w-full h-full">
                 <div className="flex-1">
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
                     Desktop Experience
@@ -1627,7 +1627,7 @@ export function LandingPage() {
 
             {/* Mobile Card */}
             <ScrollReveal delay={150} className="h-full flex flex-col">
-              <div className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 p-6 shadow-2xl sm:p-8 md:p-10 light:border-slate-200/80 light:from-white light:to-slate-50/80">
+              <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-b from-[#121624]/80 to-[#0c0e17]/90 light:from-white light:to-slate-50/80 border border-white/10 light:border-slate-200/80 shadow-2xl p-8 md:p-10 w-full h-full">
                 <div className="flex-1">
                   <p className="text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-600">
                     Mobile Experience
@@ -1695,7 +1695,7 @@ export function LandingPage() {
         <PandaCTA />
       </ScrollReveal>
 
-      <footer id="footer" className="bg-[#07100b] px-5 py-12 md:px-8 light:bg-[#e5eee8]">
+      <footer id="site-footer" className="px-5 py-12 md:px-8 bg-[#07100b] light:bg-[#e5eee8]">
         <style dangerouslySetInnerHTML={{
           __html: `
           .footer-card {
