@@ -125,18 +125,32 @@ export function PandaChat() {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-accent-primary to-accent-secondary text-slate-950 shadow-[0_8px_30px_rgba(var(--theme-emerald-rgb-raw),0.35)] hover:shadow-[0_8px_35px_rgba(var(--theme-emerald-rgb-raw),0.55)] transition duration-300 hover:scale-110 active:scale-95 group relative border border-white/20"
+          className="flex h-20 w-20 md:h-24 md:w-24 items-center justify-center transition duration-300 hover:scale-110 active:scale-95 group relative bg-transparent border-none outline-none"
           aria-label="Open helper chat"
           data-cursor="hover"
         >
+          {/* Bouncing Chat Label on Top */}
+          <span className="absolute -top-7 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-slate-950/95 border border-accent-primary/30 text-[9px] font-extrabold uppercase tracking-wider text-accent-primary whitespace-nowrap shadow-[0_4px_12px_rgba(0,0,0,0.35)] animate-[bounce_2s_infinite] flex items-center gap-1 z-30">
+            Chat 💬
+          </span>
+
+          {/* Orbiting dashed line shapes around the penguin */}
+          <div className="absolute inset-[-6px] rounded-full border border-dashed border-accent-primary/45 animate-[spin_25s_linear_infinite] pointer-events-none z-10" />
+          <div className="absolute inset-[-12px] rounded-full border border-accent-primary/15 pointer-events-none z-10 opacity-60" />
+
           {/* Breathing notification dot */}
-          <span className="absolute top-0.5 right-0.5 flex h-3.5 w-3.5">
+          <span className="absolute top-1 right-1 flex h-3.5 w-3.5 z-30">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
             <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-rose-500 border-2 border-slate-900"></span>
           </span>
           
-          <MessageSquare className="h-6 w-6 stroke-[2.2]" />
-          <span className="absolute right-16 scale-75 rounded-xl bg-slate-950/90 border border-white/10 px-3 py-1.5 text-[11px] font-bold text-white opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 whitespace-nowrap shadow-xl">
+          <img 
+            src="/you-rang-hello.gif" 
+            alt="Ask Helper Penguin" 
+            className="h-full w-full object-contain relative z-20"
+          />
+          
+          <span className="absolute right-24 md:right-28 scale-75 rounded-xl bg-slate-950/90 border border-white/10 px-3 py-1.5 text-[11px] font-bold text-white opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 whitespace-nowrap shadow-xl z-30">
             Ask Helper Penguin 🐧
           </span>
         </button>
@@ -150,35 +164,12 @@ export function PandaChat() {
           <div className="flex items-center justify-between px-5 py-4 border-b border-white/5 light:border-black/5 bg-gradient-to-r from-accent-primary/10 to-transparent z-10">
             <div className="flex items-center gap-3">
               {/* Mascot Mini Logo */}
-              <div className="h-10 w-10 rounded-2xl bg-[#1e293b]/20 light:bg-black/5 border border-white/10 flex items-center justify-center relative">
-                <svg className="h-8 w-8" viewBox="0 0 100 100">
-                  {/* Penguin Hair/Tuft */}
-                  <path d="M50,15 C48,8 46,12 45,10 C46,12 48,10 50,15 Z" fill="#1e293b" />
-                  <path d="M50,15 C52,8 54,12 55,10 C54,12 52,10 50,15 Z" fill="#1e293b" />
-                  
-                  {/* Penguin Head (Dark Navy slate) */}
-                  <circle cx="50" cy="52" r="34" fill="#1e293b" stroke="#0f172a" strokeWidth="2" />
-                  
-                  {/* Face White Patch (Heart shape/split ellipse) */}
-                  <ellipse cx="38" cy="58" rx="16" ry="18" fill="#ffffff" />
-                  <ellipse cx="62" cy="58" rx="16" ry="18" fill="#ffffff" />
-                  <circle cx="50" cy="62" r="20" fill="#ffffff" />
-                  
-                  {/* Blushing cheeks */}
-                  <circle cx="28" cy="60" r="4" fill="#fecdd3" opacity="0.8" />
-                  <circle cx="72" cy="60" r="4" fill="#fecdd3" opacity="0.8" />
-
-                  {/* Eyes (Black pupils) */}
-                  <circle cx="38" cy="50" r="3.2" fill="#0f172a" className="penguin-eye-blink" />
-                  <circle cx="62" cy="50" r="3.2" fill="#0f172a" className="penguin-eye-blink" />
-                  
-                  {/* Eye light reflections */}
-                  <circle cx="39.5" cy="48.5" r="1" fill="#ffffff" />
-                  <circle cx="63.5" cy="48.5" r="1" fill="#ffffff" />
-                  
-                  {/* Beak (Orange Triangle) */}
-                  <path d="M44,55 L56,55 L50,68 Z" fill="#f97316" stroke="#ea580c" strokeWidth="1" strokeLinejoin="round" />
-                </svg>
+              <div className="h-10 w-10 rounded-xl overflow-hidden border border-white/10 flex items-center justify-center relative">
+                <img 
+                  src="/you-rang-hello.gif" 
+                  alt="Helper Penguin" 
+                  className="h-full w-full object-cover"
+                />
                 {/* Active Status Dot */}
                 <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-400 border border-[#0b0f0d] animate-pulse" />
               </div>
