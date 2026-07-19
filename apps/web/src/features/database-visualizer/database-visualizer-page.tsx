@@ -948,7 +948,7 @@ function ERDCanvas({
   }
 
   return (
-    <section className="relative flex h-full min-h-[720px] flex-col overflow-hidden bg-[#070b09] light:bg-white">
+    <section className="relative flex h-full min-h-[560px] flex-col overflow-hidden bg-[#070b09] light:bg-white lg:min-h-0">
       <div className="absolute right-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-white/10 bg-[rgba(18,24,21,0.86)] px-3 py-2 shadow-[0_20px_48px_rgba(0,0,0,0.34)] backdrop-blur light:border-slate-200 light:bg-white/90 light:shadow-[0_12px_32px_rgba(15,23,42,0.10)]">
         <Network className="h-4 w-4 text-emerald-700" aria-hidden="true" />
         <span className="text-xs font-bold text-slate-200 light:text-slate-700">
@@ -1801,7 +1801,7 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
           onShare={handleShare}
         />
 
-        <section className="grid overflow-hidden rounded-b-[18px] border-x border-b border-white/10 bg-[rgba(18,24,21,0.78)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_18px_50px_rgba(15,23,42,0.10)] lg:h-[calc(100dvh-142px)] lg:min-h-[720px] lg:grid-cols-[minmax(300px,430px)_minmax(0,1fr)] 2xl:grid-cols-[460px_minmax(0,1fr)]">
+        <section className="grid overflow-hidden rounded-b-[18px] border-x border-b border-white/10 bg-[rgba(18,24,21,0.78)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_18px_50px_rgba(15,23,42,0.10)] lg:h-[calc(100dvh-142px)] lg:min-h-[560px] lg:grid-cols-[clamp(280px,28vw,460px)_minmax(0,1fr)] 2xl:min-h-[720px]">
           <div className="flex min-h-0 flex-col overflow-hidden border-r border-white/10 bg-[#0d1110] light:border-slate-200 light:bg-white">
             <header className="flex shrink-0 flex-col gap-2 border-b border-white/10 bg-[#121715] p-2.5 light:border-slate-200 light:bg-[#fbfefd]">
               <div className="flex flex-wrap items-center justify-between gap-2">

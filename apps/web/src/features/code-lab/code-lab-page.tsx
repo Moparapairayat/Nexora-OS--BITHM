@@ -4,12 +4,15 @@ import {
   AlertTriangle,
   CheckCircle2,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
+  ChevronUp,
   Code2,
   Command,
   Copy,
   Download,
   FolderOpen,
+  GripHorizontal,
   Maximize2,
   MoreHorizontal,
   Palette,
@@ -17,9 +20,7 @@ import {
   Play,
   Plus,
   RefreshCw,
-  Save,
   Search,
-  Sparkles,
   Trash2,
   Upload as UploadIcon,
   X,
@@ -27,7 +28,11 @@ import {
 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ChangeEvent, KeyboardEvent as ReactKeyboardEvent } from "react";
+import type {
+  ChangeEvent,
+  KeyboardEvent as ReactKeyboardEvent,
+  PointerEvent as ReactPointerEvent,
+} from "react";
 import type { BeforeMount, EditorProps, OnMount } from "@monaco-editor/react";
 
 import { AppShell } from "@/components/layout/app-shell";
@@ -57,14 +62,13 @@ import { cn } from "@/lib/utils";
 
 // ---------- Reusable design tokens (light-mode Code Lab) ----------
 
-const cardClass =
-  "rounded-[22px] border border-[#E6EEF0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.06)]";
+const idePanelClass = "bg-white";
 
 const ghostButton =
   "inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-[#E6EEF0] bg-white px-3 text-sm font-medium text-[#0B1B33] transition hover:bg-[#EFFFF5] hover:border-[#DFF8EA]";
 
 const primaryButton =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-[14px] bg-[#009B5A] px-4 text-sm font-semibold text-white shadow-[0_10px_24px_rgba(0,155,90,0.22)] transition hover:bg-[#00B86B] disabled:opacity-60";
+  "inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-[#009B5A] px-4 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(0,155,90,0.2)] transition hover:bg-[#00B86B] disabled:opacity-60";
 
 const pillBase =
   "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold";
@@ -104,6 +108,15 @@ type ProblemItem = {
 
 type IdePanelId = "explorer" | "search" | "tests" | "history" | "ai";
 type AutosaveStatus = "idle" | "saving" | "saved" | "error";
+
+type CodeLabCommand = {
+  id: string;
+  label: string;
+  detail: string;
+  shortcut?: string;
+  icon: LucideIcon;
+  action: () => void;
+};
 
 type TerminalEntry = {
   id: string;
@@ -645,7 +658,7 @@ function LanguageSelect({
         title="Programming language"
         value={value}
         onChange={(event) => onChange(event.target.value as LanguageId)}
-        className="h-10 appearance-none rounded-xl border border-[#E6EEF0] bg-white pl-3 pr-9 text-sm font-medium text-[#0B1B33] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
+        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] bg-white pl-3 pr-9 text-sm font-medium text-[#0B1B33] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
       >
         {languageOptions.map((option) => (
           <option key={option.id} value={option.id}>
@@ -673,7 +686,7 @@ function EnvironmentSelect({
         title="Execution environment"
         value={value}
         onChange={(event) => onChange(event.target.value as EnvironmentId)}
-        className="h-10 appearance-none rounded-xl border border-[#E6EEF0] bg-white pl-3 pr-9 text-sm font-medium text-[#0B1B33] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
+        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] bg-white pl-3 pr-9 text-sm font-medium text-[#0B1B33] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
       >
         {environmentOptions.map((option) => (
           <option key={option.id} value={option.id}>
@@ -689,111 +702,71 @@ function EnvironmentSelect({
 function CodeLabHeader({
   language,
   environment,
-  dbStatus,
-  autosaveStatus,
-  dirtyCount,
   onLanguageChange,
   onEnvironmentChange,
+  onOpenCommandPalette,
   onRun,
-  onSave,
   onSubmit,
   isRunning,
   isSubmitting,
 }: {
   language: LanguageId;
   environment: EnvironmentId;
-  dbStatus: "loading" | "ready" | "draft";
-  autosaveStatus: AutosaveStatus;
-  dirtyCount: number;
   onLanguageChange: (id: LanguageId) => void;
   onEnvironmentChange: (id: EnvironmentId) => void;
+  onOpenCommandPalette: () => void;
   onRun: () => void;
-  onSave: () => void;
   onSubmit: () => void;
   isRunning: boolean;
   isSubmitting: boolean;
 }) {
   return (
-    <section className={cn(cardClass, "relative overflow-hidden px-4 py-3")}>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-10 -top-16 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(0,184,107,0.14),transparent_60%)]"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 left-32 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(26,124,255,0.08),transparent_60%)]"
-      />
-
-      <div className="relative flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-3">
-          <IconChip icon={Code2} tone="emerald" size="md" />
+    <header
+      className={cn(idePanelClass, "border-b border-[#DCE7E2] px-3 py-2.5")}
+    >
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
+        <div className="flex items-center gap-2.5">
+          <IconChip icon={Code2} tone="emerald" size="sm" />
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#009B5A]">
-                Code Lab
-              </span>
-              <span className={cn(pillBase, "bg-[#DFF8EA] text-[#009B5A]")}>
+              <h1 className="text-sm font-semibold text-[#0B1B33]">Code Lab</h1>
+              <span className="code-lab-workspace-status inline-flex items-center gap-1.5 text-xs font-medium text-[#5D6B82]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#009B5A]" />
-                Live workspace
-              </span>
-              <span
-                className={cn(
-                  pillBase,
-                  dbStatus === "ready"
-                    ? "bg-[#E5F8ED] text-[#007A45]"
-                    : dbStatus === "loading"
-                      ? "bg-[#E5F0FF] text-[#1A55B8]"
-                      : "bg-[#FFF6E8] text-[#A36A00]",
-                )}
-              >
-                {dbStatus === "ready"
-                  ? "Database saved"
-                  : dbStatus === "loading"
-                    ? "Loading DB"
-                    : "Draft fallback"}
-              </span>
-              {dirtyCount > 0 ? (
-                <span className={cn(pillBase, "bg-[#FFF6E8] text-[#A36A00]")}>
-                  {dirtyCount} unsaved
-                </span>
-              ) : null}
-              <span
-                className={cn(
-                  pillBase,
-                  autosaveStatus === "saving"
-                    ? "bg-[#E5F0FF] text-[#1A55B8]"
-                    : autosaveStatus === "saved"
-                      ? "bg-[#E5F8ED] text-[#007A45]"
-                      : autosaveStatus === "error"
-                        ? "bg-[#FFE4E1] text-[#B91C1C]"
-                        : "bg-[#F2F6F5] text-[#5D6B82]",
-                )}
-              >
-                {autosaveStatus === "saving"
-                  ? "Autosaving"
-                  : autosaveStatus === "saved"
-                    ? "Autosaved"
-                    : autosaveStatus === "error"
-                      ? "Autosave error"
-                      : "Autosave idle"}
+                Workspace ready
               </span>
             </div>
-            <p className="mt-1 text-sm font-semibold text-[#0B1B33]">
-              Write, run, and test code without leaving the page.
-            </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={onOpenCommandPalette}
+          className="code-lab-command-trigger mx-auto hidden h-9 min-w-[180px] max-w-[360px] flex-1 items-center gap-2 rounded-lg border border-[#E6EEF0] bg-[#F8FCFA] px-3 text-left text-xs font-medium text-[#5D6B82] transition hover:border-[#BDEFD2] hover:bg-white 2xl:flex"
+          aria-label="Open command palette"
+          title="Open command palette"
+        >
+          <Search className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+          <span className="min-w-0 flex-1 truncate">Search commands</span>
+          <kbd className="rounded border border-[#DCE7E2] bg-white px-1.5 py-0.5 font-mono text-[10px] text-[#5D6B82]">
+            Ctrl Shift P
+          </kbd>
+        </button>
+
+        <div className="flex flex-wrap items-center gap-1.5 lg:ml-auto">
+          <button
+            type="button"
+            onClick={onOpenCommandPalette}
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[#E6EEF0] bg-white text-[#5D6B82] transition hover:border-[#BDEFD2] hover:text-[#007A45] 2xl:hidden"
+            aria-label="Open command palette"
+            title="Open command palette (Ctrl Shift P)"
+          >
+            <Command className="h-4 w-4" aria-hidden="true" />
+          </button>
           <LanguageSelect value={language} onChange={onLanguageChange} />
           <EnvironmentSelect
             value={environment}
             onChange={onEnvironmentChange}
           />
-          <button type="button" onClick={onSave} className={ghostButton}>
-            <Save className="h-4 w-4" />{" "}
-            {dirtyCount > 0 ? "Save changes" : "Save"}
-          </button>
           <button
             type="button"
             onClick={onSubmit}
@@ -801,7 +774,7 @@ function CodeLabHeader({
             className={ghostButton}
           >
             <UploadIcon className="h-4 w-4" />
-            {isSubmitting ? "Submitting..." : "Submit Lab Task"}
+            {isSubmitting ? "Submitting..." : "Submit"}
           </button>
           <button
             type="button"
@@ -814,7 +787,7 @@ function CodeLabHeader({
           </button>
         </div>
       </div>
-    </section>
+    </header>
   );
 }
 
@@ -1011,10 +984,10 @@ function FileTreeItem({
   return (
     <div
       className={cn(
-        "group flex w-full items-center gap-1 rounded-xl px-1 py-1 text-left text-sm transition",
+        "group flex w-full items-center gap-1 rounded-md px-1 py-0.5 text-left text-sm transition",
         active
           ? "bg-[#DFF8EA] text-[#005F37]"
-          : "text-[#3D4A63] hover:bg-[#EFFFF5]",
+          : "text-[#3D4A63] hover:bg-[#F2F6F5]",
       )}
     >
       <button
@@ -1022,23 +995,12 @@ function FileTreeItem({
         onClick={onClick}
         className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-1.5 py-1 text-left"
       >
-        <FileTypeIcon
-          name={file.name}
-          className={cn(
-            "h-5 w-5",
-            active ? "shadow-[0_0_0_2px_rgba(0,155,90,0.12)]" : "",
-          )}
-        />
+        <FileTypeIcon name={file.name} className="h-5 w-5" />
         <span className="min-w-0 flex-1 truncate font-medium">{file.name}</span>
         {dirty ? (
           <span
-            className="h-2 w-2 rounded-full bg-[#FFB020] shadow-[0_0_8px_rgba(255,176,32,0.45)]"
+            className="h-1.5 w-1.5 rounded-full bg-[#D97706]"
             aria-label="Unsaved changes"
-          />
-        ) : active ? (
-          <span
-            className="h-2 w-2 rounded-full bg-[#009B5A] shadow-[0_0_8px_rgba(0,155,90,0.5)]"
-            aria-hidden="true"
           />
         ) : null}
       </button>
@@ -1109,11 +1071,14 @@ function FileExplorerPanel({
 
   return (
     <aside
-      className={cn(cardClass, "flex h-full min-h-0 flex-col overflow-hidden")}
+      className={cn(
+        idePanelClass,
+        "flex h-full min-h-0 flex-col overflow-hidden",
+      )}
     >
       <header className="flex items-center justify-between border-b border-[#F0F4F4] px-3 py-2.5">
         <div className="flex items-center gap-2">
-          <IconChip icon={FolderOpen} tone="emerald" size="sm" />
+          <FolderOpen className="h-4 w-4 text-[#5D6B82]" aria-hidden="true" />
           <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B1B33]">
             Explorer
           </h2>
@@ -1149,13 +1114,13 @@ function FileExplorerPanel({
           <button
             type="button"
             onClick={() => {
-              if (activeFile) onRenameFile(activeFile);
+              if (activeFile) onDuplicateFile(activeFile);
             }}
-            title="Rename active file"
-            aria-label="Rename active file"
+            title="Duplicate active file"
+            aria-label="Duplicate active file"
             className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
           >
-            <PencilLine className="h-4 w-4" />
+            <Copy className="h-4 w-4" />
           </button>
         </div>
       </header>
@@ -1209,49 +1174,6 @@ function FileExplorerPanel({
           })}
         </div>
       </div>
-      <footer className="flex items-center gap-1 border-t border-[#F0F4F4] px-3 py-2">
-        {[
-          { label: "New file", icon: Plus, action: onCreateFile },
-          {
-            label: "Rename active file",
-            icon: PencilLine,
-            action: () => {
-              const activeFile = flattenFiles(folders).find(
-                (file) => file.id === activeFileId,
-              );
-              if (activeFile) onRenameFile(activeFile);
-            },
-          },
-          {
-            label: "Duplicate active file",
-            icon: Copy,
-            action: () => {
-              if (activeFile) onDuplicateFile(activeFile);
-            },
-          },
-          {
-            label: "Delete active file",
-            icon: Trash2,
-            action: () => {
-              if (activeFile) onDeleteFile(activeFile);
-            },
-          },
-        ].map((action) => {
-          const ActionIcon = action.icon;
-          return (
-            <button
-              key={action.label}
-              type="button"
-              onClick={action.action}
-              className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
-              aria-label={action.label}
-              title={action.label}
-            >
-              <ActionIcon className="h-4 w-4" aria-hidden="true" />
-            </button>
-          );
-        })}
-      </footer>
     </aside>
   );
 }
@@ -1260,12 +1182,16 @@ function ActivityBar({
   activePanel,
   dirtyCount,
   problemCount,
+  panelCollapsed,
   onSelectPanel,
+  onTogglePanel,
 }: {
   activePanel: IdePanelId;
   dirtyCount: number;
   problemCount: number;
+  panelCollapsed: boolean;
   onSelectPanel: (panel: IdePanelId) => void;
+  onTogglePanel: () => void;
 }) {
   const items: {
     id: IdePanelId;
@@ -1277,13 +1203,13 @@ function ActivityBar({
     { id: "search", label: "Search", icon: Search },
     { id: "tests", label: "Tests", icon: CheckCircle2, badge: problemCount },
     { id: "history", label: "History", icon: RefreshCw },
-    { id: "ai", label: "AI", icon: Sparkles },
+    { id: "ai", label: "Code help", icon: Command },
   ];
 
   return (
     <nav
       aria-label="Code Lab panels"
-      className="flex h-full min-h-0 flex-col items-center gap-2 rounded-[22px] border border-[#E6EEF0] bg-[#F8FCFA] px-1.5 py-2 shadow-[0_12px_40px_rgba(15,23,42,0.05)]"
+      className="flex h-full min-h-0 flex-col items-center gap-1.5 border-r border-[#E6EEF0] bg-[#F8FCFA] px-1 py-2"
     >
       {items.map((item) => {
         const Icon = item.icon;
@@ -1293,12 +1219,15 @@ function ActivityBar({
           <button
             key={item.id}
             type="button"
-            onClick={() => onSelectPanel(item.id)}
+            onClick={() => {
+              onSelectPanel(item.id);
+              if (panelCollapsed) onTogglePanel();
+            }}
             aria-label={item.label}
             aria-pressed={active}
             title={item.label}
             className={cn(
-              "relative grid h-10 w-10 place-items-center rounded-2xl text-[#5D6B82] transition",
+              "relative grid h-9 w-9 place-items-center rounded-xl text-[#5D6B82] transition",
               active
                 ? "bg-[#DFF8EA] text-[#005F37] shadow-[inset_0_0_0_1px_rgba(0,155,90,0.12)]"
                 : "hover:bg-white hover:text-[#009B5A]",
@@ -1313,9 +1242,19 @@ function ActivityBar({
           </button>
         );
       })}
-      <div className="mt-auto grid h-10 w-10 place-items-center rounded-2xl text-[#8A99AA]">
-        <Code2 className="h-[18px] w-[18px]" aria-hidden="true" />
-      </div>
+      <button
+        type="button"
+        onClick={onTogglePanel}
+        className="mt-auto grid h-9 w-9 place-items-center rounded-xl text-[#8A99AA] transition hover:bg-white hover:text-[#009B5A]"
+        aria-label={panelCollapsed ? "Open side panel" : "Collapse side panel"}
+        title={panelCollapsed ? "Open side panel" : "Collapse side panel"}
+      >
+        {panelCollapsed ? (
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        )}
+      </button>
     </nav>
   );
 }
@@ -1359,7 +1298,10 @@ function SearchPanel({
 
   return (
     <aside
-      className={cn(cardClass, "flex h-full min-h-0 flex-col overflow-hidden")}
+      className={cn(
+        idePanelClass,
+        "flex h-full min-h-0 flex-col overflow-hidden",
+      )}
     >
       <header className="border-b border-[#F0F4F4] px-3 py-3">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B1B33]">
@@ -1425,7 +1367,10 @@ function TestsPanel({
 
   return (
     <aside
-      className={cn(cardClass, "flex h-full min-h-0 flex-col overflow-hidden")}
+      className={cn(
+        idePanelClass,
+        "flex h-full min-h-0 flex-col overflow-hidden",
+      )}
     >
       <header className="flex items-center justify-between border-b border-[#F0F4F4] px-3 py-3">
         <div>
@@ -1446,7 +1391,7 @@ function TestsPanel({
         </button>
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        <div className="grid gap-2">
+        <div className="grid">
           {tests.map((test) => (
             <TestCaseItem key={test.id} test={test} />
           ))}
@@ -1467,7 +1412,10 @@ function HistoryPanel({
 }) {
   return (
     <aside
-      className={cn(cardClass, "flex h-full min-h-0 flex-col overflow-hidden")}
+      className={cn(
+        idePanelClass,
+        "flex h-full min-h-0 flex-col overflow-hidden",
+      )}
     >
       <header className="border-b border-[#F0F4F4] px-3 py-3">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B1B33]">
@@ -1521,31 +1469,34 @@ function AiPanel({
   const actions: { id: AiAction; label: string; detail: string }[] = [
     {
       id: "explain",
-      label: "Explain Code",
+      label: "Explain this code",
       detail: "Summarize logic and flow.",
     },
     {
       id: "debug",
-      label: "Debug Code",
+      label: "Find an issue",
       detail: "Find runtime and test issues.",
     },
     {
       id: "improve",
-      label: "Improve Code",
+      label: "Suggest an improvement",
       detail: "Suggest cleaner implementation.",
     },
   ];
 
   return (
     <aside
-      className={cn(cardClass, "flex h-full min-h-0 flex-col overflow-hidden")}
+      className={cn(
+        idePanelClass,
+        "flex h-full min-h-0 flex-col overflow-hidden",
+      )}
     >
       <header className="border-b border-[#F0F4F4] px-3 py-3">
         <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B1B33]">
-          AI Assistant
+          Code help
         </p>
         <p className="mt-1 text-xs font-medium text-[#5D6B82]">
-          Code Doctor actions for the active file
+          Guidance for the active file
         </p>
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
@@ -1556,14 +1507,11 @@ function AiPanel({
               type="button"
               onClick={() => onAiAction(action.id)}
               disabled={activeAiAction !== null}
-              className="rounded-2xl border border-[#E6EEF0] bg-[#FAFCFC] p-3 text-left transition hover:border-[#BDEFD2] hover:bg-[#EFFFF5] disabled:opacity-60"
+              className="border-b border-[#E6EEF0] px-1 py-3 text-left transition last:border-b-0 hover:bg-[#F8FCFA] disabled:opacity-60"
             >
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-[#7C4DFF]" />
-                <span className="text-sm font-semibold text-[#0B1B33]">
-                  {activeAiAction === action.id ? "Thinking..." : action.label}
-                </span>
-              </div>
+              <span className="text-sm font-semibold text-[#0B1B33]">
+                {activeAiAction === action.id ? "Working..." : action.label}
+              </span>
               <p className="mt-1 text-xs font-medium text-[#5D6B82]">
                 {action.detail}
               </p>
@@ -1577,6 +1525,7 @@ function AiPanel({
 
 function CodeLabSidebar({
   activePanel,
+  collapsed,
   folders,
   files,
   fileContents,
@@ -1585,6 +1534,7 @@ function CodeLabSidebar({
   tests,
   versions,
   activeAiAction,
+  onToggleCollapsed,
   onSelectPanel,
   onSelectFile,
   onCreateFile,
@@ -1598,6 +1548,7 @@ function CodeLabSidebar({
   onAiAction,
 }: {
   activePanel: IdePanelId;
+  collapsed: boolean;
   folders: FolderNode[];
   files: FileNode[];
   fileContents: Record<string, string>;
@@ -1606,6 +1557,7 @@ function CodeLabSidebar({
   tests: TestCase[];
   versions: StoredCodeLabWorkspace["versions"];
   activeAiAction: AiAction | null;
+  onToggleCollapsed: () => void;
   onSelectPanel: (panel: IdePanelId) => void;
   onSelectFile: (file: FileNode) => void;
   onCreateFile: () => void;
@@ -1623,14 +1575,21 @@ function CodeLabSidebar({
   const problemCount = tests.filter((test) => test.status === "failed").length;
 
   return (
-    <div className="grid h-full min-h-0 grid-cols-[52px_minmax(0,1fr)] gap-2">
+    <div
+      className={cn(
+        "grid h-full min-h-0 border-r border-[#E6EEF0]",
+        collapsed ? "grid-cols-[46px]" : "grid-cols-[46px_minmax(0,1fr)]",
+      )}
+    >
       <ActivityBar
         activePanel={activePanel}
         dirtyCount={dirtyFileIds.size}
         problemCount={problemCount}
+        panelCollapsed={collapsed}
         onSelectPanel={onSelectPanel}
+        onTogglePanel={onToggleCollapsed}
       />
-      {activePanel === "explorer" ? (
+      {!collapsed && activePanel === "explorer" ? (
         <FileExplorerPanel
           folders={folders}
           activeFileId={activeFileId}
@@ -1644,20 +1603,20 @@ function CodeLabSidebar({
           onUploadFiles={onUploadFiles}
         />
       ) : null}
-      {activePanel === "search" ? (
+      {!collapsed && activePanel === "search" ? (
         <SearchPanel
           files={files}
           fileContents={fileContents}
           onSelectFile={onSelectFile}
         />
       ) : null}
-      {activePanel === "tests" ? (
+      {!collapsed && activePanel === "tests" ? (
         <TestsPanel tests={tests} onRunTests={onRunTests} />
       ) : null}
-      {activePanel === "history" ? (
+      {!collapsed && activePanel === "history" ? (
         <HistoryPanel versions={versions} onSelectVersion={onSelectVersion} />
       ) : null}
-      {activePanel === "ai" ? (
+      {!collapsed && activePanel === "ai" ? (
         <AiPanel activeAiAction={activeAiAction} onAiAction={onAiAction} />
       ) : null}
     </div>
@@ -1692,38 +1651,62 @@ function CodeStatusBar({
   fileCount: number;
 }) {
   const passed = tests.filter((test) => test.status === "passed").length;
+  const saveLabel =
+    autosaveStatus === "saving"
+      ? "Saving"
+      : autosaveStatus === "error"
+        ? "Save paused"
+        : dirtyCount > 0
+          ? "Changes pending"
+          : "Saved";
+  const storageLabel =
+    dbStatus === "ready"
+      ? "Cloud workspace"
+      : dbStatus === "loading"
+        ? "Connecting"
+        : "Local draft";
 
   return (
-    <footer className="flex min-h-9 flex-wrap items-center justify-between gap-2 rounded-2xl border border-[#DCEBE5] bg-[#063F2B] px-3 py-1.5 text-xs font-semibold text-white shadow-[0_12px_30px_rgba(6,63,43,0.14)]">
-      <div className="flex min-w-0 flex-wrap items-center gap-3">
-        <span className="max-w-[220px] truncate">{workspaceTitle}</span>
-        <span className="text-[#A7F3D0]">{activeFile?.name ?? "No file"}</span>
-        <span className="text-[#D9FF57]">{language}</span>
+    <footer
+      title={workspaceTitle}
+      className="flex min-h-8 flex-wrap items-center justify-between gap-2 border-t border-[#DCE7E2] bg-[#F8FCFA] px-3 py-1.5 text-[11px] font-medium text-[#5D6B82]"
+    >
+      <div className="flex min-w-0 items-center gap-2.5">
+        <span className="max-w-[180px] truncate font-semibold text-[#0B1B33]">
+          {activeFile?.name ?? "No file open"}
+        </span>
+        <span aria-hidden="true" className="text-[#CBD5E1]">
+          ·
+        </span>
+        <span>{language}</span>
         <span>{fileCount} files</span>
       </div>
-      <div className="flex flex-wrap items-center gap-3 text-[#D6F7E7]">
-        <span>
-          DB:{" "}
-          {dbStatus === "ready"
-            ? "saved"
-            : dbStatus === "loading"
-              ? "loading"
-              : "draft"}
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="inline-flex items-center gap-1.5">
+          <span
+            className={cn(
+              "h-1.5 w-1.5 rounded-full",
+              autosaveStatus === "error" ? "bg-[#D97706]" : "bg-[#009B5A]",
+            )}
+          />
+          {saveLabel}
+        </span>
+        <span
+          title={
+            lastAutosavedAt
+              ? `Last saved at ${new Date(lastAutosavedAt).toLocaleTimeString()}`
+              : undefined
+          }
+        >
+          {storageLabel}
         </span>
         <span>
-          Autosave: {autosaveStatus}
-          {lastAutosavedAt
-            ? ` ${new Date(lastAutosavedAt).toLocaleTimeString()}`
-            : ""}
+          Tests {passed}/{tests.length}
         </span>
-        <span>{dirtyCount > 0 ? `${dirtyCount} unsaved` : "clean"}</span>
+        <span>{problems.length} problems</span>
         <span>
-          Tests: {passed}/{tests.length}
-        </span>
-        <span>Problems: {problems.length}</span>
-        <span>
-          Run: {runStatus}
-          {executionMs > 0 ? ` ${(executionMs / 1000).toFixed(2)}s` : ""}
+          {runStatus === "idle" ? "Ready" : `Last run: ${runStatus}`}
+          {executionMs > 0 ? ` · ${(executionMs / 1000).toFixed(2)}s` : ""}
         </span>
       </div>
     </footer>
@@ -1844,11 +1827,11 @@ function CodeEditorPanel({
   return (
     <section
       className={cn(
-        cardClass,
+        idePanelClass,
         "flex h-full flex-col overflow-hidden",
         workspaceExpanded
           ? "min-h-0 rounded-[18px] shadow-none"
-          : "min-h-[520px]",
+          : "min-h-[420px] lg:min-h-0",
       )}
     >
       <header className="flex shrink-0 items-end justify-between gap-3 border-b border-[#F0F4F4] bg-[#F8FCFA] px-3 pt-2">
@@ -2249,6 +2232,8 @@ function ConsolePanel({
   onRunTerminal,
   onClearTerminal,
   onClear,
+  collapsed,
+  onToggleCollapsed,
   consoleHeight,
   onConsoleHeightChange,
   executionMs,
@@ -2269,12 +2254,40 @@ function ConsolePanel({
   onRunTerminal: () => void;
   onClearTerminal: () => void;
   onClear: () => void;
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
   consoleHeight: number;
   onConsoleHeightChange: (value: number) => void;
   executionMs: number;
   status: "success" | "error" | "idle";
 }) {
   const [tab, setTab] = useState<ConsoleTab>("console");
+  const resizeState = useRef<{ startY: number; startHeight: number } | null>(
+    null,
+  );
+
+  function handleResizeStart(event: ReactPointerEvent<HTMLDivElement>) {
+    resizeState.current = {
+      startY: event.clientY,
+      startHeight: consoleHeight,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handleResizeMove(event: ReactPointerEvent<HTMLDivElement>) {
+    if (!resizeState.current) return;
+    const nextHeight =
+      resizeState.current.startHeight -
+      (event.clientY - resizeState.current.startY);
+    onConsoleHeightChange(Math.max(140, Math.min(360, nextHeight)));
+  }
+
+  function handleResizeEnd(event: ReactPointerEvent<HTMLDivElement>) {
+    resizeState.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  }
 
   const tabs: { id: ConsoleTab; label: string }[] = [
     { id: "console", label: "Console" },
@@ -2288,166 +2301,208 @@ function ConsolePanel({
   return (
     <section
       className={cn(
-        cardClass,
-        "flex h-full min-h-[190px] flex-col overflow-hidden",
+        idePanelClass,
+        "flex h-full min-h-0 flex-col overflow-hidden border-t border-[#E6EEF0]",
       )}
     >
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#F0F4F4] px-3 py-2">
-        <div className="flex items-center gap-1">
-          {tabs.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setTab(item.id)}
-              className={cn(
-                "rounded-lg px-3 py-1.5 text-xs font-semibold transition",
-                tab === item.id
-                  ? "bg-[#DFF8EA] text-[#005F37]"
-                  : "text-[#5D6B82] hover:bg-[#EFFFF5] hover:text-[#0B1B33]",
-              )}
-              aria-pressed={tab === item.id}
-            >
-              {item.label}
-              {item.id === "errors" && errorOutput ? (
-                <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] px-1 text-[10px] font-bold text-[#FF7A1A]">
-                  1
-                </span>
-              ) : item.id === "problems" && problems.length > 0 ? (
-                <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] px-1 text-[10px] font-bold text-[#FF7A1A]">
-                  {problems.length}
-                </span>
-              ) : null}
-            </button>
-          ))}
+      {!collapsed ? (
+        <div
+          role="separator"
+          aria-label="Resize console"
+          aria-orientation="horizontal"
+          onPointerDown={handleResizeStart}
+          onPointerMove={handleResizeMove}
+          onPointerUp={handleResizeEnd}
+          onPointerCancel={handleResizeEnd}
+          className="group grid h-2 shrink-0 touch-none cursor-row-resize place-items-center bg-[#F8FCFA]"
+        >
+          <GripHorizontal className="h-3.5 w-3.5 text-[#CBD5E1] transition group-hover:text-[#009B5A]" />
         </div>
-        <div className="flex items-center gap-2.5">
-          <div className="flex items-center rounded-lg border border-[#E6EEF0] bg-white p-0.5">
-            <button
-              type="button"
-              onClick={() =>
-                onConsoleHeightChange(Math.max(160, consoleHeight - 40))
-              }
-              className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
-              aria-label="Shrink console"
-              title="Shrink console"
-            >
-              -
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                onConsoleHeightChange(Math.min(420, consoleHeight + 40))
-              }
-              className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
-              aria-label="Expand console"
-              title="Expand console"
-            >
-              +
-            </button>
-          </div>
-          {status === "success" ? (
+      ) : null}
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#F0F4F4] px-3 py-2">
+        <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
+          {collapsed ? (
+            <span className="text-xs font-semibold text-[#0B1B33]">
+              Console
+            </span>
+          ) : (
+            tabs.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTab(item.id)}
+                className={cn(
+                  "border-b-2 px-2.5 py-2 text-xs font-semibold transition",
+                  tab === item.id
+                    ? "border-[#009B5A] text-[#005F37]"
+                    : "border-transparent text-[#5D6B82] hover:text-[#0B1B33]",
+                )}
+                aria-pressed={tab === item.id}
+              >
+                {item.label}
+                {item.id === "errors" && errorOutput ? (
+                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] px-1 text-[10px] font-bold text-[#FF7A1A]">
+                    1
+                  </span>
+                ) : item.id === "problems" && problems.length > 0 ? (
+                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] px-1 text-[10px] font-bold text-[#FF7A1A]">
+                    {problems.length}
+                  </span>
+                ) : null}
+              </button>
+            ))
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {!collapsed ? (
+            <div className="flex items-center rounded-lg border border-[#E6EEF0] bg-white p-0.5">
+              <button
+                type="button"
+                onClick={() =>
+                  onConsoleHeightChange(Math.max(140, consoleHeight - 30))
+                }
+                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+                aria-label="Shrink console"
+                title="Shrink console"
+              >
+                -
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  onConsoleHeightChange(Math.min(360, consoleHeight + 30))
+                }
+                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+                aria-label="Expand console"
+                title="Expand console"
+              >
+                +
+              </button>
+            </div>
+          ) : null}
+          {!collapsed && status === "success" ? (
             <span className={cn(pillBase, "bg-[#DFF8EA] text-[#005F37]")}>
               <CheckCircle2 className="h-3.5 w-3.5" />
               Success
             </span>
-          ) : status === "error" ? (
+          ) : !collapsed && status === "error" ? (
             <span className={cn(pillBase, "bg-[#FFE9D6] text-[#A8420C]")}>
               <AlertTriangle className="h-3.5 w-3.5" />
               Errors
             </span>
           ) : null}
-          <span className="text-xs font-medium text-[#5D6B82]">
-            {executionMs > 0 ? `${(executionMs / 1000).toFixed(2)}s` : "—"}
-          </span>
+          {!collapsed ? (
+            <>
+              <span className="text-xs font-medium text-[#5D6B82]">
+                {executionMs > 0 ? `${(executionMs / 1000).toFixed(2)}s` : "—"}
+              </span>
+              <button
+                type="button"
+                onClick={onClear}
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] bg-white text-[#5D6B82] transition hover:border-[#FFE9D6] hover:text-[#FF7A1A]"
+                aria-label="Clear console"
+                title="Clear console"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            </>
+          ) : null}
           <button
             type="button"
-            onClick={onClear}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-[#E6EEF0] bg-white px-2.5 text-xs font-medium text-[#5D6B82] transition hover:border-[#FFE9D6] hover:text-[#FF7A1A]"
+            onClick={onToggleCollapsed}
+            className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] bg-white text-[#5D6B82] transition hover:border-[#DFF8EA] hover:text-[#009B5A]"
+            aria-label={collapsed ? "Open console" : "Collapse console"}
+            title={collapsed ? "Open console" : "Collapse console"}
           >
-            <Trash2 className="h-3.5 w-3.5" />
-            Clear
+            {collapsed ? (
+              <ChevronUp className="h-4 w-4" />
+            ) : (
+              <ChevronDown className="h-4 w-4" />
+            )}
           </button>
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-auto bg-[#FAFCFC] p-3 font-mono text-[13px] leading-[22px] text-[#0B1B33]">
-        {tab === "console" ? (
-          <pre className="m-0 whitespace-pre-wrap break-words">
-            {consoleOutput || "Ready."}
-          </pre>
-        ) : null}
-        {tab === "terminal" ? (
-          <TerminalPanel
-            command={terminalCommand}
-            cwd={terminalCwd}
-            history={terminalHistory}
-            suggestions={terminalSuggestions}
-            isRunning={isTerminalRunning}
-            onCommandChange={onTerminalCommandChange}
-            onRun={onRunTerminal}
-            onClear={onClearTerminal}
-          />
-        ) : null}
-        {tab === "input" ? (
-          <textarea
-            value={inputValue}
-            onChange={(event) => onInputChange(event.target.value)}
-            rows={5}
-            placeholder="Provide stdin for your program..."
-            className="w-full resize-y rounded-xl border border-[#E6EEF0] bg-white px-3 py-2 font-mono text-[13px] text-[#0B1B33] outline-none focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
-          />
-        ) : null}
-        {tab === "output" ? (
-          htmlPreview ? (
-            <iframe
-              title="HTML preview"
-              sandbox="allow-scripts"
-              srcDoc={htmlPreview}
-              className="h-full min-h-[150px] w-full rounded-xl border border-[#E6EEF0] bg-white"
-            />
-          ) : (
-            <pre className="m-0 whitespace-pre-wrap break-words text-[#0B1B33]">
-              {consoleOutput.split("\n\n")[0] || "—"}
+      {!collapsed ? (
+        <div className="min-h-0 flex-1 overflow-auto bg-[#FAFCFC] p-3 font-mono text-[13px] leading-[22px] text-[#0B1B33]">
+          {tab === "console" ? (
+            <pre className="m-0 whitespace-pre-wrap break-words">
+              {consoleOutput || "Ready."}
             </pre>
-          )
-        ) : null}
-        {tab === "errors" ? (
-          <pre className="m-0 whitespace-pre-wrap break-words text-[#A8420C]">
-            {errorOutput || "No errors in the last run."}
-          </pre>
-        ) : null}
-        {tab === "problems" ? (
-          problems.length > 0 ? (
-            <div className="grid gap-2 font-sans">
-              {problems.map((problem) => (
-                <div
-                  key={problem.id}
-                  className="rounded-xl border border-[#FFE9D6] bg-white px-3 py-2 text-sm text-[#0B1B33]"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <span className="font-semibold">{problem.source}</span>
-                    <span
-                      className={cn(
-                        pillBase,
-                        problem.severity === "error"
-                          ? "bg-[#FFE4E1] text-[#B91C1C]"
-                          : "bg-[#FFF6E8] text-[#A36A00]",
-                      )}
-                    >
-                      {problem.severity}
-                    </span>
+          ) : null}
+          {tab === "terminal" ? (
+            <TerminalPanel
+              command={terminalCommand}
+              cwd={terminalCwd}
+              history={terminalHistory}
+              suggestions={terminalSuggestions}
+              isRunning={isTerminalRunning}
+              onCommandChange={onTerminalCommandChange}
+              onRun={onRunTerminal}
+              onClear={onClearTerminal}
+            />
+          ) : null}
+          {tab === "input" ? (
+            <textarea
+              value={inputValue}
+              onChange={(event) => onInputChange(event.target.value)}
+              rows={5}
+              placeholder="Provide stdin for your program..."
+              className="w-full resize-y rounded-xl border border-[#E6EEF0] bg-white px-3 py-2 font-mono text-[13px] text-[#0B1B33] outline-none focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
+            />
+          ) : null}
+          {tab === "output" ? (
+            htmlPreview ? (
+              <iframe
+                title="HTML preview"
+                sandbox="allow-scripts"
+                srcDoc={htmlPreview}
+                className="h-full min-h-[150px] w-full rounded-xl border border-[#E6EEF0] bg-white"
+              />
+            ) : (
+              <pre className="m-0 whitespace-pre-wrap break-words text-[#0B1B33]">
+                {consoleOutput.split("\n\n")[0] || "—"}
+              </pre>
+            )
+          ) : null}
+          {tab === "errors" ? (
+            <pre className="m-0 whitespace-pre-wrap break-words text-[#A8420C]">
+              {errorOutput || "No errors in the last run."}
+            </pre>
+          ) : null}
+          {tab === "problems" ? (
+            problems.length > 0 ? (
+              <div className="grid gap-2 font-sans">
+                {problems.map((problem) => (
+                  <div
+                    key={problem.id}
+                    className="rounded-xl border border-[#FFE9D6] bg-white px-3 py-2 text-sm text-[#0B1B33]"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="font-semibold">{problem.source}</span>
+                      <span
+                        className={cn(
+                          pillBase,
+                          problem.severity === "error"
+                            ? "bg-[#FFE4E1] text-[#B91C1C]"
+                            : "bg-[#FFF6E8] text-[#A36A00]",
+                        )}
+                      >
+                        {problem.severity}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-[#3D4A63]">{problem.message}</p>
                   </div>
-                  <p className="mt-1 text-[#3D4A63]">{problem.message}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="font-sans text-sm font-medium text-[#5D6B82]">
-              No problems detected in the latest run.
-            </p>
-          )
-        ) : null}
-      </div>
+                ))}
+              </div>
+            ) : (
+              <p className="font-sans text-sm font-medium text-[#5D6B82]">
+                No problems detected in the latest run.
+              </p>
+            )
+          ) : null}
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -2529,12 +2584,138 @@ function QuickOpenPalette({
   );
 }
 
+function CommandPalette({
+  commands,
+  query,
+  onQueryChange,
+  onClose,
+}: {
+  commands: CodeLabCommand[];
+  query: string;
+  onQueryChange: (value: string) => void;
+  onClose: () => void;
+}) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const normalizedQuery = query.trim().toLowerCase();
+  const filteredCommands = commands.filter(
+    (command) =>
+      !normalizedQuery ||
+      command.label.toLowerCase().includes(normalizedQuery) ||
+      command.detail.toLowerCase().includes(normalizedQuery),
+  );
+
+  function runCommand(command?: CodeLabCommand) {
+    if (!command) return;
+    onClose();
+    command.action();
+  }
+
+  return (
+    <div className="fixed inset-0 z-[125] bg-[#07110C]/35 p-4 backdrop-blur-sm">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Code Lab command palette"
+        className="mx-auto mt-[8vh] w-full max-w-2xl overflow-hidden rounded-2xl border border-[#DCE7E2] bg-white shadow-[0_30px_90px_rgba(15,23,42,0.24)]"
+      >
+        <div className="flex items-center gap-3 border-b border-[#E6EEF0] px-4 py-3">
+          <Command className="h-4 w-4 shrink-0 text-[#009B5A]" />
+          <input
+            autoFocus
+            value={query}
+            onChange={(event) => {
+              onQueryChange(event.target.value);
+              setActiveIndex(0);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") onClose();
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setActiveIndex((current) =>
+                  Math.min(current + 1, filteredCommands.length - 1),
+                );
+              }
+              if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setActiveIndex((current) => Math.max(current - 1, 0));
+              }
+              if (event.key === "Enter") {
+                event.preventDefault();
+                runCommand(filteredCommands[activeIndex]);
+              }
+            }}
+            placeholder="Type a command..."
+            className="h-9 min-w-0 flex-1 bg-transparent text-sm font-semibold text-[#0B1B33] outline-none placeholder:text-[#8A99AA]"
+          />
+          <kbd className="rounded border border-[#DCE7E2] bg-[#F8FCFA] px-1.5 py-0.5 font-mono text-[10px] text-[#5D6B82]">
+            Esc
+          </kbd>
+        </div>
+        <div className="max-h-[420px] overflow-y-auto p-2">
+          <p className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8A99AA]">
+            Code Lab commands
+          </p>
+          {filteredCommands.length > 0 ? (
+            filteredCommands.map((command, index) => {
+              const Icon = command.icon;
+              const active = index === activeIndex;
+
+              return (
+                <button
+                  key={command.id}
+                  type="button"
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onClick={() => runCommand(command)}
+                  className={cn(
+                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition",
+                    active ? "bg-[#EFFFF5]" : "hover:bg-[#F8FCFA]",
+                  )}
+                >
+                  <Icon
+                    className={cn(
+                      "h-4 w-4 shrink-0",
+                      active ? "text-[#007A45]" : "text-[#5D6B82]",
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold text-[#0B1B33]">
+                      {command.label}
+                    </span>
+                    <span className="mt-0.5 block truncate text-xs text-[#5D6B82]">
+                      {command.detail}
+                    </span>
+                  </span>
+                  {command.shortcut ? (
+                    <kbd className="shrink-0 rounded border border-[#DCE7E2] bg-white px-1.5 py-0.5 font-mono text-[10px] text-[#5D6B82]">
+                      {command.shortcut}
+                    </kbd>
+                  ) : null}
+                </button>
+              );
+            })
+          ) : (
+            <p className="px-3 py-8 text-center text-sm font-medium text-[#5D6B82]">
+              No matching commands.
+            </p>
+          )}
+        </div>
+        <footer className="flex items-center gap-4 border-t border-[#E6EEF0] bg-[#F8FCFA] px-4 py-2 text-[10px] font-medium text-[#5D6B82]">
+          <span>↑↓ navigate</span>
+          <span>Enter run</span>
+          <span>Esc close</span>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
 type InstructionTab = "instructions" | "examples" | "help";
 
 function TestCaseItem({ test }: { test: TestCase }) {
   const isPassed = test.status === "passed";
   return (
-    <div className="flex items-center justify-between gap-3 rounded-xl border border-[#E6EEF0] bg-[#FAFCFC] px-3 py-2">
+    <div className="flex items-center justify-between gap-3 border-b border-[#E6EEF0] py-2 last:border-b-0">
       <div className="min-w-0 font-mono text-xs text-[#3D4A63]">
         <span className="text-[#5D6B82]">In:</span>{" "}
         <span className="font-semibold text-[#0B1B33]">{test.input}</span>
@@ -2570,13 +2751,18 @@ function InstructionPanel({
   onRunTests,
   onAiAction,
   activeAiAction,
+  collapsed,
+  onToggleCollapsed,
 }: {
   tests: TestCase[];
   onRunTests: () => void;
   onAiAction: (action: AiAction) => void;
   activeAiAction: AiAction | null;
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
 }) {
   const [tab, setTab] = useState<InstructionTab>("instructions");
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const tabs: { id: InstructionTab; label: string }[] = [
     { id: "instructions", label: "Task" },
@@ -2590,32 +2776,70 @@ function InstructionPanel({
     "Handle invalid inputs",
   ];
   const aiActions: { id: AiAction; label: string }[] = [
-    { id: "explain", label: "Explain Code" },
-    { id: "debug", label: "Debug Code" },
-    { id: "improve", label: "Improve Code" },
+    { id: "explain", label: "Explain this code" },
+    { id: "debug", label: "Find an issue" },
+    { id: "improve", label: "Suggest an improvement" },
   ];
+
+  if (collapsed) {
+    return (
+      <aside
+        className={cn(
+          idePanelClass,
+          "code-lab-task-panel is-collapsed flex h-full min-h-0 flex-col items-center border-l border-[#E6EEF0] py-2",
+        )}
+      >
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="grid h-9 w-9 place-items-center rounded-xl text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+          aria-label="Open task panel"
+          title="Open task panel"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        </button>
+        <span className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A99AA] [writing-mode:vertical-rl]">
+          Task
+        </span>
+      </aside>
+    );
+  }
 
   return (
     <aside
-      className={cn(cardClass, "flex h-full min-h-0 flex-col overflow-hidden")}
+      className={cn(
+        idePanelClass,
+        "code-lab-task-panel flex h-full min-h-0 flex-col overflow-hidden border-l border-[#E6EEF0]",
+      )}
     >
-      <header className="flex items-center gap-1 border-b border-[#F0F4F4] px-3 py-2">
-        {tabs.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => setTab(item.id)}
-            className={cn(
-              "rounded-lg px-3 py-1.5 text-xs font-semibold transition",
-              tab === item.id
-                ? "bg-[#DFF8EA] text-[#005F37]"
-                : "text-[#5D6B82] hover:bg-[#EFFFF5] hover:text-[#0B1B33]",
-            )}
-            aria-pressed={tab === item.id}
-          >
-            {item.label}
-          </button>
-        ))}
+      <header className="flex items-center justify-between gap-2 border-b border-[#F0F4F4] px-3 py-2">
+        <div className="flex items-center gap-1">
+          {tabs.map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setTab(item.id)}
+              className={cn(
+                "border-b-2 px-2.5 py-2 text-xs font-semibold transition",
+                tab === item.id
+                  ? "border-[#009B5A] text-[#005F37]"
+                  : "border-transparent text-[#5D6B82] hover:text-[#0B1B33]",
+              )}
+              aria-pressed={tab === item.id}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-[#8A99AA] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+          aria-label="Collapse task panel"
+          title="Collapse task panel"
+        >
+          <ChevronRight className="h-4 w-4" aria-hidden="true" />
+        </button>
       </header>
 
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
@@ -2637,13 +2861,13 @@ function InstructionPanel({
               </p>
             </div>
 
-            <div className="rounded-xl border border-[#DFF8EA] bg-[#EFFFF5] px-3 py-2">
+            <div className="rounded-md bg-[#F2F6F5] px-3 py-2">
               <p className="font-mono text-[12px] leading-5 text-[#005F37]">
                 Factorial of n = n × (n−1) × (n−2) × ... × 1
               </p>
             </div>
 
-            <div>
+            <div className="border-t border-[#E6EEF0] pt-3">
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5D6B82]">
                 Requirements
               </p>
@@ -2660,7 +2884,7 @@ function InstructionPanel({
               </ul>
             </div>
 
-            <div>
+            <div className="border-t border-[#E6EEF0] pt-3">
               <div className="flex items-center justify-between">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5D6B82]">
                   Test cases
@@ -2681,34 +2905,38 @@ function InstructionPanel({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[#E6EEF0] bg-[#FAFCFC] p-3">
-              <div className="flex items-center justify-between gap-2">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5D6B82]">
-                    AI actions
-                  </p>
-                  <p className="mt-1 text-xs leading-5 text-[#5D6B82]">
-                    Route current code through Nexora Code Doctor.
-                  </p>
+            <div className="border-t border-[#E6EEF0] pt-2">
+              <button
+                type="button"
+                onClick={() => setHelpOpen((current) => !current)}
+                className="flex h-9 w-full items-center justify-between gap-3 rounded-lg px-2 text-left text-xs font-semibold text-[#005F37] transition hover:bg-[#EFFFF5]"
+                aria-expanded={helpOpen}
+              >
+                <span>Ask for help</span>
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4 transition-transform",
+                    helpOpen && "rotate-180",
+                  )}
+                />
+              </button>
+              {helpOpen ? (
+                <div className="mt-1 grid gap-1 border-t border-[#E6EEF0] pt-2">
+                  {aiActions.map((action) => (
+                    <button
+                      key={action.id}
+                      type="button"
+                      onClick={() => onAiAction(action.id)}
+                      disabled={activeAiAction !== null}
+                      className="flex h-8 items-center rounded-lg px-2.5 text-left text-xs font-medium text-[#3D4A63] transition hover:bg-[#EFFFF5] hover:text-[#005F37] disabled:opacity-60"
+                    >
+                      {activeAiAction === action.id
+                        ? "Working..."
+                        : action.label}
+                    </button>
+                  ))}
                 </div>
-                <Sparkles className="h-4 w-4 shrink-0 text-[#7C4DFF]" />
-              </div>
-              <div className="mt-3 grid gap-2">
-                {aiActions.map((action) => (
-                  <button
-                    key={action.id}
-                    type="button"
-                    onClick={() => onAiAction(action.id)}
-                    disabled={activeAiAction !== null}
-                    className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-[#DFF8EA] bg-white px-3 text-xs font-semibold text-[#005F37] transition hover:border-[#BDEFD2] hover:bg-[#EFFFF5] disabled:opacity-60"
-                  >
-                    <Sparkles className="h-3.5 w-3.5" />
-                    {activeAiAction === action.id
-                      ? "Thinking..."
-                      : action.label}
-                  </button>
-                ))}
-              </div>
+              ) : null}
             </div>
           </div>
         ) : null}
@@ -2740,7 +2968,7 @@ function InstructionPanel({
                 "Print the formatted result with f-strings",
               ].map((tip) => (
                 <li key={tip} className="flex items-start gap-2">
-                  <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-[#7C4DFF]" />
+                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#009B5A]" />
                   {tip}
                 </li>
               ))}
@@ -2786,10 +3014,15 @@ export function CodeLabPage({ role }: { role: AppRole }) {
   const [versionHistory, setVersionHistory] = useState<
     StoredCodeLabWorkspace["versions"]
   >([]);
-  const [consoleHeight, setConsoleHeight] = useState(240);
+  const [consoleHeight, setConsoleHeight] = useState(180);
+  const [consoleCollapsed, setConsoleCollapsed] = useState(false);
+  const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
+  const [taskPanelCollapsed, setTaskPanelCollapsed] = useState(false);
   const [quickOpen, setQuickOpen] = useState(false);
   const [quickQuery, setQuickQuery] = useState("");
-  const [workspaceExpanded, setWorkspaceExpanded] = useState(false);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [commandQuery, setCommandQuery] = useState("");
+  const [workspaceExpanded, setWorkspaceExpanded] = useState(true);
   const [activeIdePanel, setActiveIdePanel] = useState<IdePanelId>("explorer");
   const [autosaveStatus, setAutosaveStatus] = useState<AutosaveStatus>("idle");
   const [lastAutosavedAt, setLastAutosavedAt] = useState<string | null>(null);
@@ -3953,9 +4186,9 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     if (!activeFile) return;
     const code = fileContents[activeFile.id] ?? activeFile.content;
     const labels: Record<AiAction, string> = {
-      explain: "Explain Code",
-      debug: "Debug Code",
-      improve: "Improve Code",
+      explain: "Code explanation",
+      debug: "Issue check",
+      improve: "Improvement suggestion",
     };
 
     setActiveAiAction(action);
@@ -3977,26 +4210,17 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       });
 
       if (!response?.note) {
-        setConsoleOutput(
-          `${labels[action]} failed: AI assistant is unavailable.`,
-        );
+        setConsoleOutput(`${labels[action]} failed: code help is unavailable.`);
         setRunStatus("error");
         return;
       }
 
-      const metadata = [response.model, response.mode]
-        .filter(Boolean)
-        .join(" / ");
       const suggestedCode = response.suggestedCode
         ? `\n\nSuggested code:\n${response.suggestedCode}`
         : "";
 
       setConsoleOutput(
-        [
-          `${labels[action]}${metadata ? ` (${metadata})` : ""}`,
-          response.note,
-          suggestedCode,
-        ]
+        [labels[action], response.note, suggestedCode]
           .filter(Boolean)
           .join("\n\n"),
       );
@@ -4006,7 +4230,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     } catch (error) {
       setConsoleOutput("");
       setErrorOutput(
-        error instanceof Error ? error.message : "AI assistant failed.",
+        error instanceof Error ? error.message : "Code help failed.",
       );
       setRunStatus("error");
     } finally {
@@ -4089,6 +4313,13 @@ export function CodeLabPage({ role }: { role: AppRole }) {
         runShortcutRef.current();
       }
 
+      if (key === "p" && event.shiftKey) {
+        event.preventDefault();
+        setCommandPaletteOpen(true);
+        setCommandQuery("");
+        return;
+      }
+
       if (key === "p") {
         event.preventDefault();
         setQuickOpen(true);
@@ -4102,11 +4333,29 @@ export function CodeLabPage({ role }: { role: AppRole }) {
   }, []);
 
   useEffect(() => {
+    const laptopQuery = window.matchMedia(
+      "(min-width: 1024px) and (max-width: 1279px)",
+    );
+    const keepEditorReadable = (event?: MediaQueryListEvent) => {
+      const isCompactLaptop = event?.matches ?? laptopQuery.matches;
+      if (isCompactLaptop) setTaskPanelCollapsed(true);
+    };
+
+    const frameId = window.requestAnimationFrame(() => keepEditorReadable());
+    laptopQuery.addEventListener("change", keepEditorReadable);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      laptopQuery.removeEventListener("change", keepEditorReadable);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!workspaceExpanded) return;
 
     const previousOverflow = document.body.style.overflow;
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && !quickOpen && !commandPaletteOpen) {
         setWorkspaceExpanded(false);
       }
     };
@@ -4118,7 +4367,90 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [workspaceExpanded]);
+  }, [commandPaletteOpen, quickOpen, workspaceExpanded]);
+
+  const workspaceColumnClass = leftPanelCollapsed
+    ? taskPanelCollapsed
+      ? "lg:grid-cols-[46px_minmax(0,1fr)_46px]"
+      : "lg:grid-cols-[46px_minmax(0,1fr)_46px] xl:grid-cols-[46px_minmax(420px,1fr)_clamp(226px,18vw,280px)] 2xl:grid-cols-[46px_minmax(0,1fr)_clamp(248px,19vw,290px)]"
+    : taskPanelCollapsed
+      ? "lg:grid-cols-[clamp(210px,22vw,240px)_minmax(420px,1fr)_46px] xl:grid-cols-[clamp(220px,17vw,270px)_minmax(420px,1fr)_46px] 2xl:grid-cols-[clamp(248px,18vw,286px)_minmax(0,1fr)_46px]"
+      : "lg:grid-cols-[clamp(210px,22vw,240px)_minmax(420px,1fr)_46px] xl:grid-cols-[clamp(220px,17vw,270px)_minmax(420px,1fr)_clamp(226px,18vw,280px)] 2xl:grid-cols-[clamp(248px,18vw,286px)_minmax(0,1fr)_clamp(248px,19vw,290px)]";
+
+  const commands: CodeLabCommand[] = [
+    {
+      id: "run-code",
+      label: "Run current file",
+      detail: "Run the active file with the selected environment.",
+      shortcut: "Ctrl Enter",
+      icon: Play,
+      action: () => void handleRun(),
+    },
+    {
+      id: "save-workspace",
+      label: "Save workspace",
+      detail: "Save the latest file changes and create a version.",
+      shortcut: "Ctrl S",
+      icon: CheckCircle2,
+      action: () => void handleSave(),
+    },
+    {
+      id: "run-tests",
+      label: "Run all tests",
+      detail: "Check the current solution against the lab test cases.",
+      icon: RefreshCw,
+      action: handleRunTests,
+    },
+    {
+      id: "open-files",
+      label: "Go to file",
+      detail: "Search and open a file in this workspace.",
+      shortcut: "Ctrl P",
+      icon: Search,
+      action: () => {
+        setQuickOpen(true);
+        setQuickQuery("");
+      },
+    },
+    {
+      id: "open-code-help",
+      label: "Show code help",
+      detail: "Open explanations, issue checks, and improvement suggestions.",
+      icon: Command,
+      action: () => {
+        setActiveIdePanel("ai");
+        setLeftPanelCollapsed(false);
+      },
+    },
+    {
+      id: "toggle-console",
+      label: consoleCollapsed ? "Open console" : "Collapse console",
+      detail: "Show or hide the terminal and output area.",
+      icon: ChevronUp,
+      action: () => setConsoleCollapsed((current) => !current),
+    },
+    {
+      id: "toggle-task-panel",
+      label: taskPanelCollapsed ? "Open task panel" : "Collapse task panel",
+      detail: "Show or hide the lab brief and test cases.",
+      icon: ChevronRight,
+      action: () => setTaskPanelCollapsed((current) => !current),
+    },
+    {
+      id: "toggle-fullscreen",
+      label: workspaceExpanded ? "Exit focus mode" : "Enter focus mode",
+      detail: "Use the available screen for the Code Lab workspace.",
+      icon: Maximize2,
+      action: () => setWorkspaceExpanded((current) => !current),
+    },
+    {
+      id: "submit-lab",
+      label: "Submit lab task",
+      detail: "Send the current workspace for review.",
+      icon: UploadIcon,
+      action: () => void handleSubmitLabTask(),
+    },
+  ];
 
   return (
     <AppShell
@@ -4132,21 +4464,22 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     >
       <div
         className={cn(
-          "nexora-code-lab grid gap-3",
-          workspaceExpanded &&
-            "nexora-code-lab-fullscreen fixed inset-3 z-[100] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-[28px] border border-[#DDEAE5] bg-[#F8FCFA] p-3 shadow-[0_30px_90px_rgba(15,23,42,0.22)]",
+          "nexora-code-lab code-lab-ide-shell grid grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[18px] border border-[#DCE7E2] bg-white shadow-[0_12px_34px_rgba(15,23,42,0.06)]",
+          workspaceExpanded
+            ? "nexora-code-lab-fullscreen fixed inset-3 z-[100] h-[calc(100dvh-1.5rem)] min-h-0 max-h-[calc(100dvh-1.5rem)] rounded-[24px] border border-[#DDEAE5] bg-[#F8FCFA] shadow-[0_30px_90px_rgba(15,23,42,0.22)] lg:h-[calc(100dvh-1.5rem)] lg:min-h-0 2xl:min-h-0"
+            : "lg:h-[calc(100dvh-132px)] lg:min-h-[620px] 2xl:min-h-[720px]",
         )}
       >
         <CodeLabHeader
           language={language}
           environment={environment}
-          dbStatus={dbStatus}
-          autosaveStatus={autosaveStatus}
-          dirtyCount={dirtyFileIds.size}
           onLanguageChange={handleLanguageChange}
           onEnvironmentChange={handleEnvironmentChange}
+          onOpenCommandPalette={() => {
+            setCommandPaletteOpen(true);
+            setCommandQuery("");
+          }}
           onRun={handleRun}
-          onSave={handleSave}
           onSubmit={handleSubmitLabTask}
           isRunning={isRunning}
           isSubmitting={isSubmitting}
@@ -4168,121 +4501,151 @@ export function CodeLabPage({ role }: { role: AppRole }) {
             onClose={() => setQuickOpen(false)}
           />
         ) : null}
+        {commandPaletteOpen ? (
+          <CommandPalette
+            commands={commands}
+            query={commandQuery}
+            onQueryChange={setCommandQuery}
+            onClose={() => setCommandPaletteOpen(false)}
+          />
+        ) : null}
 
-        <div
+        <section
           className={cn(
-            "code-lab-workspace-grid grid gap-3",
+            "grid min-h-0 overflow-hidden bg-white",
             workspaceExpanded
-              ? "min-h-0 grid-cols-1 [&>:first-child]:hidden [&>:last-child]:hidden lg:grid-cols-[minmax(220px,280px)_minmax(0,1fr)_minmax(220px,280px)] lg:[&>:first-child]:flex lg:[&>:last-child]:block 2xl:grid-cols-[340px_minmax(0,1fr)_320px]"
-              : "lg:min-h-[680px] lg:h-[calc(100dvh-166px)] lg:min-h-[700px] lg:grid-cols-[minmax(220px,250px)_minmax(0,1fr)] lg:[&>:last-child]:hidden 2xl:grid-cols-[340px_minmax(0,1fr)_320px] 2xl:[&>:last-child]:block",
+              ? "h-full grid-rows-[minmax(0,1fr)_auto]"
+              : "lg:grid-rows-[minmax(0,1fr)_auto]",
           )}
         >
-          <CodeLabSidebar
-            activePanel={activeIdePanel}
-            folders={folders}
-            files={allFiles}
-            fileContents={fileContents}
-            activeFileId={activeFileId}
-            dirtyFileIds={dirtyFileIds}
-            tests={tests}
-            versions={versionHistory}
-            activeAiAction={activeAiAction}
-            onSelectPanel={setActiveIdePanel}
-            onSelectFile={handleSelectFile}
-            onCreateFile={handleCreateFile}
-            onDuplicateFile={handleDuplicateFile}
-            onRenameFile={handleRenameFile}
-            onDeleteFile={handleDeleteFile}
-            onDownloadFile={handleDownloadFile}
-            onUploadFiles={() => uploadInputRef.current?.click()}
-            onRunTests={handleRunTests}
-            onSelectVersion={handleSelectVersion}
-            onAiAction={handleAiAction}
-          />
-
           <div
-            className={cn("grid min-h-0 gap-3", workspaceExpanded && "h-full")}
-            style={{
-              gridTemplateRows: `minmax(0,1fr) ${
-                workspaceExpanded ? Math.max(consoleHeight, 260) : consoleHeight
-              }px`,
-            }}
+            className={cn(
+              "code-lab-workspace-grid grid min-h-0",
+              workspaceExpanded
+                ? "grid-cols-1 [&>:first-child]:hidden [&>:last-child]:hidden lg:[&>:first-child]:flex lg:[&>:last-child]:block"
+                : "",
+              workspaceColumnClass,
+            )}
           >
-            <CodeEditorPanel
-              openFiles={openFiles}
+            <CodeLabSidebar
+              activePanel={activeIdePanel}
+              collapsed={leftPanelCollapsed}
+              folders={folders}
+              files={allFiles}
+              fileContents={fileContents}
               activeFileId={activeFileId}
               dirtyFileIds={dirtyFileIds}
-              workspaceExpanded={workspaceExpanded}
-              onToggleWorkspaceExpanded={() =>
-                setWorkspaceExpanded((current) => !current)
+              tests={tests}
+              versions={versionHistory}
+              activeAiAction={activeAiAction}
+              onToggleCollapsed={() =>
+                setLeftPanelCollapsed((current) => !current)
               }
-              onSelectTab={handleSelectTab}
-              onCloseTab={handleCloseTab}
+              onSelectPanel={setActiveIdePanel}
+              onSelectFile={handleSelectFile}
               onCreateFile={handleCreateFile}
-              language={language}
-              content={activeFile?.content ?? ""}
-              onContentChange={(nextContent) => {
-                if (!activeFile) return;
-                setFileContents((current) => ({
-                  ...current,
-                  [activeFile.id]: nextContent,
-                }));
-              }}
+              onDuplicateFile={handleDuplicateFile}
+              onRenameFile={handleRenameFile}
+              onDeleteFile={handleDeleteFile}
+              onDownloadFile={handleDownloadFile}
+              onUploadFiles={() => uploadInputRef.current?.click()}
+              onRunTests={handleRunTests}
+              onSelectVersion={handleSelectVersion}
+              onAiAction={handleAiAction}
             />
-            <ConsolePanel
-              consoleOutput={consoleOutput}
-              errorOutput={errorOutput}
-              htmlPreview={htmlPreview}
-              problems={problems}
-              inputValue={stdin}
-              terminalCommand={terminalCommand}
-              terminalHistory={terminalHistory}
-              terminalCwd={terminalCwd}
-              terminalSuggestions={terminalSuggestions}
-              isTerminalRunning={isTerminalRunning}
-              onInputChange={setStdin}
-              onTerminalCommandChange={setTerminalCommand}
-              onRunTerminal={handleRunTerminal}
-              onClearTerminal={() => {
-                setTerminalHistory([]);
-                setTerminalCommand("");
+
+            <div
+              className={cn("grid min-h-0", workspaceExpanded && "h-full")}
+              style={{
+                gridTemplateRows: `minmax(0,1fr) ${
+                  consoleCollapsed ? 50 : consoleHeight
+                }px`,
               }}
-              onClear={() => {
-                setConsoleOutput("");
-                setErrorOutput("");
-                setHtmlPreview(undefined);
-                setTerminalHistory([]);
-                setRunStatus("idle");
-                setExecutionMs(0);
-              }}
-              consoleHeight={consoleHeight}
-              onConsoleHeightChange={setConsoleHeight}
-              executionMs={executionMs}
-              status={runStatus}
+            >
+              <CodeEditorPanel
+                openFiles={openFiles}
+                activeFileId={activeFileId}
+                dirtyFileIds={dirtyFileIds}
+                workspaceExpanded={workspaceExpanded}
+                onToggleWorkspaceExpanded={() =>
+                  setWorkspaceExpanded((current) => !current)
+                }
+                onSelectTab={handleSelectTab}
+                onCloseTab={handleCloseTab}
+                onCreateFile={handleCreateFile}
+                language={language}
+                content={activeFile?.content ?? ""}
+                onContentChange={(nextContent) => {
+                  if (!activeFile) return;
+                  setFileContents((current) => ({
+                    ...current,
+                    [activeFile.id]: nextContent,
+                  }));
+                }}
+              />
+              <ConsolePanel
+                consoleOutput={consoleOutput}
+                errorOutput={errorOutput}
+                htmlPreview={htmlPreview}
+                problems={problems}
+                inputValue={stdin}
+                terminalCommand={terminalCommand}
+                terminalHistory={terminalHistory}
+                terminalCwd={terminalCwd}
+                terminalSuggestions={terminalSuggestions}
+                isTerminalRunning={isTerminalRunning}
+                onInputChange={setStdin}
+                onTerminalCommandChange={setTerminalCommand}
+                onRunTerminal={handleRunTerminal}
+                onClearTerminal={() => {
+                  setTerminalHistory([]);
+                  setTerminalCommand("");
+                }}
+                onClear={() => {
+                  setConsoleOutput("");
+                  setErrorOutput("");
+                  setHtmlPreview(undefined);
+                  setTerminalHistory([]);
+                  setRunStatus("idle");
+                  setExecutionMs(0);
+                }}
+                collapsed={consoleCollapsed}
+                onToggleCollapsed={() =>
+                  setConsoleCollapsed((current) => !current)
+                }
+                consoleHeight={consoleHeight}
+                onConsoleHeightChange={setConsoleHeight}
+                executionMs={executionMs}
+                status={runStatus}
+              />
+            </div>
+
+            <InstructionPanel
+              tests={tests}
+              onRunTests={handleRunTests}
+              onAiAction={handleAiAction}
+              activeAiAction={activeAiAction}
+              collapsed={taskPanelCollapsed}
+              onToggleCollapsed={() =>
+                setTaskPanelCollapsed((current) => !current)
+              }
             />
           </div>
-
-          <InstructionPanel
+          <CodeStatusBar
+            workspaceTitle={workspaceTitle}
+            activeFile={activeFile}
+            language={language}
+            dbStatus={dbStatus}
+            autosaveStatus={autosaveStatus}
+            lastAutosavedAt={lastAutosavedAt}
+            dirtyCount={dirtyFileIds.size}
+            runStatus={runStatus}
+            executionMs={executionMs}
             tests={tests}
-            onRunTests={handleRunTests}
-            onAiAction={handleAiAction}
-            activeAiAction={activeAiAction}
+            problems={problems}
+            fileCount={allFiles.length}
           />
-        </div>
-        <CodeStatusBar
-          workspaceTitle={workspaceTitle}
-          activeFile={activeFile}
-          language={language}
-          dbStatus={dbStatus}
-          autosaveStatus={autosaveStatus}
-          lastAutosavedAt={lastAutosavedAt}
-          dirtyCount={dirtyFileIds.size}
-          runStatus={runStatus}
-          executionMs={executionMs}
-          tests={tests}
-          problems={problems}
-          fileCount={allFiles.length}
-        />
+        </section>
       </div>
     </AppShell>
   );

@@ -268,7 +268,7 @@ export function LandingNav() {
           </Link>
         </div>
 
-        <nav className="hidden items-center gap-5 text-sm xl:flex 2xl:gap-8">
+        <nav className="hidden items-center gap-4 text-[13px] min-[1180px]:flex 2xl:gap-8 2xl:text-sm">
           {navLinks.map((l) => (
             <a
               key={l.href}
@@ -297,7 +297,7 @@ export function LandingNav() {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
-            className={`flex flex-col items-center justify-center gap-[5px] rounded-xl border border-white/12 bg-white/5 p-2.5 text-slate-300 backdrop-blur-sm transition-colors hover:bg-white/10 hover:text-white xl:hidden light:border-slate-200 light:bg-slate-100 light:text-slate-600 light:hover:bg-slate-200 ${mobileOpen ? "ham-open" : ""}`}
+            className={`flex flex-col items-center justify-center gap-[5px] rounded-xl border border-white/12 bg-white/5 p-2.5 text-slate-300 backdrop-blur-sm transition-colors hover:bg-white/10 hover:text-white min-[1180px]:hidden light:border-slate-200 light:bg-slate-100 light:text-slate-600 light:hover:bg-slate-200 ${mobileOpen ? "ham-open" : ""}`}
           >
             <span className="ham-bar" />
             <span className="ham-bar" />
@@ -307,7 +307,7 @@ export function LandingNav() {
       </div>
 
       {/* Mobile slide-down drawer */}
-      <div className={`mobile-drawer mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-[rgba(6,9,7,0.92)] backdrop-blur-2xl xl:hidden light:border-white/60 light:bg-[rgba(255,255,255,0.95)] ${mobileOpen ? "open" : ""}`}>
+      <div className={`mobile-drawer mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-[rgba(6,9,7,0.92)] backdrop-blur-2xl min-[1180px]:hidden light:border-white/60 light:bg-[rgba(255,255,255,0.95)] ${mobileOpen ? "open" : ""}`}>
         <nav className="flex flex-col gap-1 px-4 py-4">
           {navLinks.map((l) => (
             <a

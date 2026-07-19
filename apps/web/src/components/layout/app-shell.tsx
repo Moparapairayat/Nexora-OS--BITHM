@@ -1,27 +1,11 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import type { AppRole, NavGroup, NavItem } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
-
-const laptopQuery = "(min-width: 1280px) and (max-width: 1535px)";
-
-function subscribeToLaptopViewport(onChange: () => void) {
-  const mediaQuery = window.matchMedia(laptopQuery);
-  mediaQuery.addEventListener("change", onChange);
-  return () => mediaQuery.removeEventListener("change", onChange);
-}
-
-function getLaptopViewportSnapshot() {
-  return window.matchMedia(laptopQuery).matches;
-}
-
-function getServerLaptopViewportSnapshot() {
-  return false;
-}
 
 export function AppShell({
   role,
@@ -58,13 +42,7 @@ export function AppShell({
 
     return () => window.cancelAnimationFrame(frame);
   }, [sidebarPreferenceKey]);
-  const isLaptopViewport = useSyncExternalStore(
-    subscribeToLaptopViewport,
-    getLaptopViewportSnapshot,
-    getServerLaptopViewportSnapshot,
-  );
-  const effectiveSidebarCollapsed =
-    sidebarCollapsed ?? (isLaptopViewport ? true : false);
+  const effectiveSidebarCollapsed = sidebarCollapsed ?? false;
 
   function toggleSidebar() {
     const next = !effectiveSidebarCollapsed;
@@ -75,16 +53,12 @@ export function AppShell({
   return (
     <div
       data-nexora-role={role}
-      style={
-        effectiveSidebarCollapsed
-          ? { gridTemplateColumns: "92px minmax(0, 1fr)" }
-          : undefined
-      }
-      className={`min-h-dvh px-3 py-3 transition-[grid-template-columns] duration-300 light:bg-[#edf3ef]/55 lg:grid lg:gap-4 ${
-        effectiveSidebarCollapsed
-          ? "lg:grid-cols-[92px_minmax(0,1fr)]"
-          : "lg:grid-cols-[248px_minmax(0,1fr)] 2xl:grid-cols-[304px_minmax(0,1fr)]"
-      }`}
+      style={{
+        gridTemplateColumns: effectiveSidebarCollapsed
+          ? "92px minmax(0, 1fr)"
+          : "var(--nexora-sidebar-width) minmax(0, 1fr)",
+      }}
+      className="nexora-app-frame min-h-dvh transition-[grid-template-columns] duration-300 light:bg-[#edf3ef]/55"
     >
       <a
         href="#nexora-main-content"
@@ -105,7 +79,7 @@ export function AppShell({
       <main
         id="nexora-main-content"
         tabIndex={-1}
-        className="min-w-0 rounded-[24px] px-2 pb-8 outline-none sm:px-4 lg:px-6 light:rounded-[28px] light:border light:border-white/70 light:bg-[#f8fbf9]/72 light:shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_14px_40px_rgba(31,67,49,0.04)]"
+        className="nexora-app-main min-w-0 rounded-[24px] px-4 pb-8 outline-none sm:px-6 light:rounded-[28px] light:border light:border-white/70 light:bg-[#f8fbf9]/72 light:shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_14px_40px_rgba(31,67,49,0.04)]"
       >
         <Topbar
           role={role}

@@ -726,7 +726,7 @@ function UserFormPanel({
         </Field>
 
         {!editingUserId ? (
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             <Field label="Role">
               <select
                 value={form.role}
@@ -799,7 +799,7 @@ function UserFormPanel({
           </select>
         </Field>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Field label="OTHM Unit">
             <select
               value={form.unitId}

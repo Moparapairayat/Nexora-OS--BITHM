@@ -5,12 +5,18 @@
 }
 
 .bg-dot-grid {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.015) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.015) 1.5px,
+    transparent 1.5px
+  );
   background-size: 28px 28px;
 }
 
 .light .bg-dot-grid {
-  background-image: radial-gradient(rgba(15, 23, 42, 0.025) 1.5px, transparent 1.5px);
+  background-image: radial-gradient(
+    rgba(15, 23, 42, 0.025) 1.5px,
+    transparent 1.5px
+  );
   background-size: 28px 28px;
 }
 
@@ -86,7 +92,11 @@
 }
 
 .light .landing-hero {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 251, 249, 0.78));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(247, 251, 249, 0.78)
+  );
   border-bottom: 1px solid rgba(16, 185, 129, 0.12);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
@@ -117,7 +127,8 @@
     inset 0 0 24px rgba(var(--theme-accent-primary-rgb-raw), 0.1),
     0 0 0 1px rgba(var(--theme-accent-primary-rgb-raw), 0.1),
     0 10px 38px rgba(var(--theme-accent-primary-rgb-raw), 0.18);
-  filter: saturate(1.22) drop-shadow(0 8px 26px rgba(var(--theme-accent-primary-rgb-raw), 0.18));
+  filter: saturate(1.22)
+    drop-shadow(0 8px 26px rgba(var(--theme-accent-primary-rgb-raw), 0.18));
 }
 
 .light .landing-hero-arc-left {
@@ -209,7 +220,11 @@
       rgba(var(--theme-accent-primary-rgb-raw), 0.3),
       transparent 48%
     ),
-    linear-gradient(145deg, rgba(var(--theme-accent-solid-rgb-raw), 0.88), rgba(34, 20, 72, 0.82));
+    linear-gradient(
+      145deg,
+      rgba(var(--theme-accent-solid-rgb-raw), 0.88),
+      rgba(34, 20, 72, 0.82)
+    );
   box-shadow:
     inset 18px 18px 38px rgba(255, 255, 255, 0.06),
     inset -22px -28px 44px rgba(4, 7, 6, 0.54),
@@ -269,10 +284,52 @@
 
 /* ============================================================
    Responsive foundation
-   Goal: keep the desktop/PC layout visually identical on laptops
-   (1280-1536px) while scaling gracefully on smaller widths and
-   accounting for laptop browser chrome + OS display scaling.
+   Desktop parity: laptops keep the same composition as desktop.
+   Only the shell width, gutters and gaps become denser.
    ============================================================ */
+
+:root {
+  --nexora-shell-edge: 0.75rem;
+  --nexora-shell-gap: 1rem;
+  --nexora-sidebar-width: 304px;
+  --nexora-content-gutter: 2rem;
+  --nexora-section-gap: 1.25rem;
+}
+
+.nexora-app-frame {
+  padding: var(--nexora-shell-edge);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --nexora-shell-edge: clamp(0.5rem, 0.65vw, 0.75rem);
+    --nexora-shell-gap: clamp(0.625rem, 1vw, 1rem);
+    --nexora-sidebar-width: clamp(220px, 18vw, 304px);
+    --nexora-content-gutter: clamp(0.75rem, 1.55vw, 2rem);
+    --nexora-section-gap: clamp(0.75rem, 1.15vw, 1.25rem);
+  }
+
+  .nexora-app-frame {
+    display: grid;
+    gap: var(--nexora-shell-gap);
+    padding: var(--nexora-shell-edge);
+  }
+
+  .nexora-app-main {
+    padding-inline: var(--nexora-content-gutter);
+  }
+
+  .nexora-app-topbar {
+    margin-inline: calc(-1 * var(--nexora-content-gutter));
+    padding-inline: var(--nexora-content-gutter);
+  }
+
+  .nexora-sidebar {
+    top: var(--nexora-shell-edge);
+    width: var(--nexora-sidebar-width);
+    height: calc(100dvh - (var(--nexora-shell-edge) * 2));
+  }
+}
 
 /* Fluid type scale: scales smoothly between laptop and desktop without
    per-breakpoint overrides. Usage: class="text-fluid-lg" */
@@ -448,23 +505,14 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   color: #8b96aa !important;
 }
 
-/* Large-laptop range (1280-1535px): nudge density so the PC layout
-   reads the same as on wider monitors. */
-@media (min-width: 1280px) and (max-width: 1535px) {
+/* Laptop density keeps the PC hierarchy without scaling the whole page. */
+@media (min-width: 1024px) and (max-width: 1535px) {
   .student-dashboard .command-surface {
-    padding: 1rem;
-  }
-}
-
-/* Small-laptop range (1024-1279px): tighten gutters and panels so the
-   sidebar + content still breathe at common 13" laptop widths. */
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .nexora-container {
-    max-width: 1180px;
+    padding: clamp(0.75rem, 1vw, 1rem);
   }
 
-  .student-dashboard .command-surface {
-    padding: 0.875rem;
+  .student-dashboard {
+    gap: var(--nexora-section-gap);
   }
 
   .student-dashboard .command-surface h2,
@@ -993,6 +1041,43 @@ html:not(.light) .nexora-sidebar .sidebar-muted {
   color: #f8fafc;
 }
 
+/* Code Lab laptop layout: keep the editor wide and move the task brief into
+   a temporary overlay when it is opened on compact laptop screens. */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .code-lab-ide-shell:not(.nexora-code-lab-fullscreen) {
+    height: calc(100dvh - 120px) !important;
+    min-height: 560px !important;
+  }
+
+  .code-lab-workspace-grid {
+    position: relative;
+  }
+
+  .code-lab-task-panel:not(.is-collapsed) {
+    position: absolute;
+    z-index: 30;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(300px, 42vw);
+    box-shadow: -18px 0 42px rgba(15, 23, 42, 0.14);
+  }
+
+  .code-lab-workspace-status {
+    display: none;
+  }
+
+  .code-lab-ide-shell select {
+    max-width: 126px;
+  }
+}
+
+.nexora-code-lab.nexora-code-lab-fullscreen {
+  height: calc(100dvh - 1.5rem) !important;
+  min-height: 0 !important;
+  max-height: calc(100dvh - 1.5rem) !important;
+}
+
 html:not(.light) .nexora-code-lab {
   color-scheme: dark;
   --code-lab-surface: rgba(18, 24, 21, 0.88);
@@ -1051,6 +1136,7 @@ html:not(.light) .nexora-code-lab .bg-\[\#EEE7FF\] {
 html:not(.light) .nexora-code-lab .border-\[\#E6EEF0\],
 html:not(.light) .nexora-code-lab .border-\[\#F0F4F4\],
 html:not(.light) .nexora-code-lab .border-\[\#DDEAE5\],
+html:not(.light) .nexora-code-lab .border-\[\#DCE7E2\],
 html:not(.light) .nexora-code-lab .border-\[\#DCEBE5\],
 html:not(.light) .nexora-code-lab .border-\[\#D8E0EA\] {
   border-color: var(--code-lab-border) !important;

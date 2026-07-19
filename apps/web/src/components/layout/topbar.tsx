@@ -97,7 +97,7 @@ export function Topbar({
 
   return (
     <>
-      <header className="sticky top-0 z-20 -mx-4 rounded-t-3xl border-b border-[var(--line)] bg-[rgba(5,7,6,0.76)] px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)] backdrop-blur-xl light:rounded-t-[28px] light:border-[color:var(--line)] light:bg-[rgba(250,253,251,0.88)] light:shadow-[0_10px_30px_rgba(31,67,49,0.055)] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+      <header className="nexora-app-topbar sticky top-0 z-20 -mx-4 rounded-t-3xl border-b border-[var(--line)] bg-[rgba(5,7,6,0.76)] px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)] backdrop-blur-xl light:rounded-t-[28px] light:border-[color:var(--line)] light:bg-[rgba(250,253,251,0.88)] light:shadow-[0_10px_30px_rgba(31,67,49,0.055)] sm:-mx-6 sm:px-6">
         <div className="flex min-h-14 items-center gap-1.5 sm:gap-2.5">
           <button
             type="button"
@@ -124,13 +124,13 @@ export function Topbar({
             </div>
           </div>
 
-          <div className="hidden min-w-0 flex-1 min-[1360px]:flex min-[1360px]:justify-center">
+          <div className="hidden min-w-0 flex-1 xl:flex xl:justify-center">
             <CommandSearch onClick={() => setCommandOpen(true)} />
           </div>
           <Button
             type="button"
             variant="ghost"
-            className="ml-auto h-10 w-10 rounded-2xl px-0 light:bg-white light:shadow-[0_10px_24px_rgba(33,45,74,0.06)] min-[1360px]:hidden"
+            className="ml-auto h-10 w-10 rounded-2xl px-0 light:bg-white light:shadow-[0_10px_24px_rgba(33,45,74,0.06)] xl:hidden"
             onClick={() => setCommandOpen(true)}
             aria-label="Search Nexora"
             title="Search Nexora"
@@ -266,7 +266,7 @@ export function Topbar({
               ) : null}
             </div>
           </div>
-          <AIButton className="hidden 2xl:inline-flex">Ask Nexora</AIButton>
+          <AIButton className="hidden min-[1440px]:inline-flex">Ask Nexora</AIButton>
         </div>
       </header>
       <CommandPalette

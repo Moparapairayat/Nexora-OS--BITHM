@@ -303,10 +303,10 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
   ];
 
   return (
-    <div className="student-dashboard grid gap-4 2xl:gap-5">
+    <div className="student-dashboard grid gap-4">
       <section className="relative overflow-hidden rounded-[24px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,#10201a_0%,#0b1915_48%,#040c0c_100%)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.36),0_0_70px_rgba(50,245,154,0.08)] backdrop-blur light:border-slate-200/80 light:bg-[linear-gradient(180deg,#f6fcf2_0%,#f5fcf2_50%,#f4fcef_100%)] light:shadow-[0_20px_54px_rgba(33,45,74,0.08)]">
         <div className="absolute inset-0 bg-transparent" />
-        <div className="relative grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(440px,0.92fr)] lg:items-stretch">
+        <div className="relative grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-stretch 2xl:grid-cols-[minmax(0,1.08fr)_minmax(440px,0.92fr)]">
           <div className="min-w-0">
             <p className="text-sm font-medium text-slate-300 light:text-slate-700">
               Welcome back,{" "}
@@ -348,17 +348,17 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
 
       <nav
         aria-label="Quick actions"
-        className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-6"
+        className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6"
       >
         {quickActions.map(
           ({ title, detail, href, icon: Icon, tone, comingSoon }) => (
             <Link
               key={title}
               href={href}
-              className="quick-action-card nexora-focus group flex min-w-0 items-center gap-3 rounded-2xl border border-[var(--line)] bg-[var(--surface-elevated)] px-3 py-3 shadow-[var(--shadow-command)] transition hover:border-[var(--line-strong)]"
+              className="quick-action-card nexora-focus group flex min-w-0 items-center gap-2 rounded-2xl border border-[var(--line)] bg-[var(--surface-elevated)] px-2.5 py-2.5 shadow-[var(--shadow-command)] transition hover:border-[var(--line-strong)] 2xl:gap-3 2xl:px-3 2xl:py-3"
             >
               <span
-                className={`quick-action-icon relative grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-xl text-white ${tone}`}
+                className={`quick-action-icon relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-xl text-white 2xl:h-10 2xl:w-10 ${tone}`}
               >
                 <Icon
                   className="quick-action-glyph relative z-10 h-5 w-5 text-white"
@@ -386,7 +386,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         )}
       </nav>
 
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5 2xl:gap-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 2xl:gap-4">
         {data.stats.map((stat, index) => {
           const Icon = statIcons[index] ?? Activity;
           return (
@@ -451,7 +451,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         </section>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-5 2xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(340px,0.75fr)]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(0,0.78fr)] 2xl:gap-5">
         <WorkflowTimeline items={data.workflows} />
 
         <DashboardCard
@@ -490,7 +490,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
           detail="How your recent work is contributing to key academic and technical skills."
           icon={ChartNoAxesCombined}
           tone="violet"
-          className="lg:col-span-2 xl:col-span-1"
+          className="lg:col-span-1"
         >
           <div className="h-36">
             <SkillRadarChart data={data.skillData} />
@@ -498,7 +498,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
         </DashboardCard>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-5 2xl:grid-cols-[minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(380px,1fr)]">
+      <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1fr)] 2xl:gap-5">
         <StudentListCard
           title="Upcoming Deadlines"
           icon={CalendarClock}
@@ -513,7 +513,7 @@ function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
           action="View all submissions"
           href="/student/submissions"
         />
-        <div className="lg:col-span-2 xl:col-span-1">
+        <div className="lg:col-span-1">
           <StudentAssistantPanel activity={data.activity} />
         </div>
       </div>
@@ -530,7 +530,7 @@ function AcademicHeroVisual() {
         fill
         priority
         unoptimized
-        sizes="(min-width: 1024px) 400px, 100vw"
+        sizes="(min-width: 1024px) 36vw, 100vw"
         className="z-0 object-cover object-right light:hidden"
       />
       <Image
@@ -539,7 +539,7 @@ function AcademicHeroVisual() {
         fill
         priority
         unoptimized
-        sizes="(min-width: 1024px) 400px, 100vw"
+        sizes="(min-width: 1024px) 36vw, 100vw"
         className="z-0 hidden object-cover object-right light:block"
       />
     </div>
