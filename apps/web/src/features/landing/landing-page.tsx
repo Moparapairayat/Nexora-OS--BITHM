@@ -26,6 +26,9 @@ import { PandaCTA } from "@/components/ui/panda-cta";
 import { PandaChat } from "@/components/ui/panda-chat";
 import { LandingNav } from "./components/landing-nav";
 import { ScrollReveal, SectionHeading } from "./components/landing-primitives";
+import { WorkflowCard } from "./components/workflow-card";
+import { WhyNexoraSection } from "./components/why-nexora-section";
+import { TeamShowcaseSection } from "./components/team-showcase-section";
 import { toolCardStyles } from "./landing-theme";
 
 const cardShape: Record<string, string> = {
@@ -176,6 +179,7 @@ const workflows = [
       "Prepare reports, organize evidence, submit work, and follow its status.",
     icon: FileCheck2,
     label: "Plan · Write · Submit",
+    action: "Open reports",
   },
   {
     title: "Practical lab work",
@@ -183,6 +187,7 @@ const workflows = [
       "Turn a task brief into tested code and a well-structured lab report.",
     icon: FlaskConical,
     label: "Build · Test · Report",
+    action: "Open Code Lab",
   },
   {
     title: "Progress and feedback",
@@ -190,6 +195,7 @@ const workflows = [
       "Keep up with deadlines, requested changes, submissions, and progress.",
     icon: BarChart3,
     label: "Review · Improve · Resubmit",
+    action: "Review progress",
   },
 ];
 
@@ -224,6 +230,37 @@ const latestAreas = [
     icon: UsersRound,
   },
 ];
+
+const availableCardThemes = [
+  {
+    surface: "bg-[#31270f] text-[#fff5ce] light:bg-[#f5d77f] light:text-[#16130c]",
+    foreground: "text-[#fff5ce] light:text-[#16130c]",
+    icon: "text-[#fff5ce] light:text-black",
+    muted: "text-[#fff5ce]/70 light:text-black/65",
+    decor: "text-[#f5d77f]/55 light:text-white/90",
+  },
+  {
+    surface: "bg-[#2b1c5c] text-white light:bg-[#7048e8] light:text-white",
+    foreground: "text-white",
+    icon: "text-white light:text-black",
+    muted: "text-white/72",
+    decor: "text-white/45 light:text-white/85",
+  },
+  {
+    surface: "bg-[#302345] text-[#f5e9ff] light:bg-[#dbc1f5] light:text-[#181020]",
+    foreground: "text-[#f5e9ff] light:text-[#181020]",
+    icon: "text-[#f5e9ff] light:text-black",
+    muted: "text-[#f5e9ff]/70 light:text-[#181020]/65",
+    decor: "text-[#dbc1f5]/45 light:text-white/85",
+  },
+  {
+    surface: "bg-[#073c33] text-white light:bg-[#087f6e] light:text-white",
+    foreground: "text-white",
+    icon: "text-white light:text-black",
+    muted: "text-white/70",
+    decor: "text-[#57d6bc]/45 light:text-white/85",
+  },
+] as const;
 
 
 
@@ -838,100 +875,72 @@ export function LandingPage() {
 
       <section
         id="how-it-works"
-        className="relative overflow-hidden border-y border-white/8 bg-[#050b08] px-5 py-20 light:border-emerald-950/8 light:bg-[#eaf3ee] md:px-8 sm:py-24"
+        className="relative overflow-hidden border-y border-white/8 bg-[radial-gradient(circle_at_50%_18%,rgba(52,211,153,0.09),transparent_34%),linear-gradient(180deg,#050b08_0%,#06100c_100%)] px-5 py-20 light:border-slate-200 light:bg-[radial-gradient(circle_at_50%_18%,rgba(16,185,129,0.1),transparent_34%),linear-gradient(180deg,#fbfdfb_0%,#f3f7f4_100%)] sm:py-24 md:px-8"
       >
-        <div className="pointer-events-none absolute left-1/2 top-0 h-80 w-[70%] -translate-x-1/2 rounded-full bg-emerald-500/8 blur-[130px] light:bg-emerald-300/16" />
+        <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[62%] -translate-x-1/2 rounded-full border border-emerald-300/7 light:border-emerald-800/6" />
 
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[30px] border border-emerald-300/12 bg-[linear-gradient(135deg,#0b2b21_0%,#072018_58%,#06140f_100%)] shadow-[0_26px_70px_rgba(0,0,0,0.28)] light:border-emerald-950/10 light:bg-[linear-gradient(135deg,#ffffff_0%,#edf8f1_58%,#e4f2ea_100%)] light:shadow-[0_22px_55px_rgba(25,80,53,0.11)]">
-          <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full border-[42px] border-emerald-300/6 light:border-emerald-700/5" />
-          <div className="pointer-events-none absolute left-[42%] top-[-15%] h-72 w-72 rounded-full bg-emerald-400/8 blur-[100px] light:bg-emerald-300/16" />
-
-          <div className="relative grid items-center lg:grid-cols-[0.96fr_1.04fr]">
-            <div className="flex flex-col justify-center px-7 py-10 sm:px-11 sm:py-14 lg:px-14 lg:py-16">
-              <div className="flex items-center gap-3">
-                <span className="h-px w-9 bg-emerald-300/70 light:bg-emerald-700/55" />
+        <div className="relative mx-auto max-w-7xl">
+          <ScrollReveal>
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="flex items-center justify-center gap-3">
+                <span className="h-px w-7 bg-emerald-300/55 light:bg-emerald-700/40" />
                 <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300 light:text-emerald-700">
                   Core workflows
                 </p>
+                <span className="h-px w-7 bg-emerald-300/55 light:bg-emerald-700/40" />
               </div>
-
-              <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.04] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+              <h2 className="mt-4 text-balance text-4xl font-semibold leading-[1.06] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
                 A clear path from task brief to final submission.
               </h2>
-              <p className="mt-4 max-w-lg text-sm leading-7 text-emerald-50/70 sm:text-base light:text-slate-600">
-                Keep the brief, practical work, evidence, and feedback connected so you always know what to work on next.
+              <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
+                Move from the brief to practical work, keep your evidence together, and act on feedback without losing context.
               </p>
-
-              <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-xs font-medium text-emerald-100/75 light:text-emerald-900/70">
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-300 light:bg-emerald-600" />
-                  Coursework
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-300 light:bg-cyan-600" />
-                  Practical labs
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-amber-300 light:bg-amber-600" />
-                  Instructor feedback
-                </span>
-              </div>
             </div>
+          </ScrollReveal>
 
-            <div className="relative flex min-h-[350px] items-center justify-center overflow-hidden px-5 pb-4 sm:min-h-[430px] sm:px-10 lg:min-h-[500px] lg:px-8 lg:pb-0">
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/10 light:border-emerald-700/8" />
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[52%] w-[52%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-300/7 blur-3xl light:bg-emerald-400/10" />
-              <Image
-                src="/landing/workflows/academic-workspace-cutout.png"
-                alt="Laptop, study notes, books, and coursework folder"
-                width={1536}
-                height={1024}
-                sizes="(min-width: 1024px) 48vw, 92vw"
-                className="relative z-10 h-auto w-full max-w-[720px] object-contain drop-shadow-[0_26px_32px_rgba(0,0,0,0.25)] light:drop-shadow-[0_22px_28px_rgba(25,75,50,0.16)]"
-              />
-              <div className="absolute bottom-7 right-6 z-20 max-w-[210px] border-l-2 border-emerald-300 bg-[#09271e]/88 px-4 py-3 text-xs leading-5 text-emerald-50/80 shadow-lg backdrop-blur-md sm:right-10 light:border-emerald-600 light:bg-white/88 light:text-slate-600">
-                <span className="mb-1 block font-semibold text-emerald-300 light:text-emerald-700">
-                  One connected workspace
-                </span>
-                Notes, practical work, and submissions stay in context.
-              </div>
-            </div>
-          </div>
-
-          <ol className="relative grid border-t border-white/10 md:grid-cols-3 light:border-emerald-950/10">
-            {workflows.map(({ title, detail, icon: Icon, label }, index) => (
-              <li
+          <div className="mt-12 grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {workflows.map(({ title, detail, icon, label, action }, index) => (
+              <ScrollReveal
                 key={title}
-                className="group grid grid-cols-[2.5rem_1fr] gap-4 border-b border-white/10 px-6 py-7 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 sm:px-8 light:border-emerald-950/10"
+                delay={index * 120}
+                className={
+                  index === 2
+                    ? "h-full md:col-span-2 md:mx-auto md:w-[calc(50%-0.625rem)] lg:col-span-1 lg:mx-0 lg:w-auto"
+                    : "h-full"
+                }
               >
-                <span className="grid h-10 w-10 place-items-center rounded-full border border-emerald-300/18 bg-emerald-300/7 text-xs font-bold text-emerald-200 light:border-emerald-700/15 light:bg-emerald-50 light:text-emerald-700">
-                  0{index + 1}
-                </span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <Icon className="h-3.5 w-3.5 text-emerald-300 light:text-emerald-700" />
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-200/60 light:text-emerald-800/65">
-                      {label}
-                    </p>
-                  </div>
-                  <h3 className="mt-2 text-base font-semibold text-white light:text-slate-900">
-                    {title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-6 text-emerald-50/62 light:text-slate-600">
-                    {detail}
-                  </p>
-                </div>
-              </li>
+                <WorkflowCard
+                  action={action}
+                  detail={detail}
+                  icon={icon}
+                  index={index}
+                  label={label}
+                  title={title}
+                />
+              </ScrollReveal>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
-      <section className="relative overflow-hidden border-y border-white/8 bg-[#07100b] px-5 py-20 light:border-emerald-950/8 light:bg-white md:px-8 sm:py-24">
-        <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-emerald-500/7 blur-[110px] light:bg-emerald-300/14" />
+      <WhyNexoraSection />
 
-        <div className="relative mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.72fr_1.28fr] lg:gap-20">
-          <div className="lg:sticky lg:top-32 lg:self-start">
+      <section id="available-now" className="relative overflow-hidden border-y border-white/8 bg-[#07100b] px-5 py-16 light:border-emerald-950/8 light:bg-[radial-gradient(circle_at_76%_40%,rgba(16,185,129,0.085),transparent_38%),linear-gradient(180deg,#ffffff_0%,#f8fbf9_100%)] md:px-8 sm:py-20">
+        <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-emerald-500/7 blur-[110px] light:bg-emerald-300/14" />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden light:block"
+          style={{
+            backgroundImage: "radial-gradient(rgba(15, 118, 110, 0.1) 0.6px, transparent 0.6px)",
+            backgroundSize: "18px 18px",
+            opacity: 0.22,
+            maskImage: "linear-gradient(to bottom, transparent, black 16%, black 84%, transparent)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent, black 16%, black 84%, transparent)",
+          }}
+        />
+
+        <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-16">
+          <div className="lg:self-center">
             <div className="flex items-center gap-3">
               <span className="h-px w-8 bg-emerald-300/65 light:bg-emerald-700/50" />
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300 light:text-emerald-700">
@@ -946,50 +955,85 @@ export function LandingPage() {
             </p>
             <Link
               href="/login"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-emerald-200 transition-colors hover:text-white light:text-emerald-700 light:hover:text-emerald-900"
+              className="landing-focus-ring mt-7 inline-flex h-10 items-center gap-2 rounded-full border border-white/14 bg-white/[0.04] px-4 text-sm font-semibold text-emerald-100 transition-colors hover:border-emerald-300/30 hover:bg-white/[0.07] hover:text-white light:border-emerald-950/12 light:bg-white/80 light:text-emerald-900 light:shadow-[0_8px_24px_rgba(25,75,50,0.06)] light:hover:border-emerald-700/25 light:hover:bg-white"
             >
               Open Nexora OS <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
-          <div className="border-y border-white/12 light:border-emerald-950/12">
+          <div className="grid auto-rows-fr gap-4 sm:grid-cols-2">
             {latestAreas.map(({ label, title, detail, icon: Icon }, index) => (
-              <article
+              <Link
                 key={title}
-                className={`group grid gap-4 py-7 sm:grid-cols-[3rem_1fr_auto] sm:items-center sm:gap-5 sm:py-8 ${
-                  index !== latestAreas.length - 1
-                    ? "border-b border-white/10 light:border-emerald-950/10"
-                    : ""
-                }`}
+                href="/login"
+                aria-label={`Open ${title}`}
+                className={`landing-focus-ring group relative flex h-full min-h-[280px] flex-col overflow-hidden rounded-[24px] border border-white/8 p-6 shadow-[0_16px_38px_rgba(4,20,13,0.14)] transition-[border-color,box-shadow] duration-300 hover:border-white/18 hover:shadow-[0_20px_46px_rgba(4,20,13,0.2)] ${availableCardThemes[index].surface}`}
               >
-                <div className="grid h-11 w-11 place-items-center rounded-full border border-white/10 text-emerald-200 transition-colors group-hover:border-emerald-300/30 group-hover:bg-emerald-300/6 light:border-emerald-950/10 light:text-emerald-700 light:group-hover:border-emerald-700/25 light:group-hover:bg-emerald-50">
-                  <Icon className="h-5 w-5" />
-                </div>
-
-                <div>
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <h3 className="text-lg font-semibold text-white light:text-slate-900">{title}</h3>
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em] text-emerald-300/65 light:text-emerald-700/70">
-                      {label}
-                    </span>
-                  </div>
-                  <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400 light:text-slate-600">{detail}</p>
-                </div>
-
-                <Link
-                  href="/login"
-                  aria-label={`Open ${title}`}
-                  className="inline-flex h-9 w-9 items-center justify-center justify-self-start rounded-full text-slate-500 transition-all hover:bg-emerald-300/8 hover:text-emerald-200 sm:justify-self-end light:text-slate-400 light:hover:bg-emerald-50 light:hover:text-emerald-700"
+                <svg
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute -right-3 -top-3 h-32 w-32 ${availableCardThemes[index].decor}`}
+                  viewBox="0 0 120 120"
+                  fill="none"
                 >
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              </article>
+                  {index === 0 && (
+                    <>
+                      <path d="M22 12c0 17-9 25-25 25" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
+                      <path d="M54 10c0 27-14 41-41 41" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
+                      <path d="M88 7c0 39-20 59-59 59" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
+                      <path d="M120 5c0 53-27 80-80 80" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
+                    </>
+                  )}
+                  {index === 1 && (
+                    <>
+                      <path d="M28 18c18-13 52-9 67 7 13 15 5 32-14 34-14 2-18 16-33 17-18 2-31-10-28-25 3-12-4-22 8-33Z" stroke="currentColor" strokeWidth="4" />
+                      <path d="M39 30c12-8 35-6 44 4 8 9 3 18-9 20-10 1-12 10-22 11-11 1-19-6-17-15 2-8-3-14 4-20Z" stroke="currentColor" strokeWidth="4" />
+                      <path d="M50 40c6-4 18-3 22 2 4 5 1 9-5 10-5 1-6 5-11 5-6 1-10-3-9-8 1-4-1-7 3-9Z" stroke="currentColor" strokeWidth="4" />
+                    </>
+                  )}
+                  {index === 2 && (
+                    <>
+                      <circle cx="76" cy="41" r="34" stroke="currentColor" strokeWidth="4" />
+                      <path d="M82 22c-20-5-34 12-28 29 5 14 23 18 33 8 8-8 5-22-5-26-8-3-17 3-16 11 1 6 8 9 13 5" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+                    </>
+                  )}
+                  {index === 3 && (
+                    <>
+                      <ellipse cx="54" cy="18" rx="8" ry="17" transform="rotate(38 54 18)" stroke="currentColor" strokeWidth="4" />
+                      <ellipse cx="82" cy="20" rx="8" ry="17" transform="rotate(38 82 20)" stroke="currentColor" strokeWidth="4" />
+                      <ellipse cx="106" cy="33" rx="8" ry="17" transform="rotate(38 106 33)" stroke="currentColor" strokeWidth="4" />
+                      <ellipse cx="64" cy="50" rx="8" ry="17" transform="rotate(38 64 50)" stroke="currentColor" strokeWidth="4" />
+                      <ellipse cx="92" cy="54" rx="8" ry="17" transform="rotate(38 92 54)" stroke="currentColor" strokeWidth="4" />
+                      <ellipse cx="112" cy="75" rx="8" ry="17" transform="rotate(38 112 75)" stroke="currentColor" strokeWidth="4" />
+                    </>
+                  )}
+                </svg>
+
+                <div className={`relative z-10 grid h-11 w-11 place-items-center rounded-full bg-white/12 ring-1 ring-white/10 light:bg-black/10 light:ring-black/5 ${availableCardThemes[index].icon}`}>
+                  <Icon className="h-5 w-5" strokeWidth={1.9} />
+                </div>
+
+                <div className="relative z-10 mt-auto pt-4">
+                  <span className={`text-[10px] font-semibold uppercase tracking-[0.15em] opacity-65 ${availableCardThemes[index].foreground}`}>
+                    {label}
+                  </span>
+                  <h3 className={`mt-2 flex min-h-14 max-w-[15rem] items-end text-[1.55rem] font-semibold leading-[1.12] tracking-[-0.03em] ${availableCardThemes[index].foreground}`}>
+                    {title}
+                  </h3>
+                  <p className={`mt-2 min-h-[3.75rem] max-w-[19rem] text-[13px] leading-5 ${availableCardThemes[index].muted}`}>
+                    {detail}
+                  </p>
+                </div>
+
+                <span className={`absolute bottom-6 right-6 z-10 grid h-9 w-9 place-items-center rounded-full border border-current/15 bg-white/8 ${availableCardThemes[index].foreground}`}>
+                  <ArrowRight className="h-4 w-4" />
+                </span>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="relative px-5 pb-20 pt-28 md:px-8 xl:py-24 bg-[#070d0a] light:bg-[#f0f6f2]">
+      <section id="academic-project" className="relative px-5 pb-20 pt-28 md:px-8 xl:py-24 bg-[#070d0a] light:bg-[#f0f6f2]">
         <div className="mx-auto max-w-7xl relative">
           {/* Outer card */}
           <div className="group/coursework relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
@@ -1160,294 +1204,7 @@ export function LandingPage() {
       </section>
 
 
-      <section
-        id="team"
-        className="relative overflow-hidden py-24 text-white light:text-[#0d2a1d]"
-      >
-        <style dangerouslySetInnerHTML={{
-          __html: `
-          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-          .font-sans {
-            font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-          }
-          #team {
-            background: linear-gradient(180deg, rgba(8, 12, 10, 0.88) 0%, rgba(5, 8, 7, 0.95) 100%), url('/landing/footer-bg-brand.png') no-repeat center center / cover;
-            border-top: 1px solid rgba(var(--theme-accent-primary-rgb-raw),0.1);
-            border-bottom: 1px solid rgba(var(--theme-accent-primary-rgb-raw),0.1);
-            --center-card-bg-start: #082219;
-            --center-card-bg-end: #030e0a;
-          }
-          .light #team {
-            background:
-              radial-gradient(circle at 50% 34%, rgba(16, 185, 129, 0.09), transparent 31%),
-              radial-gradient(circle at 7% 82%, rgba(110, 231, 183, 0.07), transparent 24%),
-              linear-gradient(180deg, #ffffff 0%, #f6faf8 52%, #ffffff 100%);
-            border-top: 1px solid rgba(15, 70, 45, 0.1);
-            border-bottom: 1px solid rgba(15, 70, 45, 0.1);
-            --center-card-bg-start: #ffffff;
-            --center-card-bg-end: #f2f8f4;
-          }
-          .light #team .team-profile-card {
-            background: #ffffff;
-            border-color: rgba(15, 70, 45, 0.11);
-            box-shadow: 0 12px 30px rgba(25, 75, 50, 0.06);
-            backdrop-filter: none;
-          }
-          .light #team .team-profile-card:hover {
-            border-color: rgba(5, 150, 105, 0.24);
-            box-shadow: 0 16px 36px rgba(25, 75, 50, 0.09);
-          }
-          .light #team .team-ornament {
-            opacity: 0.45;
-          }
-          .light #team .team-center-shell {
-            filter: drop-shadow(0 14px 28px rgba(25, 75, 50, 0.07));
-          }
-          .light #team .font-sans {
-            font-family: inherit;
-          }
-          .light #team .team-dot-grid {
-            background-image: radial-gradient(rgba(5, 150, 105, 0.12) 1px, transparent 1px) !important;
-          }
-        `}} />
-
-        {/* Ambient background glows */}
-        <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-emerald-950/15 light:bg-transparent blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 right-10 w-96 h-96 rounded-full bg-emerald-950/20 light:bg-transparent blur-3xl pointer-events-none" />
-        <div className="team-dot-grid absolute inset-0 opacity-[0.015] light:opacity-[0.012] pointer-events-none" style={{ backgroundImage: "radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-
-        <div className="relative mx-auto max-w-7xl px-5 md:px-8">
-          {/* Section Header */}
-          <ScrollReveal>
-            <div className="mb-12 flex items-center justify-center gap-6 text-center">
-              {/* Left Ornament */}
-              <div className="team-ornament hidden shrink-0 sm:block">
-                <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M 0,12 L 80,12" stroke="url(#gold-line-left)" strokeWidth="1" />
-                  <path d="M 85,12 L 91,6 L 97,12 L 91,18 Z" fill="url(#gold-grad-ornament)" />
-                  <circle cx="91" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
-                  <path d="M 103,12 L 107,8 L 111,12 L 107,16 Z" fill="url(#gold-grad-ornament)" />
-                  <circle cx="117" cy="12" r="2" fill="url(#gold-grad-ornament)" />
-                  <defs>
-                    <linearGradient id="gold-line-left" x1="0" y1="0" x2="80" y2="0" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="transparent" />
-                      <stop offset="100%" stopColor="#6ee7b7" />
-                    </linearGradient>
-                    <linearGradient id="gold-grad-ornament" x1="85" y1="6" x2="117" y2="18" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#d1fae5" />
-                      <stop offset="50%" stopColor="#6ee7b7" />
-                      <stop offset="100%" stopColor="#059669" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-
-              <h2 className="text-4xl sm:text-5xl font-semibold tracking-[-0.04em] font-sans text-[#f8fffb] light:text-[#0b2419] drop-shadow-sm select-none">
-                Our Team
-              </h2>
-
-              {/* Right Ornament */}
-              <div className="team-ornament hidden shrink-0 sm:block">
-                <svg width="120" height="24" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M 120,12 L 40,12" stroke="url(#gold-line-right)" strokeWidth="1" />
-                  <path d="M 35,12 L 29,6 L 23,12 L 29,18 Z" fill="url(#gold-grad-ornament)" />
-                  <circle cx="29" cy="12" r="1.2" fill="currentColor" className="text-[#020d0a] light:text-[#f4fbf7]" />
-                  <path d="M 17,12 L 13,8 L 9,12 L 13,16 Z" fill="url(#gold-grad-ornament)" />
-                  <circle cx="3" cy="12" r="2" fill="url(#gold-grad-ornament)" />
-                  <defs>
-                    <linearGradient id="gold-line-right" x1="120" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="transparent" />
-                      <stop offset="100%" stopColor="#6ee7b7" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* Cards Grid */}
-          <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-8 lg:grid-cols-3">
-
-            {/* Left Column - Kati & Amin */}
-            <ScrollReveal delay={0} className="h-full flex flex-col">
-              <div className="flex flex-col gap-8 order-2 md:order-none w-full">
-
-                {/* Mopara Pair Ayat */}
-                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
-                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5">
-                    <Image
-                      src="/landing/team/ayat.png"
-                      alt="Mopara Pair Ayat"
-                      fill
-                      sizes="130px"
-                      draggable={false}
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105 pointer-events-none select-none"
-                    />
-                    {/* Transparent overlay to prevent right click save */}
-                    <div
-                      className="absolute inset-0 z-10 bg-transparent select-none"
-                      onContextMenu={(e) => e.preventDefault()}
-                    />
-                  </div>
-                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
-                    Mopara Pair Ayat
-                  </h3>
-                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
-                    Founder & Lead Developer
-                  </p>
-                </div>
-
-                {/* Emre Demir */}
-                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
-                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
-                    <Image
-                      src="/landing/team/emre_avatar.png"
-                      alt="Emre Demir"
-                      fill
-                      sizes="130px"
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
-                    Emre Demir
-                  </h3>
-                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
-                    Database Architect
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Center Column - Featured Mopara Pair Ayat */}
-            <ScrollReveal delay={150} className="h-full flex flex-col justify-center">
-              <div className="team-center-shell relative order-1 mx-auto flex h-[592px] w-full max-w-[360px] flex-col items-center justify-between px-8 pb-9 pt-16 md:order-none group">
-                {/* Custom Pointed Arch Background */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0 transition-transform duration-500 group-hover:scale-[1.01]" viewBox="0 0 360 520" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M 2,518 L 2,90 L 180,2 L 358,90 L 358,518 Z" fill="url(#center-card-bg-gradient)" stroke="url(#center-gold-border-gradient)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" className="stroke-[#6ee7b7]/50 light:stroke-[#6ee7b7]/80" />
-                  <defs>
-                    <linearGradient id="center-card-bg-gradient" x1="180" y1="0" x2="180" y2="520" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="var(--center-card-bg-start)" stopOpacity="0.65" />
-                      <stop offset="100%" stopColor="var(--center-card-bg-end)" stopOpacity="0.95" />
-                    </linearGradient>
-                    <linearGradient id="center-gold-border-gradient" x1="0" y1="0" x2="360" y2="520" gradientUnits="userSpaceOnUse">
-                      <stop offset="0%" stopColor="#059669" />
-                      <stop offset="25%" stopColor="#6ee7b7" />
-                      <stop offset="75%" stopColor="#d1fae5" />
-                      <stop offset="100%" stopColor="#059669" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-
-                <div className="relative z-10 w-full flex flex-col items-center">
-                  {/* Photo */}
-                  <div className="relative w-[160px] h-[195px] rounded-t-full border border-white/95 light:border-emerald-700/20 overflow-hidden shadow-xl shadow-black/50 light:shadow-[#0d2a1d]/8 bg-emerald-950/20 light:bg-emerald-100/10">
-                    <Image
-                      src="/landing/team/afsana_tabassum.png"
-                      alt="Afsana Tabassum Tamishra"
-                      fill
-                      sizes="160px"
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-
-                  {/* Info */}
-                  <h3 className="text-2xl font-bold font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-4">
-                    Afsana Tabassum Tamishra
-                  </h3>
-                  <p className="text-xs text-[#6ee7b7] light:text-[#047857] tracking-wider text-center mt-1.5 uppercase font-semibold">
-                    Lecturer & Project Advisor
-                  </p>
-                  <p className="text-xs text-slate-300 light:text-[#2d4d3f] leading-relaxed text-center mt-3 px-4 font-light max-w-[280px]">
-                    Lecturer at BITHM College of Professionals. Project advisor and coordinator guiding the design and development of Nexora OS.
-                  </p>
-
-                  {/* Social Links */}
-                  <div className="flex items-center justify-center gap-5 mt-3">
-                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#6ee7b7] light:hover:text-[#047857] transition-colors duration-300" aria-label="LinkedIn">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#6ee7b7] light:hover:text-[#047857] transition-colors duration-300" aria-label="Facebook">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-slate-400 light:text-[#386450] hover:text-[#6ee7b7] light:hover:text-[#047857] transition-colors duration-300" aria-label="Twitter">
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Read More button */}
-                <div className="relative z-10 mt-5 flex w-full justify-center">
-                  <button className="border border-[#6ee7b7]/50 bg-black/40 px-8 py-2.5 text-xs font-medium tracking-widest text-white transition-colors duration-300 hover:bg-[#6ee7b7] hover:text-black light:border-emerald-700/25 light:bg-white light:text-[#0b2419] light:shadow-[0_8px_20px_rgba(25,75,50,0.07)] light:hover:bg-emerald-700 light:hover:text-white">
-                    Read More
-                  </button>
-                </div>
-              </div>
-            </ScrollReveal>
-
-            {/* Right Column - Mopara Pair Ayat & Tomas */}
-            <ScrollReveal delay={300} className="h-full flex flex-col">
-              <div className="flex flex-col gap-8 order-3 md:order-none w-full">
-
-                {/* Taen Ahammed */}
-                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
-                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
-                    <Image
-                      src="/landing/team/tomas_avatar.png"
-                      alt="Taen Ahammed"
-                      fill
-                      sizes="130px"
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
-                    Taen Ahammed
-                  </h3>
-                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
-                    UI/UX Designer
-                  </p>
-                </div>
-
-                {/* Fatima Rahman */}
-                <div className="team-profile-card group relative flex flex-col items-center rounded-[24px] border border-[#6ee7b7]/10 bg-gradient-to-b from-[#091b15]/40 to-[#040d0a]/90 p-6 pt-8 backdrop-blur-md transition-all duration-500 hover:border-[#6ee7b7]/35 hover:shadow-[0_15px_30px_rgba(52,211,153,0.06)]">
-                  <div className="relative w-[130px] h-[160px] rounded-t-full border border-white/80 light:border-emerald-700/15 overflow-hidden shadow-lg shadow-black/40 light:shadow-[#0d2a1d]/5 bg-emerald-950/20 light:bg-emerald-100/10">
-                    <Image
-                      src="/landing/team/kati_avatar.png"
-                      alt="Fatima Rahman"
-                      fill
-                      sizes="130px"
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <h3 className="text-xl font-medium font-sans text-[#f8fffb] light:text-[#0b2419] tracking-wide text-center mt-5">
-                    Fatima Rahman
-                  </h3>
-                  <p className="text-xs text-[#6ee7b7]/80 light:text-[#047857] tracking-wider text-center mt-1 uppercase font-semibold">
-                    Lead Frontend Engineer
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-
-          </div>
-
-          {/* Bottom pulsing arrow indicator */}
-          <div className="mt-12 flex justify-center">
-            <a href="#faq" className="group flex items-center justify-center w-11 h-11 rounded-full border border-white/10 light:border-emerald-800/15 hover:border-[#6ee7b7]/40 light:hover:border-[#6ee7b7]/60 bg-black/20 light:bg-white/40 hover:bg-emerald-950/30 light:hover:bg-emerald-50/50 transition-all duration-300 select-none cursor-pointer">
-              <svg className="w-5 h-5 text-white/50 light:text-emerald-800/60 group-hover:text-[#6ee7b7] light:group-hover:text-[#047857] transition-colors duration-300 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </a>
-          </div>
-
-        </div>
-      </section>
-
+      <TeamShowcaseSection />
       <section
         id="faq"
         className="relative overflow-hidden border-y border-white/8 py-20 light:border-emerald-950/8 light:bg-[#f4f7f5] sm:py-24"

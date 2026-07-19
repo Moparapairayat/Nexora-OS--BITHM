@@ -76,6 +76,15 @@
   animation: landing-pulse 3.2s ease-in-out infinite;
 }
 
+.landing-focus-ring:focus-visible {
+  outline: 2px solid rgba(110, 231, 183, 0.92);
+  outline-offset: 4px;
+}
+
+.light .landing-focus-ring:focus-visible {
+  outline-color: #047857;
+}
+
 .light .landing-hero {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 251, 249, 0.78));
   border-bottom: 1px solid rgba(16, 185, 129, 0.12);
