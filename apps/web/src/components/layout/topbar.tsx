@@ -97,8 +97,8 @@ export function Topbar({
 
   return (
     <>
-      <header className="nexora-app-topbar sticky top-0 z-20 -mx-4 rounded-t-3xl border-b border-[var(--line)] bg-[rgba(5,7,6,0.76)] px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)] backdrop-blur-xl light:rounded-t-[28px] light:border-[color:var(--line)] light:bg-[rgba(250,253,251,0.88)] light:shadow-[0_10px_30px_rgba(31,67,49,0.055)] sm:-mx-6 sm:px-6">
-        <div className="flex min-h-14 items-center gap-1.5 sm:gap-2.5">
+      <header className="nexora-app-topbar sticky top-0 z-20 -mx-4 rounded-t-3xl border-b border-[var(--line)] bg-[rgba(5,7,6,0.76)] px-4 py-2 sm:py-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)] backdrop-blur-xl light:rounded-t-[28px] light:border-[color:var(--line)] light:bg-[rgba(250,253,251,0.88)] light:shadow-[0_10px_30px_rgba(31,67,49,0.055)] sm:-mx-6 sm:px-6">
+        <div className="flex min-h-11 sm:min-h-14 items-center gap-1.5 sm:gap-2.5">
           <button
             type="button"
             className="nexora-focus rounded-2xl p-2 text-slate-300 transition hover:bg-white/[0.06] light:text-slate-700 light:hover:bg-emerald-50 lg:hidden"
@@ -111,7 +111,7 @@ export function Topbar({
           <NexoraLogo
             size="sm"
             priority
-            className="h-9 w-[134px] sm:w-[150px] lg:hidden"
+            className="h-7.5 w-[112px] sm:h-9 sm:w-[150px] lg:hidden"
           />
           <div className="hidden min-w-0 shrink-0 items-center gap-3 lg:flex">
             <RoleBadge role={role} />
@@ -130,7 +130,7 @@ export function Topbar({
           <Button
             type="button"
             variant="ghost"
-            className="ml-auto h-10 w-10 rounded-2xl px-0 light:bg-white light:shadow-[0_10px_24px_rgba(33,45,74,0.06)] xl:hidden"
+            className="ml-auto h-9 w-9 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl px-0 light:bg-white light:shadow-[0_10px_24px_rgba(33,45,74,0.06)] xl:hidden"
             onClick={() => setCommandOpen(true)}
             aria-label="Search Nexora"
             title="Search Nexora"
@@ -147,14 +147,14 @@ export function Topbar({
               <Button
                 type="button"
                 variant="ghost"
-                className="relative h-10 w-10 rounded-2xl px-0 light:bg-white light:shadow-[0_10px_24px_rgba(33,45,74,0.06)]"
+                className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl px-0 light:bg-white light:shadow-[0_10px_24px_rgba(33,45,74,0.06)]"
                 aria-label="Open notifications"
                 title="Open notifications"
                 aria-expanded={openMenu === "notifications"}
                 onClick={() => toggleMenu("notifications")}
               >
                 <Bell className="h-4 w-4" />
-                <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full border-2 border-white bg-emerald-600 px-1 font-mono text-[10px] font-bold text-white">
+                <span className="absolute -right-0.5 -top-0.5 sm:-right-1 sm:-top-1 grid h-4.5 min-w-[18px] sm:h-5 sm:min-w-[20px] place-items-center rounded-full border-2 border-white bg-emerald-600 px-0.5 font-mono text-[8px] sm:text-[10px] font-bold text-white">
                   3
                 </span>
               </Button>
