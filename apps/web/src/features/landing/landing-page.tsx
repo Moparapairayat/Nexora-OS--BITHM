@@ -26,7 +26,7 @@ import { PandaCTA } from "@/components/ui/panda-cta";
 import { PandaChat } from "@/components/ui/panda-chat";
 import { LandingNav } from "./components/landing-nav";
 import { ScrollReveal, SectionHeading } from "./components/landing-primitives";
-import { WorkflowCard } from "./components/workflow-card";
+import { WorkflowsSection } from "./components/workflows-section";
 import { WhyNexoraSection } from "./components/why-nexora-section";
 import { TeamShowcaseSection } from "./components/team-showcase-section";
 import { toolCardStyles } from "./landing-theme";
@@ -171,35 +171,6 @@ const platformAreas = [
     tools: ["Feedback Center", "Fix Requests"],
   },
 ];
-
-const workflows = [
-  {
-    title: "Assignment reports",
-    detail:
-      "Prepare reports, organize evidence, submit work, and follow its status.",
-    icon: FileCheck2,
-    label: "Plan · Write · Submit",
-    action: "Open reports",
-  },
-  {
-    title: "Practical lab work",
-    detail:
-      "Turn a task brief into tested code and a well-structured lab report.",
-    icon: FlaskConical,
-    label: "Build · Test · Report",
-    action: "Open Code Lab",
-  },
-  {
-    title: "Progress and feedback",
-    detail:
-      "Keep up with deadlines, requested changes, submissions, and progress.",
-    icon: BarChart3,
-    label: "Review · Improve · Resubmit",
-    action: "Review progress",
-  },
-];
-
-
 
 const latestAreas = [
   {
@@ -873,55 +844,7 @@ export function LandingPage() {
       </section>
 
 
-      <section
-        id="how-it-works"
-        className="relative overflow-hidden border-y border-white/8 bg-[radial-gradient(circle_at_50%_18%,rgba(52,211,153,0.09),transparent_34%),linear-gradient(180deg,#050b08_0%,#06100c_100%)] px-5 py-20 light:border-slate-200 light:bg-[radial-gradient(circle_at_50%_18%,rgba(16,185,129,0.1),transparent_34%),linear-gradient(180deg,#fbfdfb_0%,#f3f7f4_100%)] sm:py-24 md:px-8"
-      >
-        <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[62%] -translate-x-1/2 rounded-full border border-emerald-300/7 light:border-emerald-800/6" />
-
-        <div className="relative mx-auto max-w-7xl">
-          <ScrollReveal>
-            <div className="mx-auto max-w-3xl text-center">
-              <div className="flex items-center justify-center gap-3">
-                <span className="h-px w-7 bg-emerald-300/55 light:bg-emerald-700/40" />
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300 light:text-emerald-700">
-                  Core workflows
-                </p>
-                <span className="h-px w-7 bg-emerald-300/55 light:bg-emerald-700/40" />
-              </div>
-              <h2 className="mt-4 text-balance text-4xl font-semibold leading-[1.06] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
-                A clear path from task brief to final submission.
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
-                Move from the brief to practical work, keep your evidence together, and act on feedback without losing context.
-              </p>
-            </div>
-          </ScrollReveal>
-
-          <div className="mt-12 grid items-stretch gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {workflows.map(({ title, detail, icon, label, action }, index) => (
-              <ScrollReveal
-                key={title}
-                delay={index * 120}
-                className={
-                  index === 2
-                    ? "h-full md:col-span-2 md:mx-auto md:w-[calc(50%-0.625rem)] lg:col-span-1 lg:mx-0 lg:w-auto"
-                    : "h-full"
-                }
-              >
-                <WorkflowCard
-                  action={action}
-                  detail={detail}
-                  icon={icon}
-                  index={index}
-                  label={label}
-                  title={title}
-                />
-              </ScrollReveal>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WorkflowsSection />
 
       <WhyNexoraSection />
 

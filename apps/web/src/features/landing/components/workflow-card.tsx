@@ -140,7 +140,7 @@ function ProgressMedia() {
   );
 }
 
-function WorkflowMedia({ index }: { index: number }) {
+export function WorkflowMedia({ index }: { index: number }) {
   return (
     <div
       aria-hidden="true"
