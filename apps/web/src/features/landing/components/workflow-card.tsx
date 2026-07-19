@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
@@ -26,6 +26,31 @@ type WorkflowCardProps = {
   label: string;
   title: string;
 };
+
+function useIntersection(elementRef: React.RefObject<Element | null>) {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    const el = elementRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+        }
+      },
+      { threshold: 0.15 }
+    );
+
+    observer.observe(el);
+    return () => {
+      observer.unobserve(el);
+    };
+  }, [elementRef]);
+
+  return isIntersecting;
+}
 
 const cardTones = [
   {
@@ -129,11 +154,13 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
   const [terminalLines, setTerminalLines] = useState<string[]>([]);
   const [testStatus, setTestStatus] = useState<"idle" | "typing" | "running" | "success">("idle");
   const [typedText, setTypedText] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isIntersected = useIntersection(containerRef);
 
   const fullCommand = "npm run test";
 
   useEffect(() => {
-    if (!isActive) {
+    if (!isActive || !isIntersected) {
       setTestStatus("idle");
       setTerminalLines([]);
       setTypedText("");
@@ -141,7 +168,7 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
     }
 
     triggerTestRun();
-  }, [isActive]);
+  }, [isActive, isIntersected]);
 
   const triggerTestRun = () => {
     setTestStatus("typing");
@@ -206,7 +233,7 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
   };
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-[#071113] text-left font-mono select-none light:bg-[#f3f8f9]">
+    <div ref={containerRef} className="relative h-full w-full overflow-hidden bg-[#071113] text-left font-mono select-none light:bg-[#f3f8f9]">
       <div className="flex h-full w-full flex-col">
         {/* Editor tabs */}
         <div className="flex h-6.5 w-full border-b border-white/5 bg-[#050b0c]/60 px-2 light:border-slate-200 light:bg-slate-100/50 items-center justify-between">

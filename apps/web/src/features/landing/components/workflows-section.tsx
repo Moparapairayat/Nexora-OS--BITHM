@@ -351,7 +351,7 @@ export function WorkflowsSection() {
                   <span aria-hidden="true" className={`absolute inset-x-7 top-0 h-[2px] ${toneAccent[stepItem.tone]}`} />
 
                   <div className="relative shrink-0 overflow-hidden transition-transform duration-500 group-hover:scale-[1.02] border-b border-white/9 light:border-slate-200/90">
-                    <WorkflowMedia index={index} />
+                    <WorkflowMedia index={index} className="relative h-[225px] sm:h-[240px] w-full overflow-hidden" />
                   </div>
 
                   <div className="flex flex-1 flex-col px-6 pb-6 pt-6 sm:px-7">
