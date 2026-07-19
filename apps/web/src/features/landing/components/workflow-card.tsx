@@ -149,18 +149,30 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
     setTypedText("");
 
     let charIndex = 0;
-    const typingTimer = setInterval(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const typeNextChar = () => {
       if (charIndex < fullCommand.length) {
-        setTypedText((prev) => prev + fullCommand[charIndex]);
+        setTypedText(fullCommand.slice(0, charIndex + 1));
+        const char = fullCommand[charIndex];
         charIndex++;
+
+        // Variable human typing speeds
+        let delay = 40 + Math.random() * 40; // 40-80ms standard
+        if (char === " ") {
+          delay = 180 + Math.random() * 80; // space reflection
+        } else if (char === "-" || char === ".") {
+          delay = 150 + Math.random() * 80; // symbols delay
+        }
+
+        timeoutId = setTimeout(typeNextChar, delay);
       } else {
-        clearInterval(typingTimer);
         setTestStatus("running");
         setTerminalLines(["$ npm run test"]);
         
         const test1Timer = setTimeout(() => {
           setTerminalLines((prev) => [...prev, "✓ page.test.tsx passed (118ms)"]);
-        }, 600);
+        }, 700);
 
         const test2Timer = setTimeout(() => {
           setTerminalLines((prev) => [
@@ -169,14 +181,22 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
             "ALL TESTS PASSING (12 Passed, 0 Failed)"
           ]);
           setTestStatus("success");
-        }, 1300);
+        }, 1500);
 
         return () => {
           clearTimeout(test1Timer);
           clearTimeout(test2Timer);
         };
       }
-    }, 60);
+    };
+
+    // Human pause delay before typing begins
+    const initialDelayId = setTimeout(typeNextChar, 600);
+
+    return () => {
+      clearTimeout(initialDelayId);
+      clearTimeout(timeoutId);
+    };
   };
 
   const handleRunTestsManually = (e: React.MouseEvent) => {
@@ -211,9 +231,9 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
             }`}
           >
             {testStatus === "running" ? (
-              <Loader2 className="h-2 w-2 animate-spin" />
+              <Loader2 className="h-2.5 w-2.5 animate-spin" />
             ) : (
-              <Play className="h-2 w-2 fill-current" />
+              <Play className="h-2.5 w-2.5 fill-current" />
             )}
             Run Tests
           </button>
@@ -303,18 +323,22 @@ const confettiParticles = Array.from({ length: 28 }).map((_, i) => {
   const size = Math.random() * 5 + 3;
   const left = Math.random() * 100;
   const delay = Math.random() * 1.5;
-  const duration = 1.5 + Math.random() * 1.5;
+  const duration = 1.6 + Math.random() * 1.4;
   const colors = ["#10b981", "#06b6d4", "#f59e0b", "#3b82f6", "#ec4899"];
   const color = colors[i % colors.length];
-  return { id: i, size, left, delay, duration, color };
+  // Sway multiplier: horizontal sway factor
+  const sway = Math.random() > 0.5 ? 12 : -12;
+  return { id: i, size, left, delay, duration, color, sway };
 });
 
 function ProgressMedia({ isActive = true }: { isActive?: boolean }) {
   const [submittingStatus, setSubmittingStatus] = useState<"editing" | "submitting" | "submitted">("editing");
+  const [loadingStep, setLoadingStep] = useState(0);
 
   useEffect(() => {
     if (!isActive) {
       setSubmittingStatus("editing");
+      setLoadingStep(0);
     }
   }, [isActive]);
 
@@ -322,26 +346,31 @@ function ProgressMedia({ isActive = true }: { isActive?: boolean }) {
     e.stopPropagation();
     if (submittingStatus !== "editing") return;
     setSubmittingStatus("submitting");
+    setLoadingStep(0);
 
-    setTimeout(() => {
+    // Cycle loaders sequentially
+    const timer1 = setTimeout(() => setLoadingStep(1), 500);
+    const timer2 = setTimeout(() => setLoadingStep(2), 1100);
+    const timer3 = setTimeout(() => {
       setSubmittingStatus("submitted");
-    }, 1600);
+    }, 1700);
   };
 
   return (
     <div className="relative h-full w-full overflow-hidden bg-[#0f1107] text-left font-sans select-none light:bg-[#fafaf4]">
-      {/* CSS Confetti keyframes */}
+      {/* CSS Confetti keyframes with horizontal translation sway */}
       <style>{`
         @keyframes driftDown {
           0% {
-            transform: translateY(-20px) rotate(0deg);
+            transform: translateY(-20px) translateX(0) rotate(0deg);
             opacity: 1;
           }
-          90% {
-            opacity: 0.9;
+          50% {
+            transform: translateY(100px) translateX(12px) rotate(180deg);
+            opacity: 0.95;
           }
           100% {
-            transform: translateY(220px) rotate(360deg);
+            transform: translateY(220px) translateX(-12px) rotate(360deg);
             opacity: 0;
           }
         }
@@ -410,7 +439,11 @@ function ProgressMedia({ isActive = true }: { isActive?: boolean }) {
           {submittingStatus === "submitting" && (
             <div className="absolute inset-0 bg-[#0f1107]/90 light:bg-[#fafaf4]/90 z-20 flex flex-col items-center justify-center p-4">
               <Loader2 className="h-6 w-6 animate-spin text-amber-400" />
-              <p className="mt-3 text-[10px] font-semibold text-white light:text-slate-900">Bundling code evidence...</p>
+              <p className="mt-3 text-[10px] font-semibold text-white light:text-slate-900 transition-all duration-300">
+                {loadingStep === 0 && "Analyzing revision changes..."}
+                {loadingStep === 1 && "Running regression tests..."}
+                {loadingStep === 2 && "Syncing report evidence..."}
+              </p>
               <p className="mt-1 text-[8px] text-slate-500">Uploading revision to Nexora grading queue</p>
             </div>
           )}

@@ -94,10 +94,11 @@ const glowColors: Record<Tone, string> = {
 export function WorkflowsSection() {
   const [activeStep, setActiveStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [autoplayDisabled, setAutoplayDisabled] = useState(false);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || autoplayDisabled) return;
 
     const intervalTime = 6000; // 6 seconds per step
     const stepTime = 100; // updates progress bar every 100ms
@@ -114,15 +115,23 @@ export function WorkflowsSection() {
     }, stepTime);
 
     return () => clearInterval(timer);
-  }, [isPaused]);
+  }, [isPaused, autoplayDisabled]);
 
-  const handleStepSelect = (index: number) => {
+  const handleStepHover = (index: number) => {
     setIsPaused(true);
     setActiveStep(index);
-    setProgress(100);
+    setProgress(0); // reset progress on hover
+  };
+
+  const handleStepClick = (index: number) => {
+    setAutoplayDisabled(true);
+    setIsPaused(true);
+    setActiveStep(index);
+    setProgress(0); // clear progress loader once autoplay is permanently disabled
   };
 
   const handleMouseLeave = () => {
+    if (autoplayDisabled) return;
     setIsPaused(false);
     setProgress(0);
   };
@@ -170,8 +179,8 @@ export function WorkflowsSection() {
               return (
                 <div
                   key={stepItem.step}
-                  onClick={() => handleStepSelect(index)}
-                  onMouseEnter={() => handleStepSelect(index)}
+                  onClick={() => handleStepClick(index)}
+                  onMouseEnter={() => handleStepHover(index)}
                   onMouseLeave={handleMouseLeave}
                   className={`group cursor-pointer text-left relative overflow-hidden rounded-[22px] border px-6 py-5 transition-all duration-300 ${
                     isActive
