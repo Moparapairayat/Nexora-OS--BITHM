@@ -32,6 +32,12 @@ const roleProfileLabel: Record<AppRole, string> = {
   admin: "Admin Nexora",
 };
 
+const roleAvatar: Record<AppRole, string> = {
+  student: "/landing/team/emre_avatar.png",
+  teacher: "/landing/team/emre_avatar.png",
+  admin: "/landing/team/emre_avatar.png",
+};
+
 function normalizeHref(href: string) {
   return href.endsWith("/") && href !== "/" ? href.slice(0, -1) : href;
 }
@@ -240,8 +246,12 @@ export function Sidebar({
           >
             <RoleBadge role={role} />
             <div className="mt-3 flex items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[linear-gradient(145deg,#d9ff57,#32f59a)] font-semibold text-[#07100b] light:bg-[linear-gradient(145deg,#00a65e,#35dc8b)] light:text-white">
-                {role.charAt(0).toUpperCase()}
+              <span className="relative grid h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/20 shadow-sm light:border-emerald-200">
+                <img
+                  src={roleAvatar[role]}
+                  alt={`${role} profile`}
+                  className="h-full w-full object-cover"
+                />
               </span>
               <div className="min-w-0">
                 <p className="sidebar-strong truncate text-sm font-semibold text-white light:text-slate-950">

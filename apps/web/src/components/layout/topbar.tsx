@@ -40,10 +40,10 @@ const roleInitial: Record<AppRole, string> = {
   admin: "A",
 };
 
-const serviceLabel: Record<AppRole, string> = {
-  student: "Workspace ready",
-  teacher: "Review tools ready",
-  admin: "Local services online",
+const roleAvatar: Record<AppRole, string> = {
+  student: "/landing/team/emre_avatar.png",
+  teacher: "/landing/team/emre_avatar.png",
+  admin: "/landing/team/emre_avatar.png",
 };
 
 export function Topbar({
@@ -138,10 +138,6 @@ export function Topbar({
           >
             <Search className="h-4 w-4" />
           </Button>
-          <div className="hidden items-center gap-2 rounded-2xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.08)] px-3 py-2 text-xs font-semibold text-[var(--brand-emerald)] light:border-emerald-100 light:bg-white light:text-emerald-700 light:shadow-[0_10px_24px_rgba(20,150,92,0.08)] xl:flex">
-            <span className="h-2 w-2 rounded-full bg-[var(--brand-emerald)] shadow-[0_0_12px_rgba(50,245,154,0.9)]" />
-            {serviceLabel[role]}
-          </div>
 
           <div ref={menuRef} className="contents">
             <div className="relative">
@@ -227,21 +223,29 @@ export function Topbar({
                 type="button"
                 variant="secondary"
                 className={cn(
-                  "h-11 w-11 rounded-full px-0 font-semibold",
-                  "light:border-emerald-100 light:bg-emerald-50 light:text-emerald-800 light:shadow-[0_10px_24px_rgba(20,150,92,0.1)]",
+                  "h-10 w-10 sm:h-11 sm:w-11 rounded-full p-0 overflow-hidden border border-white/20 shadow-md transition-transform hover:scale-105 active:scale-95",
+                  "light:border-emerald-200/80 light:shadow-[0_10px_24px_rgba(20,150,92,0.12)]",
                 )}
                 aria-label="Open user menu"
                 title="Open user menu"
                 aria-expanded={openMenu === "profile"}
                 onClick={() => toggleMenu("profile")}
               >
-                {roleInitial[role]}
+                <img
+                  src={roleAvatar[role]}
+                  alt={`${role} profile avatar`}
+                  className="h-full w-full object-cover"
+                />
               </Button>
               {openMenu === "profile" ? (
                 <HeaderMenu title={workspaceLabel[role]} className="right-0">
                   <div className="flex items-center gap-3 rounded-xl bg-white/[0.045] p-3 light:bg-emerald-50/70">
-                    <span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-500/15 font-semibold text-[var(--brand-emerald)] light:bg-emerald-100 light:text-emerald-800">
-                      {roleInitial[role]}
+                    <span className="relative grid h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/20 light:border-emerald-200">
+                      <img
+                        src={roleAvatar[role]}
+                        alt={`${role} profile`}
+                        className="h-full w-full object-cover"
+                      />
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-white light:text-slate-950">
