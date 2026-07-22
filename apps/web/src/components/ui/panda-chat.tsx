@@ -46,7 +46,7 @@ export function PandaChat() {
       {
         id: "greet",
         sender: "penguin",
-        text: "Hi there! I am Nexora's Assistant Penguin 🐧. Ask me anything about the platform or BITHM coursework!",
+        text: "Hi there! I am Nexora's Assistant Penguin 🐧. Ask me anything about the platform or University coursework!",
         time: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -198,13 +198,13 @@ export function PandaChat() {
                   className="h-full w-full object-cover"
                 />
                 {/* Active Status Dot */}
-                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-400 border border-[#0b0f0d] animate-pulse" />
+                <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-accent-primary border border-[#0b0f0d] animate-pulse" />
               </div>
               <div className="leading-tight">
                 <h4 className="text-sm font-bold text-white light:text-slate-900 flex items-center gap-1.5">
                   Penguin Assistant
                 </h4>
-                <span className="text-[10px] text-emerald-400 font-semibold tracking-wider uppercase">
+                <span className="text-[10px] text-accent-primary font-semibold tracking-wider uppercase">
                   Active Helper
                 </span>
               </div>
@@ -231,11 +231,10 @@ export function PandaChat() {
                   className={`flex ${isPenguin ? "justify-start" : "justify-end"} relative z-10`}
                 >
                   <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-3 text-xs leading-relaxed ${
-                      isPenguin
+                    className={`max-w-[80%] rounded-2xl px-4 py-3 text-xs leading-relaxed ${isPenguin
                         ? "bg-white/[0.06] light:bg-black/[0.04] text-slate-200 light:text-slate-700 rounded-tl-none border border-white/10 light:border-black/5 shadow-[0_4px_12px_rgba(0,0,0,0.15)] backdrop-blur-md"
                         : "bg-gradient-to-r from-accent-primary to-accent-secondary text-slate-950 font-semibold rounded-tr-none shadow-[0_4px_12px_rgba(var(--theme-emerald-rgb-raw),0.25)]"
-                    }`}
+                      }`}
                   >
                     <p>{msg.text}</p>
                     <span

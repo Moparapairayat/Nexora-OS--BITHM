@@ -44,11 +44,23 @@ const THEMES: ThemeOption[] = [
 export function AccentPicker() {
   const [activeTheme, setActiveTheme] = useState<string>("emerald");
 
-  // Load theme preference on mount
+  // Load theme preference on mount & listen for changes
   useEffect(() => {
     const saved = localStorage.getItem("nexora-accent-theme") || "emerald";
     setActiveTheme(saved);
     applyTheme(saved);
+
+    const handleAccentChange = () => {
+      const current = localStorage.getItem("nexora-accent-theme") || "emerald";
+      setActiveTheme(current);
+    };
+
+    window.addEventListener("nexora-accent-change", handleAccentChange);
+    window.addEventListener("storage", handleAccentChange);
+    return () => {
+      window.removeEventListener("nexora-accent-change", handleAccentChange);
+      window.removeEventListener("storage", handleAccentChange);
+    };
   }, []);
 
   const applyTheme = (themeId: string) => {

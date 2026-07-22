@@ -534,9 +534,9 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   --surface: #0d1110;
   --surface-elevated: #121715;
   --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(50, 245, 154, 0.28);
-  --border-emerald: rgba(50, 245, 154, 0.28);
-  --border-lime: rgba(217, 255, 87, 0.32);
+  --line-strong: rgba(var(--theme-accent-primary-rgb-raw), 0.28);
+  --border-emerald: rgba(var(--theme-emerald-rgb-raw), 0.28);
+  --border-lime: rgba(var(--theme-accent-secondary-rgb-raw), 0.32);
   --brand-cyan: var(--theme-accent-primary);
   --brand-emerald: var(--theme-emerald-300);
   --brand-amber: #ffb45a;
@@ -551,7 +551,7 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   --chart-tooltip-border: rgba(255, 255, 255, 0.12);
   --chart-tooltip-text: #f5f7f2;
   --shadow-command:
-    0 26px 90px rgba(0, 0, 0, 0.52), 0 0 70px rgba(50, 245, 154, 0.08);
+    0 26px 90px rgba(0, 0, 0, 0.52), 0 0 70px rgba(var(--theme-accent-primary-rgb-raw), 0.08);
   --radius-command: 14px;
 
   /* Default theme values (Emerald) */
