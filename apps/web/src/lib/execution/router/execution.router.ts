@@ -47,14 +47,20 @@ export class ExecutionRouter {
           result = await provider.executeCode(input);
         }
 
-        // If execution succeeded or gave valid compile/runtime results, use this result
-        if (result.status !== "error" || (!result.errorMessage?.includes("whitelist") && !result.errorMessage?.includes("401"))) {
+        const isWhitelistError =
+          result.errorMessage?.includes("whitelist") ||
+          result.errorMessage?.includes("401") ||
+          result.stderr?.includes("whitelist") ||
+          result.stderr?.includes("401");
+
+        // If execution succeeded without 401/whitelist errors, use this result
+        if (result.success || (!isWhitelistError && result.status !== "error")) {
           await ExecutionLoggerService.logExecution(input, result);
           return result;
         }
 
         lastResult = result;
-        console.warn(`[ExecutionRouter] Provider "${provider.name}" returned error (${result.errorMessage}). Triggering failover...`);
+        console.warn(`[ExecutionRouter] Provider "${provider.name}" returned error (${result.errorMessage || result.stderr}). Triggering failover...`);
       } catch (err: any) {
         console.error(`[ExecutionRouter] Provider "${provider.name}" exception:`, err.message);
       }

@@ -13,21 +13,20 @@ export class ExecutionLoggerService {
       );
 
       if (prisma && prisma.codeRun && input.workspaceId) {
-        let ownerId = input.userId;
+        // Verify workspace exists in database to satisfy foreign key constraint
+        const validWorkspace = await prisma.codeWorkspace.findUnique({
+          where: { id: input.workspaceId },
+          select: { id: true, ownerId: true },
+        });
 
-        // If ownerId is missing or anonymous, fetch workspace owner from database
-        if (!ownerId || ownerId === "anonymous") {
-          const ws = await prisma.codeWorkspace.findUnique({
-            where: { id: input.workspaceId },
-            select: { ownerId: true },
-          });
-          ownerId = ws?.ownerId;
-        }
+        const ownerId = input.userId && input.userId !== "anonymous" 
+          ? input.userId 
+          : validWorkspace?.ownerId;
 
-        if (ownerId) {
+        if (validWorkspace && ownerId) {
           await prisma.codeRun.create({
             data: {
-              workspaceId: input.workspaceId,
+              workspaceId: validWorkspace.id,
               fileId: input.files?.[0]?.id || null,
               ownerId: ownerId,
               language: result.language,

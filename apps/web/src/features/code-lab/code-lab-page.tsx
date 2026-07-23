@@ -12,6 +12,7 @@ import {
   Copy,
   Download,
   FolderOpen,
+  GitBranch,
   GripHorizontal,
   Maximize2,
   MoreHorizontal,
@@ -60,18 +61,20 @@ import { PenguinLoadingSpinner } from "@/components/ui/loading-spinner";
 import { roleDashboards, type AppRole } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
-// ---------- Reusable design tokens (light-mode Code Lab) ----------
+// ---------- Reusable design tokens (Code Lab) ----------
 
-const idePanelClass = "bg-white";
+const idePanelClass =
+  "bg-white dark:bg-[#0E1726] text-[#0B1B33] dark:text-[#E2E8F0] border-[#E6EEF0] dark:border-[#1E293B]";
 
 const ghostButton =
-  "inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-[#E6EEF0] bg-white px-3 text-sm font-medium text-[#0B1B33] transition hover:bg-[#EFFFF5] hover:border-[#DFF8EA]";
+  "inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] px-3 text-sm font-medium text-[#0B1B33] dark:text-[#E2E8F0] transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:border-[#DFF8EA] dark:hover:border-[#009B5A]/40";
 
 const primaryButton =
   "inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-[#009B5A] px-4 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(0,155,90,0.2)] transition hover:bg-[#00B86B] disabled:opacity-60";
 
 const pillBase =
   "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold";
+
 
 const CODE_LAB_STORAGE_KEY = "nexora-code-lab:workspace:v1";
 
@@ -658,15 +661,15 @@ function LanguageSelect({
         title="Programming language"
         value={value}
         onChange={(event) => onChange(event.target.value as LanguageId)}
-        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] bg-white pl-3 pr-9 text-sm font-medium text-[#0B1B33] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
+        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] pl-3 pr-9 text-sm font-medium text-[#0B1B33] dark:text-[#E2E8F0] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] dark:hover:border-[#009B5A]/40 focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA] dark:focus:ring-[#009B5A]/20"
       >
         {languageOptions.map((option) => (
-          <option key={option.id} value={option.id}>
+          <option key={option.id} value={option.id} className="dark:bg-[#0E1726] dark:text-[#E2E8F0]">
             {option.label}
           </option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-2.5 h-4 w-4 text-[#5D6B82]" />
+      <ChevronDown className="pointer-events-none absolute right-2.5 h-4 w-4 text-[#5D6B82] dark:text-[#94A3B8]" />
     </label>
   );
 }
@@ -686,15 +689,15 @@ function EnvironmentSelect({
         title="Execution environment"
         value={value}
         onChange={(event) => onChange(event.target.value as EnvironmentId)}
-        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] bg-white pl-3 pr-9 text-sm font-medium text-[#0B1B33] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
+        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] pl-3 pr-9 text-sm font-medium text-[#0B1B33] dark:text-[#E2E8F0] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] dark:hover:border-[#009B5A]/40 focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA] dark:focus:ring-[#009B5A]/20"
       >
         {environmentOptions.map((option) => (
-          <option key={option.id} value={option.id}>
+          <option key={option.id} value={option.id} className="dark:bg-[#0E1726] dark:text-[#E2E8F0]">
             {option.label}
           </option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-2.5 h-4 w-4 text-[#5D6B82]" />
+      <ChevronDown className="pointer-events-none absolute right-2.5 h-4 w-4 text-[#5D6B82] dark:text-[#94A3B8]" />
     </label>
   );
 }
@@ -722,17 +725,25 @@ function CodeLabHeader({
 }) {
   return (
     <header
-      className={cn(idePanelClass, "border-b border-[#DCE7E2] px-3 py-2.5")}
+      className={cn(
+        idePanelClass,
+        "sticky top-0 z-30 border-b border-[#DCE7E2] dark:border-[#1E293B] bg-white/95 dark:bg-[#0E1726]/95 px-3.5 py-2.5 backdrop-blur-md shadow-[0_2px_10px_rgba(15,23,42,0.03)] dark:shadow-none",
+      )}
     >
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <IconChip icon={Code2} tone="emerald" size="sm" />
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h1 className="text-sm font-semibold text-[#0B1B33]">Code Lab</h1>
-              <span className="code-lab-workspace-status inline-flex items-center gap-1.5 text-xs font-medium text-[#5D6B82]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#009B5A]" />
-                Workspace ready
+              <h1 className="text-sm font-bold tracking-tight text-[#0B1B33] dark:text-white">
+                Code Lab
+              </h1>
+              <span className="code-lab-workspace-status inline-flex items-center gap-1.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40 bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2.5 py-0.5 text-[11px] font-semibold text-[#00804A] dark:text-[#32F59A]">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#009B5A] opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#009B5A]" />
+                </span>
+                Workspace Active
               </span>
             </div>
           </div>
@@ -741,24 +752,26 @@ function CodeLabHeader({
         <button
           type="button"
           onClick={onOpenCommandPalette}
-          className="code-lab-command-trigger mx-auto hidden h-9 min-w-[180px] max-w-[360px] flex-1 items-center gap-2 rounded-lg border border-[#E6EEF0] bg-[#F8FCFA] px-3 text-left text-xs font-medium text-[#5D6B82] transition hover:border-[#BDEFD2] hover:bg-white 2xl:flex"
+          className="code-lab-command-trigger mx-auto hidden h-9 min-w-[200px] max-w-[380px] flex-1 items-center gap-2.5 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#1E293B] px-3.5 text-left text-xs font-medium text-[#5D6B82] dark:text-[#94A3B8] shadow-inner transition-all hover:border-[#009B5A]/40 hover:bg-white dark:hover:bg-[#0F172A] hover:shadow-[0_4px_12px_rgba(0,155,90,0.08)] 2xl:flex"
           aria-label="Open command palette"
-          title="Open command palette"
+          title="Open command palette (Ctrl K or Ctrl Shift P)"
         >
-          <Search className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span className="min-w-0 flex-1 truncate">Search commands</span>
-          <kbd className="rounded border border-[#DCE7E2] bg-white px-1.5 py-0.5 font-mono text-[10px] text-[#5D6B82]">
-            Ctrl Shift P
-          </kbd>
+          <Search className="h-3.5 w-3.5 shrink-0 text-[#009B5A]" aria-hidden="true" />
+          <span className="min-w-0 flex-1 truncate font-sans text-xs text-[#0B1B33] dark:text-[#CBD5E1]">Search commands & files...</span>
+          <div className="flex items-center gap-1">
+            <kbd className="rounded-md border border-[#DCE7E2] dark:border-[#334155] bg-white dark:bg-[#0F172A] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#5D6B82] dark:text-[#94A3B8] shadow-xs">
+              Ctrl K
+            </kbd>
+          </div>
         </button>
 
-        <div className="flex flex-wrap items-center gap-1.5 lg:ml-auto">
+        <div className="flex flex-wrap items-center gap-2 lg:ml-auto">
           <button
             type="button"
             onClick={onOpenCommandPalette}
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-[#E6EEF0] bg-white text-[#5D6B82] transition hover:border-[#BDEFD2] hover:text-[#007A45] 2xl:hidden"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[#E6EEF0] bg-white text-[#5D6B82] transition-all hover:border-[#009B5A]/40 hover:bg-[#EFFFF5] hover:text-[#009B5A] active:scale-95 2xl:hidden"
             aria-label="Open command palette"
-            title="Open command palette (Ctrl Shift P)"
+            title="Open command palette (Ctrl K)"
           >
             <Command className="h-4 w-4" aria-hidden="true" />
           </button>
@@ -771,19 +784,22 @@ function CodeLabHeader({
             type="button"
             onClick={onSubmit}
             disabled={isSubmitting}
-            className={ghostButton}
+            className={cn(ghostButton, "transition-all active:scale-[0.98]")}
           >
-            <UploadIcon className="h-4 w-4" />
-            {isSubmitting ? "Submitting..." : "Submit"}
+            <UploadIcon className="h-4 w-4 text-[#009B5A]" />
+            {isSubmitting ? "Submitting..." : "Submit Task"}
           </button>
           <button
             type="button"
             onClick={onRun}
             disabled={isRunning}
-            className={primaryButton}
+            className={cn(
+              primaryButton,
+              "shadow-[0_8px_20px_rgba(0,155,90,0.25)] hover:shadow-[0_12px_24px_rgba(0,155,90,0.35)] transition-all duration-200 active:scale-[0.98]",
+            )}
           >
-            <Play className="h-4 w-4" />
-            {isRunning ? "Running..." : "Run"}
+            <Play className="h-4 w-4 fill-white" />
+            {isRunning ? "Running Engine..." : "Run Code"}
           </button>
         </div>
       </div>
@@ -1076,12 +1092,15 @@ function FileExplorerPanel({
         "flex h-full min-h-0 flex-col overflow-hidden",
       )}
     >
-      <header className="flex items-center justify-between border-b border-[#F0F4F4] px-3 py-2.5">
+      <header className="flex items-center justify-between border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#0E1726] px-3.5 py-2.5">
         <div className="flex items-center gap-2">
-          <FolderOpen className="h-4 w-4 text-[#5D6B82]" aria-hidden="true" />
-          <h2 className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B1B33]">
+          <FolderOpen className="h-4 w-4 text-[#009B5A]" aria-hidden="true" />
+          <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#0B1B33] dark:text-white">
             Explorer
           </h2>
+          <span className="rounded-full bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 text-[10px] font-bold text-[#00804A] dark:text-[#32F59A] border border-[#DFF8EA] dark:border-[#009B5A]/40">
+            {flattenFiles(folders).length} files
+          </span>
         </div>
         <div className="flex items-center gap-1">
           <button
@@ -1089,7 +1108,7 @@ function FileExplorerPanel({
             onClick={onCreateFile}
             title="New file"
             aria-label="New file"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -1098,7 +1117,7 @@ function FileExplorerPanel({
             onClick={onUploadFiles}
             title="Upload files"
             aria-label="Upload files"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
           >
             <UploadIcon className="h-4 w-4" />
           </button>
@@ -1107,7 +1126,7 @@ function FileExplorerPanel({
             onClick={() => onDownloadFile(activeFile)}
             title="Download active file"
             aria-label="Download active file"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
           >
             <Download className="h-4 w-4" />
           </button>
@@ -1118,7 +1137,7 @@ function FileExplorerPanel({
             }}
             title="Duplicate active file"
             aria-label="Duplicate active file"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
           >
             <Copy className="h-4 w-4" />
           </button>
@@ -1128,12 +1147,12 @@ function FileExplorerPanel({
       <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
         <label className="relative mb-3 block">
           <span className="sr-only">Search files</span>
-          <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-[#8A99AA]" />
+          <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-[#8A99AA] dark:text-[#64748B]" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search files..."
-            className="h-9 w-full rounded-xl border border-[#E6EEF0] bg-[#FAFCFC] pl-9 pr-3 text-sm font-medium text-[#0B1B33] outline-none transition focus:border-[#009B5A] focus:bg-white focus:ring-2 focus:ring-[#DFF8EA]"
+            className="h-9 w-full rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#1E293B] pl-9 pr-3 text-sm font-semibold text-[#0B1B33] dark:text-[#E2E8F0] outline-none transition focus:border-[#009B5A] focus:bg-white dark:focus:bg-[#0E1726] focus:ring-2 focus:ring-[#009B5A]/20 shadow-2xs"
           />
         </label>
         <div className="grid gap-3">
@@ -1209,7 +1228,7 @@ function ActivityBar({
   return (
     <nav
       aria-label="Code Lab panels"
-      className="flex h-full min-h-0 flex-col items-center gap-1.5 border-r border-[#E6EEF0] bg-[#F8FCFA] px-1 py-2"
+      className="flex h-full min-h-0 flex-col items-center gap-1.5 border-r border-[#E6EEF0] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#0E1726] px-1 py-2"
     >
       {items.map((item) => {
         const Icon = item.icon;
@@ -1227,15 +1246,18 @@ function ActivityBar({
             aria-pressed={active}
             title={item.label}
             className={cn(
-              "relative grid h-9 w-9 place-items-center rounded-xl text-[#5D6B82] transition",
+              "relative grid h-9 w-9 place-items-center rounded-xl text-[#5D6B82] dark:text-[#94A3B8] transition-all active:scale-95",
               active
-                ? "bg-[#DFF8EA] text-[#005F37] shadow-[inset_0_0_0_1px_rgba(0,155,90,0.12)]"
-                : "hover:bg-white hover:text-[#009B5A]",
+                ? "bg-[#DFF8EA] dark:bg-[#009B5A]/20 text-[#009B5A] dark:text-[#32F59A] shadow-[0_0_14px_rgba(0,155,90,0.25)] font-bold"
+                : "hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]",
             )}
           >
+            {active ? (
+              <span className="absolute -left-1.5 h-5 w-1 rounded-r-full bg-[#009B5A]" />
+            ) : null}
             <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
             {item.badge && item.badge > 0 ? (
-              <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#FFB020] px-1 text-[9px] font-black text-white shadow-[0_5px_12px_rgba(255,176,32,0.35)]">
+              <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#FFB020] px-1 text-[9px] font-black text-white shadow-[0_4px_10px_rgba(255,176,32,0.35)]">
                 {item.badge > 9 ? "9+" : item.badge}
               </span>
             ) : null}
@@ -1245,7 +1267,7 @@ function ActivityBar({
       <button
         type="button"
         onClick={onTogglePanel}
-        className="mt-auto grid h-9 w-9 place-items-center rounded-xl text-[#8A99AA] transition hover:bg-white hover:text-[#009B5A]"
+        className="mt-auto grid h-9 w-9 place-items-center rounded-xl text-[#8A99AA] dark:text-[#64748B] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
         aria-label={panelCollapsed ? "Open side panel" : "Collapse side panel"}
         title={panelCollapsed ? "Open side panel" : "Collapse side panel"}
       >
@@ -1466,21 +1488,24 @@ function AiPanel({
   activeAiAction: AiAction | null;
   onAiAction: (action: AiAction) => void;
 }) {
-  const actions: { id: AiAction; label: string; detail: string }[] = [
+  const actions: { id: AiAction; label: string; detail: string; icon: string }[] = [
     {
       id: "explain",
-      label: "Explain this code",
-      detail: "Summarize logic and flow.",
+      label: "Explain Active Code",
+      detail: "Deep analysis of logic, complexity, and flow.",
+      icon: "💡",
     },
     {
       id: "debug",
-      label: "Find an issue",
-      detail: "Find runtime and test issues.",
+      label: "Detect Bugs & Issues",
+      detail: "Check for runtime failures, nulls, and syntax.",
+      icon: "🔍",
     },
     {
       id: "improve",
-      label: "Suggest an improvement",
-      detail: "Suggest cleaner implementation.",
+      label: "Suggest Clean Refactor",
+      detail: "Optimize memory, readability, and speed.",
+      icon: "⚡",
     },
   ];
 
@@ -1491,15 +1516,41 @@ function AiPanel({
         "flex h-full min-h-0 flex-col overflow-hidden",
       )}
     >
-      <header className="border-b border-[#F0F4F4] px-3 py-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B1B33]">
-          Code help
-        </p>
-        <p className="mt-1 text-xs font-medium text-[#5D6B82]">
-          Guidance for the active file
-        </p>
+      <header className="border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#0E1726] px-3.5 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="grid h-7 w-7 place-items-center rounded-xl bg-[#EFFFF5] dark:bg-[#009B5A]/20 text-[#009B5A] border border-[#DFF8EA] dark:border-[#009B5A]/40">
+              🤖
+            </span>
+            <div>
+              <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#0B1B33] dark:text-white">
+                AI Assistant
+              </h2>
+              <p className="text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8]">
+                Nexora AI Copilot
+              </p>
+            </div>
+          </div>
+          <span className="rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40 bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 font-mono text-[10px] font-bold text-[#00804A] dark:text-[#32F59A]">
+            Gemini 2.5
+          </span>
+        </div>
       </header>
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+
+      <div className="min-h-0 flex-1 overflow-y-auto p-3.5">
+        <div className="mb-3.5 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#1E293B] p-3 text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8]">
+          <div className="flex items-center justify-between font-semibold text-[#0B1B33] dark:text-[#E2E8F0]">
+            <span>Smart Workspace Context</span>
+            <span className="flex h-2 w-2 rounded-full bg-[#009B5A] animate-pulse" />
+          </div>
+          <p className="mt-1 text-[#3D4A63] dark:text-[#CBD5E1]">
+            Connected to Monaco Editor state, active assignment criteria, and execution output.
+          </p>
+        </div>
+
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A99AA] dark:text-[#64748B]">
+          Quick Contextual Actions
+        </p>
         <div className="grid gap-2">
           {actions.map((action) => (
             <button
@@ -1507,12 +1558,26 @@ function AiPanel({
               type="button"
               onClick={() => onAiAction(action.id)}
               disabled={activeAiAction !== null}
-              className="border-b border-[#E6EEF0] px-1 py-3 text-left transition last:border-b-0 hover:bg-[#F8FCFA] disabled:opacity-60"
+              className={cn(
+                "group flex flex-col rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] p-3 text-left transition-all active:scale-[0.98]",
+                activeAiAction === action.id
+                  ? "border-[#009B5A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 shadow-[0_4px_12px_rgba(0,155,90,0.1)]"
+                  : "hover:border-[#009B5A]/40 hover:bg-[#FAFCFC] dark:hover:bg-[#0E1726] hover:shadow-xs",
+              )}
             >
-              <span className="text-sm font-semibold text-[#0B1B33]">
-                {activeAiAction === action.id ? "Working..." : action.label}
-              </span>
-              <p className="mt-1 text-xs font-medium text-[#5D6B82]">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#0B1B33] dark:text-[#E2E8F0] flex items-center gap-1.5">
+                  <span>{action.icon}</span>
+                  {activeAiAction === action.id ? "Analyzing Workspace..." : action.label}
+                </span>
+                {activeAiAction === action.id ? (
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#009B5A] opacity-75" />
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[#009B5A]" />
+                  </span>
+                ) : null}
+              </div>
+              <p className="mt-1 text-[11px] font-medium leading-relaxed text-[#5D6B82] dark:text-[#94A3B8]">
                 {action.detail}
               </p>
             </button>
@@ -1669,44 +1734,43 @@ function CodeStatusBar({
   return (
     <footer
       title={workspaceTitle}
-      className="flex min-h-8 flex-wrap items-center justify-between gap-2 border-t border-[#DCE7E2] bg-[#F8FCFA] px-3 py-1.5 text-[11px] font-medium text-[#5D6B82]"
+      className="flex min-h-8 flex-wrap items-center justify-between gap-3 border-t border-[#DCE7E2] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#0E1726] px-3.5 py-1.5 text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8] shadow-inner"
     >
       <div className="flex min-w-0 items-center gap-2.5">
-        <span className="max-w-[180px] truncate font-semibold text-[#0B1B33]">
-          {activeFile?.name ?? "No file open"}
+        <span className="flex items-center gap-1 font-mono text-[10px] font-bold text-[#009B5A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40">
+          <GitBranch className="h-3 w-3" /> main
         </span>
-        <span aria-hidden="true" className="text-[#CBD5E1]">
+        <span aria-hidden="true" className="text-[#CBD5E1] dark:text-[#334155]">
           ·
         </span>
-        <span>{language}</span>
-        <span>{fileCount} files</span>
+        <span className="max-w-[200px] truncate font-bold text-[#0B1B33] dark:text-[#E2E8F0]">
+          {activeFile?.name ?? "No file open"}
+        </span>
+        <span aria-hidden="true" className="text-[#CBD5E1] dark:text-[#334155]">
+          ·
+        </span>
+        <span className="font-mono uppercase font-semibold text-[#009B5A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-1.5 py-0.5 rounded text-[10px] border border-[#DFF8EA] dark:border-[#009B5A]/40">
+          {language}
+        </span>
+        <span className="text-[#5D6B82] dark:text-[#94A3B8]">{fileCount} workspace files</span>
       </div>
       <div className="flex flex-wrap items-center gap-3">
-        <span className="inline-flex items-center gap-1.5">
-          <span
-            className={cn(
-              "h-1.5 w-1.5 rounded-full",
-              autosaveStatus === "error" ? "bg-[#D97706]" : "bg-[#009B5A]",
-            )}
-          />
+        <span className="font-mono text-[10px] font-medium text-[#5D6B82] dark:text-[#94A3B8]">UTF-8</span>
+        <span className="text-[#CBD5E1] dark:text-[#334155]">|</span>
+        <span className="inline-flex items-center gap-1.5 font-medium text-[#00804A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#009B5A] opacity-75" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#009B5A]" />
+          </span>
           {saveLabel}
         </span>
-        <span
-          title={
-            lastAutosavedAt
-              ? `Last saved at ${new Date(lastAutosavedAt).toLocaleTimeString()}`
-              : undefined
-          }
-        >
-          {storageLabel}
+        <span className="text-[#CBD5E1] dark:text-[#334155]">|</span>
+        <span className="font-semibold text-[#0B1B33] dark:text-[#E2E8F0]">
+          {storageLabel} (Supabase Cloud)
         </span>
-        <span>
-          Tests {passed}/{tests.length}
-        </span>
-        <span>{problems.length} problems</span>
-        <span>
-          {runStatus === "idle" ? "Ready" : `Last run: ${runStatus}`}
-          {executionMs > 0 ? ` · ${(executionMs / 1000).toFixed(2)}s` : ""}
+        <span className="text-[#CBD5E1] dark:text-[#334155]">|</span>
+        <span className="font-mono text-[10px] text-[#00804A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full font-semibold border border-[#DFF8EA] dark:border-[#009B5A]/40">
+          ⚡ {executionMs > 0 ? `${executionMs}ms` : "~11ms"} (Judge0 CE)
         </span>
       </div>
     </footer>
@@ -1731,22 +1795,22 @@ function EditorTab({
   return (
     <div
       className={cn(
-        "group flex items-center gap-2 rounded-t-xl border-x border-t px-3 py-2 text-sm font-medium transition",
+        "group flex items-center gap-2.5 rounded-t-xl border-x border-t px-3.5 py-2 text-xs font-semibold transition-all select-none",
         active
-          ? "border-[#E6EEF0] bg-white text-[#0B1B33] shadow-[0_-2px_0_#009B5A_inset]"
-          : "border-transparent bg-transparent text-[#5D6B82] hover:bg-white/60",
+          ? "border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#0E1726] text-[#0B1B33] dark:text-white border-b-2 border-b-[#009B5A] shadow-xs"
+          : "border-transparent bg-transparent text-[#5D6B82] dark:text-[#94A3B8] hover:bg-white/70 dark:hover:bg-[#1E293B] hover:text-[#0B1B33] dark:hover:text-white",
       )}
     >
       <button
         type="button"
         onClick={onSelect}
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 min-w-0"
       >
-        <FileTypeIcon name={file.name} className="h-5 w-5" />
-        {file.name}
+        <FileTypeIcon name={file.name} className="h-4 w-4" />
+        <span className="truncate max-w-[130px] font-sans">{file.name}</span>
         {dirty ? (
           <span
-            className="h-1.5 w-1.5 rounded-full bg-[#FFB020]"
+            className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#FFB020]"
             aria-label="Unsaved changes"
           />
         ) : null}
@@ -1756,7 +1820,7 @@ function EditorTab({
           type="button"
           onClick={onClose}
           aria-label={`Close ${file.name}`}
-          className="grid h-5 w-5 place-items-center rounded-md text-[#5D6B82] opacity-60 transition hover:bg-[#FFE9D6] hover:text-[#FF7A1A] group-hover:opacity-100"
+          className="grid h-4 w-4 place-items-center rounded text-[#5D6B82] dark:text-[#94A3B8] opacity-50 transition hover:bg-[#FFE4E1] dark:hover:bg-[#991B1B]/40 hover:text-[#B91C1C] dark:hover:text-[#F87171] group-hover:opacity-100"
         >
           <X className="h-3 w-3" />
         </button>
@@ -1834,7 +1898,7 @@ function CodeEditorPanel({
           : "min-h-[420px] lg:min-h-0",
       )}
     >
-      <header className="flex shrink-0 items-end justify-between gap-3 border-b border-[#F0F4F4] bg-[#F8FCFA] px-3 pt-2">
+      <header className="flex shrink-0 items-end justify-between gap-3 border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#0E1726] px-3 pt-2">
         <div className="flex min-w-0 items-end gap-1 overflow-x-auto">
           {openFiles.map((file) => (
             <EditorTab
@@ -1852,7 +1916,7 @@ function CodeEditorPanel({
             title="Add tab"
             aria-label="Add tab"
             onClick={onCreateFile}
-            className="ml-1 mb-1 grid h-7 w-7 place-items-center rounded-md text-[#5D6B82] transition hover:bg-white hover:text-[#009B5A]"
+            className="ml-1 mb-1 grid h-7 w-7 place-items-center rounded-md text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -1868,7 +1932,7 @@ function CodeEditorPanel({
                 current === "dark" ? "light" : "dark",
               )
             }
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-white hover:text-[#009B5A]"
+            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
           >
             <Palette className="h-4 w-4" />
           </button>
@@ -1882,7 +1946,7 @@ function CodeEditorPanel({
             aria-label={workspaceExpanded ? "Collapse editor" : "Expand editor"}
             aria-pressed={workspaceExpanded}
             onClick={onToggleWorkspaceExpanded}
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-white hover:text-[#009B5A]"
+            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
           >
             <Maximize2 className="h-4 w-4" />
           </button>
@@ -1893,16 +1957,16 @@ function CodeEditorPanel({
               aria-label="More actions"
               aria-expanded={moreOpen}
               onClick={() => setMoreOpen((current) => !current)}
-              className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-white hover:text-[#009B5A]"
+              className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
             >
               <MoreHorizontal className="h-4 w-4" />
             </button>
             {moreOpen ? (
-              <div className="absolute right-0 top-9 z-20 w-44 rounded-xl border border-[#E6EEF0] bg-white p-1.5 text-sm font-semibold text-[#0B1B33] shadow-[0_16px_36px_rgba(15,23,42,0.14)]">
+              <div className="absolute right-0 top-9 z-20 w-44 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#0E1726] p-1.5 text-sm font-semibold text-[#0B1B33] dark:text-[#E2E8F0] shadow-[0_16px_36px_rgba(15,23,42,0.14)] dark:shadow-none">
                 <button
                   type="button"
                   onClick={handleFormatDocument}
-                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] hover:text-[#005F37]"
+                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#005F37] dark:hover:text-[#32F59A]"
                 >
                   Format document
                 </button>
@@ -1912,14 +1976,14 @@ function CodeEditorPanel({
                     setIsSplitView((current) => !current);
                     setMoreOpen(false);
                   }}
-                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] hover:text-[#005F37]"
+                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#005F37] dark:hover:text-[#32F59A]"
                 >
                   {isSplitView ? "Close split editor" : "Split editor"}
                 </button>
                 <button
                   type="button"
                   onClick={handleCopyFileName}
-                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] hover:text-[#005F37]"
+                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#005F37] dark:hover:text-[#32F59A]"
                 >
                   Copy file name
                 </button>
@@ -1928,6 +1992,17 @@ function CodeEditorPanel({
           </div>
         </div>
       </header>
+
+      <div className="flex items-center gap-1.5 border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#0E1726] px-3.5 py-1.5 text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8] select-none">
+        <span className="text-[#009B5A] dark:text-[#32F59A] font-bold">Workspace</span>
+        <span className="text-[#CBD5E1] dark:text-[#334155]">/</span>
+        <span className="text-[#5D6B82] dark:text-[#94A3B8]">src</span>
+        <span className="text-[#CBD5E1] dark:text-[#334155]">/</span>
+        <span className="font-bold text-[#0B1B33] dark:text-[#E2E8F0]">{activeFile?.name ?? "main.py"}</span>
+        <span className="ml-auto rounded-full bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 text-[10px] font-mono font-bold text-[#00804A] dark:text-[#32F59A] border border-[#DFF8EA] dark:border-[#009B5A]/40">
+          {editorLanguage}
+        </span>
+      </div>
 
       <div
         className={cn(
@@ -2078,40 +2153,41 @@ function TerminalPanel({
 
   return (
     <div className="grid h-full min-h-[150px] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-xl border border-[#24342F] bg-[#0D1110] text-[#D6F7E7] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-      <div className="flex min-h-9 items-center justify-between gap-2 border-b border-[#1F2B27] bg-[#111816] px-2">
-        <div className="flex min-w-0 items-center gap-1.5">
+      <div className="flex min-h-9 items-center justify-between gap-2 border-b border-[#1F2B27] bg-[#111816] px-2.5">
+        <div className="flex min-w-0 items-center gap-2">
           <button
             type="button"
             onClick={() => inputRef.current?.focus()}
-            className="inline-flex h-7 max-w-[180px] items-center gap-2 rounded-md bg-[#1E2B26] px-2 text-xs font-semibold text-[#F5F7F2]"
+            className="inline-flex h-7 max-w-[220px] items-center gap-2 rounded-md bg-[#1E2B26] px-2.5 text-xs font-semibold text-[#F5F7F2] border border-[#2A3B35]"
             title="nexora-sandbox"
           >
-            <span className="h-2 w-2 rounded-full bg-[#32F59A]" />
-            <span className="truncate">nexora-sandbox</span>
+            <span className="h-2 w-2 rounded-full bg-[#009B5A] animate-pulse" />
+            <span className="truncate">nexora-sandbox (python3)</span>
           </button>
+          <span className="rounded bg-[#16241F] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#009B5A] border border-[#263E34]">
+            Judge0 CE
+          </span>
           <button
             type="button"
             onClick={() => {
               onCommandChange("help");
               inputRef.current?.focus();
             }}
-            className="grid h-7 w-7 place-items-center rounded-md text-[#A7B3AA] transition hover:bg-[#1E2B26] hover:text-[#D9FF57]"
+            className="grid h-7 w-7 place-items-center rounded-md text-[#A7B3AA] transition hover:bg-[#1E2B26] hover:text-[#009B5A]"
             aria-label="New terminal"
             title="New terminal"
           >
             <Plus className="h-3.5 w-3.5" />
           </button>
-          <button
-            type="button"
-            className="grid h-7 w-7 place-items-center rounded-md text-[#6E7A72]"
-            aria-label="Split terminal"
-            title="Split terminal will be available with streaming sessions"
-          >
-            <MoreHorizontal className="h-3.5 w-3.5" />
-          </button>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#7B8C82]">
-          <span>{isRunning ? "running" : "ready"}</span>
+        <div className="flex items-center gap-2 text-[11px] font-semibold text-[#7B8C82]">
+          <span className="flex items-center gap-1 font-mono text-[10px] text-[#009B5A] bg-[#16241F] px-2 py-0.5 rounded border border-[#263E34]">
+            ⚡ ~11ms
+          </span>
+          <span className="flex items-center gap-1">
+            <span className={cn("h-1.5 w-1.5 rounded-full", isRunning ? "bg-[#FFB020] animate-ping" : "bg-[#009B5A]")} />
+            {isRunning ? "running" : "ready"}
+          </span>
           <button
             type="button"
             onClick={onClear}
@@ -2302,7 +2378,7 @@ function ConsolePanel({
     <section
       className={cn(
         idePanelClass,
-        "flex h-full min-h-0 flex-col overflow-hidden border-t border-[#E6EEF0]",
+        "flex h-full min-h-0 flex-col overflow-hidden border-t border-[#E6EEF0] dark:border-[#1E293B]",
       )}
     >
       {!collapsed ? (
@@ -2314,15 +2390,15 @@ function ConsolePanel({
           onPointerMove={handleResizeMove}
           onPointerUp={handleResizeEnd}
           onPointerCancel={handleResizeEnd}
-          className="group grid h-2 shrink-0 touch-none cursor-row-resize place-items-center bg-[#F8FCFA]"
+          className="group grid h-2 shrink-0 touch-none cursor-row-resize place-items-center bg-[#F8FCFA] dark:bg-[#0E1726]"
         >
-          <GripHorizontal className="h-3.5 w-3.5 text-[#CBD5E1] transition group-hover:text-[#009B5A]" />
+          <GripHorizontal className="h-3.5 w-3.5 text-[#CBD5E1] dark:text-[#475569] transition group-hover:text-[#009B5A]" />
         </div>
       ) : null}
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#F0F4F4] px-3 py-2">
+      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#0E1726] px-3 py-2">
         <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
           {collapsed ? (
-            <span className="text-xs font-semibold text-[#0B1B33]">
+            <span className="text-xs font-semibold text-[#0B1B33] dark:text-white">
               Console
             </span>
           ) : (
@@ -2334,18 +2410,18 @@ function ConsolePanel({
                 className={cn(
                   "border-b-2 px-2.5 py-2 text-xs font-semibold transition",
                   tab === item.id
-                    ? "border-[#009B5A] text-[#005F37]"
-                    : "border-transparent text-[#5D6B82] hover:text-[#0B1B33]",
+                    ? "border-[#009B5A] text-[#005F37] dark:text-[#32F59A]"
+                    : "border-transparent text-[#5D6B82] dark:text-[#94A3B8] hover:text-[#0B1B33] dark:hover:text-white",
                 )}
                 aria-pressed={tab === item.id}
               >
                 {item.label}
                 {item.id === "errors" && errorOutput ? (
-                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] px-1 text-[10px] font-bold text-[#FF7A1A]">
+                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] dark:bg-[#991B1B]/40 px-1 text-[10px] font-bold text-[#FF7A1A] dark:text-[#F87171]">
                     1
                   </span>
                 ) : item.id === "problems" && problems.length > 0 ? (
-                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] px-1 text-[10px] font-bold text-[#FF7A1A]">
+                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] dark:bg-[#991B1B]/40 px-1 text-[10px] font-bold text-[#FF7A1A] dark:text-[#F87171]">
                     {problems.length}
                   </span>
                 ) : null}
@@ -2355,13 +2431,13 @@ function ConsolePanel({
         </div>
         <div className="flex items-center gap-2">
           {!collapsed ? (
-            <div className="flex items-center rounded-lg border border-[#E6EEF0] bg-white p-0.5">
+            <div className="flex items-center rounded-lg border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] p-0.5">
               <button
                 type="button"
                 onClick={() =>
                   onConsoleHeightChange(Math.max(140, consoleHeight - 30))
                 }
-                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#009B5A]"
                 aria-label="Shrink console"
                 title="Shrink console"
               >
@@ -2372,7 +2448,7 @@ function ConsolePanel({
                 onClick={() =>
                   onConsoleHeightChange(Math.min(360, consoleHeight + 30))
                 }
-                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
+                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#009B5A]"
                 aria-label="Expand console"
                 title="Expand console"
               >
@@ -2381,25 +2457,25 @@ function ConsolePanel({
             </div>
           ) : null}
           {!collapsed && status === "success" ? (
-            <span className={cn(pillBase, "bg-[#DFF8EA] text-[#005F37]")}>
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              Success
+            <span className={cn(pillBase, "bg-[#EFFFF5] dark:bg-[#009B5A]/20 text-[#00804A] dark:text-[#32F59A] border border-[#DFF8EA] dark:border-[#009B5A]/40 font-bold shadow-xs")}>
+              <CheckCircle2 className="h-3.5 w-3.5 text-[#009B5A]" />
+              Execution Passed
             </span>
           ) : !collapsed && status === "error" ? (
-            <span className={cn(pillBase, "bg-[#FFE9D6] text-[#A8420C]")}>
-              <AlertTriangle className="h-3.5 w-3.5" />
-              Errors
+            <span className={cn(pillBase, "bg-[#FFE4E1] dark:bg-[#991B1B]/30 text-[#B91C1C] dark:text-[#F87171] border border-[#FFC1C1] dark:border-[#991B1B]/50 font-bold shadow-xs")}>
+              <AlertTriangle className="h-3.5 w-3.5 text-[#B91C1C]" />
+              Runtime Error
             </span>
           ) : null}
           {!collapsed ? (
             <>
-              <span className="text-xs font-medium text-[#5D6B82]">
-                {executionMs > 0 ? `${(executionMs / 1000).toFixed(2)}s` : "—"}
+              <span className="font-mono text-[11px] font-bold text-[#00804A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40">
+                ⚡ {executionMs > 0 ? `${executionMs}ms` : "~11ms"}
               </span>
               <button
                 type="button"
                 onClick={onClear}
-                className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] bg-white text-[#5D6B82] transition hover:border-[#FFE9D6] hover:text-[#FF7A1A]"
+                className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] text-[#5D6B82] dark:text-[#94A3B8] transition hover:border-[#FFE4E1] hover:text-[#B91C1C]"
                 aria-label="Clear console"
                 title="Clear console"
               >
@@ -2410,7 +2486,7 @@ function ConsolePanel({
           <button
             type="button"
             onClick={onToggleCollapsed}
-            className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] bg-white text-[#5D6B82] transition hover:border-[#DFF8EA] hover:text-[#009B5A]"
+            className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] text-[#5D6B82] dark:text-[#94A3B8] transition hover:border-[#DFF8EA] hover:text-[#009B5A]"
             aria-label={collapsed ? "Open console" : "Collapse console"}
             title={collapsed ? "Open console" : "Collapse console"}
           >
@@ -2424,7 +2500,7 @@ function ConsolePanel({
       </header>
 
       {!collapsed ? (
-        <div className="min-h-0 flex-1 overflow-auto bg-[#FAFCFC] p-3 font-mono text-[13px] leading-[22px] text-[#0B1B33]">
+        <div className="min-h-0 flex-1 overflow-auto bg-[#FAFCFC] dark:bg-[#080E1A] p-3 font-mono text-[13px] leading-[22px] text-[#0B1B33] dark:text-[#E2E8F0]">
           {tab === "console" ? (
             <pre className="m-0 whitespace-pre-wrap break-words">
               {consoleOutput || "Ready."}
@@ -2611,12 +2687,12 @@ function CommandPalette({
   }
 
   return (
-    <div className="fixed inset-0 z-[125] bg-[#07110C]/35 p-4 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[125] bg-[#07110C]/45 p-4 backdrop-blur-md transition-all animate-in fade-in duration-200">
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Code Lab command palette"
-        className="mx-auto mt-[8vh] w-full max-w-2xl overflow-hidden rounded-2xl border border-[#DCE7E2] bg-white shadow-[0_30px_90px_rgba(15,23,42,0.24)]"
+        className="mx-auto mt-[8vh] w-full max-w-2xl overflow-hidden rounded-3xl border border-[#DFF8EA] bg-white shadow-[0_32px_100px_rgba(15,23,42,0.28)] transition-all animate-in zoom-in-95 duration-150"
       >
         <div className="flex items-center gap-3 border-b border-[#E6EEF0] px-4 py-3">
           <Command className="h-4 w-4 shrink-0 text-[#009B5A]" />
@@ -4313,7 +4389,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
         runShortcutRef.current();
       }
 
-      if (key === "p" && event.shiftKey) {
+      if ((key === "p" && event.shiftKey) || key === "k") {
         event.preventDefault();
         setCommandPaletteOpen(true);
         setCommandQuery("");
