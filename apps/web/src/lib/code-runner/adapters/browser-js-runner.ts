@@ -81,7 +81,7 @@ function sandboxDocument() {
             stdout: logs.join("\\n"),
             stderr: errors.join("\\n"),
             success: errors.length === 0
-          }, "*");
+          }, window.location.origin);
         } catch (error) {
           parent.postMessage({
             type: "nexora-js-result",
@@ -90,7 +90,7 @@ function sandboxDocument() {
             stderr: error && error.stack ? error.stack : String(error),
             success: false,
             errorMessage: error && error.message ? error.message : String(error)
-          }, "*");
+          }, window.location.origin);
         }
       });
     </script>

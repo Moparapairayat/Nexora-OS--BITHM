@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum UserRole {
@@ -737,16 +738,29 @@ model SkillScore {
 }
 
 model AIRequestLog {
-  id        String   @id @default(cuid())
-  task      String
-  model     String
-  mode      String
-  prompt    String
-  response  Json?
-  latencyMs Int?
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  createdAt DateTime @default(now())
+  id               String   @id @default(cuid())
+  task             String
+  provider         String   @default("unknown")
+  model            String
+  mode             String   @default("api")
+  status           String   @default("success")
+  prompt           String
+  response         Json?
+  promptLength     Int      @default(0)
+  responseLength   Int      @default(0)
+  executionTime    Int      @default(0)
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  totalTokens      Int      @default(0)
+  moduleName       String?
+  userId           String?
+  user             User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+  @@index([task])
+  @@index([provider])
+  @@index([status])
 }
 
 model SystemLog {

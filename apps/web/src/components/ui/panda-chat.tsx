@@ -76,26 +76,69 @@ export function PandaChat() {
     setMessages((prev) => [...prev, userMsg]);
     setIsTyping(true);
 
-    // Find predefined answer or fallback
+    // Find predefined answer or fallback to Gemini 2.0 Flash API
     const matchedQA = PREDEFINED_QA.find(
       (qa) => qa.question.toLowerCase().trim() === text.toLowerCase().trim(),
     );
 
-    setTimeout(() => {
+    if (matchedQA) {
+      setTimeout(() => {
+        setIsTyping(false);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Math.random().toString(),
+            sender: "penguin",
+            text: matchedQA.answer,
+            time: new Date().toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+          },
+        ]);
+      }, 600);
+      return;
+    }
+
+    // Call Backend AI Router for dynamic AI response
+    (async () => {
+      let replyText = "I'm still learning! Try clicking one of the quick questions below to learn about Nexora OS.";
+
+      try {
+        const res = await fetch("/api/ai/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            prompt: text,
+            moduleName: "PandaChat",
+            task: "general",
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.response) {
+            replyText = data.response;
+          }
+        }
+      } catch (err) {
+        console.error("Backend AI Router Error:", err);
+      }
+
       setIsTyping(false);
-      const replyMsg: Message = {
-        id: Math.random().toString(),
-        sender: "penguin",
-        text: matchedQA
-          ? matchedQA.answer
-          : "I'm still learning! Try clicking one of the quick questions below to learn about Nexora OS.",
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => [...prev, replyMsg]);
-    }, 1200);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Math.random().toString(),
+          sender: "penguin",
+          text: replyText,
+          time: new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        },
+      ]);
+    })();
   };
 
   const handleInputSubmit = (e: React.FormEvent) => {

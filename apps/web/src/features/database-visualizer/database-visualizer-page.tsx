@@ -4,8 +4,12 @@ import type { DiagramOutput } from "@nexora/types";
 import {
   AlertTriangle,
   Bot,
+  Check,
   CheckCircle2,
+  ChevronDown,
+  ChevronRight,
   Code2,
+  Copy,
   Database,
   Download,
   FileCode2,
@@ -18,24 +22,29 @@ import {
   KeyRound,
   Link2,
   Maximize2,
+  Minimize2,
   Minus,
   MousePointer2,
   Network,
+  Palette,
   PanelRight,
   Plus,
   Save,
   Search,
   Share2,
+  SlidersHorizontal,
   Sparkles,
   Shuffle,
   Table as TableIcon,
   Upload,
   Wand2,
+  X,
   Zap,
   type LucideIcon,
 } from "lucide-react";
 import {
   type PointerEvent as ReactPointerEvent,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -193,10 +202,17 @@ function formatColumnType(column: Column) {
   return column.size ? `${column.type}(${column.size})` : column.type;
 }
 
-function tableHeight(table: Table) {
+function getVisibleColumns(table: Table, isCollapsed?: boolean): Column[] {
+  if (!isCollapsed) return table.columns;
+  const keyCols = table.columns.filter((col) => col.key !== "none");
+  return keyCols.length > 0 ? keyCols : table.columns.slice(0, 1);
+}
+
+function tableHeight(table: Table, isCollapsed?: boolean) {
+  const visibleCols = getVisibleColumns(table, isCollapsed);
   return (
     TABLE_HEADER_HEIGHT +
-    table.columns.length * COLUMN_ROW_HEIGHT +
+    visibleCols.length * COLUMN_ROW_HEIGHT +
     TABLE_FOOTER
   );
 }
@@ -323,64 +339,272 @@ function escapeXml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
-function buildExportSvg(tables: Table[], relationships: Relationship[]) {
-  const width = Math.max(
-    1200,
-    ...tables.map((table) => table.x + TABLE_WIDTH + 80),
+function getColumnCenterY(
+  table: Table,
+  columnName: string,
+  isCollapsed?: boolean,
+): number {
+  const visibleCols = getVisibleColumns(table, isCollapsed);
+  const colIndex = visibleCols.findIndex((col) => col.name === columnName);
+  if (colIndex < 0) {
+    return table.y + tableHeight(table, isCollapsed) / 2;
+  }
+  return (
+    table.y +
+    TABLE_HEADER_HEIGHT +
+    8 +
+colIndex * COLUMN_ROW_HEIGHT +
+    COLUMN_ROW_HEIGHT / 2
   );
-  const height = Math.max(
-    760,
-    ...tables.map((table) => table.y + tableHeight(table) + 80),
-  );
+}
+
+export type ExportPreset = "studio" | "blueprint" | "dark" | "clean";
+
+export interface ExportStudioConfig {
+  preset: ExportPreset;
+  includeHeaderBar: boolean;
+  includeMetrics: boolean;
+  includeWatermark: boolean;
+  includeBackgroundGlow: boolean;
+}
+
+export const defaultExportStudioConfig: ExportStudioConfig = {
+  preset: "studio",
+  includeHeaderBar: true,
+  includeMetrics: true,
+  includeWatermark: true,
+  includeBackgroundGlow: true,
+};
+
+let cachedLogoDataUrl: string | null = null;
+
+async function getNexoraLogoDataUrl(): Promise<string> {
+  if (cachedLogoDataUrl) return cachedLogoDataUrl;
+  try {
+    const res = await fetch("/brand/nexora-os-logo.png");
+    const blob = await res.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        cachedLogoDataUrl = reader.result as string;
+        resolve(cachedLogoDataUrl);
+      };
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return "/brand/nexora-os-logo.png";
+  }
+}
+
+function buildExportSvg(
+  tables: Table[],
+  relationships: Relationship[],
+  themeMode: "dark" | "blueprint" | "light" = "light",
+  collapsedTableIds: Set<string> = new Set(),
+  diagramName: string = "Nexora ERD",
+  logoSrc: string = "/brand/nexora-os-logo.png",
+  config: ExportStudioConfig = defaultExportStudioConfig,
+  dialect: SchemaDialect = "dbml",
+) {
+  const minX = tables.length > 0 ? Math.min(...tables.map((t) => t.x)) : 0;
+  const minY = tables.length > 0 ? Math.min(...tables.map((t) => t.y)) : 0;
+
+  const offsetX = Math.max(60, 60 - minX);
+  const offsetY = config.includeHeaderBar ? Math.max(115, 115 - minY) : Math.max(60, 60 - minY);
+
+  const maxX =
+    tables.length > 0
+      ? Math.max(...tables.map((t) => t.x + offsetX + TABLE_WIDTH))
+      : 1200;
+  const maxY =
+    tables.length > 0
+      ? Math.max(
+          ...tables.map(
+            (t) => t.y + offsetY + tableHeight(t, collapsedTableIds.has(t.id)),
+          ),
+        )
+      : 800;
+
+  const width = Math.max(720, maxX + 60);
+  const height = Math.max(480, maxY + 60);
+
   const tableMap = new Map(tables.map((table) => [table.id, table]));
 
-  const lines = relationships
+  const effectivePreset = config.preset;
+
+  let bgColor = "#070b09";
+  let gridPatternSvg = "";
+  let glowSvg = "";
+
+  if (effectivePreset === "blueprint") {
+    bgColor = "#060d1e";
+    gridPatternSvg = `<defs><pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(56, 189, 248, 0.18)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/>`;
+    if (config.includeBackgroundGlow) {
+      glowSvg = `<defs><radialGradient id="blueprintGlow" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="rgba(56, 189, 248, 0.26)"/><stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/></radialGradient></defs><rect width="100%" height="100%" fill="url(#blueprintGlow)"/>`;
+    }
+  } else if (effectivePreset === "clean") {
+    bgColor = "#ffffff";
+    gridPatternSvg = `<defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#cbd5e1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/>`;
+    if (config.includeBackgroundGlow) {
+      glowSvg = `<defs><radialGradient id="cleanGlow" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="rgba(16, 185, 129, 0.12)"/><stop offset="100%" stop-color="rgba(255, 255, 255, 0)"/></radialGradient></defs><rect width="100%" height="100%" fill="url(#cleanGlow)"/>`;
+    }
+  } else if (effectivePreset === "dark") {
+    bgColor = "#090d0b";
+    gridPatternSvg = `<defs><pattern id="grid" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="1.1" cy="1.1" r="1.1" fill="rgba(108,246,179,0.18)"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/>`;
+  } else {
+    // Studio preset (Ray.so style)
+    bgColor = "#070b09";
+    gridPatternSvg = `<defs><pattern id="grid" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="1.1" cy="1.1" r="1.1" fill="rgba(50,245,154,0.22)"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/>`;
+    if (config.includeBackgroundGlow) {
+      glowSvg = `<defs><radialGradient id="studioGlow" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="rgba(50, 245, 154, 0.25)"/><stop offset="50%" stop-color="rgba(217, 255, 87, 0.12)"/><stop offset="100%" stop-color="rgba(0, 0, 0, 0)"/></radialGradient></defs><rect width="100%" height="100%" fill="url(#studioGlow)"/>`;
+    }
+  }
+
+  let headerBarSvg = "";
+  if (config.includeHeaderBar) {
+    const titleWidthEstimate = Math.min(diagramName.length * 8.5, 340);
+    const dialectBadgeX = 84 + titleWidthEstimate + 12;
+    const totalPKs = tables.reduce((acc, t) => acc + t.columns.filter((c) => c.key === "pk").length, 0);
+
+    headerBarSvg = `<g transform="translate(44, 30)">
+      <rect width="${width - 88}" height="48" rx="14" fill="rgba(15, 23, 20, 0.92)" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1.2" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.35))"/>
+      <circle cx="24" cy="24" r="5.5" fill="#ff5f56"/>
+      <circle cx="40" cy="24" r="5.5" fill="#ffbd2e"/>
+      <circle cx="56" cy="24" r="5.5" fill="#27c93f"/>
+      <text x="84" y="29" fill="#ffffff" font-size="14" font-weight="700" font-family="Inter, Arial">${escapeXml(diagramName)}</text>
+      <rect x="${dialectBadgeX}" y="14" width="${dialect.length * 8 + 20}" height="20" rx="5" fill="rgba(50,245,154,0.15)" stroke="rgba(50,245,154,0.3)" stroke-width="1"/>
+      <text x="${dialectBadgeX + 10}" y="28" fill="#32f59a" font-size="10" font-weight="800" font-family="ui-monospace, monospace">${dialect.toUpperCase()}</text>
+      ${
+        config.includeMetrics
+          ? `<text x="${width - 110}" y="29" fill="#94a3b8" font-size="11" font-weight="600" text-anchor="end" font-family="Inter, Arial">${tables.length} Tables • ${relationships.length} Relations • ${totalPKs} PK</text>`
+          : ""
+      }
+    </g>`;
+  }
+
+  let watermarkSvg = "";
+  let centerWatermarkSvg = "";
+  let tiledWatermarkSvg = "";
+
+  if (config.includeWatermark) {
+    watermarkSvg = `<g transform="translate(${width - 240}, ${height - 54})" opacity="0.92"><image href="${logoSrc}" x="0" y="0" width="150" height="32" preserveAspectRatio="xMinYMid meet"/><rect x="160" y="6" width="1" height="20" fill="rgba(255,255,255,0.22)"/><text x="172" y="20" fill="#32f59a" font-size="11" font-weight="800" font-family="Inter, Arial" letter-spacing="0.6">ERD</text></g>`;
+    centerWatermarkSvg = `<g transform="translate(${width / 2 - 160}, ${height / 2 - 40})" opacity="0.15"><image href="${logoSrc}" x="0" y="0" width="320" height="80" preserveAspectRatio="xMidYMid meet"/></g>`;
+    const tileTextFill = effectivePreset === "clean" ? "rgba(15,23,42,0.06)" : "rgba(255,255,255,0.06)";
+    tiledWatermarkSvg = `<defs><pattern id="tiledWatermark" width="320" height="220" patternUnits="userSpaceOnUse" patternTransform="rotate(-20)"><text x="40" y="110" fill="${tileTextFill}" font-size="16" font-weight="900" font-family="Inter, Arial" letter-spacing="3">NEXORA OS</text></pattern></defs><rect width="100%" height="100%" fill="url(#tiledWatermark)"/>`;
+  }
+
+  const linesSvg = relationships
     .map((relationship) => {
       const from = tableMap.get(relationship.from.table);
       const to = tableMap.get(relationship.to.table);
       if (!from || !to) return "";
-      const fromCenter = {
-        x: from.x + TABLE_WIDTH / 2,
-        y: from.y + tableHeight(from) / 2,
-      };
-      const toCenter = {
-        x: to.x + TABLE_WIDTH / 2,
-        y: to.y + tableHeight(to) / 2,
-      };
-      const leftToRight = fromCenter.x <= toCenter.x;
-      const x1 = leftToRight ? from.x + TABLE_WIDTH : from.x;
-      const x2 = leftToRight ? to.x : to.x + TABLE_WIDTH;
-      const y1 = fromCenter.y;
-      const y2 = toCenter.y;
+
+      const fromCollapsed = collapsedTableIds.has(from.id);
+      const toCollapsed = collapsedTableIds.has(to.id);
+
+      const fromX = from.x + offsetX;
+      const fromY = from.y + offsetY;
+      const toX = to.x + offsetX;
+      const toY = to.y + offsetY;
+
+      const leftToRight = fromX + TABLE_WIDTH / 2 <= toX + TABLE_WIDTH / 2;
+      const x1 = leftToRight ? fromX + TABLE_WIDTH : fromX;
+      const x2 = leftToRight ? toX : toX + TABLE_WIDTH;
+      const y1 = getColumnCenterY(
+        { ...from, y: fromY },
+        relationship.from.column,
+        fromCollapsed,
+      );
+      const y2 = getColumnCenterY(
+        { ...to, y: toY },
+        relationship.to.column,
+        toCollapsed,
+      );
       const mid = (x1 + x2) / 2;
-      return `<path d="M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}" fill="none" stroke="${relationshipColor(
-        relationship.kind,
-      )}" stroke-width="3" stroke-dasharray="${relationshipDash(relationship.kind) ?? ""}" stroke-linecap="round"/>`;
+      const color = relationshipColor(relationship.kind);
+      const dash = relationshipDash(relationship.kind) ?? "";
+
+      return `<g><path d="M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}" fill="none" stroke="${color}" stroke-width="2.6" ${dash ? `stroke-dasharray="${dash}"` : ""} stroke-linecap="round" opacity="0.85"/><circle cx="${x1}" cy="${y1}" r="4" fill="${color}"/><circle cx="${x2}" cy="${y2}" r="4" fill="#ffffff" stroke="${color}" stroke-width="2"/></g>`;
     })
     .join("");
 
-  const cards = tables
+  const cardsSvg = tables
     .map((table) => {
-      const height = tableHeight(table);
-      const columns = table.columns
+      const isCollapsed = collapsedTableIds.has(table.id);
+      const cardHeight = tableHeight(table, isCollapsed);
+      const visibleCols = getVisibleColumns(table, isCollapsed);
+
+      const tableX = table.x + offsetX;
+      const tableY = table.y + offsetY;
+
+      const columnsSvg = visibleCols
         .map((column, index) => {
           const y =
-            table.y + TABLE_HEADER_HEIGHT + index * COLUMN_ROW_HEIGHT + 20;
-          return `<text x="${table.x + 18}" y="${y}" fill="#334155" font-size="12" font-family="ui-monospace, monospace">${escapeXml(
-            column.name,
-          )}</text><text x="${table.x + TABLE_WIDTH - 18}" y="${y}" fill="#64748b" font-size="11" text-anchor="end" font-family="ui-monospace, monospace">${escapeXml(
-            formatColumnType(column),
-          )}</text>`;
+            tableY +
+            TABLE_HEADER_HEIGHT +
+            8 +
+            index * COLUMN_ROW_HEIGHT +
+            COLUMN_ROW_HEIGHT / 2 +
+            4;
+          const badge = columnBadge(column);
+
+          let badgeSvg = "";
+          let textIndent = 12;
+
+          if (badge) {
+            let bgFill = "#ecfdf5";
+            let textFill = "#047857";
+            let borderStroke = "#a7f3d0";
+
+            if (column.key === "pk") {
+              bgFill = "#d1fae5";
+              textFill = "#047857";
+              borderStroke = "#6ee7b7";
+            } else if (column.key === "fk") {
+              bgFill = "#e0f2fe";
+              textFill = "#0369a1";
+              borderStroke = "#7dd3fc";
+            } else if (column.key === "unique") {
+              bgFill = "#f3e8ff";
+              textFill = "#6b21a8";
+              borderStroke = "#c084fc";
+            }
+
+            badgeSvg = `<rect x="${tableX + 10}" y="${y - 13}" width="34" height="17" rx="4" fill="${bgFill}" stroke="${borderStroke}" stroke-width="1"/><text x="${tableX + 27}" y="${y - 1}" fill="${textFill}" font-size="9" font-weight="700" text-anchor="middle" font-family="Inter, sans-serif">${badge.label}</text>`;
+            textIndent = 50;
+          }
+
+          return `<g><rect x="${tableX + 4}" y="${y - 17}" width="${TABLE_WIDTH - 8}" height="28" rx="4" fill="transparent"/><line x1="${tableX + 8}" y1="${y + 10}" x2="${tableX + TABLE_WIDTH - 8}" y2="${y + 10}" stroke="#f1f5f9" stroke-width="0.8"/>${badgeSvg}<text x="${tableX + textIndent}" y="${y}" fill="#334155" font-size="12" font-weight="600" font-family="ui-monospace, monospace">${escapeXml(column.name)}</text><text x="${tableX + TABLE_WIDTH - 12}" y="${y}" fill="#94a3b8" font-size="11" font-weight="500" text-anchor="end" font-family="ui-monospace, monospace">${escapeXml(formatColumnType(column))}</text></g>`;
         })
         .join("");
 
-      return `<g><rect x="${table.x}" y="${table.y}" width="${TABLE_WIDTH}" height="${height}" rx="18" fill="#ffffff" stroke="#dbe7e2"/><rect x="${table.x}" y="${table.y}" width="${TABLE_WIDTH}" height="48" rx="18" fill="#ecfdf5"/><text x="${table.x + 18}" y="${table.y + 31}" fill="#064e3b" font-size="15" font-weight="700" font-family="Inter, Arial">${escapeXml(
-        table.name,
-      )}</text>${columns}</g>`;
+      const clipId = `card-clip-${table.id}`;
+
+      return `<g class="table-card">
+        <defs>
+          <clipPath id="${clipId}">
+            <rect x="${tableX}" y="${tableY}" width="${TABLE_WIDTH}" height="${cardHeight}" rx="10"/>
+          </clipPath>
+        </defs>
+        <rect x="${tableX}" y="${tableY}" width="${TABLE_WIDTH}" height="${cardHeight}" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2" filter="drop-shadow(0 8px 16px rgba(15,23,42,0.12))"/>
+        <g clip-path="url(#${clipId})">
+          <rect x="${tableX}" y="${tableY}" width="${TABLE_WIDTH}" height="44" fill="#0f5132"/>
+          <g transform="translate(${tableX + 12}, ${tableY + 13})">
+            <rect width="18" height="18" rx="4" fill="rgba(217,255,87,0.22)" stroke="rgba(217,255,87,0.4)" stroke-width="0.8"/>
+            <rect x="4" y="4" width="10" height="10" rx="1.5" fill="none" stroke="#d9ff57" stroke-width="1.2"/>
+            <line x1="4" y1="8.5" x2="14" y2="8.5" stroke="#d9ff57" stroke-width="1.1"/>
+            <line x1="9" y1="4" x2="9" y2="14" stroke="#d9ff57" stroke-width="1.1"/>
+          </g>
+          <text x="${tableX + 36}" y="${tableY + 27}" fill="#ffffff" font-size="14" font-weight="700" font-family="ui-monospace, monospace">${escapeXml(table.name)}</text>
+          ${config.includeWatermark ? `<g transform="translate(${tableX + TABLE_WIDTH - 118}, ${tableY + 14})"><rect width="48" height="16" rx="4" fill="rgba(217,255,87,0.16)" stroke="rgba(217,255,87,0.3)" stroke-width="0.8"/><text x="24" y="11" fill="#d9ff57" font-size="8" font-weight="800" text-anchor="middle" font-family="Inter, sans-serif" letter-spacing="0.4">NEXORA</text></g>` : ""}
+          <text x="${tableX + TABLE_WIDTH - 12}" y="${tableY + 26}" fill="#d1fae5" font-size="10" font-weight="600" text-anchor="end" font-family="Inter, sans-serif">${isCollapsed ? `${visibleCols.length}/${table.columns.length} keys` : `${table.columns.length} cols`}</text>
+        </g>
+        ${columnsSvg}
+      </g>`;
     })
     .join("");
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="#f8fcfa"/><defs><pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M 28 0 L 0 0 0 28" fill="none" stroke="#dbe7e2" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)" opacity="0.65"/><text x="36" y="42" fill="#064e3b" font-size="20" font-weight="800" font-family="Inter, Arial">Nexora OS Database Visualizer</text>${lines}${cards}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><rect width="100%" height="100%" fill="${bgColor}"/>${gridPatternSvg}${glowSvg}${tiledWatermarkSvg}${centerWatermarkSvg}${headerBarSvg}${linesSvg}${cardsSvg}${watermarkSvg}</svg>`;
 }
 
 function toDiagramOutput(
@@ -417,8 +641,22 @@ async function exportDiagram(
   tables: Table[],
   relationships: Relationship[],
   diagramName: string,
+  themeMode: "dark" | "blueprint" | "light" = "dark",
+  collapsedTableIds: Set<string> = new Set(),
+  config: ExportStudioConfig = defaultExportStudioConfig,
+  dialect: SchemaDialect = "dbml",
 ) {
-  const svg = buildExportSvg(tables, relationships);
+  const logoSrc = await getNexoraLogoDataUrl();
+  const svg = buildExportSvg(
+    tables,
+    relationships,
+    themeMode,
+    collapsedTableIds,
+    diagramName,
+    logoSrc,
+    config,
+    dialect,
+  );
   const safeName =
     diagramName
       .trim()
@@ -444,7 +682,7 @@ async function exportDiagram(
     canvas.height = image.height * 2;
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Canvas export is not available.");
-    context.fillStyle = "#f8fcfa";
+    context.fillStyle = themeMode === "blueprint" ? "#060d1e" : themeMode === "dark" ? "#070b09" : "#fbfcfb";
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.scale(2, 2);
     context.drawImage(image, 0, 0);
@@ -456,14 +694,41 @@ async function exportDiagram(
     return;
   }
 
-  const printWindow = window.open("", "_blank", "width=1200,height=820");
-  if (!printWindow) return;
-  printWindow.document.write(
+  const iframe = document.createElement("iframe");
+  iframe.style.position = "fixed";
+  iframe.style.right = "0";
+  iframe.style.bottom = "0";
+  iframe.style.width = "0";
+  iframe.style.height = "0";
+  iframe.style.border = "0";
+  iframe.style.opacity = "0";
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow?.document;
+  if (!doc) {
+    document.body.removeChild(iframe);
+    return;
+  }
+
+  doc.open();
+  doc.write(
     `<!doctype html><html><head><title>${escapeXml(
       diagramName,
-    )}</title><style>body{margin:0;background:#f8fcfa;font-family:Inter,Arial,sans-serif}.wrap{padding:24px}svg{max-width:100%;height:auto}@media print{.wrap{padding:0}}</style></head><body><div class="wrap">${svg}</div><script>window.onload=()=>window.print();</script></body></html>`,
+    )} - ERD Export</title><style>@page{size:auto;margin:12mm}body{margin:0;background:#ffffff;font-family:Inter,Arial,sans-serif}.wrap{padding:16px;text-align:center}.title{font-size:18px;font-weight:700;color:#0f5132;margin-bottom:16px;border-bottom:2px solid #ecfdf5;padding-bottom:10px}svg{max-width:100%;height:auto;display:block;margin:0 auto}</style></head><body><div class="wrap"><div class="title">${escapeXml(
+      diagramName,
+    )}</div>${svg}</div></body></html>`,
   );
-  printWindow.document.close();
+  doc.close();
+
+  iframe.contentWindow?.focus();
+  setTimeout(() => {
+    iframe.contentWindow?.print();
+    setTimeout(() => {
+      if (document.body.contains(iframe)) {
+        document.body.removeChild(iframe);
+      }
+    }, 1000);
+  }, 250);
 }
 
 function EditorTabs({
@@ -512,40 +777,91 @@ function DatabaseCodeEditor({
 }) {
   const lines = value.split("\n");
   const [scroll, setScroll] = useState({ top: 0, left: 0 });
+  const [activeLine, setActiveLine] = useState(0);
+
+  function handleCursorMove(textarea: HTMLTextAreaElement) {
+    const textBefore = value.substring(0, textarea.selectionStart);
+    const lineIndex = textBefore.split("\n").length - 1;
+    setActiveLine(lineIndex);
+  }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      const textarea = event.currentTarget;
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+
+      const nextValue =
+        value.substring(0, start) + "  " + value.substring(end);
+      onChange(nextValue);
+
+      setTimeout(() => {
+        textarea.selectionStart = textarea.selectionEnd = start + 2;
+      }, 0);
+    }
+  }
 
   return (
-    <div className="relative h-[560px] min-h-0 flex-1 overflow-hidden bg-[#0d1110] font-mono text-[13px] leading-6 shadow-inner light:bg-[#fbfefd] lg:h-full">
+    <div className="relative h-[560px] min-h-0 flex-1 overflow-hidden bg-[#0d1110] font-mono text-[13px] leading-6 tracking-normal shadow-inner light:bg-[#fbfefd] lg:h-full">
+      {/* Line Numbers Gutter */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-14 border-r border-white/10 bg-[#090d0b] text-right text-[12px] text-slate-500 light:border-slate-200 light:bg-slate-50 light:text-slate-400"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-14 border-r border-white/10 bg-[#090d0b] text-right font-mono text-[12px] text-slate-500 light:border-slate-200 light:bg-slate-50 light:text-slate-400"
       >
         <div
           className="px-3 py-4"
           style={{ transform: `translateY(-${scroll.top}px)` }}
         >
           {lines.map((_, index) => (
-            <div key={`ln-${index}`}>{index + 1}</div>
+            <div
+              key={`ln-${index}`}
+              className={cn(
+                "h-6",
+                index === activeLine
+                  ? "font-bold text-[var(--brand-lime)] light:text-emerald-700"
+                  : "text-slate-500 light:text-slate-400",
+              )}
+            >
+              {index + 1}
+            </div>
           ))}
         </div>
       </div>
 
+      {/* Syntax Highlight Overlay */}
       <pre
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 left-14 min-w-max whitespace-pre px-4 py-4"
+        className="pointer-events-none absolute inset-0 left-14 min-w-max whitespace-pre font-mono text-[13px] leading-6 tracking-normal py-4"
         style={{
           transform: `translate(${-scroll.left}px, ${-scroll.top}px)`,
         }}
       >
         {lines.map((line, index) => (
-          <div key={`hl-${index}`} className="h-6">
+          <div
+            key={`hl-${index}`}
+            className={cn(
+              "h-6 px-4 transition-colors",
+              index === activeLine
+                ? "bg-white/[0.045] light:bg-emerald-500/10"
+                : "bg-transparent",
+            )}
+          >
             {highlightLine(line, dialect)}
           </div>
         ))}
       </pre>
 
+      {/* Textarea Code Input */}
       <textarea
         value={value}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event) => {
+          onChange(event.target.value);
+          handleCursorMove(event.target);
+        }}
+        onKeyUp={(event) => handleCursorMove(event.currentTarget)}
+        onClick={(event) => handleCursorMove(event.currentTarget)}
+        onKeyDown={handleKeyDown}
         onScroll={(event) =>
           setScroll({
             top: event.currentTarget.scrollTop,
@@ -555,7 +871,7 @@ function DatabaseCodeEditor({
         spellCheck={false}
         wrap="off"
         aria-label="Database schema code editor"
-        className="absolute inset-0 left-14 w-[calc(100%-3.5rem)] resize-none overflow-auto border-0 bg-transparent px-4 py-4 font-mono text-[13px] leading-6 text-transparent caret-[var(--brand-lime)] outline-none selection:bg-emerald-400/30 light:caret-emerald-600 light:selection:bg-emerald-200/70"
+        className="absolute inset-0 left-14 w-[calc(100%-3.5rem)] resize-none overflow-auto border-0 bg-transparent px-4 py-4 font-mono text-[13px] leading-6 tracking-normal text-transparent caret-[var(--brand-lime)] outline-none selection:bg-emerald-400/30 light:caret-emerald-600 light:selection:bg-emerald-200/70"
       />
     </div>
   );
@@ -634,46 +950,68 @@ function RelationshipPath({
   relationship,
   from,
   to,
+  fromCollapsed,
+  toCollapsed,
   selected,
+  isHovered,
+  isHighlighted,
   highlightRelationships,
   onSelect,
+  onHover,
+  onLeave,
 }: {
   relationship: Relationship;
   from: Table;
   to: Table;
+  fromCollapsed?: boolean;
+  toCollapsed?: boolean;
   selected: boolean;
+  isHovered: boolean;
+  isHighlighted: boolean;
   highlightRelationships: boolean;
   onSelect: () => void;
+  onHover: () => void;
+  onLeave: () => void;
 }) {
-  const fromCenter = {
-    x: from.x + TABLE_WIDTH / 2,
-    y: from.y + tableHeight(from) / 2,
-  };
-  const toCenter = {
-    x: to.x + TABLE_WIDTH / 2,
-    y: to.y + tableHeight(to) / 2,
-  };
-  const leftToRight = fromCenter.x <= toCenter.x;
+  const leftToRight = from.x + TABLE_WIDTH / 2 <= to.x + TABLE_WIDTH / 2;
   const x1 = leftToRight ? from.x + TABLE_WIDTH : from.x;
   const x2 = leftToRight ? to.x : to.x + TABLE_WIDTH;
-  const y1 = fromCenter.y;
-  const y2 = toCenter.y;
+  const y1 = getColumnCenterY(from, relationship.from.column, fromCollapsed);
+  const y2 = getColumnCenterY(to, relationship.to.column, toCollapsed);
   const mid = (x1 + x2) / 2;
   const color = relationshipColor(relationship.kind);
-  const strokeColor = highlightRelationships || selected ? color : "#94A3B8";
-  const relationshipOpacity = selected
-    ? 1
-    : highlightRelationships
-      ? 0.74
-      : 0.22;
+  const strokeColor =
+    isHovered || isHighlighted || selected
+      ? color
+      : highlightRelationships
+        ? color
+        : "#94A3B8";
+  const relationshipWidth =
+    isHovered || selected
+      ? 4.2
+      : isHighlighted
+        ? 3.4
+        : highlightRelationships
+          ? 2.4
+          : 1.8;
+  const relationshipOpacity =
+    isHovered || isHighlighted || selected
+      ? 1
+      : highlightRelationships
+        ? 0.74
+        : 0.22;
 
   return (
-    <g>
+    <g
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      className="cursor-pointer transition-all duration-200"
+    >
       <path
         d={`M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`}
         fill="none"
         stroke="transparent"
-        strokeWidth="18"
+        strokeWidth="24"
         className="cursor-pointer"
         onClick={onSelect}
       />
@@ -681,22 +1019,28 @@ function RelationshipPath({
         d={`M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`}
         fill="none"
         stroke={strokeColor}
-        strokeWidth={selected ? 3.6 : highlightRelationships ? 2.4 : 1.8}
+        strokeWidth={relationshipWidth}
         strokeDasharray={relationshipDash(relationship.kind)}
         strokeLinecap="round"
         opacity={relationshipOpacity}
+        style={{
+          filter:
+            isHovered || isHighlighted
+              ? `drop-shadow(0 0 6px ${color})`
+              : undefined,
+        }}
       />
       <circle
         cx={x1}
         cy={y1}
-        r={selected ? 5 : 3.5}
+        r={isHovered || selected ? 6 : 4}
         fill={strokeColor}
         opacity={relationshipOpacity}
       />
       <circle
         cx={x2}
         cy={y2}
-        r={selected ? 5 : 3.5}
+        r={isHovered || selected ? 6 : 4}
         fill="#ffffff"
         stroke={strokeColor}
         strokeWidth="2"
@@ -709,17 +1053,33 @@ function RelationshipPath({
 function TableNode({
   table,
   selected,
+  isHovered,
+  isHighlighted,
+  isSearchMatch,
+  hasActiveSearch,
+  isCollapsed,
+  onToggleCollapse,
   zoom,
   stageRef,
   onSelect,
   onMove,
+  onHover,
+  onLeave,
 }: {
   table: Table;
   selected: boolean;
+  isHovered?: boolean;
+  isHighlighted?: boolean;
+  isSearchMatch?: boolean;
+  hasActiveSearch?: boolean;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
   zoom: number;
   stageRef: React.RefObject<HTMLDivElement | null>;
   onSelect: () => void;
   onMove: (id: string, next: { x: number; y: number }) => void;
+  onHover?: () => void;
+  onLeave?: () => void;
 }) {
   const dragOffset = useRef({ x: 0, y: 0 });
 
@@ -756,10 +1116,14 @@ function TableNode({
     }
   }
 
+  const columnsToRender = getVisibleColumns(table, isCollapsed);
+
   return (
     <div
       role="button"
       tabIndex={0}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
@@ -768,16 +1132,21 @@ function TableNode({
         if (event.key === "Enter" || event.key === " ") onSelect();
       }}
       className={cn(
-        "absolute cursor-grab overflow-hidden rounded-lg border bg-white text-left shadow-[0_12px_28px_rgba(15,23,42,0.14)] transition active:cursor-grabbing",
-        selected
-          ? "border-emerald-500 ring-4 ring-emerald-200/70"
-          : "border-slate-300 hover:border-emerald-300",
+        "absolute cursor-grab overflow-hidden rounded-lg border bg-white text-left transition-[box-shadow,border-color,opacity,transform] duration-150 active:cursor-grabbing",
+        isHovered || isHighlighted
+          ? "border-emerald-500 ring-4 ring-emerald-400 shadow-[0_0_30px_rgba(50,245,154,0.5)] z-20 scale-[1.02]"
+          : selected
+            ? "border-emerald-500 ring-4 ring-emerald-200/70 z-10"
+            : isSearchMatch
+              ? "border-emerald-500 ring-4 ring-emerald-400/80 shadow-[0_0_24px_rgba(50,245,154,0.4)]"
+              : "border-slate-300 hover:border-emerald-300",
+        hasActiveSearch && !isSearchMatch && !selected && "opacity-40 grayscale-[20%]",
       )}
       style={{
         left: table.x,
         top: table.y,
         width: TABLE_WIDTH,
-        minHeight: tableHeight(table),
+        minHeight: tableHeight(table, isCollapsed),
       }}
     >
       <div className="flex items-center justify-between gap-3 bg-[#0f5132] px-3 py-2 text-white">
@@ -792,17 +1161,39 @@ function TableNode({
             </h3>
           </div>
           <p className="mt-0.5 text-[10px] font-medium text-emerald-100">
-            {table.columns.length} columns
+            {isCollapsed
+              ? `${columnsToRender.length}/${table.columns.length} keys`
+              : `${table.columns.length} columns`}
           </p>
         </div>
-        <MousePointer2
-          className="h-3.5 w-3.5 text-emerald-100"
-          aria-hidden="true"
-        />
+        <div className="flex items-center gap-1">
+          {onToggleCollapse ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleCollapse();
+              }}
+              className="rounded p-0.5 text-emerald-100 hover:bg-white/20"
+              title={isCollapsed ? "Expand table columns" : "Collapse non-key columns"}
+              aria-label={isCollapsed ? "Expand columns" : "Collapse columns"}
+            >
+              {isCollapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
+            </button>
+          ) : null}
+          <MousePointer2
+            className="h-3.5 w-3.5 text-emerald-100"
+            aria-hidden="true"
+          />
+        </div>
       </div>
 
       <div className="px-2 py-2">
-        {table.columns.map((column) => {
+        {columnsToRender.map((column) => {
           const badge = columnBadge(column);
           const BadgeIcon = badge?.icon;
           return (
@@ -848,11 +1239,15 @@ function ERDCanvas({
   showGrid,
   highlightRelationships,
   layoutAlgorithm,
+  themeMode = "light",
+  collapsedTableIds = new Set(),
   onZoom,
   onToolChange,
   onShowGridChange,
   onHighlightRelationshipsChange,
   onLayoutAlgorithmChange,
+  onThemeModeChange,
+  onToggleTableCollapse,
   onSelect,
   onMove,
   onAutoLayout,
@@ -865,17 +1260,71 @@ function ERDCanvas({
   showGrid: boolean;
   highlightRelationships: boolean;
   layoutAlgorithm: LayoutAlgorithm;
+  themeMode?: "dark" | "blueprint" | "light";
+  collapsedTableIds?: Set<string>;
   onZoom: (zoom: number) => void;
   onToolChange: (tool: CanvasTool) => void;
   onShowGridChange: (showGrid: boolean) => void;
   onHighlightRelationshipsChange: (enabled: boolean) => void;
   onLayoutAlgorithmChange: (algorithm: LayoutAlgorithm) => void;
-  onSelect: (selection: Selection) => void;
+  onThemeModeChange?: (theme: "dark" | "blueprint" | "light") => void;
+  onToggleTableCollapse?: (tableId: string) => void;
+  onSelect: (selection: Selection | null) => void;
   onMove: (id: string, next: { x: number; y: number }) => void;
   onAutoLayout: () => void;
 }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const [isSpacePressed, setIsSpacePressed] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [hoveredTableId, setHoveredTableId] = useState<string | null>(null);
+  const [hoveredRelationshipId, setHoveredRelationshipId] = useState<string | null>(null);
+
+  const activeHoverTableId = hoveredTableId;
+  const activeHoverRelationship = relationships.find(
+    (r) => r.id === hoveredRelationshipId,
+  );
+
+  const highlightedTableIds = useMemo(() => {
+    const set = new Set<string>();
+    if (activeHoverTableId) {
+      set.add(activeHoverTableId);
+      relationships.forEach((r) => {
+        if (r.from.table === activeHoverTableId) set.add(r.to.table);
+        if (r.to.table === activeHoverTableId) set.add(r.from.table);
+      });
+    } else if (activeHoverRelationship) {
+      set.add(activeHoverRelationship.from.table);
+      set.add(activeHoverRelationship.to.table);
+    }
+    return set;
+  }, [activeHoverTableId, activeHoverRelationship, relationships]);
+
+  const highlightedRelationshipIds = useMemo(() => {
+    const set = new Set<string>();
+    if (hoveredRelationshipId) {
+      set.add(hoveredRelationshipId);
+    }
+    if (activeHoverTableId) {
+      relationships.forEach((r) => {
+        if (
+          r.from.table === activeHoverTableId ||
+          r.to.table === activeHoverTableId
+        ) {
+          set.add(r.id);
+        }
+      });
+    }
+    return set;
+  }, [hoveredRelationshipId, activeHoverTableId, relationships]);
+
+  function cycleThemeMode() {
+    if (!onThemeModeChange) return;
+    const next = themeMode === "dark" ? "blueprint" : themeMode === "blueprint" ? "light" : "dark";
+    onThemeModeChange(next);
+  }
+
   const panState = useRef({
     active: false,
     startX: 0,
@@ -883,6 +1332,9 @@ function ERDCanvas({
     scrollLeft: 0,
     scrollTop: 0,
   });
+
+  const activeTool = isSpacePressed ? "pan" : tool;
+
   const tableMap = useMemo(
     () => new Map(tables.map((table) => [table.id, table])),
     [tables],
@@ -902,8 +1354,99 @@ function ERDCanvas({
         )
       : -1;
 
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return [];
+
+    const results: Array<{
+      type: "table" | "column";
+      table: Table;
+      columnName?: string;
+    }> = [];
+
+    tables.forEach((table) => {
+      if (table.name.toLowerCase().includes(query)) {
+        results.push({ type: "table", table });
+      }
+      table.columns.forEach((col) => {
+        if (col.name.toLowerCase().includes(query)) {
+          results.push({ type: "column", table, columnName: col.name });
+        }
+      });
+    });
+
+    return results.slice(0, 8);
+  }, [tables, searchQuery]);
+
+  function handleFocusTable(targetTable: Table) {
+    onSelect({ type: "table", id: targetTable.id });
+    setIsSearchOpen(false);
+
+    const area = scrollAreaRef.current;
+    if (!area) return;
+
+    const scale = zoom / 100;
+    const targetX = targetTable.x * scale - area.clientWidth / 2 + (TABLE_WIDTH * scale) / 2;
+    const targetY = targetTable.y * scale - area.clientHeight / 2 + (tableHeight(targetTable) * scale) / 2;
+
+    area.scrollTo({
+      left: Math.max(0, targetX),
+      top: Math.max(0, targetY),
+      behavior: "smooth",
+    });
+  }
+
+  // Listen for Spacebar key to enable pan mode temporarily
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.code === "Space" && !event.repeat) {
+        const target = event.target as HTMLElement | null;
+        if (
+          target &&
+          (target.tagName === "INPUT" ||
+            target.tagName === "TEXTAREA" ||
+            target.isContentEditable)
+        ) {
+          return;
+        }
+        setIsSpacePressed(true);
+      }
+    }
+    function handleKeyUp(event: KeyboardEvent) {
+      if (event.code === "Space") {
+        setIsSpacePressed(false);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
+  // Listen for non-passive Mouse Wheel / Trackpad Pinch zoom
+  useEffect(() => {
+    const area = scrollAreaRef.current;
+    if (!area) return;
+
+    function handleWheel(event: WheelEvent) {
+      if (event.ctrlKey || event.metaKey || event.altKey) {
+        event.preventDefault();
+        const delta = event.deltaY < 0 ? 8 : -8;
+        onZoom(Math.min(180, Math.max(40, zoom + delta)));
+      }
+    }
+
+    area.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      area.removeEventListener("wheel", handleWheel);
+    };
+  }, [zoom, onZoom]);
+
   function handlePanPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
-    if (tool !== "pan") return;
+    const isMiddleClick = event.button === 1;
+    if (activeTool !== "pan" && !isMiddleClick) return;
     const area = scrollAreaRef.current;
     if (!area) return;
     panState.current = {
@@ -917,7 +1460,7 @@ function ERDCanvas({
   }
 
   function handlePanPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
-    if (tool !== "pan" || !panState.current.active) return;
+    if (!panState.current.active) return;
     const area = scrollAreaRef.current;
     if (!area) return;
     area.scrollLeft =
@@ -947,8 +1490,15 @@ function ERDCanvas({
     onLayoutAlgorithmChange(next);
   }
 
+  function handleStageClick(event: React.MouseEvent<HTMLDivElement>) {
+    if (event.target === stageRef.current || event.target === scrollAreaRef.current) {
+      onSelect(null);
+    }
+  }
+
   return (
     <section className="relative flex h-full min-h-[560px] flex-col overflow-hidden bg-[#070b09] light:bg-white lg:min-h-0">
+
       <div className="absolute right-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-white/10 bg-[rgba(18,24,21,0.86)] px-3 py-2 shadow-[0_20px_48px_rgba(0,0,0,0.34)] backdrop-blur light:border-slate-200 light:bg-white/90 light:shadow-[0_12px_32px_rgba(15,23,42,0.10)]">
         <Network className="h-4 w-4 text-emerald-700" aria-hidden="true" />
         <span className="text-xs font-bold text-slate-200 light:text-slate-700">
@@ -960,7 +1510,7 @@ function ERDCanvas({
       <div className="absolute bottom-4 left-4 z-20 flex items-center gap-1.5 rounded-xl border border-white/10 bg-[rgba(18,24,21,0.90)] p-1.5 shadow-[0_24px_54px_rgba(0,0,0,0.38)] backdrop-blur light:border-slate-200 light:bg-white/95 light:shadow-[0_14px_34px_rgba(15,23,42,0.14)]">
         <button
           type="button"
-          onClick={() => onZoom(Math.max(50, zoom - 10))}
+          onClick={() => onZoom(Math.max(40, zoom - 10))}
           className={compactIconButton}
           aria-label="Zoom out"
           title="Zoom out"
@@ -972,7 +1522,7 @@ function ERDCanvas({
         </span>
         <button
           type="button"
-          onClick={() => onZoom(Math.min(170, zoom + 10))}
+          onClick={() => onZoom(Math.min(180, zoom + 10))}
           className={compactIconButton}
           aria-label="Zoom in"
           title="Zoom in"
@@ -983,8 +1533,8 @@ function ERDCanvas({
           type="button"
           onClick={() => onZoom(100)}
           className={compactIconButton}
-          aria-label="Fit view"
-          title="Fit view"
+          aria-label="Reset zoom (100%)"
+          title="Reset zoom to 100%"
         >
           <Maximize2 className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -997,11 +1547,11 @@ function ERDCanvas({
           onClick={() => onToolChange("select")}
           className={cn(
             compactIconButton,
-            tool === "select" &&
+            activeTool === "select" &&
               "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-lime)] light:border-emerald-200 light:bg-emerald-50 light:text-emerald-700",
           )}
           aria-label="Select mode"
-          title="Select and move tables"
+          title="Select mode (default)"
         >
           <MousePointer2 className="h-4 w-4" aria-hidden="true" />
         </button>
@@ -1010,17 +1560,17 @@ function ERDCanvas({
           onClick={() => onToolChange("pan")}
           className={cn(
             compactIconButton,
-            tool === "pan" &&
+            activeTool === "pan" &&
               "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-lime)] light:border-emerald-200 light:bg-emerald-50 light:text-emerald-700",
           )}
           aria-label="Pan mode"
-          title="Pan canvas"
+          title="Pan canvas (or hold Spacebar)"
         >
           <Hand className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
 
-      <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1.5 rounded-xl border border-white/10 bg-[rgba(18,24,21,0.90)] p-1.5 shadow-[0_24px_54px_rgba(0,0,0,0.38)] backdrop-blur light:border-slate-200 light:bg-white/95 light:shadow-[0_14px_34px_rgba(15,23,42,0.14)]">
+      <div className="absolute bottom-3 sm:bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 sm:gap-1.5 max-w-[95vw] sm:max-w-none flex-wrap justify-center rounded-xl border border-white/10 bg-[rgba(18,24,21,0.90)] p-1 sm:p-1.5 shadow-[0_24px_54px_rgba(0,0,0,0.38)] backdrop-blur light:border-slate-200 light:bg-white/95 light:shadow-[0_14px_34px_rgba(15,23,42,0.14)]">
         <button
           type="button"
           onClick={() =>
@@ -1063,6 +1613,18 @@ function ERDCanvas({
         </button>
         <button
           type="button"
+          onClick={cycleThemeMode}
+          className={cn(
+            compactButton,
+            themeMode === "blueprint" && "border-sky-400/80 bg-sky-500/20 text-sky-300 font-bold",
+          )}
+          title={`Switch Theme (Current: ${themeMode})`}
+        >
+          <Palette className="h-4 w-4" aria-hidden="true" />
+          {themeMode === "blueprint" ? "Blueprint" : themeMode === "dark" ? "Dark Glass" : "Light Studio"}
+        </button>
+        <button
+          type="button"
           onClick={() => onShowGridChange(!showGrid)}
           className={cn(
             compactIconButton,
@@ -1088,11 +1650,17 @@ function ERDCanvas({
       <div
         ref={scrollAreaRef}
         className={cn(
-          "relative flex-1 overflow-auto bg-[#070b09] light:bg-[#fbfcfb]",
-          tool === "pan"
+          "relative flex-1 overflow-auto transition-colors duration-300",
+          themeMode === "blueprint"
+            ? "bg-[#060d1e]"
+            : themeMode === "dark"
+              ? "bg-[#070b09]"
+              : "bg-[#fbfcfb]",
+          activeTool === "pan"
             ? "cursor-grab active:cursor-grabbing"
             : "cursor-default",
         )}
+        onClick={handleStageClick}
         onPointerDown={handlePanPointerDown}
         onPointerMove={handlePanPointerMove}
         onPointerUp={handlePanPointerUp}
@@ -1104,15 +1672,17 @@ function ERDCanvas({
             className="pointer-events-none absolute inset-0 opacity-85"
             style={{
               backgroundImage:
-                "radial-gradient(circle, rgba(108,246,179,0.22) 1.1px, transparent 1.2px)",
-              backgroundSize: "14px 14px",
+                themeMode === "blueprint"
+                  ? "linear-gradient(to right, rgba(56, 189, 248, 0.18) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.18) 1px, transparent 1px)"
+                  : "radial-gradient(circle, rgba(108,246,179,0.22) 1.1px, transparent 1.2px)",
+              backgroundSize: themeMode === "blueprint" ? "24px 24px" : "14px 14px",
             }}
           />
         ) : null}
         <div className="relative min-h-full min-w-full p-10">
           <div
             ref={stageRef}
-            className={cn("relative", tool === "pan" && "pointer-events-none")}
+            className={cn("relative", activeTool === "pan" && "pointer-events-none")}
             style={{
               width: stageWidth,
               height: stageHeight,
@@ -1137,32 +1707,55 @@ function ERDCanvas({
                     relationship={relationship}
                     from={from}
                     to={to}
+                    fromCollapsed={collapsedTableIds.has(from.id)}
+                    toCollapsed={collapsedTableIds.has(to.id)}
                     selected={
                       selection?.type === "relationship" &&
                       selection.id === relationship.id
                     }
+                    isHovered={hoveredRelationshipId === relationship.id}
+                    isHighlighted={highlightedRelationshipIds.has(relationship.id)}
                     highlightRelationships={highlightRelationships}
                     onSelect={() =>
                       onSelect({ type: "relationship", id: relationship.id })
                     }
+                    onHover={() => setHoveredRelationshipId(relationship.id)}
+                    onLeave={() => setHoveredRelationshipId(null)}
                   />
                 );
               })}
             </svg>
 
-            {tables.map((table) => (
-              <TableNode
-                key={table.id}
-                table={table}
-                selected={
-                  selection?.type === "table" && selection.id === table.id
-                }
-                zoom={zoom}
-                stageRef={stageRef}
-                onSelect={() => onSelect({ type: "table", id: table.id })}
-                onMove={onMove}
-              />
-            ))}
+            {tables.map((table) => {
+              const query = searchQuery.trim().toLowerCase();
+              const isMatch =
+                !!query &&
+                (table.name.toLowerCase().includes(query) ||
+                  table.columns.some((col) =>
+                    col.name.toLowerCase().includes(query),
+                  ));
+              return (
+                <TableNode
+                  key={table.id}
+                  table={table}
+                  selected={
+                    selection?.type === "table" && selection.id === table.id
+                  }
+                  isHovered={hoveredTableId === table.id}
+                  isHighlighted={highlightedTableIds.has(table.id)}
+                  isSearchMatch={isMatch}
+                  hasActiveSearch={!!query}
+                  isCollapsed={collapsedTableIds.has(table.id)}
+                  onToggleCollapse={() => onToggleTableCollapse?.(table.id)}
+                  zoom={zoom}
+                  stageRef={stageRef}
+                  onSelect={() => onSelect({ type: "table", id: table.id })}
+                  onMove={onMove}
+                  onHover={() => setHoveredTableId(table.id)}
+                  onLeave={() => setHoveredTableId(null)}
+                />
+              );
+            })}
 
             {tables.length === 0 ? (
               <div className="absolute left-4 right-4 top-6 w-auto max-w-[420px] rounded-[24px] border border-dashed border-white/15 bg-[rgba(18,24,21,0.9)] p-4 text-center shadow-[0_24px_70px_rgba(0,0,0,0.34)] sm:left-10 sm:right-auto sm:top-10 sm:w-[calc(100%-5rem)] sm:p-6 light:border-slate-300 light:bg-white/90 light:shadow-[0_18px_42px_rgba(33,45,74,0.08)]">
@@ -1189,12 +1782,18 @@ function DetailsPanel({
   selection,
   issues,
   suggestions,
+  onAddAuditFields,
+  onGenerateMockData,
+  onClose,
 }: {
   tables: Table[];
   relationships: Relationship[];
   selection: Selection | null;
   issues: ParseIssue[];
   suggestions: AiSuggestion[];
+  onAddAuditFields?: () => void;
+  onGenerateMockData?: () => void;
+  onClose?: () => void;
 }) {
   const selectedTable =
     selection?.type === "table"
@@ -1206,42 +1805,56 @@ function DetailsPanel({
       : null;
 
   return (
-    <section className={cn(panel, "overflow-hidden")}>
-      <header className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 light:border-slate-200">
-        <div className="flex items-center gap-3">
+    <aside className="flex h-full min-h-0 flex-col overflow-hidden border-l border-white/10 bg-[#0d1110] light:border-slate-200 light:bg-white">
+      <header className="flex shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-[#121715] px-4 py-3 light:border-slate-200 light:bg-[#fbfefd]">
+        <div className="flex items-center gap-2.5">
           <IconTile icon={PanelRight} tone="blue" />
           <div>
             <h2 className="text-sm font-bold text-white light:text-slate-950">
               Inspector
             </h2>
             <p className="text-xs text-slate-500">
-              Table details, relationship context and AI review.
+              Table & relationship details
             </p>
           </div>
         </div>
-        <span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-xs font-bold text-slate-300 light:bg-slate-100 light:text-slate-600">
-          {issues.length} validations
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-white/[0.06] px-2.5 py-0.5 text-[11px] font-bold text-slate-300 light:bg-slate-100 light:text-slate-600">
+            {issues.length} validations
+          </span>
+          {onClose ? (
+            <button
+              type="button"
+              onClick={onClose}
+              className="grid h-7 w-7 place-items-center rounded-lg border border-white/10 text-slate-400 transition hover:bg-white/10 hover:text-white light:border-slate-200 light:text-slate-500 light:hover:bg-slate-100"
+              aria-label="Close Inspector"
+              title="Close Inspector"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
+          ) : null}
+        </div>
       </header>
 
-      <div className="grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(260px,360px)]">
+      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-4">
+        {/* Selected Entity Card */}
         <div className="rounded-[18px] border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-[#fbfefd]">
           {selectedTable ? (
             <>
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-700">
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-emerald-500 light:text-emerald-700">
                     Selected table
                   </p>
-                  <h3 className="mt-1 font-mono text-xl font-bold text-white light:text-slate-950">
+                  <h3 className="mt-1 truncate font-mono text-lg font-bold text-white light:text-slate-950">
                     {selectedTable.name}
                   </h3>
-                  <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
+                  <p className="mt-1 text-xs leading-5 text-slate-500">
                     {selectedTable.description ||
-                      "Parsed from the active editor document."}
+                      "Parsed from active editor document."}
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex shrink-0 gap-1.5">
                   <StatPill
                     label="Columns"
                     value={selectedTable.columns.length}
@@ -1254,50 +1867,51 @@ function DetailsPanel({
                 </div>
               </div>
 
-              <div className="mt-4 overflow-hidden rounded-2xl border border-white/10 bg-[#0d1110] light:border-slate-200 light:bg-white">
-                <div className="grid grid-cols-[minmax(0,1fr)_120px_90px] border-b border-white/10 bg-white/[0.04] px-3 py-2 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400 light:border-slate-200 light:bg-slate-50 light:text-slate-500">
+              <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-[#0d1110] light:border-slate-200 light:bg-white">
+                <div className="grid grid-cols-[minmax(0,1fr)_85px_55px] border-b border-white/10 bg-white/[0.04] px-3 py-2 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 light:border-slate-200 light:bg-slate-50 light:text-slate-500">
                   <span>Column</span>
                   <span>Type</span>
                   <span>Key</span>
                 </div>
-                {selectedTable.columns.map((column) => (
-                  <div
-                    key={`${selectedTable.id}-detail-${column.name}`}
-                    className="grid grid-cols-[minmax(0,1fr)_120px_90px] items-center gap-2 border-b border-white/10 px-3 py-2 text-sm last:border-b-0 light:border-slate-100"
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate font-mono font-semibold text-slate-200 light:text-slate-800">
-                        {column.name}
-                      </p>
-                      {column.references ? (
-                        <p className="mt-0.5 text-xs text-slate-500">
-                          references {column.references.table}.
-                          {column.references.column}
+                <div className="max-h-[220px] overflow-y-auto">
+                  {selectedTable.columns.map((column) => (
+                    <div
+                      key={`${selectedTable.id}-detail-${column.name}`}
+                      className="grid grid-cols-[minmax(0,1fr)_85px_55px] items-center gap-2 border-b border-white/10 px-3 py-2 text-xs last:border-b-0 light:border-slate-100"
+                    >
+                      <div className="min-w-0">
+                        <p className="truncate font-mono font-semibold text-slate-200 light:text-slate-800">
+                          {column.name}
                         </p>
-                      ) : null}
+                        {column.references ? (
+                          <p className="mt-0.5 truncate text-[10px] text-slate-500">
+                            refs {column.references.table}.{column.references.column}
+                          </p>
+                        ) : null}
+                      </div>
+                      <span className="truncate font-mono text-[11px] font-medium text-slate-400">
+                        {formatColumnType(column)}
+                      </span>
+                      <span className="text-[10px] font-bold uppercase text-slate-400">
+                        {column.key === "none" ? "-" : column.key}
+                      </span>
                     </div>
-                    <span className="font-mono text-xs font-semibold text-slate-500">
-                      {formatColumnType(column)}
-                    </span>
-                    <span className="text-xs font-bold uppercase text-slate-500">
-                      {column.key === "none" ? "-" : column.key}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </>
           ) : selectedRelationship ? (
             <>
-              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-sky-700">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-sky-500 light:text-sky-700">
                 Selected relationship
               </p>
-              <h3 className="mt-1 text-xl font-bold text-white light:text-slate-950">
+              <h3 className="mt-1 font-mono text-base font-bold text-white light:text-slate-950">
                 {selectedRelationship.from.table}.
                 {selectedRelationship.from.column}
-                <span className="px-2 text-slate-400">to</span>
+                <span className="px-1 text-xs text-slate-400">to</span>
                 {selectedRelationship.to.table}.{selectedRelationship.to.column}
               </h3>
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="mt-3 grid grid-cols-3 gap-2">
                 <StatPill
                   label="Type"
                   value={selectedRelationship.kind.replace(/-/g, " ")}
@@ -1313,83 +1927,112 @@ function DetailsPanel({
                   tone="violet"
                 />
               </div>
-              <p className="mt-4 rounded-2xl border border-sky-300/20 bg-sky-300/10 px-4 py-3 text-sm leading-6 text-sky-100 light:border-sky-100 light:bg-sky-50 light:text-sky-800">
+              <p className="mt-3 rounded-xl border border-sky-300/20 bg-sky-300/10 px-3 py-2.5 text-xs leading-5 text-sky-100 light:border-sky-100 light:bg-sky-50 light:text-sky-800">
                 Add an index on the foreign-key side if this relationship is
-                used in assignment, lab or reporting queries.
+                used in queries.
               </p>
             </>
           ) : (
-            <div className="py-8 text-center">
+            <div className="py-6 text-center">
               <IconTile icon={MousePointer2} tone="slate" />
-              <h3 className="mt-4 text-lg font-bold text-white light:text-slate-950">
-                Select a table or relationship
+              <h3 className="mt-3 text-sm font-bold text-white light:text-slate-950">
+                Select a table or line
               </h3>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+              <p className="mt-1 text-xs leading-5 text-slate-500">
                 Click a table card or relationship line in the canvas to inspect
-                columns, keys and validation context.
+                its fields and properties.
               </p>
             </div>
           )}
         </div>
 
-        <div className="grid gap-3">
-          <div className="rounded-[18px] border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-white">
-            <div className="flex items-center gap-2">
-              <IconTile icon={Bot} tone="violet" />
-              <div>
-                <h3 className="text-sm font-bold text-white light:text-slate-950">
-                  AI suggestions
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Mock adapter-ready review.
-                </p>
-              </div>
-            </div>
-            <div className="mt-3 grid gap-2">
-              {suggestions.map((suggestion) => (
-                <div
-                  key={suggestion.title}
-                  className={cn(
-                    "rounded-2xl border px-3 py-2",
-                    suggestion.tone === "emerald" &&
-                      "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-emerald)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-800",
-                    suggestion.tone === "amber" &&
-                      "border-amber-300/20 bg-amber-300/10 text-amber-100 light:border-amber-100 light:bg-amber-50 light:text-amber-800",
-                    suggestion.tone === "blue" &&
-                      "border-sky-300/20 bg-sky-300/10 text-sky-100 light:border-sky-100 light:bg-sky-50 light:text-sky-800",
-                  )}
-                >
-                  <p className="text-xs font-bold">{suggestion.title}</p>
-                  <p className="mt-1 text-xs leading-5">{suggestion.detail}</p>
-                </div>
-              ))}
+        {/* Actionable AI Tools Card */}
+        <div className="rounded-[18px] border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-white">
+          <div className="flex items-center gap-2">
+            <IconTile icon={Bot} tone="violet" />
+            <div>
+              <h3 className="text-sm font-bold text-white light:text-slate-950">
+                Actionable AI Tools
+              </h3>
+              <p className="text-xs text-slate-500">
+                One-click schema refactoring
+              </p>
             </div>
           </div>
 
-          <div className="rounded-[18px] border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-white">
-            <h3 className="text-sm font-bold text-white light:text-slate-950">
-              Validation issues
-            </h3>
-            <div className="mt-3 grid gap-2">
-              {issues.length === 0 ? (
-                <p className="rounded-2xl bg-[rgba(50,245,154,0.10)] px-3 py-2 text-xs font-semibold text-[var(--brand-emerald)] light:bg-emerald-50 light:text-emerald-700">
-                  No blocking validation issues.
+          <div className="mt-3 grid gap-2">
+            {onAddAuditFields ? (
+              <button
+                type="button"
+                onClick={onAddAuditFields}
+                className="flex w-full items-center justify-between gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-left text-xs font-bold text-emerald-300 transition hover:bg-emerald-500/20 light:border-emerald-200 light:bg-emerald-50 light:text-emerald-800"
+              >
+                <span className="flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-[var(--brand-lime)] light:text-emerald-700" />
+                  Add Audit Timestamps
+                </span>
+                <span className="rounded bg-emerald-400/20 px-1.5 py-0.5 text-[10px]">1-Click</span>
+              </button>
+            ) : null}
+
+            {onGenerateMockData ? (
+              <button
+                type="button"
+                onClick={onGenerateMockData}
+                className="flex w-full items-center justify-between gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-left text-xs font-bold text-sky-300 transition hover:bg-sky-500/20 light:border-sky-200 light:bg-sky-50 light:text-sky-800"
+              >
+                <span className="flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-sky-400 light:text-sky-700" />
+                  Generate Mock Data
+                </span>
+                <span className="rounded bg-sky-400/20 px-1.5 py-0.5 text-[10px]">SQL/JSON</span>
+              </button>
+            ) : null}
+
+            {suggestions.map((suggestion) => (
+              <div
+                key={suggestion.title}
+                className={cn(
+                  "rounded-xl border px-3 py-2 text-xs",
+                  suggestion.tone === "emerald" &&
+                    "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-emerald)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-800",
+                  suggestion.tone === "amber" &&
+                    "border-amber-300/20 bg-amber-300/10 text-amber-100 light:border-amber-100 light:bg-amber-50 light:text-amber-800",
+                  suggestion.tone === "blue" &&
+                    "border-sky-300/20 bg-sky-300/10 text-sky-100 light:border-sky-100 light:bg-sky-50 light:text-sky-800",
+                )}
+              >
+                <p className="font-bold">{suggestion.title}</p>
+                <p className="mt-0.5 text-[11px] leading-4 opacity-90">{suggestion.detail}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Validation Issues Card */}
+        <div className="rounded-[18px] border border-white/10 bg-white/[0.035] p-4 light:border-slate-200 light:bg-white">
+          <h3 className="text-sm font-bold text-white light:text-slate-950">
+            Validation Issues
+          </h3>
+          <div className="mt-2 grid gap-2">
+            {issues.length === 0 ? (
+              <p className="rounded-xl bg-[rgba(50,245,154,0.10)] px-3 py-2 text-xs font-semibold text-[var(--brand-emerald)] light:bg-emerald-50 light:text-emerald-700">
+                No blocking validation issues.
+              </p>
+            ) : (
+              issues.slice(0, 3).map((issue, index) => (
+                <p
+                  key={`${issue.message}-${index}`}
+                  className="rounded-xl bg-amber-300/10 px-3 py-2 text-xs leading-4 text-amber-100 light:bg-amber-50 light:text-amber-800"
+                >
+                  {issue.message}
                 </p>
-              ) : (
-                issues.slice(0, 3).map((issue, index) => (
-                  <p
-                    key={`${issue.message}-${index}`}
-                    className="rounded-2xl bg-amber-300/10 px-3 py-2 text-xs leading-5 text-amber-100 light:bg-amber-50 light:text-amber-800"
-                  >
-                    {issue.message}
-                  </p>
-                ))
-              )}
-            </div>
+              ))
+            )}
           </div>
         </div>
       </div>
-    </section>
+    </aside>
   );
 }
 
@@ -1397,6 +2040,10 @@ function TopToolbar({
   diagramName,
   onDiagramNameChange,
   stats,
+  showInspector,
+  isFullscreen,
+  onToggleInspector,
+  onToggleFullscreen,
   onSave,
   onImport,
   onExport,
@@ -1412,6 +2059,10 @@ function TopToolbar({
     primaryKeys: number;
     foreignKeys: number;
   };
+  showInspector: boolean;
+  isFullscreen: boolean;
+  onToggleInspector: () => void;
+  onToggleFullscreen: () => void;
   onSave: () => void | Promise<void>;
   onImport: () => void;
   onExport: (format: ExportFormat) => void | Promise<void>;
@@ -1420,28 +2071,32 @@ function TopToolbar({
   onShare: () => void;
 }) {
   const toolbarButton =
-    "inline-flex h-8 items-center justify-center gap-1.5 rounded-md border border-white/10 bg-white/[0.055] px-2.5 text-xs font-bold text-slate-200 transition hover:border-[color:var(--border-emerald)] hover:bg-[rgba(50,245,154,0.10)] hover:text-[var(--brand-lime)] light:border-slate-200 light:bg-white light:text-slate-700 light:hover:border-emerald-200 light:hover:bg-emerald-50 light:hover:text-emerald-700";
-  const toolbarIconButton =
-    "grid h-8 w-8 place-items-center rounded-md border border-white/10 bg-white/[0.055] text-slate-300 transition hover:border-[color:var(--border-emerald)] hover:bg-[rgba(50,245,154,0.10)] hover:text-[var(--brand-lime)] light:border-slate-200 light:bg-white light:text-slate-600 light:hover:border-emerald-200 light:hover:bg-emerald-50 light:hover:text-emerald-700";
+    "inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.055] px-3 text-xs font-bold text-slate-200 transition hover:border-[color:var(--border-emerald)] hover:bg-[rgba(50,245,154,0.12)] hover:text-[var(--brand-lime)] light:border-slate-200 light:bg-white light:text-slate-700 light:hover:border-emerald-200 light:hover:bg-emerald-50 light:hover:text-emerald-700";
 
   return (
-    <section className="overflow-hidden rounded-t-[18px] border border-white/10 bg-[rgba(18,24,21,0.88)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_16px_40px_rgba(33,45,74,0.08)]">
-      <div className="flex flex-col gap-2 border-t border-[color:var(--border-emerald)] p-2 light:border-emerald-200 xl:flex-row xl:items-center xl:justify-between">
+    <section className="overflow-hidden rounded-t-[18px] border border-white/10 bg-[#0d1410] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_16px_40px_rgba(33,45,74,0.08)]">
+      <div className="flex flex-col gap-2 border-t border-[color:var(--border-emerald)] p-2 light:border-emerald-200 lg:flex-row lg:items-center lg:justify-between">
+        {/* Left Section: Workspace + Title + Metrics (dbdiagram style) */}
         <div className="flex min-w-0 flex-1 items-center gap-2">
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-[linear-gradient(135deg,#d9ff57,#32f59a)] text-[#07100b] shadow-[0_0_24px_rgba(50,245,154,0.22)] light:bg-none light:bg-emerald-600 light:text-white light:shadow-[0_10px_22px_rgba(7,154,86,0.20)]">
-            <Database className="h-4 w-4" aria-hidden="true" />
-          </span>
-          <span className="hidden h-8 items-center rounded-md border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.08)] px-2.5 text-xs font-bold text-[var(--brand-lime)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-700 sm:inline-flex">
-            Nexora OS
-          </span>
-          <div className="min-w-[180px] flex-1">
+          <div className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-bold text-slate-200 light:border-slate-200 light:bg-slate-100 light:text-slate-800">
+            <span className="grid h-5 w-5 place-items-center rounded bg-[linear-gradient(135deg,#d9ff57,#32f59a)] text-[#07100b]">
+              <Database className="h-3 w-3" aria-hidden="true" />
+            </span>
+            <span>Nexora OS</span>
+          </div>
+
+          <span className="text-slate-500 font-bold">/</span>
+
+          <div className="min-w-[160px] max-w-[320px] flex-1">
             <input
               value={diagramName}
               onChange={(event) => onDiagramNameChange(event.target.value)}
               aria-label="Diagram name"
-              className="h-8 w-full rounded-md border border-white/10 bg-[#0d1110] px-3 text-sm font-bold text-white outline-none placeholder:text-slate-600 hover:border-[color:var(--border-emerald)] focus:border-[color:var(--border-lime)] focus:bg-[#090d0b] light:border-slate-200 light:bg-slate-50 light:text-slate-950 light:placeholder:text-slate-300 light:hover:border-emerald-200 light:focus:border-emerald-300 light:focus:bg-white"
+              placeholder="Untitled Diagram"
+              className="h-8 w-full rounded-lg border border-white/10 bg-[#070b09] px-3 text-xs font-bold text-white outline-none placeholder:text-slate-600 hover:border-[color:var(--border-emerald)] focus:border-[color:var(--border-lime)] focus:bg-[#050806] light:border-slate-200 light:bg-slate-50 light:text-slate-950 light:placeholder:text-slate-300 light:hover:border-emerald-200 light:focus:border-emerald-300 light:focus:bg-white"
             />
           </div>
+
           <div className="hidden items-center gap-1.5 xl:flex">
             <MiniMetric label="T" value={stats.tables} title="Tables" />
             <MiniMetric
@@ -1454,81 +2109,321 @@ function TopToolbar({
               value={stats.primaryKeys}
               title="Primary keys"
             />
-            <MiniMetric
-              label="FK"
-              value={stats.foreignKeys}
-              title="Foreign keys"
-            />
           </div>
         </div>
 
+        {/* Right Section: Action Buttons (dbdiagram style: AI, Save, Share, Import, Export) */}
         <div className="flex flex-wrap items-center gap-1.5">
-          <button type="button" onClick={onAiAssist} className={toolbarButton}>
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
+          <button type="button" onClick={onAiAssist} className={toolbarButton} title="AI Assistant">
+            <Sparkles className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
             AI
           </button>
-          <span className="inline-flex h-8 items-center gap-1.5 rounded-md border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] px-2.5 text-xs font-bold text-[var(--brand-emerald)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-700">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.65)]" />
-            Live
-          </span>
-          <button type="button" onClick={onSave} className={toolbarButton}>
-            <Save className="h-4 w-4" aria-hidden="true" />
+
+          <button type="button" onClick={onSave} className={toolbarButton} title="Save Diagram">
+            <Save className="h-3.5 w-3.5" aria-hidden="true" />
             Save
           </button>
-          <button type="button" onClick={onShare} className={toolbarButton}>
-            <Share2 className="h-4 w-4" aria-hidden="true" />
+
+          <button type="button" onClick={onShare} className={toolbarButton} title="Share Link">
+            <Share2 className="h-3.5 w-3.5" aria-hidden="true" />
             Share
           </button>
-          <button type="button" onClick={onImport} className={toolbarButton}>
-            <Upload className="h-4 w-4" aria-hidden="true" />
+
+          <button type="button" onClick={onImport} className={toolbarButton} title="Import Schema File">
+            <Upload className="h-3.5 w-3.5" aria-hidden="true" />
             Import
           </button>
-          <span
-            className="mx-0.5 h-6 w-px bg-white/10 light:bg-slate-200"
-            aria-hidden="true"
-          />
-          <button
-            type="button"
-            onClick={() => onExport("svg")}
-            className={toolbarIconButton}
-            aria-label="Export SVG"
-            title="Export SVG"
-          >
-            <Download className="h-4 w-4" aria-hidden="true" />
-          </button>
+
           <button
             type="button"
             onClick={() => onExport("png")}
-            className={toolbarIconButton}
-            aria-label="Export PNG"
-            title="Export PNG"
+            className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-[linear-gradient(135deg,#d9ff57,#32f59a)] px-3 text-xs font-bold text-[#07100b] shadow-[0_0_20px_rgba(50,245,154,0.25)] transition hover:opacity-90"
+            title="Open Export Studio (PNG, SVG, PDF)"
           >
-            <ImageDown className="h-4 w-4" aria-hidden="true" />
+            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+            Export
           </button>
-          <button
-            type="button"
-            onClick={() => onExport("pdf")}
-            className={toolbarIconButton}
-            aria-label="Export PDF"
-            title="Export PDF"
-          >
-            <FileText className="h-4 w-4" aria-hidden="true" />
-          </button>
+
           <span
-            className="mx-0.5 h-6 w-px bg-white/10 light:bg-slate-200"
+            className="mx-1 h-6 w-px bg-white/10 light:bg-slate-200"
             aria-hidden="true"
           />
+
           <button
             type="button"
-            onClick={onAutoLayout}
-            className={toolbarButton}
+            onClick={onToggleFullscreen}
+            className={cn(
+              toolbarButton,
+              isFullscreen &&
+                "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.15)] text-[var(--brand-lime)] font-bold light:border-emerald-200 light:bg-emerald-50 light:text-emerald-700",
+            )}
+            title={isFullscreen ? "Exit Fullscreen (Esc)" : "Enter Fullscreen Mode"}
           >
-            <Grid3x3 className="h-4 w-4" aria-hidden="true" />
-            Layout
+            {isFullscreen ? (
+              <Minimize2 className="h-3.5 w-3.5" aria-hidden="true" />
+            ) : (
+              <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={onToggleInspector}
+            className={cn(
+              toolbarButton,
+              showInspector &&
+                "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-lime)] light:border-emerald-200 light:bg-emerald-50 light:text-emerald-700",
+            )}
+            title="Toggle Inspector Sidebar"
+          >
+            <PanelRight className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         </div>
       </div>
     </section>
+  );
+}
+
+function ExportStudioModal({
+  isOpen,
+  tables,
+  relationships,
+  diagramName,
+  dialect,
+  themeMode,
+  collapsedTableIds,
+  onClose,
+  onExport,
+}: {
+  isOpen: boolean;
+  tables: Table[];
+  relationships: Relationship[];
+  diagramName: string;
+  dialect: SchemaDialect;
+  themeMode: "dark" | "blueprint" | "light";
+  collapsedTableIds: Set<string>;
+  onClose: () => void;
+  onExport: (format: ExportFormat, config: ExportStudioConfig) => void | Promise<void>;
+}) {
+  const [config, setConfig] = useState<ExportStudioConfig>(() => ({
+    ...defaultExportStudioConfig,
+    preset: themeMode === "blueprint" ? "blueprint" : themeMode === "light" ? "clean" : "studio",
+  }));
+  const [logoSrc, setLogoSrc] = useState<string>("/brand/nexora-os-logo.png");
+  const [isExporting, setIsExporting] = useState<string | null>(null);
+  const [previewMode, setPreviewMode] = useState<"fit" | "full">("fit");
+
+  useEffect(() => {
+    getNexoraLogoDataUrl().then(setLogoSrc);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      const activePreset: ExportPreset =
+        themeMode === "blueprint" ? "blueprint" : themeMode === "light" ? "clean" : "studio";
+      setConfig((prev) => ({ ...prev, preset: activePreset }));
+    }
+  }, [isOpen, themeMode]);
+
+  if (!isOpen) return null;
+
+  const svgPreview = buildExportSvg(
+    tables,
+    relationships,
+    config.preset === "blueprint" ? "blueprint" : config.preset === "clean" ? "light" : "dark",
+    collapsedTableIds,
+    diagramName,
+    logoSrc,
+    config,
+    dialect,
+  );
+
+  async function handleDownload(format: ExportFormat) {
+    setIsExporting(format);
+    try {
+      await onExport(format, config);
+    } finally {
+      setIsExporting(null);
+    }
+  }
+
+  const presetOptions: { id: ExportPreset; label: string; desc: string; badge: string }[] = [
+    { id: "studio", label: "Studio Glass", desc: "MacOS window frame with subtle ambient backlight", badge: "Default" },
+    { id: "blueprint", label: "Cyber Blueprint", desc: "Cyan architectural grid pattern", badge: "Cyan Grid" },
+    { id: "dark", label: "Enterprise Dark", desc: "Onyx background with emerald accents", badge: "Dark Glass" },
+    { id: "clean", label: "Minimal Paper", desc: "Crisp document canvas with soft drop shadows", badge: "Light Canvas" },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-black/80 p-4 backdrop-blur-md animate-in fade-in duration-200">
+      <div className="flex h-[92vh] max-h-[920px] w-[94vw] max-w-6xl xl:max-w-7xl flex-col overflow-hidden rounded-2xl border border-white/15 bg-[#0a0f0d] text-white shadow-[0_32px_90px_rgba(0,0,0,0.6)]">
+        {/* Modal Header */}
+        <header className="flex items-center justify-between border-b border-white/10 bg-[#101713] px-6 py-4">
+          <div className="flex items-center gap-3">
+            <span className="grid h-9 w-9 place-items-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+              <SlidersHorizontal className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div>
+              <h2 className="text-base font-bold text-white">Export Studio</h2>
+              <p className="text-xs text-slate-400">Configure canvas presets, layout elements, and download formats</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="grid h-8 w-8 place-items-center rounded-lg border border-white/10 bg-white/5 text-slate-400 transition hover:bg-white/10 hover:text-white"
+          >
+            ✕
+          </button>
+        </header>
+
+        {/* Modal Body */}
+        <div className="grid flex-1 min-h-0 grid-cols-1 overflow-y-auto lg:grid-cols-[300px_minmax(0,1fr)]">
+          {/* Controls Sidebar */}
+          <div className="flex flex-col gap-5 border-r border-white/10 bg-[#0d1410] p-5">
+            {/* Preset Selector */}
+            <div>
+              <label className="mb-2.5 block text-xs font-bold uppercase tracking-wider text-slate-400">
+                Canvas Preset
+              </label>
+              <div className="grid gap-2">
+                {presetOptions.map((opt) => (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => setConfig((prev) => ({ ...prev, preset: opt.id }))}
+                    className={cn(
+                      "flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition",
+                      config.preset === opt.id
+                        ? "border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.12)] text-white shadow-[0_0_20px_rgba(50,245,154,0.15)]"
+                        : "border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/20 hover:bg-white/[0.06]",
+                    )}
+                  >
+                    <div className="flex w-full items-center justify-between">
+                      <span className="text-xs font-bold">{opt.label}</span>
+                      <span className="rounded bg-white/10 px-1.5 py-0.5 text-[9px] font-semibold text-slate-300">
+                        {opt.badge}
+                      </span>
+                    </div>
+                    <span className="text-[11px] text-slate-400 leading-tight">{opt.desc}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Custom Branding Toggles */}
+            <div className="border-t border-white/10 pt-4">
+              <label className="mb-2.5 block text-xs font-bold uppercase tracking-wider text-slate-400">
+                Layout Elements
+              </label>
+              <div className="grid gap-2 text-xs">
+                <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] p-2.5 hover:bg-white/[0.06]">
+                  <span className="font-medium text-slate-300">MacOS Window Frame</span>
+                  <input
+                    type="checkbox"
+                    checked={config.includeHeaderBar}
+                    onChange={(e) => setConfig((prev) => ({ ...prev, includeHeaderBar: e.target.checked }))}
+                    className="h-4 w-4 rounded accent-emerald-500"
+                  />
+                </label>
+
+                <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] p-2.5 hover:bg-white/[0.06]">
+                  <span className="font-medium text-slate-300">Schema Metrics Badge</span>
+                  <input
+                    type="checkbox"
+                    checked={config.includeMetrics}
+                    onChange={(e) => setConfig((prev) => ({ ...prev, includeMetrics: e.target.checked }))}
+                    className="h-4 w-4 rounded accent-emerald-500"
+                  />
+                </label>
+
+                <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] p-2.5 hover:bg-white/[0.06]">
+                  <span className="font-medium text-slate-300">Official Nexora Watermark</span>
+                  <input
+                    type="checkbox"
+                    checked={config.includeWatermark}
+                    onChange={(e) => setConfig((prev) => ({ ...prev, includeWatermark: e.target.checked }))}
+                    className="h-4 w-4 rounded accent-emerald-500"
+                  />
+                </label>
+
+                <label className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] p-2.5 hover:bg-white/[0.06]">
+                  <span className="font-medium text-slate-300">Ambient Background Glow</span>
+                  <input
+                    type="checkbox"
+                    checked={config.includeBackgroundGlow}
+                    onChange={(e) => setConfig((prev) => ({ ...prev, includeBackgroundGlow: e.target.checked }))}
+                    className="h-4 w-4 rounded accent-emerald-500"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Live Preview Container */}
+          <div className="flex flex-col p-5 bg-[#060a08] min-h-0">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Live Preview</span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPreviewMode((prev) => (prev === "fit" ? "full" : "fit"))}
+                  className="rounded border border-white/15 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
+                >
+                  {previewMode === "fit" ? "🔍 Zoom 100%" : "📐 Fit to Screen"}
+                </button>
+                <span className="text-[11px] font-semibold text-emerald-400">1:1 Real-time Rendering</span>
+              </div>
+            </div>
+            <div
+              className={cn(
+                "flex-1 min-h-[460px] h-full overflow-auto rounded-xl border border-white/10 bg-[#040705] p-0 shadow-inner transition-all",
+                previewMode === "fit"
+                  ? "flex items-center justify-center [&>svg]:w-full [&>svg]:h-full [&>svg]:max-h-[660px] [&>svg]:object-contain"
+                  : "[&>svg]:w-auto [&>svg]:h-auto",
+              )}
+              dangerouslySetInnerHTML={{ __html: svgPreview }}
+            />
+          </div>
+        </div>
+
+        {/* Modal Footer Actions */}
+        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 bg-[#101713] px-6 py-4">
+          <span className="text-xs font-semibold text-slate-400">
+            Select format to trigger high-res download
+          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              disabled={isExporting !== null}
+              onClick={() => handleDownload("png")}
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-[linear-gradient(135deg,#d9ff57,#32f59a)] px-4 text-xs font-bold text-[#07100b] shadow-[0_0_24px_rgba(50,245,154,0.3)] transition hover:opacity-90 disabled:opacity-50"
+            >
+              <ImageDown className="h-4 w-4" aria-hidden="true" />
+              {isExporting === "png" ? "Rendering PNG..." : "Download 2x PNG"}
+            </button>
+            <button
+              type="button"
+              disabled={isExporting !== null}
+              onClick={() => handleDownload("svg")}
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 text-xs font-bold text-white transition hover:bg-white/20 disabled:opacity-50"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              {isExporting === "svg" ? "Exporting SVG..." : "Download Vector SVG"}
+            </button>
+            <button
+              type="button"
+              disabled={isExporting !== null}
+              onClick={() => handleDownload("pdf")}
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 text-xs font-bold text-white transition hover:bg-white/20 disabled:opacity-50"
+            >
+              <FileText className="h-4 w-4" aria-hidden="true" />
+              {isExporting === "pdf" ? "Preparing PDF..." : "Export PDF"}
+            </button>
+          </div>
+        </footer>
+      </div>
+    </div>
   );
 }
 
@@ -1566,7 +2461,33 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
   const [canvasTool, setCanvasTool] = useState<CanvasTool>("select");
   const [showGrid, setShowGrid] = useState(true);
   const [highlightRelationships, setHighlightRelationships] = useState(true);
+  const [themeMode, setThemeMode] = useState<"dark" | "blueprint" | "light">("light");
+  const [collapsedTableIds, setCollapsedTableIds] = useState<Set<string>>(new Set());
+
+  function toggleTableCollapse(tableId: string) {
+    setCollapsedTableIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(tableId)) {
+        next.delete(tableId);
+      } else {
+        next.add(tableId);
+      }
+      return next;
+    });
+  }
+  const [showInspector, setShowInspector] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(true);
   const [layoutAlgorithm, setLayoutAlgorithm] = useState<LayoutAlgorithm>(2);
+
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape" && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFullscreen]);
   const [positionOverrides, setPositionOverrides] = useState<
     Record<string, { x: number; y: number }>
   >({});
@@ -1576,6 +2497,78 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
     AiSuggestion[] | null
   >(null);
   const [savedDiagramId, setSavedDiagramId] = useState<string | null>(null);
+  const [mockDataModalContent, setMockDataModalContent] = useState<{ sql: string; json: string } | null>(null);
+  const [copiedType, setCopiedType] = useState<string | null>(null);
+
+  function handleAddAuditFields() {
+    let nextSource = source;
+
+    if (dialect === "dbml") {
+      nextSource = source.replace(/Table\s+([a-zA-Z0-9_]+)\s*\{([^}]*)\}/gi, (match, tableName, content) => {
+        if (content.includes("created_at")) return match;
+        return `Table ${tableName} {${content}\n  created_at timestamp [default: \`now()\`]\n  updated_at timestamp [default: \`now()\`]\n}`;
+      });
+    } else if (dialect === "sql") {
+      nextSource = source.replace(/CREATE\s+TABLE\s+([^\(]+)\(([^;]+)\);/gi, (match, tableName, content) => {
+        if (content.includes("created_at")) return match;
+        return `CREATE TABLE ${tableName}(\n${content.trim()},\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);`;
+      });
+    } else if (dialect === "prisma") {
+      nextSource = source.replace(/model\s+([a-zA-Z0-9_]+)\s*\{([^}]*)\}/gi, (match, modelName, content) => {
+        if (content.includes("createdAt")) return match;
+        return `model ${modelName} {${content}\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}`;
+      });
+    } else {
+      nextSource = source.replace(/new\s+Schema\(\{([^}+]+)\}\)/gi, (match, content) => {
+        if (content.includes("timestamps")) return match;
+        return `new Schema({${content}}, { timestamps: true })`;
+      });
+    }
+
+    setSource(nextSource);
+    setStatus("⚡ Audit timestamps added to schema");
+  }
+
+  function handleGenerateMockData() {
+    if (tables.length === 0) return;
+
+    let sql = "";
+    const jsonObj: Record<string, Array<Record<string, unknown>>> = {};
+
+    tables.forEach((table) => {
+      const rows: Array<Record<string, unknown>> = [];
+      const colNames = table.columns.map((col) => col.name);
+
+      for (let i = 1; i <= 3; i++) {
+        const row: Record<string, unknown> = {};
+        colNames.forEach((colName) => {
+          const lower = colName.toLowerCase();
+          if (lower.includes("id") && i === 1) row[colName] = i;
+          else if (lower.includes("email")) row[colName] = `user${i}@example.com`;
+          else if (lower.includes("name")) row[colName] = `Sample ${table.name} ${i}`;
+          else if (lower.includes("price") || lower.includes("amount")) row[colName] = 29.99 * i;
+          else if (lower.includes("status")) row[colName] = i % 2 === 0 ? "active" : "pending";
+          else if (lower.includes("created") || lower.includes("updated")) row[colName] = new Date().toISOString();
+          else row[colName] = `${table.name}_val_${i}`;
+        });
+        rows.push(row);
+      }
+
+      jsonObj[table.name] = rows;
+
+      sql += `-- Mock Data for ${table.name}\n`;
+      rows.forEach((row) => {
+        const vals = Object.values(row).map((v) => (typeof v === "number" ? v : `'${v}'`));
+        sql += `INSERT INTO ${table.name} (${colNames.join(", ")}) VALUES (${vals.join(", ")});\n`;
+      });
+      sql += "\n";
+    });
+
+    setMockDataModalContent({
+      sql: sql.trim(),
+      json: JSON.stringify(jsonObj, null, 2),
+    });
+  }
 
   const parseResult = useMemo(
     () => parseSchema(source, dialect),
@@ -1741,8 +2734,26 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
     event.target.value = "";
   }
 
+  const [isExportStudioOpen, setIsExportStudioOpen] = useState(false);
+
   async function handleExport(format: ExportFormat) {
-    await exportDiagram(format, tables, relationships, diagramName);
+    setIsExportStudioOpen(true);
+  }
+
+  async function handleExportWithConfig(
+    format: ExportFormat,
+    config: ExportStudioConfig = defaultExportStudioConfig,
+  ) {
+    await exportDiagram(
+      format,
+      tables,
+      relationships,
+      diagramName,
+      themeMode,
+      collapsedTableIds,
+      config,
+      dialect,
+    );
     const response = await apiPost<DiagramExportResponse>("/diagrams/export", {
       diagramId: savedDiagramId ?? undefined,
       title: diagramName,
@@ -1783,7 +2794,14 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
         onChange={handleImportFile}
       />
 
-      <div className="grid gap-0 text-white light:text-slate-950">
+      <div
+        className={cn(
+          "grid gap-0 text-white light:text-slate-950 transition-all duration-300",
+          isFullscreen
+            ? "fixed inset-0 z-50 flex flex-col h-screen w-screen bg-[#070b09] p-2 overflow-hidden"
+            : "",
+        )}
+      >
         <TopToolbar
           diagramName={diagramName}
           onDiagramNameChange={setDiagramName}
@@ -1793,6 +2811,10 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
             primaryKeys,
             foreignKeys,
           }}
+          showInspector={showInspector}
+          isFullscreen={isFullscreen}
+          onToggleInspector={() => setShowInspector((prev) => !prev)}
+          onToggleFullscreen={() => setIsFullscreen((prev) => !prev)}
           onSave={handleSave}
           onImport={() => fileInputRef.current?.click()}
           onExport={handleExport}
@@ -1801,7 +2823,17 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
           onShare={handleShare}
         />
 
-        <section className="grid overflow-hidden rounded-b-[18px] border-x border-b border-white/10 bg-[rgba(18,24,21,0.78)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_18px_50px_rgba(15,23,42,0.10)] lg:h-[calc(100dvh-142px)] lg:min-h-[560px] lg:grid-cols-[clamp(280px,28vw,460px)_minmax(0,1fr)] 2xl:min-h-[720px]">
+        <section
+          className={cn(
+            "grid overflow-hidden rounded-b-[18px] border-x border-b border-white/10 bg-[rgba(18,24,21,0.78)] shadow-[0_24px_70px_rgba(0,0,0,0.34)] light:border-slate-200 light:bg-white light:shadow-[0_18px_50px_rgba(15,23,42,0.10)]",
+            isFullscreen
+              ? "flex-1 min-h-0 h-full"
+              : "lg:h-[calc(100dvh-142px)] lg:min-h-[560px] 2xl:min-h-[720px]",
+            showInspector
+              ? "lg:grid-cols-[clamp(230px,20vw,340px)_minmax(0,1fr)_clamp(250px,21vw,350px)]"
+              : "lg:grid-cols-[clamp(260px,25vw,420px)_minmax(0,1fr)]",
+          )}
+        >
           <div className="flex min-h-0 flex-col overflow-hidden border-r border-white/10 bg-[#0d1110] light:border-slate-200 light:bg-white">
             <header className="flex shrink-0 flex-col gap-2 border-b border-white/10 bg-[#121715] p-2.5 light:border-slate-200 light:bg-[#fbfefd]">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -1875,6 +2907,7 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
               <ParserIssuesPanel issues={parseResult.issues} />
             </div>
           </div>
+
           <div className="min-h-0 min-w-0">
             <ERDCanvas
               tables={tables}
@@ -1885,27 +2918,125 @@ export function DatabaseVisualizerPage({ role }: { role: AppRole }) {
               showGrid={showGrid}
               highlightRelationships={highlightRelationships}
               layoutAlgorithm={layoutAlgorithm}
+              themeMode={themeMode}
+              collapsedTableIds={collapsedTableIds}
               onZoom={setZoom}
               onToolChange={setCanvasTool}
               onShowGridChange={setShowGrid}
               onHighlightRelationshipsChange={setHighlightRelationships}
               onLayoutAlgorithmChange={handleLayoutAlgorithmChange}
+              onThemeModeChange={setThemeMode}
+              onToggleTableCollapse={toggleTableCollapse}
               onSelect={setSelection}
               onMove={handleMoveTable}
               onAutoLayout={handleAutoLayout}
             />
           </div>
+
+          {showInspector ? (
+            <div className="min-h-0">
+              <DetailsPanel
+                tables={tables}
+                relationships={relationships}
+                selection={activeSelection}
+                issues={parseResult.issues}
+                suggestions={aiSuggestions}
+                onAddAuditFields={handleAddAuditFields}
+                onGenerateMockData={handleGenerateMockData}
+                onClose={() => setShowInspector(false)}
+              />
+            </div>
+          ) : null}
         </section>
-        <div className="mt-3">
-          <DetailsPanel
-            tables={tables}
-            relationships={relationships}
-            selection={activeSelection}
-            issues={parseResult.issues}
-            suggestions={aiSuggestions}
-          />
-        </div>
       </div>
+
+      {/* Mock Data Modal */}
+      {mockDataModalContent ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+          <div className="flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1110] shadow-2xl light:border-slate-200 light:bg-white">
+            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4 light:border-slate-200">
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-[var(--brand-lime)] light:text-emerald-700" />
+                <h3 className="font-bold text-white light:text-slate-900">Generated Mock Data</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMockDataModalContent(null)}
+                className="text-slate-400 hover:text-white light:hover:text-slate-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-5">
+              <div className="mb-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold uppercase text-emerald-400">SQL INSERTs</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(mockDataModalContent.sql);
+                      setCopiedType("sql");
+                      setTimeout(() => setCopiedType(null), 2000);
+                    }}
+                    className="flex items-center gap-1 rounded bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:bg-white/20 light:bg-slate-100 light:text-slate-700"
+                  >
+                    {copiedType === "sql" ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copiedType === "sql" ? "Copied!" : "Copy SQL"}
+                  </button>
+                </div>
+                <pre className="max-h-48 overflow-auto rounded-xl bg-black/60 p-3 font-mono text-xs text-slate-300 light:bg-slate-900 light:text-slate-200">
+                  {mockDataModalContent.sql}
+                </pre>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold uppercase text-sky-400">JSON Dataset</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(mockDataModalContent.json);
+                      setCopiedType("json");
+                      setTimeout(() => setCopiedType(null), 2000);
+                    }}
+                    className="flex items-center gap-1 rounded bg-white/10 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:bg-white/20 light:bg-slate-100 light:text-slate-700"
+                  >
+                    {copiedType === "json" ? <Check className="h-3.5 w-3.5 text-emerald-400" /> : <Copy className="h-3.5 w-3.5" />}
+                    {copiedType === "json" ? "Copied!" : "Copy JSON"}
+                  </button>
+                </div>
+                <pre className="max-h-48 overflow-auto rounded-xl bg-black/60 p-3 font-mono text-xs text-slate-300 light:bg-slate-900 light:text-slate-200">
+                  {mockDataModalContent.json}
+                </pre>
+              </div>
+            </div>
+
+            <div className="border-t border-white/10 px-5 py-3 text-right light:border-slate-200">
+              <button
+                type="button"
+                onClick={() => setMockDataModalContent(null)}
+                className="rounded-lg bg-emerald-500 px-4 py-1.5 text-xs font-bold text-black hover:bg-emerald-400"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <ExportStudioModal
+        isOpen={isExportStudioOpen}
+        tables={tables}
+        relationships={relationships}
+        diagramName={diagramName}
+        dialect={dialect}
+        themeMode={themeMode}
+        collapsedTableIds={collapsedTableIds}
+        onClose={() => setIsExportStudioOpen(false)}
+        onExport={handleExportWithConfig}
+      />
     </AppShell>
   );
 }
+

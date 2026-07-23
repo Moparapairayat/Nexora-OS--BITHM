@@ -41,26 +41,92 @@ export const codeRunner: CodeRunner = {
   async runCode(input: CodeRunInput): Promise<CodeRunResult> {
     const language = normalizeLanguage(String(input.language));
 
+    // Send execution payload to backend Piston API execution engine if in browser environment
+    if (typeof window !== "undefined" && ["c", "cpp", "java", "python", "javascript", "typescript"].includes(language)) {
+      try {
+        const res = await fetch("/api/code/execute", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            language,
+            code: input.code,
+            stdin: input.stdin,
+            timeoutMs: input.timeoutMs,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          return {
+            stdout: data.stdout || (data.success ? "Execution completed without stdout." : ""),
+            stderr: data.stderr || "",
+            success: data.success,
+            executionTime: data.executionTimeMs || 0,
+            errorMessage: data.errorMessage,
+            adapter: `piston-engine:${data.provider || "api"}`,
+            language,
+          };
+        }
+      } catch (err) {
+        console.warn("[codeRunner] Backend execution failed, resorting to client runner fallback:", err);
+      }
+    }
+
     return runnerFor(language).runCode({
       ...input,
       language,
     });
   },
+
   async runTests(input: CodeRunInput): Promise<CodeRunResult> {
     const language = normalizeLanguage(String(input.language));
+
+    if (typeof window !== "undefined" && ["c", "cpp", "java", "python", "javascript", "typescript"].includes(language)) {
+      try {
+        const res = await fetch("/api/code/test", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            language,
+            code: input.code,
+            testCases: input.testCases,
+            timeoutMs: input.timeoutMs,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          return {
+            stdout: data.stdout || "",
+            stderr: data.stderr || "",
+            success: data.success,
+            executionTime: data.executionTimeMs || 0,
+            testResults: data.testResults,
+            errorMessage: data.errorMessage,
+            adapter: `piston-engine:${data.provider || "api"}`,
+            language,
+          };
+        }
+      } catch (err) {
+        console.warn("[codeRunner] Backend test suite execution failed, resorting to client fallback:", err);
+      }
+    }
 
     return runnerFor(language).runTests({
       ...input,
       language,
     });
   },
+
   getSupportedLanguages() {
     return [
-      ...new Set<CodeRunnerLanguage>([
-        ...browserJsRunner.getSupportedLanguages(),
-        ...pyodidePythonRunner.getSupportedLanguages(),
-        "html",
-      ]),
+      "javascript",
+      "typescript",
+      "python",
+      "c" as any,
+      "cpp" as any,
+      "java" as any,
+      "html",
     ];
   },
 };
