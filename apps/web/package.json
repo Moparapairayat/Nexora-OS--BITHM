@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "next build",
+    "build": "prisma generate --schema=../../prisma/schema.prisma && next build",
     "start": "next start",
     "lint": "eslint"
   },
@@ -14,6 +14,7 @@
     "@monaco-editor/react": "^4.7.0",
     "@nexora/config": "*",
     "@nexora/types": "*",
+    "@prisma/client": "^6.19.0",
     "@tanstack/react-query": "^5.90.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -37,6 +38,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "prisma": "^6.19.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
