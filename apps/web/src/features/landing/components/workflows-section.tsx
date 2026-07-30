@@ -1,418 +1,229 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import type { LucideIcon } from "lucide-react";
-import { ArrowRight, BarChart3, CheckCircle2, FileCheck2, FlaskConical } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-
+import {
+  ArrowRight,
+  Brain,
+  CheckCircle2,
+  FileCheck2,
+  Lightbulb,
+  PenTool,
+} from "lucide-react";
+import { motion } from "framer-motion";
 import { ScrollReveal } from "./landing-primitives";
-import { WorkflowMedia } from "./workflow-card";
 
-type Tone = "emerald" | "cyan" | "amber";
-
-type Step = {
-  step: string;
-  kicker: string;
+type WorkflowFeature = {
   title: string;
-  bullets: string[];
-  status: string;
-  action: string;
-  icon: LucideIcon;
-  tone: Tone;
+  description: string;
+  icon: any;
+  customImage?: string;
 };
 
-const steps: Step[] = [
+const workflowFeatures: WorkflowFeature[] = [
   {
-    step: "01",
-    kicker: "Plan & Start",
-    title: "Brief to practical work",
-    bullets: ["Analyze assignment briefs directly", "Kickstart your lab workspace", "Zero setup times, zero delays"],
-    status: "Ready for workspace",
-    action: "View brief template",
-    icon: FileCheck2,
-    tone: "emerald",
+    title: "Understand & Start",
+    description:
+      "Break down your task prompt immediately and dive straight into coding without tricky setup steps.",
+    icon: Lightbulb,
+    customImage: "/landing/icons/plan-start.png",
   },
   {
-    step: "02",
-    kicker: "Build & Save",
-    title: "Together evidence",
-    bullets: ["Autosave code runs & outputs", "Compile logs as official evidence", "Keep documents side-by-side"],
-    status: "Evidence synced",
-    action: "Open Code Lab",
-    icon: FlaskConical,
-    tone: "cyan",
+    title: "Build & Auto-Save",
+    description:
+      "Focus on writing code. Every test run, terminal output, and revision is automatically saved as you go.",
+    icon: PenTool,
+    customImage: "/landing/icons/build-code.png",
   },
   {
-    step: "03",
-    kicker: "Review & Refine",
-    title: "Act on feedback",
-    bullets: ["Get inline professor reviews", "Resolve comment threads in code", "Resubmit in a single click"],
-    status: "Feedback loop active",
-    action: "Review flow demo",
-    icon: BarChart3,
-    tone: "amber",
+    title: "Review & Refine",
+    description:
+      "Receive clear inline feedback from teachers, fix issues on the spot, and polish your work effortlessly.",
+    icon: Brain,
+    customImage: "/landing/icons/review-refine.png",
+  },
+  {
+    title: "Instant Submission",
+    description:
+      "Submit your completed lab work in one click with a verified digital receipt and total peace of mind.",
+    icon: CheckCircle2,
+    customImage: "/landing/icons/one-click-submission.png",
   },
 ];
 
-const toneAccent: Record<Tone, string> = {
-  emerald: "bg-emerald-400 light:bg-emerald-600",
-  cyan: "bg-cyan-300 light:bg-cyan-600",
-  amber: "bg-amber-300 light:bg-amber-500",
-};
-
-const toneIcon: Record<Tone, string> = {
-  emerald: "border-emerald-300/18 bg-emerald-300/8 text-emerald-300 light:border-emerald-700/12 light:bg-emerald-50 light:text-emerald-700",
-  cyan: "border-cyan-300/18 bg-cyan-300/8 text-cyan-200 light:border-cyan-700/12 light:bg-cyan-50 light:text-cyan-700",
-  amber: "border-amber-300/18 bg-amber-300/8 text-amber-200 light:border-amber-700/12 light:bg-amber-50 light:text-amber-700",
-};
-
-const toneMeta: Record<Tone, string> = {
-  emerald: "text-emerald-300 light:text-emerald-700",
-  cyan: "text-cyan-200 light:text-cyan-700",
-  amber: "text-amber-200 light:text-amber-700",
-};
-
-const tonePill: Record<Tone, string> = {
-  emerald: "border-emerald-300/15 bg-emerald-300/5 text-emerald-200 light:border-emerald-700/15 light:bg-emerald-50 light:text-emerald-700",
-  cyan: "border-cyan-300/15 bg-cyan-300/5 text-cyan-200 light:border-cyan-700/15 light:bg-cyan-50 light:text-cyan-700",
-  amber: "border-amber-300/15 bg-amber-300/5 text-amber-200 light:border-amber-700/15 light:bg-amber-50 light:text-amber-700",
-};
-
-const toneDot: Record<Tone, string> = {
-  emerald: "bg-emerald-400 light:bg-emerald-600",
-  cyan: "bg-cyan-300 light:bg-cyan-600",
-  amber: "bg-amber-300 light:bg-amber-500",
-};
-
-const glowColors: Record<Tone, string> = {
-  emerald: "bg-emerald-500/10 dark:bg-emerald-500/15 light:bg-emerald-500/8",
-  cyan: "bg-cyan-500/10 dark:bg-cyan-500/15 light:bg-cyan-500/8",
-  amber: "bg-amber-500/10 dark:bg-amber-500/15 light:bg-amber-500/8",
-};
-
 export function WorkflowsSection() {
-  const [activeStep, setActiveStep] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [autoplayDisabled, setAutoplayDisabled] = useState(false);
-  const [progress, setProgress] = useState(0);
-
-  useEffect(() => {
-    if (isPaused || autoplayDisabled) return;
-
-    const intervalTime = 6000; // 6 seconds per step
-    const stepTime = 100; // updates progress bar every 100ms
-    const stepsCount = steps.length;
-
-    const timer = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setActiveStep((current) => (current + 1) % stepsCount);
-          return 0;
-        }
-        return prev + (100 / (intervalTime / stepTime));
-      });
-    }, stepTime);
-
-    return () => clearInterval(timer);
-  }, [isPaused, autoplayDisabled]);
-
-  const handleStepHover = (index: number) => {
-    setIsPaused(true);
-    setActiveStep(index);
-    setProgress(0); // reset progress on hover
-  };
-
-  const handleStepClick = (index: number) => {
-    setAutoplayDisabled(true);
-    setIsPaused(true);
-    setActiveStep(index);
-    setProgress(0); // clear progress loader once autoplay is permanently disabled
-  };
-
-  const handleMouseLeave = () => {
-    if (autoplayDisabled) return;
-    setIsPaused(false);
-    setProgress(0);
-  };
-
   return (
     <section
       id="how-it-works"
-      className="relative overflow-hidden border-y border-white/8 bg-[radial-gradient(circle_at_50%_18%,rgba(52,211,153,0.09),transparent_34%),linear-gradient(180deg,#050b08_0%,#06100c_100%)] px-5 py-20 light:border-slate-200 light:bg-[radial-gradient(circle_at_50%_18%,rgba(16,185,129,0.1),transparent_34%),linear-gradient(180deg,#fbfdfb_0%,#f3f7f4_100%)] sm:py-24 md:px-8"
+      className="relative overflow-hidden border-y border-white/8 bg-[#06100c] px-5 py-20 light:border-slate-200/80 light:bg-[#fbfdfc] sm:py-24 md:px-8"
     >
-      <div className="pointer-events-none absolute left-1/2 top-0 h-72 w-[62%] -translate-x-1/2 rounded-full border border-emerald-300/7 light:border-emerald-800/6" />
+      {/* Background ambient lighting */}
+      <div className="pointer-events-none absolute -left-20 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-[120px] light:bg-emerald-500/6" />
 
       <div className="relative mx-auto max-w-7xl">
-        <ScrollReveal>
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="flex items-center justify-center gap-3">
-              <span className="h-px w-7 bg-emerald-300/55 light:bg-emerald-700/40" />
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-300 light:text-emerald-700">
-                Core workflows
-              </p>
-              <span className="h-px w-7 bg-emerald-300/55 light:bg-emerald-700/40" />
-            </div>
-            <h2 className="mt-4 text-balance text-4xl font-semibold leading-[1.06] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
-              A clear path from task brief to final submission
-            </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
-              Move from the brief to practical work, keep your evidence together, and act on feedback — all in one connected flow.
-            </p>
-            <div className="mt-5 flex items-center justify-center gap-2 text-xs text-slate-400 light:text-slate-600">
-              <span className="font-semibold text-slate-200 light:text-slate-800">3 connected steps</span>
-              <span aria-hidden="true">·</span>
-              <span className="font-semibold text-slate-200 light:text-slate-800">0 context switches</span>
-              <span aria-hidden="true">·</span>
-              <span className="font-semibold text-slate-200 light:text-slate-800">1 timeline</span>
-            </div>
-          </div>
-        </ScrollReveal>
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Left Column: Pill Badge, Title, Subtitle & 2x2 Feature Grid */}
+          <div className="lg:col-span-7">
+            <ScrollReveal>
+              <div>
+                {/* Top Decorative Dots & Pill Badge */}
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex items-center gap-1.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 light:bg-[#1b5042]" />
+                    <span className="h-4 w-4 rounded-full bg-emerald-800/60 light:bg-[#b8dad0]" />
+                  </div>
+                  <span className="inline-flex items-center rounded-full border border-emerald-800/50 bg-emerald-950/80 px-4 py-1.5 text-xs sm:text-sm font-semibold text-emerald-300 shadow-sm light:border-transparent light:bg-[#e2efe9] light:text-[#1b5042]">
+                    How It Works
+                  </span>
+                </div>
 
-        {/* Desktop Split Showcase */}
-        <div className="hidden lg:grid lg:grid-cols-12 lg:gap-12 lg:items-center mt-16 max-w-6xl mx-auto">
-          {/* Left: Stepper Accordion list */}
-          <div className="lg:col-span-5 flex flex-col gap-4">
-            {steps.map((stepItem, index) => {
-              const Icon = stepItem.icon;
-              const isActive = activeStep === index;
-              return (
-                <div
-                  key={stepItem.step}
-                  onClick={() => handleStepClick(index)}
-                  onMouseEnter={() => handleStepHover(index)}
-                  onMouseLeave={handleMouseLeave}
-                  className={`group cursor-pointer text-left relative overflow-hidden rounded-[22px] border px-6 py-5 transition-all duration-300 ${
-                    isActive
-                      ? "border-white/15 bg-white/5 shadow-[0_20px_40px_rgba(0,0,0,0.25)] light:border-slate-300 light:bg-[#fbfcfb] light:shadow-[0_20px_40px_rgba(32,65,47,0.06)]"
-                      : "border-transparent bg-transparent hover:bg-white/[0.02] light:hover:bg-slate-50"
-                  }`}
-                >
-                  {/* Active Indicator Glow Line */}
-                  {isActive && (
-                    <motion.span
-                      layoutId="activeGlow"
-                      className={`absolute left-0 inset-y-4 w-[3px] rounded-r-md ${toneAccent[stepItem.tone]}`}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
+                {/* Main Heading */}
+                <h2 className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-[44px] light:text-slate-900">
+                  A clear path from task brief to final submission
+                </h2>
 
-                  {/* Neon Connector Segment (runs under the icon to the next step) */}
-                  {index < steps.length - 1 && (
+                {/* Subtitle */}
+                <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-300 sm:text-base light:text-slate-600">
+                  Understand your prompt, build your solution, track teacher feedback, and submit your work with total confidence — all in one connected workspace.
+                </p>
+              </div>
+
+              {/* 2x2 Feature Grid matching photo styling */}
+              <div className="mt-10 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2">
+                {workflowFeatures.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
                     <div
-                      className="absolute w-[2px] bg-white/5 light:bg-slate-200"
-                      style={{
-                        left: "44px", // horizontal center of icon
-                        top: "60px", // bottom of icon
-                        bottom: "-16px", // runs down to meet the next card
-                        zIndex: 0,
-                      }}
+                      key={item.title}
+                      className="group flex items-start gap-4 transition-transform duration-300 hover:translate-x-1"
                     >
-                      <div
-                        className={`w-full h-full origin-top transition-transform duration-700 ease-in-out ${
-                          activeStep > index
-                            ? `scale-y-100 ${toneAccent[stepItem.tone]}`
-                            : "scale-y-0 bg-transparent"
-                        }`}
-                        style={{
-                          boxShadow: activeStep > index ? `0 0 10px ${stepItem.tone === 'emerald' ? '#34d399' : stepItem.tone === 'cyan' ? '#67e8f9' : '#f59e0b'}` : 'none'
-                        }}
-                      />
-                    </div>
-                  )}
+                      {/* Circular Icon Container */}
+                      <div className="flex h-16 w-16 sm:h-18 sm:w-18 shrink-0 items-center justify-center rounded-full border border-emerald-500/20 bg-[#0e241c] text-emerald-400 shadow-md transition-all duration-300 group-hover:scale-105 group-hover:bg-emerald-900/60 light:border-transparent light:bg-[#e2efe9] light:text-[#1b5042] light:group-hover:bg-[#d4e8df]">
+                        {item.customImage ? (
+                          <Image
+                            src={item.customImage}
+                            alt={item.title}
+                            width={36}
+                            height={36}
+                            className="h-8.5 w-8.5 sm:h-9 sm:w-9 object-contain"
+                          />
+                        ) : (
+                          <IconComponent className="h-7.5 w-7.5 sm:h-8 sm:w-8 stroke-[2.2]" />
+                        )}
+                      </div>
 
-                  {/* Visual Progress Loader Loader bar */}
-                  {isActive && (
-                    <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/5 overflow-hidden">
-                      <div
-                        className={`h-full transition-[width] ease-linear duration-100 ${toneAccent[stepItem.tone]}`}
-                        style={{ width: `${progress}%` }}
-                      />
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-4">
-                    <span
-                      className={`relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border text-sm font-semibold font-mono transition-colors duration-300 ${
-                        isActive
-                          ? toneIcon[stepItem.tone]
-                          : "border-white/10 text-slate-400 light:border-slate-300 light:text-slate-500"
-                      }`}
-                    >
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <div className="flex flex-col min-w-0">
-                      <span className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${isActive ? toneMeta[stepItem.tone] : "text-slate-500 light:text-slate-400"}`}>
-                        {stepItem.kicker}
-                      </span>
-                      <h3 className="text-lg font-semibold text-white light:text-slate-900 mt-0.5">
-                        {stepItem.title}
-                      </h3>
-                    </div>
-                  </div>
-
-                  {/* Expanded content under active step */}
-                  <div
-                    className={`grid transition-all duration-300 ease-in-out ${
-                      isActive ? "grid-rows-[1fr] opacity-100 mt-4" : "grid-rows-[0fr] opacity-0"
-                    }`}
-                  >
-                    <div className="overflow-hidden min-h-0">
-                      <ul className="space-y-2.5">
-                        {stepItem.bullets.map((bullet) => (
-                          <li
-                            key={bullet}
-                            className="flex items-start gap-2.5 text-sm leading-6 text-slate-300 light:text-slate-600"
-                          >
-                            <CheckCircle2 className={`mt-0.5 h-4 w-4 shrink-0 ${toneMeta[stepItem.tone]}`} />
-                            <span>{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <div className="mt-5 flex items-center justify-between gap-4 pt-1">
-                        <span
-                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium ${tonePill[stepItem.tone]}`}
-                        >
-                          <span className={`h-1.5 w-1.5 rounded-full animate-pulse ${toneDot[stepItem.tone]}`} />
-                          {stepItem.status}
-                        </span>
-
-                        <Link
-                          href="/login"
-                          className="landing-focus-ring inline-flex items-center gap-2 text-xs font-semibold text-slate-100 transition-colors hover:text-emerald-200 light:text-slate-800 light:hover:text-emerald-800"
-                        >
-                          {stepItem.action}
-                          <span className="grid h-6 w-6 place-items-center rounded-full border border-white/12 bg-white/5 light:border-slate-300 light:bg-white">
-                            <ArrowRight className="h-3 w-3" />
-                          </span>
-                        </Link>
+                      {/* Text Content */}
+                      <div className="pt-0.5">
+                        <h3 className="text-base sm:text-lg font-bold text-white transition-colors group-hover:text-emerald-300 light:text-slate-900 light:group-hover:text-[#1b5042]">
+                          {item.title}
+                        </h3>
+                        <p className="mt-1 text-xs sm:text-sm leading-snug text-slate-400 light:text-slate-600">
+                          {item.description}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Right: Mockup browser preview */}
-          <div className="lg:col-span-7 relative">
-            {/* Pulsing dynamic glow background behind browser */}
-            <div className={`absolute -inset-8 rounded-[26px] blur-3xl pointer-events-none opacity-60 transition-all duration-700 ease-in-out ${glowColors[steps[activeStep].tone]}`} />
-            
-            <div className="relative w-full rounded-2xl border border-white/10 bg-[#060c09] shadow-[0_24px_60px_rgba(0,0,0,0.45)] transition-all duration-300 light:border-slate-200 light:bg-slate-50 light:shadow-[0_20px_50px_rgba(32,65,47,0.08)]">
-              {/* Browser header */}
-              <div className="flex items-center gap-2 border-b border-white/5 px-4 py-3 light:border-slate-200/70">
-                <div className="flex gap-1.5">
-                  <span className="h-3 w-3 rounded-full bg-red-500/35 border border-red-500/20" />
-                  <span className="h-3 w-3 rounded-full bg-yellow-500/35 border border-yellow-500/20" />
-                  <span className="h-3 w-3 rounded-full bg-green-500/35 border border-green-500/20" />
-                </div>
-                <div className="mx-auto flex h-6 w-3/5 items-center justify-center rounded-md border border-white/5 bg-white/5 px-3 text-[10px] text-slate-400 font-mono light:border-slate-200 light:bg-white light:text-slate-500">
-                  nexora.os/brief-to-submission
-                </div>
+                  );
+                })}
               </div>
-              {/* Content area */}
-              <div className="relative h-[340px] w-full overflow-hidden bg-slate-950/40 light:bg-white">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeStep}
-                    initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.98, y: -10 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="absolute inset-0 h-full w-full"
-                  >
-                    <WorkflowMedia index={activeStep} className="relative h-full w-full overflow-hidden" isActive={true} />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Mobile & Tablet card stack */}
-        <div className="mt-10 grid items-stretch gap-5 md:grid-cols-2 lg:hidden">
-          {steps.map((stepItem, index) => {
-            const Icon = stepItem.icon;
-            return (
-              <ScrollReveal
-                key={stepItem.title}
-                delay={index * 120}
-                className={
-                  index === 2
-                    ? "h-full md:col-span-2 md:mx-auto md:w-[calc(50%-0.625rem)]"
-                    : "h-full"
-                }
-              >
-                <article
-                  className="group relative flex h-full min-h-[480px] flex-col overflow-hidden rounded-[22px] border border-white/10 bg-[#0b1510] shadow-[0_24px_54px_rgba(0,0,0,0.18)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1 hover:border-white/18 light:border-slate-200/90 light:bg-[#fbfcfb] light:shadow-[0_22px_48px_rgba(32,65,47,0.08)] light:hover:border-emerald-900/18"
+              {/* Action Link / Button */}
+              <div className="mt-10 flex items-center gap-4">
+                <Link
+                  href="/login"
+                  className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#1b5042] px-7 text-sm font-bold !text-white shadow-lg shadow-emerald-900/20 transition-all hover:bg-[#143e33] hover:scale-[1.02] light:bg-[#1b5042] light:!text-white light:hover:bg-[#143e33]"
                 >
-                  <span aria-hidden="true" className={`absolute inset-x-7 top-0 h-[2px] ${toneAccent[stepItem.tone]}`} />
+                  <span className="!text-white font-bold">Explore How It Works</span>
+                  <ArrowRight className="h-4 w-4 stroke-[2.5] !text-white" />
+                </Link>
+              </div>
+            </ScrollReveal>
+          </div>
 
-                  <div className="relative shrink-0 overflow-hidden transition-transform duration-500 group-hover:scale-[1.02] border-b border-white/9 light:border-slate-200/90">
-                    <WorkflowMedia index={index} className="relative h-[225px] sm:h-[240px] w-full overflow-hidden" />
-                  </div>
+          {/* Right Column: Exact Photo Image Showcase with Circular Images & Orange Badge */}
+          <div className="relative flex justify-center lg:col-span-5">
+            <ScrollReveal delay={150} className="relative w-full max-w-[480px]">
+              {/* Giant Outer Sage Accent Ring behind main circle */}
+              <div className="absolute top-4 right-0 h-[360px] w-[360px] sm:h-[440px] sm:w-[440px] rounded-full border-[18px] sm:border-[26px] border-emerald-900/30 bg-emerald-950/20 pointer-events-none -z-10 light:border-[#e2efe9] light:bg-[#e2efe9]/40" />
 
-                  <div className="flex flex-1 flex-col px-6 pb-6 pt-6 sm:px-7">
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="flex min-w-0 items-center gap-3">
-                        <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full border ${toneIcon[stepItem.tone]}`}>
-                          <Icon className="h-[18px] w-[18px]" />
-                        </span>
-                        <div className="flex flex-col">
-                          <span className={`text-[10px] font-semibold uppercase tracking-[0.15em] ${toneMeta[stepItem.tone]}`}>
-                            {stepItem.kicker}
-                          </span>
-                          <span className="text-[10px] font-mono text-slate-500 light:text-slate-400">
-                            Step {stepItem.step}
-                          </span>
-                        </div>
-                      </div>
-                      <span className="font-mono text-2xl font-semibold text-white/8 light:text-slate-900/10">
-                        {stepItem.step}
-                      </span>
-                    </div>
+              {/* Central Main Circular Frame */}
+              <motion.div
+                animate={{ y: [0, -6, 0] }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="relative z-10 mx-auto h-[310px] w-[310px] sm:h-[390px] sm:w-[390px] overflow-hidden rounded-full border-4 sm:border-8 border-[#08130e] bg-slate-900 shadow-[0_20px_50px_rgba(0,0,0,0.5)] light:border-white light:bg-slate-100 light:shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+              >
+                <Image
+                  src="/landing/workflows/choose-1.png"
+                  alt="Student working on task"
+                  fill
+                  className="object-cover object-center"
+                  priority
+                />
+              </motion.div>
 
-                    <h3 className="mt-5 text-[1.5rem] font-semibold leading-[1.14] tracking-[-0.035em] text-white light:text-slate-900">
-                      {stepItem.title}
-                    </h3>
+              {/* Floating Top-Left Circle Image */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{
+                  duration: 4.8,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="absolute -top-4 left-0 sm:-top-8 sm:-left-4 z-20 h-28 w-28 sm:h-40 sm:w-40 overflow-hidden rounded-full border-4 sm:border-6 border-[#08130e] bg-slate-900 shadow-xl transition-transform duration-300 hover:scale-105 light:border-white light:bg-slate-100"
+              >
+                <Image
+                  src="/landing/workflows/choose-2.png"
+                  alt="Student writing in notebook"
+                  fill
+                  className="object-cover object-center"
+                />
+              </motion.div>
 
-                    <ul className="mt-4 space-y-2.5">
-                      {stepItem.bullets.map((bullet) => (
-                        <li
-                          key={bullet}
-                          className="flex items-start gap-2.5 text-sm leading-6 text-slate-300 light:text-slate-600"
-                        >
-                          <CheckCircle2 className={`mt-0.5 h-4 w-4 shrink-0 ${toneMeta[stepItem.tone]}`} />
-                          <span>{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
+              {/* Floating Bottom-Left Circle Image */}
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{
+                  duration: 5.4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.5,
+                }}
+                className="absolute -bottom-4 left-2 sm:-bottom-8 sm:-left-6 z-20 h-32 w-32 sm:h-44 sm:w-44 overflow-hidden rounded-full border-4 sm:border-6 border-[#08130e] bg-slate-900 shadow-xl transition-transform duration-300 hover:scale-105 light:border-white light:bg-slate-100"
+              >
+                <Image
+                  src="/landing/workflows/choose-3.png"
+                  alt="Group discussion and work"
+                  fill
+                  className="object-cover object-center"
+                />
+              </motion.div>
 
-                    <span
-                      className={`mt-5 inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium ${tonePill[stepItem.tone]}`}
-                    >
-                      <span className={`h-1.5 w-1.5 rounded-full animate-pulse ${toneDot[stepItem.tone]}`} />
-                      {stepItem.status}
-                    </span>
-
-                    <Link
-                      href="/login"
-                      className="landing-focus-ring mt-6 inline-flex w-fit items-center gap-2 text-sm font-semibold text-slate-100 transition-colors hover:text-emerald-200 light:text-slate-800 light:hover:text-emerald-800"
-                    >
-                      {stepItem.action}
-                      <span className="grid h-7 w-7 place-items-center rounded-full border border-white/12 bg-white/5 light:border-slate-300 light:bg-white">
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </span>
-                    </Link>
-                  </div>
-                </article>
-              </ScrollReveal>
-            );
-          })}
+              {/* Right Side Floating Orange Metric Card (Nexora OS Context) */}
+              <motion.div
+                animate={{ y: [0, -8, 0] }}
+                transition={{
+                  duration: 4.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.2,
+                }}
+                className="absolute top-1/2 -right-3 sm:-right-8 -translate-y-1/2 z-30 flex items-center gap-3.5 rounded-2xl bg-[#ff5500] px-4 py-3.5 sm:px-5 sm:py-4.5 text-white shadow-[0_16px_36px_rgba(255,85,0,0.35)] transition-transform duration-300 hover:scale-105"
+              >
+                <span className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+                  100%
+                </span>
+                <span className="text-xs sm:text-sm font-semibold text-white/95 leading-tight max-w-[110px]">
+                  Connected Workflows.
+                </span>
+              </motion.div>
+            </ScrollReveal>
+          </div>
         </div>
       </div>
     </section>
   );
 }
+

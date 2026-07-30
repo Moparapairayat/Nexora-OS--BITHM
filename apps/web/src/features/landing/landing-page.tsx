@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   ArrowLeft,
   ArrowRight,
@@ -403,6 +404,21 @@ export function LandingPage() {
 
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 md:grid-cols-2 md:px-8 lg:gap-16">
           <div className="relative w-full max-w-[560px]">
+            {/* Floating Decorative Shape 03 near title badge */}
+            <motion.div
+              animate={{ y: [0, -10, 0], rotate: [0, 6, 0] }}
+              transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
+              className="pointer-events-none absolute -top-10 -right-2 sm:-top-12 sm:right-4 z-20 hidden sm:block opacity-85"
+            >
+              <Image
+                src="/landing/shape-03.png"
+                alt="Decorative shape"
+                width={68}
+                height={94}
+                className="h-12 w-auto sm:h-16 object-contain drop-shadow-lg"
+              />
+            </motion.div>
+
             <div className="mb-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300 shadow-[0_2px_10px_rgba(16,185,129,0.05)] light:border-emerald-600/15 light:bg-emerald-50 light:text-emerald-700">
                 Nexora OS · BITHM Academic Platform
@@ -442,9 +458,9 @@ export function LandingPage() {
             <div className="mt-10 flex items-center gap-4 text-sm text-slate-400 light:text-slate-600">
               <div className="flex -space-x-2">
                 {[
-                  { src: "/landing/avatars/avatar-student.png", alt: "Student" },
-                  { src: "/landing/avatars/avatar-teacher.png", alt: "Teacher" },
-                  { src: "/landing/avatars/avatar-admin.png", alt: "Administrator" },
+                  { src: "/landing/team/ayat.png", alt: "Mopara Pair Ayat" },
+                  { src: "/landing/team/afsana_tabassum.png", alt: "Afsana Tabassum Tamishra" },
+                  { src: "/landing/team/kati_avatar.png", alt: "Fatima Rahman" },
                 ].map((avatar, index) => (
                   <div
                     key={avatar.alt}
@@ -476,6 +492,21 @@ export function LandingPage() {
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/20 dark:text-white/15 light:text-slate-900/10 text-[6.5rem] sm:text-[9.5rem] md:text-[8rem] lg:text-[11.5rem] uppercase pointer-events-none transition-all duration-300">
               NEXORA
             </div>
+
+            {/* Floating Decorative Shape 03 near image illustration */}
+            <motion.div
+              animate={{ y: [0, 12, 0], rotate: [0, -8, 0] }}
+              transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+              className="pointer-events-none absolute -top-4 -right-4 sm:-top-8 sm:-right-8 z-30 drop-shadow-xl"
+            >
+              <Image
+                src="/landing/shape-03.png"
+                alt="Decorative accent shape"
+                width={68}
+                height={94}
+                className="h-14 w-auto sm:h-20 object-contain opacity-90"
+              />
+            </motion.div>
 
             <div className="landing-orbit absolute -inset-8 rounded-full border border-emerald-300/10 before:absolute before:left-1/2 before:top-0 before:h-2 before:w-2 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10" />
             <Image
@@ -956,173 +987,88 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="academic-project" className="relative px-5 pb-20 pt-28 md:px-8 xl:py-24 bg-[#070d0a] light:bg-[#f0f6f2]">
+      <section className="relative px-5 py-10 md:px-8">
         <div className="mx-auto max-w-7xl relative">
-          {/* Outer card */}
-          <div className="group/coursework relative rounded-3xl border border-emerald-500/15 light:border-emerald-700/20 bg-gradient-to-b from-[#0d1f18]/80 to-[#06100c]/95 light:from-white light:to-[#f0f9f4] backdrop-blur-md overflow-hidden shadow-[0_20px_50px_rgba(4,20,13,0.4)] light:shadow-[0_20px_50px_rgba(16,185,129,0.08)]">
+          {/* Outer Compact Single Card */}
+          <div className="group/coursework relative rounded-2xl border border-emerald-500/20 light:border-emerald-700/20 bg-gradient-to-r from-[#0c1b14]/90 via-[#07120e]/95 to-[#0c1b14]/90 light:from-white light:via-[#f2f9f5] light:to-white backdrop-blur-xl p-6 sm:p-8 shadow-[0_16px_40px_rgba(4,20,13,0.35)] light:shadow-[0_12px_32px_rgba(16,185,129,0.08)] overflow-hidden">
+            {/* Ambient Background Glow */}
+            <div className="absolute -left-16 -top-16 w-64 h-64 rounded-full bg-emerald-500/10 light:bg-emerald-500/5 blur-3xl pointer-events-none" />
+            <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-emerald-400/10 light:bg-emerald-400/5 blur-3xl pointer-events-none" />
 
-            {/* Subtle grid pattern specifically inside the card */}
-            <div className="absolute inset-0 opacity-[0.03] light:opacity-[0.06] pointer-events-none mix-blend-overlay"
-              style={{ backgroundImage: "linear-gradient(to right, #10b981 1px, transparent 1px), linear-gradient(to bottom, #10b981 1px, transparent 1px)", backgroundSize: "20px 20px" }}
-            />
-
-            {/* Glowing spot lights */}
-            <div className="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-emerald-500/10 light:bg-emerald-500/5 blur-3xl pointer-events-none" />
-            <div className="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-emerald-400/5 light:bg-emerald-400/5 blur-3xl pointer-events-none" />
-
-            {/* Ribbon Badge: VERIFIED */}
-            <div className="absolute top-0 right-0 w-32 h-32 overflow-hidden pointer-events-none z-20">
-              <div className="absolute top-6 -right-8 w-32 py-1 bg-gradient-to-r from-accent-primary to-accent-secondary light:from-accent-solid light:to-accent-primary text-center text-[10px] font-bold uppercase tracking-wider text-white shadow-md transform rotate-45 border-y border-white/10 select-none">
-                Verified
-              </div>
-            </div>
-
-            {/* Subtle background watermark */}
-            <div className="absolute inset-0 pointer-events-none select-none overflow-hidden">
-              <div className="absolute -bottom-8 -right-8 text-[11rem] font-black tracking-tighter text-accent-primary/[0.015] light:text-accent-solid/[0.03] uppercase leading-none">OS</div>
-            </div>
-
-            <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0">
-
-              {/* LEFT PANEL - Credentials Presentation */}
-              <div className="p-8 sm:p-12 flex flex-col justify-between border-b lg:border-b-0 lg:border-r border-emerald-500/10 light:border-emerald-700/10">
+            {/* Top Header Row */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-emerald-500/15 light:border-slate-200/80">
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 light:bg-emerald-50 light:border-emerald-300 text-emerald-400 light:text-emerald-700 shadow-sm">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
                 <div>
-                  {/* Badge */}
-                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/25 light:border-emerald-700/20 bg-emerald-500/5 light:bg-emerald-50/70 px-3.5 py-1.5 mb-8">
-                    <svg className="w-3.5 h-3.5 text-emerald-400 light:text-emerald-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" />
-                    </svg>
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700">Official Coursework</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700">
+                      Official Academic Credential
+                    </span>
+                    <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-bold text-emerald-300 light:bg-emerald-100 light:text-emerald-800">
+                      Verified
+                    </span>
                   </div>
-
-                  {/* Premium Seal / Badge Symbol */}
-                  <div className="relative flex items-center gap-4 mb-8">
-                    <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-emerald-500/5 light:bg-emerald-50 border border-emerald-500/20 light:border-emerald-700/15 shadow-[0_0_15px_rgba(16,185,129,0.05)] overflow-hidden">
-                      {/* Metallic Sheen Overlay */}
-                      <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 light:via-white/60 to-transparent -translate-x-[150%] -skew-x-[25deg] transition-transform duration-1000 ease-out group-hover/coursework:translate-x-[150%] pointer-events-none" />
-
-                      {/* Laurel Wreath Certificate SVG */}
-                      <svg className="w-10 h-10 text-emerald-400 light:text-emerald-600 relative z-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M6 3a9 9 0 0 1 8.7 7M18 3a9 9 0 0 0-8.7 7M12 7v10M9 14l3 3 3-3" />
-                        <circle cx="12" cy="17" r="1" fill="currentColor" />
-                        <path d="M5.5 10a7 7 0 0 0 6.5 6 7 7 0 0 0 6.5-6" />
-                      </svg>
-                      {/* Small floating pulse dot */}
-                      <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 light:bg-emerald-600 border-2 border-[#0d1f18] light:border-white shadow-[0_0_8px_rgba(52,211,153,0.6)] animate-pulse z-20" />
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-medium tracking-wide text-slate-400 light:text-slate-500">Nexora Integrity Protocol</p>
-                      <p className="text-xs font-bold text-emerald-400 light:text-emerald-700">Verified Submission Ledger</p>
-                    </div>
-                  </div>
-
-                  {/* Heading */}
-                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white light:text-slate-900 leading-tight">
-                    Developed for<br />Academic Coursework
-                  </h2>
-
-                  {/* Emerald gradient underline bar */}
-                  <div className="mt-5 w-14 h-[4px] rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary light:from-accent-solid light:to-accent-primary" />
-
-                  {/* Description */}
-                  <p className="mt-6 text-sm leading-relaxed text-slate-400 light:text-slate-600 max-w-md">
-                    Nexora OS bridges the gap between study and practice. It brings assignments, hands-on coding labs, submission evidence, and instructor feedback together into one unified platform.
-                  </p>
-                </div>
-
-                {/* Footer status row */}
-                <div className="mt-10 flex items-center gap-3 text-sm text-slate-500 light:text-slate-500">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500/10 light:bg-emerald-50 flex items-center justify-center shrink-0">
-                    <svg className="w-4 h-4 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" /><line x1="16" x2="16" y1="2" y2="6" /><line x1="8" x2="8" y1="2" y2="6" /><line x1="3" x2="21" y1="10" y2="10" />
-                    </svg>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-200 light:text-slate-800">Summer 2026</span>
-                    <span className="mx-2 text-slate-700 light:text-slate-300">·</span>
-                    <span className="text-xs text-slate-400 light:text-slate-500">Academic Submission Verified</span>
-                  </div>
+                  <h3 className="text-lg font-bold text-white light:text-slate-900 sm:text-xl">
+                    Developed for BITHM Academic Coursework
+                  </h3>
                 </div>
               </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 light:text-slate-600 sm:text-right">
+                <span className="rounded-lg bg-white/5 light:bg-slate-100 px-3 py-1.5 border border-white/10 light:border-slate-200">
+                  Summer 2026 Submission
+                </span>
+              </div>
+            </div>
 
-              {/* RIGHT PANEL — Academic details, grouped without nested cards */}
-              <div className="grid grid-cols-1 bg-black/10 sm:grid-cols-2 light:bg-slate-50/30">
+            {/* Bottom 4-Column Metadata Grid */}
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {/* Institution */}
+              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+                  Institution
+                </p>
+                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                  BITHM College of Professionals
+                </p>
+                <p className="text-[11px] text-slate-400 light:text-slate-500">Academic Partner</p>
+              </div>
 
-                {/* Institution */}
-                <div className="group border-b border-emerald-500/10 px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] sm:border-r light:border-slate-200/80 light:hover:bg-emerald-50/60">
-                  <div className="flex items-start justify-between">
-                    <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M3 22h18M6 18V9M10 18V9M14 18V9M18 18V9M2 9l10-6 10 6" />
-                      </svg>
-                    </div>
-                    {/* Small tag icon for metadata */}
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 light:text-emerald-600/60">Verified</span>
-                  </div>
-                  <div className="mt-6">
-                    <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700 mb-1.5">Institution</p>
-                    <p className="text-base font-bold text-white light:text-slate-800 leading-snug tracking-wide group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors">BITHM College of Professionals</p>
-                    <p className="text-xs text-slate-500 light:text-slate-500 mt-1">Academic partner</p>
-                  </div>
-                </div>
+              {/* Student */}
+              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+                  Student
+                </p>
+                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                  Mopara Pair Ayat
+                </p>
+                <p className="text-[11px] text-slate-400 light:text-slate-500">ID: IT202510001</p>
+              </div>
 
-                {/* Student */}
-                <div className="group border-b border-emerald-500/10 px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] light:border-slate-200/80 light:hover:bg-emerald-50/60">
-                  <div className="flex items-start justify-between">
-                    <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-                      </svg>
-                    </div>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 light:text-emerald-600/60">Profile</span>
-                  </div>
-                  <div className="mt-6">
-                    <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700 mb-1.5">Student</p>
-                    <p className="text-base font-bold text-white light:text-slate-800 leading-snug tracking-wide group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors">Mopara Pair Ayat</p>
-                    <p className="text-xs text-slate-500 light:text-slate-500 mt-1">IT202510001 · Information Technology</p>
-                  </div>
-                </div>
+              {/* Instructor */}
+              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+                  Instructor
+                </p>
+                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                  Afsana Tabassum Tamishra
+                </p>
+                <p className="text-[11px] text-slate-400 light:text-slate-500">Lecturer · Dept. of IT</p>
+              </div>
 
-                {/* Instructor */}
-                <div className="group border-b border-emerald-500/10 px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] sm:border-r sm:border-b-0 light:border-slate-200/80 light:hover:bg-emerald-50/60">
-                  <div className="flex items-start justify-between">
-                    <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                      </svg>
-                    </div>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 light:text-emerald-600/60">Faculty</span>
-                  </div>
-                  <div className="mt-6">
-                    <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700 mb-1.5">Instructor</p>
-                    <p className="text-base font-bold text-white light:text-slate-800 leading-snug tracking-wide group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors">Afsana Tabassum Tamishra</p>
-                    <p className="text-xs text-slate-500 light:text-slate-500 mt-1">Lecturer · Dept. of IT</p>
-                  </div>
-                </div>
-
-                {/* Course */}
-                <div className="group px-7 py-8 transition-colors hover:bg-emerald-500/[0.025] light:hover:bg-emerald-50/60">
-                  <div className="flex items-start justify-between">
-                    <div className="w-10 h-10 rounded-xl border border-emerald-500/20 light:border-emerald-200 bg-emerald-500/5 light:bg-emerald-50 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-emerald-400 light:text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                      </svg>
-                    </div>
-                    <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-500/60 light:text-emerald-600/60">Module</span>
-                  </div>
-                  <div className="mt-6">
-                    <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700 mb-1.5">Course</p>
-                    <p className="text-base font-bold text-white light:text-slate-800 leading-snug tracking-wide group-hover:text-emerald-300 light:group-hover:text-emerald-600 transition-colors">Web and Mobile Applications</p>
-                    <p className="text-xs text-slate-500 light:text-slate-500 mt-1">OTHM Unit H/650/3385</p>
-                  </div>
-                </div>
-
+              {/* Course */}
+              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+                  Course
+                </p>
+                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                  Web & Mobile Applications
+                </p>
+                <p className="text-[11px] text-slate-400 light:text-slate-500">OTHM Unit H/650/3385</p>
               </div>
             </div>
           </div>
-
-          {/* Hanging interactive Panda mascot, synced to track user cursor */}
-          <PandaCTA mascotOnly className="absolute top-[-130px] left-1/2 -translate-x-1/2 w-[300px] h-[300px] xl:top-[-100px] xl:right-[-280px] xl:left-auto xl:translate-x-0 xl:w-[450px] xl:h-[450px]" />
         </div>
       </section>
 
@@ -1199,7 +1145,7 @@ export function LandingPage() {
 
 
       <section id="demo" className="px-5 py-20 light:bg-[#f4f7f5] md:px-8 sm:py-24">
-        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[28px] border border-accent-primary/15 bg-gradient-to-br from-accent-solid via-accent-solid to-accent-primary/20 px-6 py-14 text-center shadow-[0_24px_64px_rgba(var(--theme-accent-primary-rgb-raw),0.18)] sm:px-10">
+        <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[28px] border border-white/20 bg-gradient-to-br from-emerald-900 via-accent-solid to-emerald-950 px-6 py-14 text-center shadow-[0_24px_64px_rgba(var(--theme-accent-primary-rgb-raw),0.25)] sm:px-10">
           <div className="absolute inset-0 bg-[url('/landing/mentor-modern/cta-bg-vector.png')] bg-cover bg-center opacity-35" />
           <div className="relative mx-auto max-w-2xl">
             <h2 className="text-3xl font-bold text-white sm:text-4xl">

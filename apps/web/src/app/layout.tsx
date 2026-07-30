@@ -67,12 +67,14 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} ${caveat.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <head>
         <Script
           id="nexora-theme-init"
           src="/scripts/theme-init.js"
           strategy="beforeInteractive"
         />
+      </head>
+      <body className="min-h-full flex flex-col">
         <PremiumCursor />
         <AppProviders>{children}</AppProviders>
       </body>

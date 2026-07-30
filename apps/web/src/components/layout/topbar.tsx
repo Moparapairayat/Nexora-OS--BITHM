@@ -17,7 +17,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { CommandPalette } from "@/components/layout/command-palette";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { AccentPicker } from "@/components/layout/accent-picker";
 import { NexoraLogo } from "@/components/brand/nexora-logo";
 import {
   AIButton,
@@ -177,7 +176,6 @@ export function Topbar({
               ) : null}
             </div>
 
-            <AccentPicker />
             <ThemeToggle />
 
             <div className="relative hidden md:block">
