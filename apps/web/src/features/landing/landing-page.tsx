@@ -391,7 +391,7 @@ export function LandingPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(var(--theme-accent-primary-rgb-raw),0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_15%_10%,rgba(167,139,250,0.06),transparent_35%),radial-gradient(circle_at_85%_15%,rgba(52,211,153,0.09),transparent_35%),radial-gradient(circle_at_80%_45%,rgba(110,231,183,0.05),transparent_30%),linear-gradient(180deg,#ffffff_0%,#f6faf7_55%,#fafdfb_100%)] light:text-[#15251f]">
+    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(var(--theme-accent-primary-rgb-raw),0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_12%_85%,rgba(252,228,198,0.55),transparent_42%),radial-gradient(circle_at_88%_12%,rgba(195,236,220,0.65),transparent_45%),linear-gradient(130deg,#fcf8f3_0%,#f5faf7_50%,#f2f8f5_100%)] light:text-[#15251f]">
       <div className="absolute inset-0 bg-dot-grid pointer-events-none z-0" />
       <LandingNav />
 
@@ -399,8 +399,8 @@ export function LandingPage() {
       <section id="about" className="landing-hero relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
         <div className="landing-hero-arc-left nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75" />
         <div className="landing-hero-arc-right nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65" />
-        <div className="pointer-events-none absolute -left-20 -top-20 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/10 blur-[130px] light:bg-violet-500/10" />
-        <div className="pointer-events-none absolute -right-20 bottom-10 z-0 h-[380px] w-[380px] rounded-full bg-emerald-500/15 blur-[130px] light:bg-emerald-500/12" />
+        <div className="pointer-events-none absolute -left-36 -bottom-10 z-0 h-[540px] w-[540px] rounded-full bg-amber-400/10 blur-[140px] light:bg-[#fce5cb]/80" />
+        <div className="pointer-events-none absolute -right-36 -top-10 z-0 h-[580px] w-[580px] rounded-full bg-emerald-500/15 blur-[150px] light:bg-[#c9ead9]/85" />
 
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 md:grid-cols-2 md:px-8 lg:gap-16">
           <div className="relative w-full max-w-[560px]">
