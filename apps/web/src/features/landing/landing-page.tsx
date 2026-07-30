@@ -404,20 +404,6 @@ export function LandingPage() {
 
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 md:grid-cols-2 md:px-8 lg:gap-16">
           <div className="relative w-full max-w-[560px]">
-            {/* Floating Decorative Shape 03 near title badge */}
-            <motion.div
-              animate={{ y: [0, -10, 0], rotate: [0, 6, 0] }}
-              transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-              className="pointer-events-none absolute -top-10 -right-2 sm:-top-12 sm:right-4 z-20 hidden sm:block opacity-85"
-            >
-              <Image
-                src="/landing/shape-03.png"
-                alt="Decorative shape"
-                width={68}
-                height={94}
-                className="h-12 w-auto sm:h-16 object-contain drop-shadow-lg"
-              />
-            </motion.div>
 
             <div className="mb-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300 shadow-[0_2px_10px_rgba(16,185,129,0.05)] light:border-emerald-600/15 light:bg-emerald-50 light:text-emerald-700">
