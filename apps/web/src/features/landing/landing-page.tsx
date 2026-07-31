@@ -1139,9 +1139,11 @@ export function LandingPage() {
         <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
           <ScrollReveal>
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-emerald-300 light:text-emerald-700">
-                Questions
-              </p>
+              <div className="mb-2 overflow-visible inline-flex items-center justify-start">
+                <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+                  Frequently Asked Questions
+                </span>
+              </div>
               <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
                 A few things to know before signing in
               </h2>

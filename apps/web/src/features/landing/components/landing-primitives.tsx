@@ -61,13 +61,38 @@ type SectionHeadingProps = {
 export function SectionHeading({ eyebrow, title, detail }: SectionHeadingProps) {
   return (
     <div className="mx-auto max-w-2xl text-center">
-      <p className="inline-flex rounded-full border border-emerald-300/15 bg-emerald-400/7 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300 light:border-emerald-700/12 light:bg-emerald-50 light:text-emerald-700">
-        {eyebrow}
-      </p>
-      <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight sm:text-4xl">
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+        .font-3d-neon-script {
+          font-family: 'Pacifico', cursive;
+          background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
+                  drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
+          line-height: 1.35;
+          padding: 0.15em 0.25em 0.35em;
+          display: inline-block;
+        }
+
+        .light .font-3d-neon-script {
+          background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
+        }
+      `}} />
+      <div className="overflow-visible inline-flex items-center justify-center">
+        <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+          {eyebrow}
+        </span>
+      </div>
+      <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
         {title}
       </h2>
-      <p className="mt-4 text-sm leading-7 text-slate-400 light:text-slate-600 sm:text-base">
+      <p className="mt-3 text-xs font-medium leading-relaxed text-slate-300/85 sm:text-sm light:text-slate-600">
         {detail}
       </p>
     </div>

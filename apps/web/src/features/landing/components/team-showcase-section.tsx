@@ -127,7 +127,7 @@ export function TeamShowcaseSection() {
   return (
     <section
       id="team"
-      className="relative isolate overflow-hidden border-y border-emerald-300/10 bg-[#050b08] py-20 text-white [--team-featured-end:#05110c] [--team-featured-start:#123428] light:border-emerald-950/8 light:bg-[#f3eee4] light:text-[#10281f] light:[--team-featured-end:#eef5ef] light:[--team-featured-start:#ffffff] sm:py-24"
+      className="relative isolate overflow-hidden border-y border-emerald-300/10 bg-[#050b08] py-8 text-white [--team-featured-end:#05110c] [--team-featured-start:#123428] light:border-emerald-950/8 light:bg-[#f3eee4] light:text-[#10281f] light:[--team-featured-end:#eef5ef] light:[--team-featured-start:#ffffff] sm:py-12"
     >
       <div
         className="pointer-events-none absolute inset-0 light:hidden"
@@ -146,22 +146,46 @@ export function TeamShowcaseSection() {
 
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <header className="mx-auto max-w-3xl text-center">
-          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-emerald-300/75 light:text-emerald-800/70">
-            Academic project team
-          </p>
-          <div className="mt-4 flex items-center justify-center gap-4 sm:gap-6">
+          <style dangerouslySetInnerHTML={{
+            __html: `
+            @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+            .font-3d-neon-script {
+              font-family: 'Pacifico', cursive;
+              background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
+                      drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
+              line-height: 1.25;
+              display: inline-block;
+            }
+
+            .light .font-3d-neon-script {
+              background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
+            }
+          `}} />
+          <div className="overflow-visible inline-flex items-center justify-center">
+            <span className="font-3d-neon-script text-xl sm:text-2xl md:text-3xl font-normal tracking-wide transform -rotate-2 select-none">
+              Academic project team
+            </span>
+          </div>
+          <div className="mt-1 flex items-center justify-center gap-4 sm:gap-6">
             <HeadingOrnament />
-            <h2 className="font-serif text-[clamp(2.7rem,7vw,4.8rem)] font-medium leading-none tracking-[-0.045em] text-[#fbfff9] light:text-[#10281f]">
+            <h2 className="font-serif text-[clamp(2.5rem,6.5vw,4.2rem)] font-medium leading-none tracking-[-0.045em] text-[#fbfff9] light:text-[#10281f]">
               Our Team
             </h2>
             <HeadingOrnament reverse />
           </div>
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-6 text-[#9eb2a8] light:text-[#607168] sm:text-[15px]">
+          <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-[#9eb2a8] light:text-[#607168] sm:text-[15px]">
             The people and academic context behind Nexora OS.
           </p>
         </header>
 
-        <div className="relative mx-auto mt-12 max-w-[1180px] px-0 py-4 sm:px-4 lg:px-8">
+        <div className="relative mx-auto mt-6 max-w-[1180px] px-0 py-2 sm:mt-8 sm:px-4 lg:px-8">
           <div className="pointer-events-none absolute left-1/2 top-[44%] h-72 w-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/7 blur-3xl light:bg-emerald-600/7" />
 
           <svg
