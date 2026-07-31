@@ -154,10 +154,12 @@ export function WorkflowsSection() {
               <div className="mt-10 flex items-center gap-4">
                 <Link
                   href="/login"
-                  className="inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-[#1b5042] px-7 text-sm font-bold !text-white shadow-lg shadow-emerald-900/20 transition-all hover:bg-[#143e33] hover:scale-[1.02] light:bg-[#1b5042] light:!text-white light:hover:bg-[#143e33]"
+                  className="group relative z-10 inline-flex items-center gap-3.5 rounded-full border border-emerald-400/40 bg-[#044b3b] pl-6 pr-2 py-2 text-sm sm:text-base font-extrabold !text-white shadow-[0_12px_28px_rgba(4,75,59,0.4)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98]"
                 >
-                  <span className="!text-white font-bold">Explore How It Works</span>
-                  <ArrowRight className="h-4 w-4 stroke-[2.5] !text-white" />
+                  <span>Explore How It Works</span>
+                  <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[#ff5500] text-white shadow-[0_4px_12px_rgba(255,85,0,0.4)] transition-transform duration-300 group-hover:scale-105 group-hover:translate-x-0.5 shrink-0">
+                    <ArrowRight className="h-4 w-4 stroke-[2.5]" />
+                  </span>
                 </Link>
               </div>
             </ScrollReveal>

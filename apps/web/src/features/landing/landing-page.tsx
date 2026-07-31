@@ -951,9 +951,12 @@ export function LandingPage() {
             </p>
             <Link
               href="/login"
-              className="landing-focus-ring mt-7 inline-flex h-10 items-center gap-2 rounded-full border border-white/14 bg-white/[0.04] px-4 text-sm font-semibold text-emerald-100 transition-colors hover:border-emerald-300/30 hover:bg-white/[0.07] hover:text-white light:border-emerald-950/12 light:bg-white/80 light:text-emerald-900 light:shadow-[0_8px_24px_rgba(25,75,50,0.06)] light:hover:border-emerald-700/25 light:hover:bg-white"
+              className="group relative z-10 mt-7 inline-flex items-center gap-3.5 rounded-full border border-emerald-400/40 bg-[#044b3b] pl-6 pr-2 py-2 text-sm sm:text-base font-extrabold !text-white shadow-[0_12px_28px_rgba(4,75,59,0.4)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98]"
             >
-              Open Nexora OS <ArrowRight className="h-4 w-4" />
+              <span>Open Nexora OS</span>
+              <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[#ff5500] text-white shadow-[0_4px_12px_rgba(255,85,0,0.4)] transition-transform duration-300 group-hover:scale-105 group-hover:translate-x-0.5 shrink-0">
+                <ArrowRight className="h-4 w-4 stroke-[2.5]" />
+              </span>
             </Link>
           </div>
 
