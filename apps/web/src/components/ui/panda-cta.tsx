@@ -1339,13 +1339,16 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
               </div>
               <button 
                 type="button" 
-                className="submit-btn" 
+                className="group relative mt-2 flex w-full items-center justify-between gap-3 rounded-full border border-emerald-400/40 bg-[#044b3b] pl-6 pr-2 py-2 text-sm sm:text-base font-extrabold text-white shadow-[0_12px_28px_rgba(4,75,59,0.4)] transition-all duration-300 hover:scale-[1.02] hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98] disabled:opacity-75 disabled:cursor-not-allowed cursor-pointer" 
                 id="submit-btn"
                 onClick={handleFormSubmit}
                 disabled={submitBtnDisabled}
                 style={submitBtnBg ? { background: submitBtnBg } : undefined}
               >
-                {submitBtnText}
+                <span>{submitBtnText}</span>
+                <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[#ff5500] text-white shadow-[0_4px_12px_rgba(255,85,0,0.4)] transition-transform duration-300 group-hover:scale-105 group-hover:translate-x-0.5 shrink-0">
+                  <ArrowRight className="h-4 w-4 stroke-[2.5]" />
+                </span>
               </button>
             </form>
           </div>
