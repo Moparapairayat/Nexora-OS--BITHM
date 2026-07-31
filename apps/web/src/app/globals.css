@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+body {
+  -webkit-overflow-scrolling: touch !important;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
 .font-handwriting {
   font-family: var(--font-caveat), cursive;
 }

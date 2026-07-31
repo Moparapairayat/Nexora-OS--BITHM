@@ -26,7 +26,7 @@ export function ScrollReveal({
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.05, rootMargin: "0px 0px -30px 0px" },
     );
 
     const element = ref.current;
@@ -43,8 +43,9 @@ export function ScrollReveal({
       className={className}
       style={{
         opacity: isVisible ? 1 : 0,
-        transform: isVisible ? "translateY(0)" : "translateY(24px)",
+        transform: isVisible ? "translate3d(0, 0, 0)" : "translate3d(0, 18px, 0)",
         transition: `opacity ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms`,
+        willChange: "transform, opacity",
       }}
     >
       {children}
