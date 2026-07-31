@@ -7,13 +7,10 @@ import {
   CheckCircle2,
   ChevronRight,
   Github,
-  Globe,
   Instagram,
   Linkedin,
   Mail,
   Send,
-  ShieldCheck,
-  Sparkles,
   Twitter,
 } from "lucide-react";
 import { NexoraLogo } from "@/components/brand/nexora-logo";
@@ -59,20 +56,9 @@ export function NextGenFooter() {
               <NexoraLogo size="md" className="h-9 w-[140px]" />
             </div>
 
-            <p className="mt-2.5 text-xs leading-relaxed text-slate-300/85 light:text-slate-600">
-              Unified Operating System for BITHM College of Professionals. Assignments, labs, and feedback in one place.
+            <p className="mt-2 text-xs leading-relaxed text-slate-300/85 light:text-slate-600 max-w-sm">
+              Unified Operating System for BITHM College of Professionals. Assignments, labs, and course feedback in one connected workspace.
             </p>
-
-            <div className="mt-3.5 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300 light:border-emerald-800/20 light:bg-emerald-100 light:text-emerald-900">
-                <Sparkles className="h-3 w-3 text-emerald-400 light:text-emerald-700" />
-                Built for BITHM
-              </span>
-              <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/25 bg-cyan-500/10 px-2.5 py-0.5 text-[10px] font-bold text-cyan-300 light:border-cyan-800/20 light:bg-cyan-100 light:text-cyan-900">
-                <Globe className="h-3 w-3 text-cyan-400 light:text-cyan-700" />
-                Cloud Connected
-              </span>
-            </div>
           </div>
 
           {/* Quick Links: Platform */}
