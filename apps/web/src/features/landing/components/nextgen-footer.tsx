@@ -35,58 +35,58 @@ export function NextGenFooter() {
   };
 
   return (
-    <footer className="relative w-full overflow-hidden px-4 pb-8 pt-12 sm:px-6 md:px-8 lg:px-12">
+    <footer className="relative w-full overflow-hidden px-4 pb-4 pt-4 sm:px-6 md:px-8">
       {/* Background Ambient Glow Orbs */}
-      <div className="pointer-events-none absolute -bottom-24 left-1/2 h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[140px] light:bg-emerald-300/25" />
-      <div className="pointer-events-none absolute bottom-10 -left-20 h-[300px] w-[300px] rounded-full bg-cyan-500/10 blur-[120px] light:bg-cyan-300/20" />
+      <div className="pointer-events-none absolute -bottom-24 left-1/2 h-[350px] w-[600px] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[130px] light:bg-emerald-300/20" />
+      <div className="pointer-events-none absolute bottom-5 -left-20 h-[220px] w-[220px] rounded-full bg-cyan-500/10 blur-[100px] light:bg-cyan-300/15" />
 
       {/* Main Glassmorphism Cyber Footer Card Container */}
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] border border-emerald-400/20 bg-[#040a07]/90 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.5)] backdrop-blur-2xl light:border-emerald-800/15 light:bg-[linear-gradient(145deg,#f4faf6_0%,#e8f5ee_100%)] light:shadow-[0_20px_60px_rgba(20,80,50,0.08)] sm:p-12 md:p-14">
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[24px] border border-emerald-400/20 bg-[#040a07]/90 p-5 shadow-[0_16px_50px_rgba(0,0,0,0.4)] backdrop-blur-xl light:border-emerald-800/15 light:bg-[linear-gradient(145deg,#f4faf6_0%,#e8f5ee_100%)] sm:p-7 md:p-8">
         
         {/* Top Watermark Decorative Branding Text */}
-        <div className="pointer-events-none absolute -top-4 right-0 select-none opacity-[0.035] light:opacity-[0.05]">
-          <span className="font-mono text-7xl sm:text-9xl font-black uppercase tracking-tighter text-emerald-300 light:text-emerald-900">
-            NEXORA OS
+        <div className="pointer-events-none absolute -top-4 right-0 select-none opacity-[0.03] light:opacity-[0.04]">
+          <span className="font-mono text-6xl sm:text-8xl font-black uppercase tracking-tighter text-emerald-300 light:text-emerald-900">
+            NEXORA
           </span>
         </div>
 
         {/* Top Header Row: System Status & Live Network Badge */}
-        <div className="flex flex-col gap-4 border-b border-white/10 pb-8 sm:flex-row sm:items-center sm:justify-between light:border-black/10">
-          <div className="flex items-center gap-3">
-            <div className="relative flex h-3 w-3 items-center justify-center">
+        <div className="flex flex-col gap-3 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between light:border-black/10">
+          <div className="flex items-center gap-2.5">
+            <div className="relative flex h-2.5 w-2.5 items-center justify-center">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
             </div>
-            <span className="font-mono text-xs font-semibold uppercase tracking-widest text-emerald-300 light:text-emerald-800">
-              All Systems Operational · Academic Grid v2.4 Online
+            <span className="font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-emerald-300 light:text-emerald-800">
+              All Systems Operational · Academic Grid v2.4
             </span>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 light:text-slate-600">
-            <ShieldCheck className="h-4 w-4 text-emerald-400 light:text-emerald-600" />
-            <span>Official BITHM Academic Platform</span>
+          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 light:text-slate-600">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 light:text-emerald-600" />
+            <span>Official BITHM Platform</span>
           </div>
         </div>
 
         {/* Middle Main Content Grid */}
-        <div className="mt-10 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 lg:gap-8">
+        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 lg:gap-6">
           
           {/* Brand Info Column (Spans 4 columns) */}
           <div className="lg:col-span-4">
             <div className="flex items-center gap-3">
-              <NexoraLogo size="md" className="h-11 w-[168px]" />
+              <NexoraLogo size="md" className="h-9 w-[140px]" />
             </div>
 
-            <p className="mt-4 text-xs sm:text-sm leading-relaxed text-slate-300/90 light:text-slate-600">
-              The next-generation unified Operating System for BITHM College of Professionals. Assignments, lab work, live coding environments, and course administration in one connected space.
+            <p className="mt-2.5 text-xs leading-relaxed text-slate-300/85 light:text-slate-600">
+              Unified Operating System for BITHM College of Professionals. Assignments, labs, and feedback in one place.
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-2.5">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-300 light:border-emerald-800/20 light:bg-emerald-100 light:text-emerald-900">
+            <div className="mt-3.5 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/25 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-300 light:border-emerald-800/20 light:bg-emerald-100 light:text-emerald-900">
                 <Sparkles className="h-3 w-3 text-emerald-400 light:text-emerald-700" />
                 Built for BITHM
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-400/25 bg-cyan-500/10 px-3 py-1 text-[11px] font-bold text-cyan-300 light:border-cyan-800/20 light:bg-cyan-100 light:text-cyan-900">
+              <span className="inline-flex items-center gap-1 rounded-full border border-cyan-400/25 bg-cyan-500/10 px-2.5 py-0.5 text-[10px] font-bold text-cyan-300 light:border-cyan-800/20 light:bg-cyan-100 light:text-cyan-900">
                 <Globe className="h-3 w-3 text-cyan-400 light:text-cyan-700" />
                 Cloud Connected
               </span>
@@ -95,10 +95,10 @@ export function NextGenFooter() {
 
           {/* Quick Links: Platform */}
           <div className="lg:col-span-2">
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-emerald-400 light:text-emerald-800">
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-emerald-400 light:text-emerald-800">
               Platform
             </h4>
-            <ul className="mt-4 space-y-2.5 text-xs sm:text-sm font-medium">
+            <ul className="mt-3 space-y-1.5 text-xs font-medium">
               {[
                 { label: "Overview", href: "#about" },
                 { label: "Features", href: "#platform" },
@@ -121,10 +121,10 @@ export function NextGenFooter() {
 
           {/* Quick Links: Resources & BITHM */}
           <div className="lg:col-span-3">
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-emerald-400 light:text-emerald-800">
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-emerald-400 light:text-emerald-800">
               Resources & Roles
             </h4>
-            <ul className="mt-4 space-y-2.5 text-xs sm:text-sm font-medium">
+            <ul className="mt-3 space-y-1.5 text-xs font-medium">
               {[
                 { label: "Student Login", href: "/login?role=student" },
                 { label: "Teacher Portal", href: "/login?role=teacher" },
@@ -147,42 +147,42 @@ export function NextGenFooter() {
 
           {/* Newsletter & Social Column */}
           <div className="lg:col-span-3">
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-emerald-400 light:text-emerald-800">
+            <h4 className="font-mono text-[11px] font-bold uppercase tracking-widest text-emerald-400 light:text-emerald-800">
               Stay Connected
             </h4>
-            <p className="mt-4 text-xs leading-relaxed text-slate-300/80 light:text-slate-600">
-              Get academic announcements and system release notes directly in your inbox.
+            <p className="mt-2.5 text-xs leading-snug text-slate-300/80 light:text-slate-600">
+              Get academic release notes directly in your inbox.
             </p>
 
-            <form onSubmit={handleSubscribe} className="mt-4 flex flex-col gap-2">
+            <form onSubmit={handleSubscribe} className="mt-3 flex flex-col gap-1.5">
               <div className="relative flex items-center">
-                <Mail className="absolute left-3.5 h-4 w-4 text-slate-400" />
+                <Mail className="absolute left-3 h-3.5 w-3.5 text-slate-400" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="Enter student / staff email..."
-                  className="w-full rounded-xl border border-white/15 bg-white/5 py-2.5 pl-10 pr-12 text-xs text-white placeholder-slate-400 outline-none backdrop-blur-md transition-all focus:border-emerald-400 focus:bg-white/10 light:border-black/15 light:bg-white light:text-slate-900 light:placeholder-slate-400 light:focus:border-emerald-600"
+                  placeholder="Enter email..."
+                  className="w-full rounded-lg border border-white/15 bg-white/5 py-2 pl-9 pr-10 text-xs text-white placeholder-slate-400 outline-none backdrop-blur-md transition-all focus:border-emerald-400 focus:bg-white/10 light:border-black/15 light:bg-white light:text-slate-900 light:placeholder-slate-400 light:focus:border-emerald-600"
                 />
                 <button
                   type="submit"
                   aria-label="Subscribe"
-                  className="absolute right-1.5 flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500 text-slate-950 transition-all hover:scale-105 active:scale-95 shadow-[0_0_12px_rgba(16,185,129,0.4)]"
+                  className="absolute right-1 flex h-6 w-6 items-center justify-center rounded-md bg-emerald-500 text-slate-950 transition-all hover:scale-105 active:scale-95 shadow-[0_0_10px_rgba(16,185,129,0.4)]"
                 >
-                  <Send className="h-3.5 w-3.5 stroke-[2.5]" />
+                  <Send className="h-3 w-3 stroke-[2.5]" />
                 </button>
               </div>
               {subscribed && (
-                <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 light:text-emerald-700 animate-pulse">
-                  <CheckCircle2 className="h-3.5 w-3.5" />
-                  <span>Subscribed successfully to Nexora OS grid!</span>
+                <div className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 light:text-emerald-700 animate-pulse">
+                  <CheckCircle2 className="h-3 w-3" />
+                  <span>Subscribed successfully!</span>
                 </div>
               )}
             </form>
 
             {/* Social Icons Bar */}
-            <div className="mt-5 flex items-center gap-2">
+            <div className="mt-3.5 flex items-center gap-1.5">
               {[
                 { icon: Twitter, label: "X / Twitter", href: "#" },
                 { icon: Linkedin, label: "LinkedIn", href: "#" },
@@ -195,9 +195,9 @@ export function NextGenFooter() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-slate-300 shadow-md backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-emerald-400 hover:bg-emerald-500/20 hover:text-white light:border-black/10 light:bg-white light:text-slate-700 light:hover:border-emerald-600 light:hover:bg-emerald-100 light:hover:text-emerald-900"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-slate-300 shadow-sm backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-emerald-400 hover:bg-emerald-500/20 hover:text-white light:border-black/10 light:bg-white light:text-slate-700 light:hover:border-emerald-600 light:hover:bg-emerald-100 light:hover:text-emerald-900"
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-3.5 w-3.5" />
                 </a>
               ))}
             </div>
@@ -205,30 +205,30 @@ export function NextGenFooter() {
         </div>
 
         {/* Bottom Bar Divider */}
-        <div className="my-8 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent light:via-black/10" />
+        <div className="my-5 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent light:via-black/10" />
 
         {/* Bottom Copyright & Back to Top */}
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row text-center sm:text-left">
-          <p className="text-xs text-slate-400 light:text-slate-600">
-            © 2026 <span className="font-bold text-white light:text-slate-900">Nexora OS</span> · BITHM Academic Platform. All Rights Reserved.
-            <span className="block sm:inline sm:ml-2">
-              Developed by <a href="https://github.com/Moparapairayat" target="_blank" rel="noreferrer" className="font-extrabold text-emerald-400 hover:underline light:text-emerald-700">Mopara Pair Ayat</a> under supervision of Afsana Tabassum Tamishra.
+        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row text-center sm:text-left">
+          <p className="text-[11px] sm:text-xs text-slate-400 light:text-slate-600">
+            © 2026 <span className="font-bold text-white light:text-slate-900">Nexora OS</span> · BITHM. All Rights Reserved.
+            <span className="block sm:inline sm:ml-1.5">
+              Dev: <a href="https://github.com/Moparapairayat" target="_blank" rel="noreferrer" className="font-bold text-emerald-400 hover:underline light:text-emerald-700">Mopara Pair Ayat</a> (Supervised by Afsana Tabassum Tamishra).
             </span>
           </p>
 
-          <div className="flex items-center gap-3">
-            <span className="hidden text-xs font-semibold text-slate-400 sm:inline light:text-slate-600">
-              Designed for students. Built for institutions.
+          <div className="flex items-center gap-2.5">
+            <span className="hidden text-[11px] font-medium text-slate-400 sm:inline light:text-slate-600">
+              Designed for students.
             </span>
 
             {/* Back to Top Floating Button */}
             <button
               onClick={scrollToTop}
-              className="group flex h-9 w-9 items-center justify-center rounded-xl border border-emerald-400/30 bg-emerald-500/10 text-emerald-300 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-emerald-300 hover:bg-emerald-500 hover:text-slate-950 active:scale-95 light:border-emerald-800/25 light:bg-white light:text-emerald-800 light:hover:bg-emerald-600 light:hover:text-white"
+              className="group flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-500/10 text-emerald-300 shadow-md backdrop-blur-md transition-all duration-200 hover:scale-105 hover:border-emerald-300 hover:bg-emerald-500 hover:text-slate-950 active:scale-95 light:border-emerald-800/25 light:bg-white light:text-emerald-800 light:hover:bg-emerald-600 light:hover:text-white"
               title="Back to Top"
               aria-label="Back to Top"
             >
-              <ArrowUp className="h-4 w-4 stroke-[2.5] transition-transform duration-300 group-hover:-translate-y-0.5" />
+              <ArrowUp className="h-3.5 w-3.5 stroke-[2.5] transition-transform duration-200 group-hover:-translate-y-0.5" />
             </button>
           </div>
         </div>
