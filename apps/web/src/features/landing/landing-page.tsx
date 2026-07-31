@@ -437,11 +437,9 @@ export function LandingPage() {
         <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 md:grid-cols-2 md:px-8 lg:gap-16">
           <div className="relative w-full max-w-[560px]">
 
-            <div className="mb-4">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1 text-xs shadow-[0_2px_10px_rgba(16,185,129,0.1)] light:border-emerald-600/20 light:bg-emerald-50">
-                <span className="font-3d-neon-script text-xs sm:text-sm font-normal tracking-wide select-none !py-0 !px-0">
-                  Nexora OS · BITHM Academic Platform
-                </span>
+            <div className="mb-2 overflow-visible inline-block">
+              <span className="font-3d-neon-script text-sm sm:text-base font-normal tracking-wide select-none !py-0 !px-0">
+                Nexora OS · BITHM Academic Platform
               </span>
             </div>
             <h1 className="text-balance text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-5xl lg:text-[54px] text-white light:text-slate-800">
