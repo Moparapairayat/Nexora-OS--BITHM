@@ -1165,7 +1165,7 @@ export function LandingPage() {
           <ScrollReveal>
             <div>
               <div className="mb-2 overflow-visible inline-flex items-center justify-start max-w-full">
-                <span className="font-3d-neon-script text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+                <span className="font-3d-neon-script text-base xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal tracking-wide transform -rotate-2 select-none whitespace-nowrap">
                   Frequently Asked Questions
                 </span>
               </div>
