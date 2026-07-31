@@ -50,26 +50,8 @@ export function NextGenFooter() {
           </span>
         </div>
 
-        {/* Top Header Row: System Status & Live Network Badge */}
-        <div className="flex flex-col gap-3 border-b border-white/10 pb-5 sm:flex-row sm:items-center sm:justify-between light:border-black/10">
-          <div className="flex items-center gap-2.5">
-            <div className="relative flex h-2.5 w-2.5 items-center justify-center">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]" />
-            </div>
-            <span className="font-mono text-[11px] sm:text-xs font-semibold uppercase tracking-widest text-emerald-300 light:text-emerald-800">
-              All Systems Operational · Academic Grid v2.4
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 light:text-slate-600">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400 light:text-emerald-600" />
-            <span>Official BITHM Platform</span>
-          </div>
-        </div>
-
         {/* Middle Main Content Grid */}
-        <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 lg:gap-6">
+        <div className="mt-1 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-12 lg:gap-6">
           
           {/* Brand Info Column (Spans 4 columns) */}
           <div className="lg:col-span-4">
