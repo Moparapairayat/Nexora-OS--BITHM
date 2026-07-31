@@ -405,6 +405,30 @@ export function LandingPage() {
 
       {/* HERO SECTION */}
       <section id="about" className="landing-hero relative overflow-hidden pb-16 pt-32 sm:pt-36 lg:pb-20">
+        <style dangerouslySetInnerHTML={{
+          __html: `
+          @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+          .font-3d-neon-script {
+            font-family: 'Pacifico', cursive;
+            background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
+                    drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
+            line-height: 1.35;
+            padding: 0.15em 0.25em 0.35em;
+            display: inline-block;
+          }
+
+          .light .font-3d-neon-script {
+            background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
+          }
+        ` }} />
+
         <div className="landing-hero-arc-left nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75" />
         <div className="landing-hero-arc-right nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65" />
         <div className="pointer-events-none absolute -left-36 -bottom-10 z-0 h-[540px] w-[540px] rounded-full bg-amber-400/10 blur-[140px] light:bg-[#fce5cb]/80" />
@@ -414,8 +438,10 @@ export function LandingPage() {
           <div className="relative w-full max-w-[560px]">
 
             <div className="mb-4">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-emerald-300 shadow-[0_2px_10px_rgba(16,185,129,0.05)] light:border-emerald-600/15 light:bg-emerald-50 light:text-emerald-700">
-                Nexora OS · BITHM Academic Platform
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-1 text-xs shadow-[0_2px_10px_rgba(16,185,129,0.1)] light:border-emerald-600/20 light:bg-emerald-50">
+                <span className="font-3d-neon-script text-xs sm:text-sm font-normal tracking-wide select-none !py-0 !px-0">
+                  Nexora OS · BITHM Academic Platform
+                </span>
               </span>
             </div>
             <h1 className="text-balance text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-5xl lg:text-[54px] text-white light:text-slate-800">
