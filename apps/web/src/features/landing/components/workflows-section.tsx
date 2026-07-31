@@ -95,8 +95,8 @@ export function WorkflowsSection() {
             <ScrollReveal>
               <div>
                 {/* 3D Volumetric Script "How It Works" Headline */}
-                <div className="mb-2 overflow-visible inline-flex items-center justify-start">
-                  <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+                <div className="mb-2 overflow-visible inline-flex items-center justify-start max-w-full">
+                  <span className="font-3d-neon-script text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
                     How It Works
                   </span>
                 </div>

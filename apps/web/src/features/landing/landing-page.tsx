@@ -911,12 +911,12 @@ export function LandingPage() {
 
         <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-16">
           <div className="lg:self-center">
-            <div className="mb-2 overflow-visible inline-flex items-center justify-start">
-              <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+            <div className="mb-2 overflow-visible inline-flex items-center justify-start max-w-full">
+              <span className="font-3d-neon-script text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
                 Available now
               </span>
             </div>
-            <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
+            <h2 className="mt-2 max-w-xl text-balance text-3xl font-semibold leading-[1.1] tracking-[-0.04em] text-white sm:text-4xl md:text-5xl light:text-slate-900">
               Start with the tools available today
             </h2>
             <p className="mt-4 max-w-md text-sm leading-7 text-slate-400 sm:text-base light:text-slate-600">
@@ -1139,8 +1139,8 @@ export function LandingPage() {
         <div className="mx-auto grid max-w-7xl gap-12 px-5 md:px-8 lg:grid-cols-[0.8fr_1.2fr]">
           <ScrollReveal>
             <div>
-              <div className="mb-2 overflow-visible inline-flex items-center justify-start">
-                <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+              <div className="mb-2 overflow-visible inline-flex items-center justify-start max-w-full">
+                <span className="font-3d-neon-script text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
                   Frequently Asked Questions
                 </span>
               </div>

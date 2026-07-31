@@ -84,8 +84,8 @@ export function SectionHeading({ eyebrow, title, detail }: SectionHeadingProps) 
           filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
         }
       `}} />
-      <div className="overflow-visible inline-flex items-center justify-center">
-        <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+      <div className="overflow-visible inline-flex items-center justify-center max-w-full">
+        <span className="font-3d-neon-script text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none text-center">
           {eyebrow}
         </span>
       </div>

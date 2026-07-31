@@ -30,7 +30,7 @@ export function NextGenBrandDivider({
 
       {/* SVG Container */}
       <svg
-        className="relative block w-full h-14 sm:h-18 md:h-22"
+        className="relative block w-full h-8 sm:h-12 md:h-16 lg:h-20"
         viewBox="0 0 1440 180"
         preserveAspectRatio="none"
         fill="none"
