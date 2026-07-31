@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { ScrollReveal } from "./landing-primitives";
+import { NextGenBrandDivider } from "./nextgen-brand-divider";
 
 type WorkflowFeature = {
   title: string;
@@ -55,8 +56,35 @@ export function WorkflowsSection() {
   return (
     <section
       id="how-it-works"
-      className="relative overflow-hidden border-y border-white/8 bg-[#06100c] px-5 py-20 light:border-slate-200/80 light:bg-[#fbfdfc] sm:py-24 md:px-8"
+      className="relative overflow-hidden bg-[#06100c] px-5 py-20 light:bg-[#fbfdfc] sm:py-24 md:px-8"
     >
+      {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
+      <NextGenBrandDivider toBgColorClass="fill-[#020906] light:fill-[#f8fcf9]" badgeText="HOW IT WORKS" />
+      {/* 3D Script Font Style */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+        .font-3d-neon-script {
+          font-family: 'Pacifico', cursive;
+          background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
+                  drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
+          line-height: 1.35;
+          padding: 0.15em 0.25em 0.35em;
+          display: inline-block;
+        }
+
+        .light .font-3d-neon-script {
+          background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
+        }
+      `}} />
+
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute -left-20 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-emerald-500/10 blur-[120px] light:bg-emerald-500/6" />
 
@@ -66,13 +94,9 @@ export function WorkflowsSection() {
           <div className="lg:col-span-7">
             <ScrollReveal>
               <div>
-                {/* Top Decorative Dots & Pill Badge */}
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex items-center gap-1.5">
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 light:bg-[#1b5042]" />
-                    <span className="h-4 w-4 rounded-full bg-emerald-800/60 light:bg-[#b8dad0]" />
-                  </div>
-                  <span className="inline-flex items-center rounded-full border border-emerald-800/50 bg-emerald-950/80 px-4 py-1.5 text-xs sm:text-sm font-semibold text-emerald-300 shadow-sm light:border-transparent light:bg-[#e2efe9] light:text-[#1b5042]">
+                {/* 3D Volumetric Script "How It Works" Headline */}
+                <div className="mb-2 overflow-visible inline-flex items-center justify-start">
+                  <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
                     How It Works
                   </span>
                 </div>

@@ -30,6 +30,7 @@ import { ScrollReveal, SectionHeading } from "./components/landing-primitives";
 import { WorkflowsSection } from "./components/workflows-section";
 import { WhyNexoraSection } from "./components/why-nexora-section";
 import { TeamShowcaseSection } from "./components/team-showcase-section";
+import { NextGenBrandDivider } from "./components/nextgen-brand-divider";
 import { toolCardStyles } from "./landing-theme";
 
 const cardShape: Record<string, string> = {
@@ -316,8 +317,23 @@ export function LandingPage() {
     }, 600);
   };
 
-  // Auto-scrolling system
+  // Auto-scrolling system & Global drag safety
   useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      isDown.current = false;
+    };
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!isDown.current || !sliderRef.current) return;
+      e.preventDefault();
+      const x = e.pageX - sliderRef.current.offsetLeft;
+      const walk = (x - startX.current) * 1.5;
+      sliderRef.current.scrollLeft = scrollLeftVal.current - walk;
+    };
+
+    window.addEventListener("mouseup", handleGlobalMouseUp);
+    window.addEventListener("mousemove", handleGlobalMouseMove);
+
     if (isHovered || isDown.current) return;
 
     const interval = setInterval(() => {
@@ -333,7 +349,11 @@ export function LandingPage() {
       }
     }, 4000);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("mouseup", handleGlobalMouseUp);
+      window.removeEventListener("mousemove", handleGlobalMouseMove);
+    };
   }, [isHovered]);
 
   const scroll = (direction: "left" | "right") => {
@@ -374,20 +394,7 @@ export function LandingPage() {
   };
 
   const handleMouseLeave = () => {
-    isDown.current = false;
     setIsHovered(false);
-  };
-
-  const handleMouseUp = () => {
-    isDown.current = false;
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDown.current || !sliderRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX.current) * 1.5;
-    sliderRef.current.scrollLeft = scrollLeftVal.current - walk;
   };
 
   return (
@@ -519,10 +526,10 @@ export function LandingPage() {
           </div>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-4">
             {[
-              "/landing/mentor-modern/logos/bithm-logo.png?v=3",
+              "/landing/mentor-modern/logos/bithm-logo.png",
               "/landing/mentor-modern/logos/othm-logo.png",
-              "/landing/mentor-modern/logos/bithm-shield-logo.png?v=3",
-              "/landing/mentor-modern/logos/standard-logo.png?v=3",
+              "/landing/mentor-modern/logos/bithm-shield-logo.png",
+              "/landing/mentor-modern/logos/standard-logo.png",
               "/landing/mentor-modern/logos/koc.png",
             ].map((src, index) => {
               const isBithmText = src.includes("bithm-logo.png");
@@ -578,6 +585,27 @@ export function LandingPage() {
         <div className="relative w-full h-[90px] sm:h-[130px] mt-6 sm:mt-8 overflow-hidden select-none pointer-events-none z-20">
           <style dangerouslySetInnerHTML={{
             __html: `
+            @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+            .font-3d-neon-script {
+              font-family: 'Pacifico', cursive;
+              background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
+                      drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
+              line-height: 1.35;
+              padding: 0.15em 0.25em 0.35em;
+              display: inline-block;
+            }
+
+            .light .font-3d-neon-script {
+              background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
+            }
+
             @keyframes marquee-ltr {
               0% { transform: translateX(0); }
               100% { transform: translateX(-50%); }
@@ -665,6 +693,8 @@ export function LandingPage() {
         id="platform"
         className="relative z-10 overflow-hidden py-20 light:bg-[#f3f7f4] sm:py-24"
       >
+        {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
+        <NextGenBrandDivider toBgColorClass="fill-[#06100c] light:fill-[#fbfdfc]" badgeText="NEXORA OS" />
         <div className="absolute -left-32 top-24 h-80 w-80 rounded-full bg-emerald-500/9 blur-[120px]" />
         <div className="absolute -right-32 bottom-16 h-80 w-80 rounded-full bg-emerald-500/10 blur-[120px]" />
         <div className="relative mx-auto max-w-7xl px-5 md:px-8">
@@ -707,8 +737,6 @@ export function LandingPage() {
               onMouseDown={handleMouseDown}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={handleMouseLeave}
-              onMouseUp={handleMouseUp}
-              onMouseMove={handleMouseMove}
               className="flex gap-5 overflow-x-auto scrollbar-none snap-x snap-mandatory pb-6 cursor-grab active:cursor-grabbing select-none"
             >
               {platformAreas.map(({ title, detail, icon: Icon, tone, tools }, index) => {
@@ -866,6 +894,8 @@ export function LandingPage() {
       <WhyNexoraSection />
 
       <section id="available-now" className="relative overflow-hidden border-y border-white/8 bg-[#07100b] px-5 py-16 light:border-emerald-950/8 light:bg-[radial-gradient(circle_at_76%_40%,rgba(16,185,129,0.085),transparent_38%),linear-gradient(180deg,#ffffff_0%,#f8fbf9_100%)] md:px-8 sm:py-20">
+        {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
+        <NextGenBrandDivider toBgColorClass="fill-[#070d0a] light:fill-[#ffffff]" badgeText="AVAILABLE NOW" />
         <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-emerald-500/7 blur-[110px] light:bg-emerald-300/14" />
         <div
           aria-hidden="true"
@@ -881,11 +911,10 @@ export function LandingPage() {
 
         <div className="relative mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-16">
           <div className="lg:self-center">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-8 bg-emerald-300/65 light:bg-emerald-700/50" />
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-300 light:text-emerald-700">
+            <div className="mb-2 overflow-visible inline-flex items-center justify-start">
+              <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
                 Available now
-              </p>
+              </span>
             </div>
             <h2 className="mt-4 max-w-xl text-balance text-4xl font-semibold leading-[1.08] tracking-[-0.04em] text-white sm:text-5xl light:text-slate-900">
               Start with the tools available today
@@ -972,92 +1001,118 @@ export function LandingPage() {
           </div>
         </div>
       </section>
+      <section className="group/credential relative w-full overflow-hidden py-10 sm:py-14 bg-[#070d0a]">
+        {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
+        <NextGenBrandDivider toBgColorClass="fill-[#080e15] light:fill-[#f8fafc]" badgeText="ACADEMIC CREDENTIAL" />
 
-      <section className="relative px-5 py-10 md:px-8">
-        <div className="mx-auto max-w-7xl relative">
-          {/* Outer Compact Single Card */}
-          <div className="group/coursework relative rounded-2xl border border-emerald-500/20 light:border-emerald-700/20 bg-gradient-to-r from-[#0c1b14]/90 via-[#07120e]/95 to-[#0c1b14]/90 light:from-white light:via-[#f2f9f5] light:to-white backdrop-blur-xl p-6 sm:p-8 shadow-[0_16px_40px_rgba(4,20,13,0.35)] light:shadow-[0_12px_32px_rgba(16,185,129,0.08)] overflow-hidden">
-            {/* Ambient Background Glow */}
-            <div className="absolute -left-16 -top-16 w-64 h-64 rounded-full bg-emerald-500/10 light:bg-emerald-500/5 blur-3xl pointer-events-none" />
-            <div className="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-emerald-400/10 light:bg-emerald-400/5 blur-3xl pointer-events-none" />
+        {/* Full Background Image spanning full screen width */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/landing/gettyimages-2153780024-640x640.jpg"
+            alt="BITHM Academic Workspace"
+            fill
+            className="object-cover object-right md:object-[80%_center] opacity-100 transition-transform duration-700 group-hover/credential:scale-105"
+            priority
+          />
+          {/* Soft ambient gradient overlay on left for text legibility, leaving background image 100% bright & clear */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 via-40% to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent md:hidden" />
+        </div>
 
-            {/* Top Header Row */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-emerald-500/15 light:border-slate-200/80">
-              <div className="flex items-center gap-3.5">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-emerald-500/30 bg-emerald-500/10 light:bg-emerald-50 light:border-emerald-300 text-emerald-400 light:text-emerald-700 shadow-sm">
-                  <ShieldCheck className="h-5 w-5" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400 light:text-emerald-700">
-                      Official Academic Credential
-                    </span>
-                    <span className="inline-flex items-center rounded-full bg-emerald-500/15 px-2 py-0.5 text-[9px] font-bold text-emerald-300 light:bg-emerald-100 light:text-emerald-800">
-                      Verified
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold text-white light:text-slate-900 sm:text-xl">
-                    Developed for BITHM Academic Coursework
-                  </h3>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 light:text-slate-600 sm:text-right">
-                <span className="rounded-lg bg-white/5 light:bg-slate-100 px-3 py-1.5 border border-white/10 light:border-slate-200">
-                  Summer 2026 Submission
+        {/* Content Container aligned with standard page grid */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+          <ScrollReveal>
+            <div className="max-w-xl md:max-w-2xl">
+              {/* Bright Glowing 3D Script Headline */}
+              <div className="mb-2 overflow-visible inline-flex items-center justify-start">
+                <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none !bg-[linear-gradient(180deg,#f7fee7_0%,#bef264_35%,#84cc16_70%,#3f6212_100%)] ![-webkit-text-fill-color:transparent] ![-webkit-background-clip:text] filter drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                  Academic Excellence
                 </span>
+              </div>
+
+              {/* Main Title */}
+              <h2 className="mt-2 text-balance text-2xl font-black leading-[1.12] tracking-tight !text-white sm:text-3xl md:text-4xl lg:text-[40px] drop-shadow-md">
+                Developed for BITHM Academic Coursework
+              </h2>
+
+              {/* Subtitle */}
+              <p className="mt-3 max-w-xl text-xs sm:text-sm leading-relaxed !text-slate-200 font-medium drop-shadow">
+                Official coursework submission for BITHM College of Professionals. Designed & built by Mopara Pair Ayat under supervision of Afsana Tabassum Tamishra.
+              </p>
+
+              {/* Action Buttons */}
+              <div className="mt-6 flex flex-wrap items-center gap-3.5">
+                <Link
+                  href="/login?role=student"
+                  className="group/btn inline-flex items-center gap-2.5 rounded-full border border-emerald-400/40 bg-[#044b3b] px-6 py-3 text-xs font-extrabold !text-white shadow-xl shadow-emerald-950/50 transition-all duration-300 hover:scale-105 hover:bg-[#033b2e]"
+                >
+                  <span className="font-extrabold !text-white">Become A Student</span>
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#ff5500] !text-white shadow-md transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12">
+                    <ArrowRight className="h-4 w-4 stroke-[2.5] !text-white" />
+                  </span>
+                </Link>
+
+                <Link
+                  href="/login?role=teacher"
+                  className="group/btn inline-flex items-center gap-2.5 rounded-full border border-white/40 bg-white/10 px-6 py-3 text-xs font-extrabold !text-white shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-105 hover:bg-white/20"
+                >
+                  <span className="font-extrabold !text-white">Become A Teacher</span>
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white !text-[#06100c] shadow-md transition-transform duration-300 group-hover/btn:scale-110 group-hover/btn:rotate-12">
+                    <ArrowRight className="h-4 w-4 stroke-[2.5] !text-[#06100c]" />
+                  </span>
+                </Link>
               </div>
             </div>
 
-            {/* Bottom 4-Column Metadata Grid */}
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Bottom Metadata Grid (Clean Frameless Dividers) */}
+            <div className="mt-8 grid grid-cols-1 gap-4 border-t border-white/20 pt-6 sm:grid-cols-2 lg:grid-cols-4">
               {/* Institution */}
-              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
-                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+              <div className="border-l-2 border-emerald-400/80 pl-3">
+                <p className="text-[9.5px] font-extrabold uppercase tracking-wider text-emerald-400">
                   Institution
                 </p>
-                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                <p className="mt-0.5 text-xs font-extrabold !text-white truncate drop-shadow">
                   BITHM College of Professionals
                 </p>
-                <p className="text-[11px] text-slate-400 light:text-slate-500">Academic Partner</p>
+                <p className="text-[10.5px] !text-slate-300 font-medium">Academic Partner</p>
               </div>
 
               {/* Student */}
-              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
-                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+              <div className="border-l-2 border-emerald-400/80 pl-3">
+                <p className="text-[9.5px] font-extrabold uppercase tracking-wider text-emerald-400">
                   Student
                 </p>
-                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                <p className="mt-0.5 text-xs font-extrabold !text-white truncate drop-shadow">
                   Mopara Pair Ayat
                 </p>
-                <p className="text-[11px] text-slate-400 light:text-slate-500">ID: IT202510001</p>
+                <p className="text-[10.5px] !text-slate-300 font-medium">ID: IT202510001</p>
               </div>
 
               {/* Instructor */}
-              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
-                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+              <div className="border-l-2 border-emerald-400/80 pl-3">
+                <p className="text-[9.5px] font-extrabold uppercase tracking-wider text-emerald-400">
                   Instructor
                 </p>
-                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                <p className="mt-0.5 text-xs font-extrabold !text-white truncate drop-shadow">
                   Afsana Tabassum Tamishra
                 </p>
-                <p className="text-[11px] text-slate-400 light:text-slate-500">Lecturer · Dept. of IT</p>
+                <p className="text-[10.5px] !text-slate-300 font-medium">Lecturer - Dept. of IT</p>
               </div>
 
               {/* Course */}
-              <div className="rounded-xl border border-white/8 light:border-slate-200/80 bg-white/[0.03] light:bg-white/80 p-3.5 transition hover:border-emerald-500/30 light:hover:border-emerald-300">
-                <p className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-400 light:text-emerald-700">
+              <div className="border-l-2 border-emerald-400/80 pl-3">
+                <p className="text-[9.5px] font-extrabold uppercase tracking-wider text-emerald-400">
                   Course
                 </p>
-                <p className="mt-1 text-sm font-bold text-white light:text-slate-800 truncate">
+                <p className="mt-0.5 text-xs font-extrabold !text-white truncate drop-shadow">
                   Web & Mobile Applications
                 </p>
-                <p className="text-[11px] text-slate-400 light:text-slate-500">OTHM Unit H/650/3385</p>
+                <p className="text-[10.5px] !text-slate-300 font-medium">OTHM Unit H/650/3385</p>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
-
 
       <TeamShowcaseSection />
       <section
@@ -1307,7 +1362,7 @@ export function LandingPage() {
         <PandaCTA />
       </ScrollReveal>
 
-      <footer id="site-footer" className="px-5 py-12 md:px-8 bg-[#07100b] light:bg-[#e5eee8]">
+      <footer id="contact" className="px-5 py-12 md:px-8 bg-[#07100b] light:bg-[#e5eee8]">
         <style dangerouslySetInnerHTML={{
           __html: `
           .footer-card {

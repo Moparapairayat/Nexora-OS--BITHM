@@ -14,29 +14,37 @@ export function LandingNav() {
   const [activeSection, setActiveSection] = useState("#about");
 
   useEffect(() => {
+    let ticking = false;
+
     const handlePageScroll = () => {
-      // 1. Calculate vertical page scroll progress percentage
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-      setPageScrollProgress(progress);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          // 1. Calculate vertical page scroll progress percentage
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+          setPageScrollProgress(progress);
 
-      // 2. Scroll spy to detect active section
-      const sections = ["about", "platform", "how-it-works", "download", "team", "faq", "contact"];
-      let currentSection = "";
+          // 2. Scroll spy to detect active section
+          const sections = ["about", "platform", "how-it-works", "download", "team", "faq", "contact"];
+          let currentSection = "";
 
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          // Detect active section if top is above 35% of viewport height
-          if (rect.top <= window.innerHeight * 0.35) {
-            currentSection = `#${sectionId}`;
+          for (const sectionId of sections) {
+            const el = document.getElementById(sectionId);
+            if (el) {
+              const rect = el.getBoundingClientRect();
+              // Detect active section if top is above 35% of viewport height
+              if (rect.top <= window.innerHeight * 0.35) {
+                currentSection = `#${sectionId}`;
+              }
+            }
           }
-        }
-      }
 
-      setActiveSection(currentSection || "#about");
+          setActiveSection(currentSection || "#about");
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     window.addEventListener("scroll", handlePageScroll, { passive: true });

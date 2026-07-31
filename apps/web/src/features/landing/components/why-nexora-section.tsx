@@ -12,11 +12,13 @@ import {
 import Image from "next/image";
 
 import { ScrollReveal } from "./landing-primitives";
+import { NextGenBrandDivider } from "./nextgen-brand-divider";
 
 type Benefit = {
   detail: string;
   icon: LucideIcon;
   title: string;
+  customImage?: string;
 };
 
 const leftBenefits: Benefit[] = [
@@ -24,16 +26,19 @@ const leftBenefits: Benefit[] = [
     title: "Coursework stays structured",
     detail: "Briefs, evidence, and reports remain together.",
     icon: FileCheck2,
+    customImage: "/landing/icons/coursework-structured-v2.png",
   },
   {
     title: "Lab work keeps its context",
     detail: "Code, testing, and documentation follow one flow.",
     icon: FlaskConical,
+    customImage: "/landing/icons/lab-work.png",
   },
   {
     title: "Feedback points forward",
     detail: "Every comment leads to a clear next step.",
     icon: MessageSquareText,
+    customImage: "/landing/icons/feedback.png",
   },
 ];
 
@@ -42,16 +47,19 @@ const rightBenefits: Benefit[] = [
     title: "A workspace for every role",
     detail: "Students, teachers, and admins see what matters.",
     icon: UsersRound,
+    customImage: "/landing/icons/workspace-role.png",
   },
   {
     title: "Practical tools, ready when needed",
     detail: "Work moves from planning to building without clutter.",
     icon: Braces,
+    customImage: "/landing/icons/practical-tools.png",
   },
   {
     title: "Progress stays easy to follow",
     detail: "Deadlines, revisions, and submissions remain visible.",
     icon: ChartNoAxesCombined,
+    customImage: "/landing/icons/progress-chart.png",
   },
 ];
 
@@ -60,24 +68,35 @@ function BenefitItem({ benefit, side, index }: { benefit: Benefit; side: "left" 
 
   return (
     <div
-      className={`relative flex min-h-[106px] items-center gap-4 overflow-hidden rounded-2xl border border-white/14 bg-white/[0.055] px-5 py-4 shadow-[0_18px_42px_rgba(0,0,0,0.18)] backdrop-blur-xl sm:px-6 light:border-emerald-900/12 light:bg-white/76 light:shadow-[0_18px_40px_rgba(32,78,52,0.09)] ${
+      className={`group flex items-start gap-4 sm:gap-5 transition-transform duration-300 hover:translate-x-1 ${
         side === "left" ? "lg:flex-row-reverse lg:text-right" : "lg:text-left"
       }`}
     >
-      <span className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/45 to-transparent light:via-emerald-700/24" />
-      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-emerald-300/18 bg-emerald-300/8 text-emerald-200 shadow-[inset_0_0_18px_rgba(52,211,153,0.08)] light:border-emerald-700/14 light:bg-emerald-100/80 light:text-emerald-700 light:shadow-none">
-        <Icon className="h-[19px] w-[19px]" />
-      </span>
-      <div className="min-w-0 flex-1">
+      {/* Circular Icon Container matching How It Works section */}
+      <div className="flex h-14 w-14 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-full border border-emerald-500/20 bg-[#0e241c] text-emerald-400 shadow-md transition-all duration-300 group-hover:scale-105 group-hover:bg-emerald-900/60 light:border-transparent light:bg-[#e2efe9] light:text-[#1b5042] light:group-hover:bg-[#d4e8df]">
+        {benefit.customImage ? (
+          <Image
+            src={benefit.customImage}
+            alt={benefit.title}
+            width={40}
+            height={40}
+            className="h-9 w-9 sm:h-10 sm:w-10 object-contain"
+          />
+        ) : (
+          <Icon className="h-7 w-7 stroke-[2.2]" />
+        )}
+      </div>
+
+      <div className="min-w-0 flex-1 pt-0.5">
         <div className={`flex items-center gap-2 ${side === "left" ? "lg:justify-end" : ""}`}>
-          <span className="font-mono text-[9px] font-semibold tracking-[0.12em] text-emerald-300/55 light:text-emerald-700/60">
+          <span className="inline-flex items-center justify-center rounded-full border border-emerald-500/30 bg-emerald-950/80 px-2.5 py-0.5 font-mono text-[10px] font-extrabold text-emerald-300 shadow-sm light:border-transparent light:bg-[#e2efe9] light:text-[#1b5042]">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <h3 className="text-base font-semibold leading-5 tracking-[-0.02em] text-white sm:text-[1.05rem] light:text-slate-900">
+          <h3 className="text-base sm:text-lg font-bold text-white transition-colors duration-300 group-hover:text-emerald-300 light:text-slate-900 light:group-hover:text-[#1b5042]">
             {benefit.title}
           </h3>
         </div>
-        <p className="mt-2 text-xs leading-5 text-slate-300/68 sm:text-[13px] light:text-slate-600">
+        <p className="mt-1 text-xs sm:text-sm leading-snug text-slate-400 light:text-slate-600">
           {benefit.detail}
         </p>
       </div>
@@ -87,8 +106,8 @@ function BenefitItem({ benefit, side, index }: { benefit: Benefit; side: "left" 
 
 function NexoraOrbit({ idPrefix }: { idPrefix: string }) {
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[440px]">
-      <div className="pointer-events-none absolute inset-[14%] rounded-full bg-emerald-400/16 blur-[70px] light:bg-cyan-300/20" />
+    <div className="relative mx-auto aspect-square w-full max-w-[370px]">
+      <div className="pointer-events-none absolute inset-[14%] rounded-full bg-emerald-400/16 blur-[60px] light:bg-cyan-300/20" />
       <svg
         aria-hidden="true"
         className="absolute inset-0 h-full w-full"
@@ -126,25 +145,73 @@ function NexoraOrbit({ idPrefix }: { idPrefix: string }) {
         </g>
       </svg>
 
-      <div className="absolute left-1/2 top-1/2 grid h-[92px] w-[92px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[28px] border border-white/18 bg-[#04120d]/78 shadow-[0_20px_55px_rgba(0,0,0,0.34)] backdrop-blur-xl light:border-emerald-900/12 light:bg-white/88 light:shadow-[0_18px_42px_rgba(31,91,57,0.16)]">
+      <div className="absolute left-1/2 top-1/2 grid h-[84px] w-[84px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[24px] border border-white/18 bg-[#04120d]/78 shadow-[0_18px_48px_rgba(0,0,0,0.34)] backdrop-blur-xl light:border-emerald-900/12 light:bg-white/88 light:shadow-[0_16px_36px_rgba(31,91,57,0.16)]">
         <Image
           src="/brand/nexora-os-icon.png"
           alt=""
-          width={52}
-          height={52}
-          className="h-12 w-12 object-contain"
+          width={46}
+          height={46}
+          className="h-11 w-11 object-contain"
         />
       </div>
 
-      <span className="absolute left-[6%] top-[18%] rounded-full border border-white/12 bg-[#06140f]/72 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-100 backdrop-blur-md light:border-cyan-800/14 light:bg-white/88 light:text-cyan-800">
+      <span className="absolute left-[6%] top-[18%] rounded-full border border-white/12 bg-[#06140f]/72 px-3 py-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-cyan-100 backdrop-blur-md light:border-cyan-800/14 light:bg-white/88 light:text-cyan-800">
         Brief
       </span>
-      <span className="absolute right-[2%] top-[47%] rounded-full border border-white/12 bg-[#06140f]/72 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald-100 backdrop-blur-md light:border-emerald-800/14 light:bg-white/88 light:text-emerald-800">
+      <span className="absolute right-[2%] top-[47%] rounded-full border border-white/12 bg-[#06140f]/72 px-3 py-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-emerald-100 backdrop-blur-md light:border-emerald-800/14 light:bg-white/88 light:text-emerald-800">
         Build
       </span>
-      <span className="absolute bottom-[13%] left-[9%] rounded-full border border-white/12 bg-[#06140f]/72 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-lime-100 backdrop-blur-md light:border-lime-800/14 light:bg-white/88 light:text-lime-800">
+      <span className="absolute bottom-[13%] left-[9%] rounded-full border border-white/12 bg-[#06140f]/72 px-3 py-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-lime-100 backdrop-blur-md light:border-lime-800/14 light:bg-white/88 light:text-lime-800">
         Review
       </span>
+    </div>
+  );
+}
+
+function NextGenCyberDividerTop() {
+  return (
+    <div className="pointer-events-none absolute left-0 right-0 top-0 z-20 w-full overflow-hidden leading-none select-none">
+      <svg className="relative block w-full h-12 sm:h-16 md:h-20" viewBox="0 0 1440 160" preserveAspectRatio="none" fill="none">
+        <defs>
+          <linearGradient id="nextgen-why-top-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0.8" />
+            <stop offset="35%" stopColor="#06b6d4" stopOpacity="1" />
+            <stop offset="70%" stopColor="#84cc16" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#34d399" stopOpacity="0.7" />
+          </linearGradient>
+          <filter id="laser-glow-why-top" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="7" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+
+        {/* Ambient Laser Glow Backing Cut */}
+        <path
+          d="M0,0 L0,75 C240,150 480,-10 720,90 C960,190 1200,20 1440,70 L1440,0 Z"
+          fill="url(#nextgen-why-top-grad)"
+          opacity="0.3"
+          filter="url(#laser-glow-why-top)"
+        />
+
+        {/* Main Solid Cut Body matching top section background */}
+        <path
+          d="M0,0 L0,48 C240,120 480,-20 720,70 C960,160 1200,10 1440,50 L1440,0 Z"
+          className="fill-[#040b08] light:fill-[#ffffff]"
+        />
+
+        {/* Glowing Laser Circuit Trace Line */}
+        <path
+          d="M0,49 C240,121 480,-19 720,71 C960,161 1200,11 1440,51"
+          stroke="url(#nextgen-why-top-grad)"
+          strokeWidth="2.5"
+          fill="none"
+        />
+
+        {/* Pulsing Cyber Particle Nodes */}
+        <circle cx="240" cy="121" r="5" fill="#34d399" className="animate-pulse" />
+        <circle cx="720" cy="71" r="6" fill="#06b6d4" className="animate-pulse" />
+        <circle cx="1200" cy="11" r="5" fill="#a3e635" className="animate-pulse" />
+      </svg>
     </div>
   );
 }
@@ -155,72 +222,92 @@ export function WhyNexoraSection() {
   return (
     <section
       id="why-nexora"
-      className="relative overflow-hidden border-y border-emerald-300/10 bg-[radial-gradient(circle_at_50%_48%,rgba(6,182,212,0.13),transparent_28%),radial-gradient(circle_at_18%_50%,rgba(16,185,129,0.1),transparent_30%),linear-gradient(180deg,#020906_0%,#03110c_100%)] px-5 py-20 text-white sm:py-24 md:px-8 light:border-emerald-900/10 light:bg-[radial-gradient(circle_at_50%_46%,rgba(34,211,238,0.15),transparent_29%),radial-gradient(circle_at_17%_48%,rgba(16,185,129,0.12),transparent_31%),linear-gradient(180deg,#f8fcf9_0%,#eaf5ee_100%)] light:text-slate-900"
+      className="relative overflow-hidden bg-[radial-gradient(circle_at_50%_48%,rgba(6,182,212,0.13),transparent_28%),radial-gradient(circle_at_18%_50%,rgba(16,185,129,0.1),transparent_30%),linear-gradient(180deg,#020906_0%,#03110c_100%)] px-5 py-14 sm:py-16 md:px-8 light:bg-[radial-gradient(circle_at_50%_46%,rgba(34,211,238,0.15),transparent_29%),radial-gradient(circle_at_17%_48%,rgba(16,185,129,0.12),transparent_31%),linear-gradient(180deg,#f8fcf9_0%,#eaf5ee_100%)] light:text-slate-900"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/55 to-transparent light:via-emerald-700/30" />
+      {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
+      <NextGenBrandDivider toBgColorClass="fill-[#07100b] light:fill-[#ffffff]" badgeText="WHY NEXORA" />
+
       <div className="pointer-events-none absolute left-1/2 top-[46%] h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/6 light:border-emerald-900/7" />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.13] light:opacity-[0.1]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(110,231,183,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(110,231,183,0.18) 1px, transparent 1px)",
-          backgroundSize: "54px 54px",
-          maskImage: "radial-gradient(circle at center, black, transparent 76%)",
-        }}
-      />
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+        .font-3d-neon-script {
+          font-family: 'Pacifico', cursive;
+          background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
+                  drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
+          line-height: 1.35;
+          padding: 0.15em 0.25em 0.35em;
+          display: inline-block;
+        }
+
+        .light .font-3d-neon-script {
+          background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
+        }
+      `}} />
 
       <div className="relative mx-auto max-w-[1320px]">
         <ScrollReveal>
-          <div className="mx-auto max-w-5xl text-center">
-            <div className="flex items-center justify-center gap-3 text-xs font-semibold text-emerald-200 light:text-emerald-700">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 light:bg-emerald-600" />
-              <span>Why Nexora</span>
-              <span className="h-2 w-2 rounded-full bg-emerald-400 light:bg-emerald-600" />
+          <div className="mx-auto max-w-4xl text-center">
+            {/* 3D Volumetric Script "Why Nexora" Headline */}
+            <div className="overflow-visible inline-flex items-center justify-center">
+              <span className="font-3d-neon-script text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-normal tracking-wide transform -rotate-2 select-none">
+                Why Nexora
+              </span>
             </div>
 
-            <h2 className="mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-balance text-4xl font-semibold leading-[1.04] tracking-[-0.045em] text-white sm:text-5xl lg:text-[4rem] light:text-slate-900">
-              <span>One workspace</span>
-              <span className="grid h-12 w-12 place-items-center rounded-2xl border border-white/15 bg-white/7 sm:h-14 sm:w-14 light:border-emerald-900/12 light:bg-white/80 light:shadow-[0_10px_28px_rgba(31,91,57,0.12)]">
-                <Image src="/brand/nexora-os-icon.png" alt="" width={34} height={34} className="h-8 w-8 object-contain sm:h-9 sm:w-9" />
+            <h2 className="mt-3 flex flex-wrap items-center justify-center gap-x-3.5 gap-y-1.5 text-balance text-3xl font-black leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-[3.2rem] light:text-slate-900">
+              <span className="font-extrabold tracking-tight">One workspace</span>
+              <span className="relative grid h-10 w-10 place-items-center rounded-xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 p-1.5 shadow-[0_0_20px_rgba(52,211,153,0.25)] backdrop-blur-xl sm:h-12 sm:w-12 light:border-emerald-600/20 light:bg-white/90 light:shadow-[0_8px_22px_rgba(31,91,57,0.15)]">
+                <Image src="/brand/nexora-os-icon.png" alt="" width={30} height={30} className="h-7 w-7 object-contain sm:h-8 sm:w-8" />
               </span>
-              <span>every step connected.</span>
+              <span className="bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300 bg-clip-text text-transparent drop-shadow-[0_0_18px_rgba(52,211,153,0.3)] light:from-emerald-700 light:via-teal-600 light:to-emerald-800">
+                every step connected.
+              </span>
             </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 text-slate-300/74 sm:text-base light:text-slate-600">
-              Coursework, practical tools, feedback, and progress stay in the same academic context.
+
+            <p className="mx-auto mt-3 max-w-xl text-xs font-medium leading-relaxed text-slate-300/85 sm:text-sm light:text-slate-600">
+              Coursework, practical code tools, instructor feedback, and progress stay in one unified academic context.
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="mt-12 hidden items-center gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(360px,0.9fr)_minmax(0,1fr)] xl:gap-12">
-          <div className="space-y-6">
+        <div className="mt-8 hidden items-center gap-7 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.9fr)_minmax(0,1fr)] xl:gap-10">
+          <div className="space-y-4.5">
             {leftBenefits.map((benefit, index) => (
-              <ScrollReveal key={benefit.title} delay={index * 90}>
+              <ScrollReveal key={benefit.title} delay={index * 60}>
                 <BenefitItem benefit={benefit} side="left" index={index} />
               </ScrollReveal>
             ))}
           </div>
 
-          <ScrollReveal delay={100}>
+          <ScrollReveal delay={80}>
             <NexoraOrbit idPrefix="desktop-nexora" />
           </ScrollReveal>
 
-          <div className="space-y-6">
+          <div className="space-y-4.5">
             {rightBenefits.map((benefit, index) => (
-              <ScrollReveal key={benefit.title} delay={(index + 1) * 90}>
+              <ScrollReveal key={benefit.title} delay={(index + 1) * 60}>
                 <BenefitItem benefit={benefit} side="right" index={index + 3} />
               </ScrollReveal>
             ))}
           </div>
         </div>
 
-        <div className="mt-10 lg:hidden">
+        <div className="mt-8 lg:hidden">
           <ScrollReveal>
             <NexoraOrbit idPrefix="mobile-nexora" />
           </ScrollReveal>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-4 grid gap-3.5 sm:grid-cols-2">
             {mobileBenefits.map((benefit, index) => (
-              <ScrollReveal key={benefit.title} delay={(index % 2) * 80}>
+              <ScrollReveal key={benefit.title} delay={(index % 2) * 60}>
                 <BenefitItem benefit={benefit} side="right" index={index} />
               </ScrollReveal>
             ))}
