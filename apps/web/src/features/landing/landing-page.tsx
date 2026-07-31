@@ -456,13 +456,15 @@ export function LandingPage() {
 
             <div className="relative mt-8 flex flex-wrap items-center gap-4 z-10">
               <div className="relative inline-block">
-                <div className="pointer-events-none absolute top-1/2 -left-6 h-[72px] w-[72px] -translate-y-1/2 rounded-full bg-accent-solid/16 blur-[24px]" />
+                <div className="pointer-events-none absolute top-1/2 -left-6 h-[72px] w-[72px] -translate-y-1/2 rounded-full bg-emerald-500/20 blur-[24px]" />
                 <Link
                   href="/login"
-                  className="relative z-10 inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-emerald-300/15 bg-accent-solid px-6 text-sm font-semibold !text-white shadow-[0_12px_28px_rgba(var(--theme-emerald-rgb-raw),0.22)] hover:bg-accent-solid-hover light:bg-accent-solid light:!text-white light:hover:bg-accent-solid-hover"
+                  className="group relative z-10 inline-flex items-center gap-3.5 rounded-full border border-emerald-400/40 bg-[#044b3b] pl-6 pr-2 py-2 text-sm sm:text-base font-extrabold !text-white shadow-[0_12px_28px_rgba(4,75,59,0.4)] transition-all duration-300 hover:scale-[1.03] hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98]"
                 >
-                  Login
-                  <ArrowRight className="h-4 w-4" />
+                  <span>Login</span>
+                  <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-[#ff5500] text-white shadow-[0_4px_12px_rgba(255,85,0,0.4)] transition-transform duration-300 group-hover:scale-105 group-hover:translate-x-0.5">
+                    <ArrowRight className="h-4 w-4 stroke-[2.5]" />
+                  </span>
                 </Link>
               </div>
               <a
