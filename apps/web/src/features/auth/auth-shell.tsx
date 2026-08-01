@@ -19,7 +19,10 @@ export function AuthShell({
   mode: "login" | "register";
 }) {
   return (
-    <main className="relative grid min-h-dvh w-full place-items-center overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6 md:px-8 bg-[radial-gradient(circle_at_50%_0%,rgba(var(--theme-accent-primary-rgb-raw),0.16),transparent_50rem),linear-gradient(180deg,rgba(6,10,8,0.98)_0%,rgba(4,6,5,1)_100%)] light:bg-[linear-gradient(135deg,#f9fdf8_0%,#fffdf3_46%,#edf9f3_100%)]">
+    <main
+      style={{ background: "var(--theme-page-aura), var(--theme-page-bg)" }}
+      className="relative grid min-h-dvh w-full place-items-center overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6 md:px-8 transition-colors duration-500 light:bg-[linear-gradient(135deg,#f9fdf8_0%,#fffdf3_46%,#edf9f3_100%)]"
+    >
       <AuthBackgroundBranding />
 
       <div className="absolute right-3 top-4 z-30 sm:right-5 sm:top-8">
