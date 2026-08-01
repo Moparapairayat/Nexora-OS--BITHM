@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -272,21 +271,6 @@ export function LandingNav() {
       ` }} />
       <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(var(--theme-accent-primary-rgb-raw),0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(var(--theme-accent-primary-rgb-raw),0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-white/75 light:bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(236,253,245,0.62)),rgba(255,255,255,0.68)] light:shadow-[inset_0_1px_0_rgba(255,255,255,0.96),0_14px_38px_rgba(31,67,49,0.11),0_0_28px_rgba(var(--theme-emerald-rgb-raw),0.06)]">
         <div className="relative flex shrink-0 items-center">
-          {/* Floating Decorative Parachute Shape near Header Logo */}
-          <motion.div
-            animate={{ y: [0, -6, 0], rotate: [0, 5, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="pointer-events-none absolute -top-8 -left-3 sm:-top-9 sm:-left-5 z-20 opacity-90 drop-shadow-md"
-          >
-            <Image
-              src="/landing/shape-03.png"
-              alt="Decorative parachute shape"
-              width={48}
-              height={66}
-              className="h-9 w-auto sm:h-11 object-contain"
-            />
-          </motion.div>
-
           <Link href="/" aria-label="Nexora OS home">
             <NexoraLogo size="md" priority className="h-8 w-[124px] sm:h-10 sm:w-[158px]" />
           </Link>

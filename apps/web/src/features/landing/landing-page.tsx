@@ -517,7 +517,7 @@ export function LandingPage() {
             <motion.div
               animate={{ y: [0, 12, 0], rotate: [0, -8, 0] }}
               transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-              className="pointer-events-none absolute -top-4 -right-4 sm:-top-8 sm:-right-8 z-30 drop-shadow-xl"
+              className="pointer-events-none absolute -top-4 -right-4 sm:-top-8 sm:-right-8 z-30 hidden sm:block drop-shadow-xl"
             >
               <Image
                 src="/landing/shape-03.png"
