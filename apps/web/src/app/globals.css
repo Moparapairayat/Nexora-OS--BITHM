@@ -1,5 +1,5 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import "tailwindcss";
 
 .font-3d-neon-script {
   font-family: 'Pacifico', cursive;
