@@ -420,7 +420,10 @@ export function LandingPage() {
   };
 
   return (
-    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(var(--theme-accent-primary-rgb-raw),0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_12%_85%,rgba(252,228,198,0.55),transparent_42%),radial-gradient(circle_at_88%_12%,rgba(195,236,220,0.65),transparent_45%),linear-gradient(130deg,#fcf8f3_0%,#f5faf7_50%,#f2f8f5_100%)] light:text-[#15251f]">
+    <main
+      style={{ background: "var(--theme-page-aura), var(--theme-page-bg)" }}
+      className="relative min-h-screen overflow-x-clip text-white transition-colors duration-500 light:bg-[radial-gradient(circle_at_12%_85%,rgba(252,228,198,0.55),transparent_42%),radial-gradient(circle_at_88%_12%,rgba(195,236,220,0.65),transparent_45%),linear-gradient(130deg,#fcf8f3_0%,#f5faf7_50%,#f2f8f5_100%)] light:text-[#15251f]"
+    >
       <div className="absolute inset-0 bg-dot-grid pointer-events-none z-0" />
       <LandingNav />
 

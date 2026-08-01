@@ -225,7 +225,8 @@ export function WhyNexoraSection() {
   return (
     <section
       id="why-nexora"
-      className="relative overflow-hidden bg-[radial-gradient(circle_at_50%_48%,rgba(6,182,212,0.13),transparent_28%),radial-gradient(circle_at_18%_50%,rgba(16,185,129,0.1),transparent_30%),linear-gradient(180deg,#020906_0%,#03110c_100%)] px-5 py-14 sm:py-16 md:px-8 light:bg-[radial-gradient(circle_at_50%_46%,rgba(34,211,238,0.15),transparent_29%),radial-gradient(circle_at_17%_48%,rgba(16,185,129,0.12),transparent_31%),linear-gradient(180deg,#f8fcf9_0%,#eaf5ee_100%)] light:text-slate-900"
+      style={{ background: "var(--theme-page-bg)" }}
+      className="relative overflow-hidden px-5 py-14 sm:py-16 md:px-8 transition-colors duration-500 light:bg-[radial-gradient(circle_at_50%_46%,rgba(34,211,238,0.15),transparent_29%),radial-gradient(circle_at_17%_48%,rgba(16,185,129,0.12),transparent_31%),linear-gradient(180deg,#f8fcf9_0%,#eaf5ee_100%)] light:text-slate-900"
     >
       {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
       <NextGenBrandDivider toBgColorClass="fill-[#07100b] light:fill-[#ffffff]" badgeText="WHY NEXORA" />
