@@ -153,7 +153,7 @@ export function RoleTabs<TValue extends string>({
     <div
       role="tablist"
       aria-label="Account role"
-      className="grid min-w-0 gap-1 rounded-lg sm:rounded-2xl border border-[var(--line)] bg-black/20 p-1 light:border-emerald-100 light:bg-emerald-50/70"
+      className="grid min-w-0 gap-1 rounded-lg sm:rounded-2xl border border-[var(--line)] bg-black/25 p-1 light:border-slate-200 light:bg-slate-200/60"
       style={{
         gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))`,
       }}
@@ -168,12 +168,7 @@ export function RoleTabs<TValue extends string>({
             role="tab"
             aria-selected={active}
             tabIndex={active ? 0 : -1}
-            className={cn(
-              "nexora-focus relative h-11 sm:h-12 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition",
-              active
-                ? "text-[#07100b] light:text-white"
-                : "text-[var(--muted)] hover:text-[var(--foreground)] light:text-slate-600 light:hover:text-emerald-900",
-            )}
+            className="nexora-focus relative h-11 sm:h-12 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-colors duration-200"
             onClick={() => onChange(option.value)}
           >
             {active ? (
@@ -183,7 +178,16 @@ export function RoleTabs<TValue extends string>({
                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
               />
             ) : null}
-            <span className="relative font-bold text-slate-950 light:text-white">{option.label}</span>
+            <span
+              className={cn(
+                "relative z-10 transition-colors duration-200 font-bold",
+                active
+                  ? "text-slate-950 dark:text-slate-950 light:text-white"
+                  : "text-slate-300 hover:text-white light:text-slate-700 light:hover:text-slate-950"
+              )}
+            >
+              {option.label}
+            </span>
           </button>
         );
       })}
