@@ -118,32 +118,32 @@ function NexoraOrbit({ idPrefix }: { idPrefix: string }) {
       >
         <defs>
           <linearGradient id={`${idPrefix}-orbit-a`} x1="95" y1="86" x2="421" y2="224" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#2563EB" stopOpacity="0.7" />
-            <stop offset="0.52" stopColor="#0EA5E9" stopOpacity="0.85" />
-            <stop offset="1" stopColor="#22D3A5" stopOpacity="0.9" />
+            <stop stopColor="#2563EB" />
+            <stop offset="0.52" stopColor="#0EA5E9" />
+            <stop offset="1" stopColor="#22D3A5" />
           </linearGradient>
           <linearGradient id={`${idPrefix}-orbit-b`} x1="94" y1="229" x2="425" y2="331" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#4F46E5" stopOpacity="0.7" />
-            <stop offset="0.5" stopColor="#0891B2" stopOpacity="0.85" />
-            <stop offset="1" stopColor="#34D399" stopOpacity="0.9" />
+            <stop stopColor="#4F46E5" />
+            <stop offset="0.5" stopColor="#0891B2" />
+            <stop offset="1" stopColor="#34D399" />
           </linearGradient>
           <linearGradient id={`${idPrefix}-orbit-c`} x1="103" y1="344" x2="415" y2="456" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#14B8A6" stopOpacity="0.7" />
-            <stop offset="0.56" stopColor="#0F766E" stopOpacity="0.85" />
-            <stop offset="1" stopColor="#84CC16" stopOpacity="0.9" />
+            <stop stopColor="#14B8A6" />
+            <stop offset="0.56" stopColor="#0F766E" />
+            <stop offset="1" stopColor="#84CC16" />
           </linearGradient>
         </defs>
 
-        <g opacity="0.65">
-          <ellipse cx="260" cy="157" rx="170" ry="90" stroke={`url(#${idPrefix}-orbit-a)`} strokeWidth="1.8" />
-          <ellipse cx="260" cy="260" rx="170" ry="90" stroke={`url(#${idPrefix}-orbit-b)`} strokeWidth="1.8" />
-          <ellipse cx="260" cy="363" rx="170" ry="90" stroke={`url(#${idPrefix}-orbit-c)`} strokeWidth="1.8" />
+        <g opacity="0.94">
+          <ellipse cx="260" cy="157" rx="170" ry="90" stroke={`url(#${idPrefix}-orbit-a)`} strokeWidth="72" />
+          <ellipse cx="260" cy="260" rx="170" ry="90" stroke={`url(#${idPrefix}-orbit-b)`} strokeWidth="72" />
+          <ellipse cx="260" cy="363" rx="170" ry="90" stroke={`url(#${idPrefix}-orbit-c)`} strokeWidth="72" />
         </g>
 
-        <g opacity="0.45">
-          <ellipse cx="260" cy="157" rx="205" ry="108" stroke="#5EEAD4" strokeWidth="1.2" strokeDasharray="4 6" />
-          <ellipse cx="260" cy="260" rx="205" ry="108" stroke="#BAE6FD" strokeWidth="1.2" strokeDasharray="4 6" />
-          <ellipse cx="260" cy="363" rx="205" ry="108" stroke="#86EFAC" strokeWidth="1.2" strokeDasharray="4 6" />
+        <g opacity="0.82">
+          <ellipse cx="260" cy="157" rx="205" ry="108" stroke="#5EEAD4" strokeWidth="1.8" strokeDasharray="4 6" />
+          <ellipse cx="260" cy="260" rx="205" ry="108" stroke="#BAE6FD" strokeWidth="1.8" strokeDasharray="4 6" />
+          <ellipse cx="260" cy="363" rx="205" ry="108" stroke="#86EFAC" strokeWidth="1.8" strokeDasharray="4 6" />
         </g>
       </svg>
 
