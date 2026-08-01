@@ -19,7 +19,7 @@ export function AuthShell({
   mode: "login" | "register";
 }) {
   return (
-    <main className="relative grid min-h-dvh w-full place-items-center overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6 md:px-8 light:bg-[linear-gradient(135deg,#f9fdf8_0%,#fffdf3_46%,#edf9f3_100%)]">
+    <main className="relative grid min-h-dvh w-full place-items-center overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6 md:px-8 bg-[radial-gradient(circle_at_50%_0%,rgba(var(--theme-accent-primary-rgb-raw),0.16),transparent_50rem),linear-gradient(180deg,rgba(6,10,8,0.98)_0%,rgba(4,6,5,1)_100%)] light:bg-[linear-gradient(135deg,#f9fdf8_0%,#fffdf3_46%,#edf9f3_100%)]">
       <AuthBackgroundBranding />
 
       <div className="absolute right-3 top-4 z-30 sm:right-5 sm:top-8">
@@ -30,9 +30,9 @@ export function AuthShell({
         initial={{ opacity: 0, scale: 0.97, y: 18 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="command-border relative grid w-full max-w-[460px] lg:max-w-[980px] xl:max-w-[1080px] overflow-hidden rounded-[22px] sm:rounded-[28px] lg:rounded-[34px] border border-[var(--line-strong)] bg-[rgba(18,24,21,0.78)] shadow-[0_20px_60px_rgba(0,0,0,0.4),0_0_90px_rgba(50,245,154,0.08)] sm:shadow-[0_28px_90px_rgba(0,0,0,0.48),0_0_90px_rgba(50,245,154,0.08)] lg:shadow-[0_34px_120px_rgba(0,0,0,0.55),0_0_90px_rgba(50,245,154,0.08)] backdrop-blur-2xl lg:min-h-[580px] lg:max-h-[calc(100dvh-32px)] lg:grid-cols-[0.46fr_0.54fr] light:border-emerald-100 light:bg-slate-50 light:shadow-[0_16px_50px_rgba(21,92,61,0.12)] sm:light:shadow-[0_20px_70px_rgba(21,92,61,0.14)] lg:light:shadow-[0_28px_90px_rgba(21,92,61,0.16)]"
+        className="command-border relative grid w-full max-w-[460px] lg:max-w-[980px] xl:max-w-[1080px] overflow-hidden rounded-[22px] sm:rounded-[28px] lg:rounded-[34px] border border-[rgba(var(--theme-accent-primary-rgb-raw),0.25)] bg-[rgba(14,18,16,0.82)] shadow-[0_20px_60px_rgba(0,0,0,0.4),0_0_90px_rgba(var(--theme-accent-primary-rgb-raw),0.16)] sm:shadow-[0_28px_90px_rgba(0,0,0,0.48),0_0_90px_rgba(var(--theme-accent-primary-rgb-raw),0.18)] lg:shadow-[0_34px_120px_rgba(0,0,0,0.55),0_0_100px_rgba(var(--theme-accent-primary-rgb-raw),0.22)] backdrop-blur-2xl lg:min-h-[580px] lg:max-h-[calc(100dvh-32px)] lg:grid-cols-[0.46fr_0.54fr] light:border-emerald-100 light:bg-slate-50 light:shadow-[0_16px_50px_rgba(21,92,61,0.12)] sm:light:shadow-[0_20px_70px_rgba(21,92,61,0.14)] lg:light:shadow-[0_28px_90px_rgba(21,92,61,0.16)]"
       >
-        <div className="relative flex min-w-0 flex-col overflow-y-auto scrollbar-none rounded-[22px] sm:rounded-[28px] lg:rounded-l-none lg:rounded-r-[34px] bg-[linear-gradient(180deg,rgba(245,247,242,0.055),rgba(217,255,87,0.025)),rgba(5,7,6,0.35)] p-5 sm:p-7 lg:order-2 lg:px-7 lg:py-6 xl:px-8 xl:py-7 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfff8_64%,#fff8e8_100%)]">
+        <div className="relative flex min-w-0 flex-col overflow-y-auto scrollbar-none rounded-[22px] sm:rounded-[28px] lg:rounded-l-none lg:rounded-r-[34px] bg-[linear-gradient(180deg,rgba(245,247,242,0.055),rgba(var(--theme-accent-primary-rgb-raw),0.035)),rgba(5,7,6,0.35)] p-5 sm:p-7 lg:order-2 lg:px-7 lg:py-6 xl:px-8 xl:py-7 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfff8_64%,#fff8e8_100%)]">
           <AuthMascot />
           <div className="flex w-full min-w-0 flex-1 flex-col">
             {children}
