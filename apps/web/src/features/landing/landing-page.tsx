@@ -1041,10 +1041,10 @@ export function LandingPage() {
         {/* Full Background Image spanning full screen width */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/landing/gettyimages-2153780024-640x640.jpg"
+            src="/landing/teamwork_190415.jpg"
             alt="BITHM Academic Workspace"
             fill
-            className="object-cover object-right md:object-[80%_center] opacity-100 transition-transform duration-700 group-hover/credential:scale-105"
+            className="object-cover object-center opacity-100 transition-transform duration-700 group-hover/credential:scale-105"
             priority
           />
           {/* Soft ambient gradient overlay on left for text legibility, leaving background image 100% bright & clear */}
