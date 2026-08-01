@@ -1287,6 +1287,20 @@ html:not(.light) .nexora-code-lab ::placeholder {
   background: linear-gradient(135deg, var(--theme-accent-primary) 0%, var(--theme-accent-solid) 100%) !important;
 }
 
+html.theme-purple .landing-primary-btn,
+html.theme-amber .landing-primary-btn,
+html.theme-rose .landing-primary-btn {
+  background: linear-gradient(135deg, var(--theme-accent-solid), var(--theme-accent-primary)) !important;
+  border-color: rgba(var(--theme-accent-primary-rgb-raw), 0.4) !important;
+  box-shadow: 0 12px 28px rgba(var(--theme-accent-primary-rgb-raw), 0.4) !important;
+}
+
+html.theme-purple .landing-primary-btn:hover,
+html.theme-amber .landing-primary-btn:hover,
+html.theme-rose .landing-primary-btn:hover {
+  filter: brightness(1.1) !important;
+}
+
 .scrollbar-thin {
   scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
   scrollbar-width: thin;
