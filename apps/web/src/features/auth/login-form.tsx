@@ -211,7 +211,7 @@ export function LoginForm() {
 
         <Button
           type="submit"
-          className="auth-primary-action h-10 w-full rounded-xl text-xs sm:h-11 sm:rounded-2xl sm:text-sm"
+          className="auth-primary-action h-11 sm:h-12 w-full rounded-xl sm:rounded-2xl text-sm font-bold"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
         >

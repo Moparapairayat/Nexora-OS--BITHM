@@ -30,16 +30,17 @@ export function AuthShell({
         initial={{ opacity: 0, scale: 0.97, y: 18 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        style={{ width: "calc(100vw - 1.5rem)", maxWidth: "1080px" }}
-        className="command-border relative grid min-w-0 max-w-[1080px] overflow-visible rounded-[20px] sm:rounded-[28px] lg:rounded-[34px] border border-[var(--line-strong)] bg-[rgba(18,24,21,0.72)] shadow-[0_20px_60px_rgba(0,0,0,0.4),0_0_90px_rgba(50,245,154,0.08)] sm:shadow-[0_28px_90px_rgba(0,0,0,0.48),0_0_90px_rgba(50,245,154,0.08)] lg:shadow-[0_34px_120px_rgba(0,0,0,0.55),0_0_90px_rgba(50,245,154,0.08)] backdrop-blur-2xl lg:h-[min(680px,calc(100dvh-48px))] lg:grid-cols-[0.48fr_0.52fr] light:border-emerald-100 light:bg-slate-50 light:shadow-[0_16px_50px_rgba(21,92,61,0.12)] sm:light:shadow-[0_20px_70px_rgba(21,92,61,0.14)] lg:light:shadow-[0_28px_90px_rgba(21,92,61,0.16)]"
+        className="command-border relative grid w-full max-w-[480px] lg:max-w-[1080px] overflow-hidden rounded-[22px] sm:rounded-[28px] lg:rounded-[34px] border border-[var(--line-strong)] bg-[rgba(18,24,21,0.78)] shadow-[0_20px_60px_rgba(0,0,0,0.4),0_0_90px_rgba(50,245,154,0.08)] sm:shadow-[0_28px_90px_rgba(0,0,0,0.48),0_0_90px_rgba(50,245,154,0.08)] lg:shadow-[0_34px_120px_rgba(0,0,0,0.55),0_0_90px_rgba(50,245,154,0.08)] backdrop-blur-2xl lg:h-[min(680px,calc(100dvh-48px))] lg:grid-cols-[0.48fr_0.52fr] light:border-emerald-100 light:bg-slate-50 light:shadow-[0_16px_50px_rgba(21,92,61,0.12)] sm:light:shadow-[0_20px_70px_rgba(21,92,61,0.14)] lg:light:shadow-[0_28px_90px_rgba(21,92,61,0.16)]"
       >
-        <div className="relative order-1 flex min-w-0 flex-col overflow-hidden rounded-t-[20px] sm:rounded-t-[28px] lg:rounded-t-[34px] bg-[linear-gradient(180deg,rgba(245,247,242,0.055),rgba(217,255,87,0.025)),rgba(5,7,6,0.35)] p-4 sm:p-6 md:p-7 lg:order-2 lg:rounded-l-none lg:rounded-r-[34px] lg:px-8 lg:py-7 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfff8_64%,#fff8e8_100%)]">
+        <div className="relative flex min-w-0 flex-col overflow-hidden rounded-[22px] sm:rounded-[28px] lg:rounded-l-none lg:rounded-r-[34px] bg-[linear-gradient(180deg,rgba(245,247,242,0.055),rgba(217,255,87,0.025)),rgba(5,7,6,0.35)] p-5 sm:p-7 lg:order-2 lg:px-8 lg:py-7 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfff8_64%,#fff8e8_100%)]">
           <AuthMascot />
-          <div className="flex w-full min-w-0 flex-1 flex-col max-sm:mx-0 max-sm:max-w-full sm:mx-auto sm:max-w-none">
+          <div className="flex w-full min-w-0 flex-1 flex-col">
             {children}
           </div>
         </div>
-        <AuthPreviewPanel mode={mode} />
+        <div className="hidden lg:block lg:order-1 h-full">
+          <AuthPreviewPanel mode={mode} />
+        </div>
       </motion.section>
     </main>
   );
@@ -138,7 +139,7 @@ export function RoleTabs<TValue extends string>({
             aria-selected={active}
             tabIndex={active ? 0 : -1}
             className={cn(
-              "nexora-focus relative h-10 rounded-lg sm:rounded-xl text-xs sm:text-sm font-semibold transition",
+              "nexora-focus relative h-11 sm:h-12 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition",
               active
                 ? "text-[#07100b] light:text-white"
                 : "text-[var(--muted)] hover:text-[var(--foreground)] light:text-slate-600 light:hover:text-emerald-900",
@@ -186,7 +187,7 @@ export function AuthField({
 }
 
 export const authInputClass =
-  "nexora-focus h-10 sm:h-[45px] w-full min-w-0 rounded-lg sm:rounded-2xl border border-[var(--line)] bg-[rgba(245,247,242,0.055)] px-3 sm:px-4 text-xs sm:text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] transition-all duration-200 focus:border-[#32f59a] focus:bg-[rgba(50,245,154,0.08)] focus:shadow-[0_0_0_3px_rgba(50,245,154,0.12)] light:border-slate-300 light:bg-white light:text-slate-900 light:placeholder:text-slate-400 light:shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:light:shadow-[0_4px_12px_rgba(0,0,0,0.06)] light:focus:border-emerald-400 light:focus:bg-emerald-50 light:focus:ring-4 light:focus:ring-emerald-100/50";
+  "nexora-focus h-11 sm:h-[46px] w-full min-w-0 rounded-xl sm:rounded-2xl border border-[var(--line)] bg-[rgba(245,247,242,0.055)] px-3.5 sm:px-4 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] transition-all duration-200 focus:border-[#32f59a] focus:bg-[rgba(50,245,154,0.08)] focus:shadow-[0_0_0_3px_rgba(50,245,154,0.12)] light:border-slate-300 light:bg-white light:text-slate-900 light:placeholder:text-slate-400 light:shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:light:shadow-[0_4px_12px_rgba(0,0,0,0.06)] light:focus:border-emerald-400 light:focus:bg-emerald-50 light:focus:ring-4 light:focus:ring-emerald-100/50";
 
 function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
   const title = mode === "register" ? "Create your account" : "Welcome back";
