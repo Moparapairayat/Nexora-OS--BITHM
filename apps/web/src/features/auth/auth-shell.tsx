@@ -205,12 +205,12 @@ function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
         style={{ background: "var(--auth-preview-bg)" }}
         className="relative flex h-full min-h-full w-full flex-col justify-between overflow-hidden rounded-l-[34px] rounded-r-none p-6 md:p-8 lg:p-10 text-white shadow-none light:shadow-none"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_8%,rgba(255,255,255,0.64),transparent_9rem),radial-gradient(circle_at_44%_16%,rgba(255,255,255,0.3),transparent_12rem),linear-gradient(135deg,rgba(255,255,255,0.14),transparent_46%)]" />
-        <div className="absolute -right-16 -top-16 h-40 w-40 rounded-[44%] bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.78),rgba(var(--theme-accent-primary-rgb-raw),0.52)_32%,rgba(var(--theme-accent-primary-rgb-raw),0.92)_66%)] shadow-[inset_18px_22px_50px_rgba(255,255,255,0.22),0_24px_80px_rgba(0,0,0,0.38)] blur-[0.2px] sm:h-48 sm:w-48 md:h-52 md:w-52" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_8%,rgba(255,255,255,0.64),transparent_9rem),radial-gradient(circle_at_44%_16%,rgba(255,147,197,0.5),transparent_12rem),linear-gradient(135deg,rgba(255,255,255,0.14),transparent_46%)]" />
+        <div className="absolute -right-16 -top-16 h-40 w-40 rounded-[44%] bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.78),rgba(255,147,197,0.52)_32%,rgba(139,35,255,0.74)_66%,rgba(94,33,205,0.92))] shadow-[inset_18px_22px_50px_rgba(255,255,255,0.22),0_24px_80px_rgba(76,16,176,0.38)] blur-[0.2px] sm:h-48 sm:w-48 md:h-52 md:w-52" />
         <motion.div
           animate={{ y: [0, -8, 0], rotate: [-8, -3, -8] }}
           transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -left-12 top-2 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_32%_30%,rgba(255,255,255,0.9),var(--theme-accent-primary)_38%,var(--theme-accent-secondary)_72%)] shadow-[inset_18px_18px_42px_rgba(255,255,255,0.2),0_24px_70px_rgba(0,0,0,0.3)] sm:h-36 sm:w-36 sm:top-4 md:h-44 md:w-44 lg:h-44 lg:w-44"
+          className="absolute -left-12 top-2 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_32%_30%,rgba(71,232,255,0.98),rgba(8,173,223,0.88)_38%,rgba(26,68,255,0.94)_72%,rgba(33,22,190,0.98))] shadow-[inset_18px_18px_42px_rgba(255,255,255,0.18),0_24px_70px_rgba(0,126,255,0.34)] sm:h-36 sm:w-36 sm:top-4 md:h-44 md:w-44 lg:h-44 lg:w-44"
         >
           <div className="absolute left-[36%] top-[18%] h-14 w-14 rounded-full bg-[radial-gradient(circle_at_30%_28%,rgba(255,255,255,0.55),rgba(19,141,161,0.72)_45%,rgba(20,54,115,0.84))] shadow-[0_18px_42px_rgba(0,30,80,0.28)] sm:h-16 sm:w-16 md:h-20 md:w-20" />
         </motion.div>
