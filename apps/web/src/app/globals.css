@@ -117,6 +117,14 @@ body {
   backdrop-filter: blur(28px) saturate(1.35);
 }
 
+@media (max-width: 767px) {
+  .nexora-brand-arc,
+  .landing-hero-arc-left,
+  .landing-hero-arc-right {
+    display: none !important;
+  }
+}
+
 .nexora-brand-arc {
   border-radius: 9999px;
   border: 54px solid rgba(var(--theme-accent-primary-rgb-raw), 0.4);

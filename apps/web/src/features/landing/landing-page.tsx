@@ -429,8 +429,8 @@ export function LandingPage() {
           }
         ` }} />
 
-        <div className="landing-hero-arc-left nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75" />
-        <div className="landing-hero-arc-right nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65" />
+        <div className="landing-hero-arc-left nexora-brand-arc pointer-events-none absolute w-[320px] h-[320px] -left-[240px] top-[-60px] -rotate-12 opacity-60 sm:w-[480px] sm:h-[480px] sm:-left-[360px] sm:top-[-90px] sm:opacity-70 md:w-[560px] md:h-[560px] md:-left-[420px] md:top-[-100px] xl:w-[620px] xl:h-[620px] xl:-left-[455px] xl:top-[-120px] xl:opacity-75 hidden md:block" />
+        <div className="landing-hero-arc-right nexora-brand-arc pointer-events-none absolute w-[340px] h-[340px] -right-[260px] bottom-[-70px] rotate-[148deg] opacity-50 sm:w-[520px] sm:h-[520px] sm:-right-[400px] sm:bottom-[-100px] sm:opacity-55 md:w-[600px] md:h-[600px] md:-right-[450px] md:bottom-[-110px] xl:w-[680px] xl:h-[680px] xl:-right-[490px] xl:bottom-[-150px] xl:opacity-65 hidden md:block" />
         <div className="pointer-events-none absolute -left-36 -bottom-10 z-0 h-[540px] w-[540px] rounded-full bg-amber-400/10 blur-[140px] light:bg-[#fce5cb]/80" />
         <div className="pointer-events-none absolute -right-36 -top-10 z-0 h-[580px] w-[580px] rounded-full bg-emerald-500/15 blur-[150px] light:bg-[#c9ead9]/85" />
 
