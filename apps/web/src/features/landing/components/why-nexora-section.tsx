@@ -227,7 +227,7 @@ export function WhyNexoraSection() {
       {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
       <NextGenBrandDivider toBgColorClass="fill-[#07100b] light:fill-[#ffffff]" badgeText="WHY NEXORA" />
 
-      <div className="pointer-events-none absolute left-1/2 top-[46%] h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/6 light:border-emerald-900/7" />
+      <div className="pointer-events-none absolute left-1/2 top-[46%] h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/6 light:border-emerald-900/7 hidden md:block" />
 
       <style dangerouslySetInnerHTML={{
         __html: `
@@ -302,10 +302,7 @@ export function WhyNexoraSection() {
         </div>
 
         <div className="mt-8 lg:hidden">
-          <ScrollReveal>
-            <NexoraOrbit idPrefix="mobile-nexora" />
-          </ScrollReveal>
-          <div className="mt-4 grid gap-3.5 sm:grid-cols-2">
+          <div className="grid gap-3.5 sm:grid-cols-2">
             {mobileBenefits.map((benefit, index) => (
               <ScrollReveal key={benefit.title} delay={(index % 2) * 60}>
                 <BenefitItem benefit={benefit} side="right" index={index} />

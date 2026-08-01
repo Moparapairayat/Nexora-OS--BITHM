@@ -15,7 +15,7 @@ export function HeroScene() {
     <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
       <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(138,95,61,0.18),transparent_34%),linear-gradient(250deg,rgba(50,245,154,0.16),transparent_40%),linear-gradient(180deg,rgba(5,7,6,0.38),rgba(5,7,6,0.98))] light:bg-[radial-gradient(circle_at_18%_12%,rgba(184,243,79,0.18),transparent_28rem),radial-gradient(circle_at_82%_10%,rgba(7,167,93,0.16),transparent_30rem),linear-gradient(180deg,#fbfdf9_0%,#f5fbf6_55%,#edf7f1_100%)]" />
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(to_top,rgba(5,7,6,1),transparent)] light:bg-[linear-gradient(to_top,rgba(237,247,241,0.95),transparent)]" />
-      <div className="absolute left-1/2 top-1/2 h-[520px] w-[920px] -translate-x-1/2 -translate-y-1/2 rotate-[-9deg] opacity-80">
+      <div className="absolute left-1/2 top-1/2 h-[520px] w-[920px] -translate-x-1/2 -translate-y-1/2 rotate-[-9deg] opacity-80 hidden md:block">
         <div className="grid h-full grid-cols-5 gap-3">
           {lanes.map((lane, index) => (
             <motion.div
