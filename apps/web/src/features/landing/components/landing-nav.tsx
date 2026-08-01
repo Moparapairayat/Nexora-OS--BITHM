@@ -160,7 +160,7 @@ export function LandingNav() {
 
         .hk-button:hover {
           transform: scale(1.05);
-          box-shadow: 0 0 16px rgba(50, 245, 154, 0.35);
+          box-shadow: 0 0 16px rgba(var(--theme-accent-primary-rgb-raw), 0.45);
         }
         .hk-button:hover::before {
           animation-duration: 1.5s;

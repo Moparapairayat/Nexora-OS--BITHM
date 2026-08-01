@@ -34,15 +34,15 @@ export function NextGenFooter() {
   return (
     <footer className="relative w-full overflow-hidden px-3 pb-4 pt-4 sm:px-6 md:px-8 lg:px-12 lg:pb-8 lg:pt-8">
       {/* Background Ambient Glow Orbs */}
-      <div className="pointer-events-none absolute -bottom-24 left-1/2 h-[350px] w-[500px] -translate-x-1/2 rounded-full bg-emerald-500/10 blur-[130px] light:bg-emerald-300/20 lg:h-[450px] lg:w-[700px]" />
-      <div className="pointer-events-none absolute bottom-5 -left-20 h-[220px] w-[220px] rounded-full bg-cyan-500/10 blur-[100px] light:bg-cyan-300/15 lg:h-[300px] lg:w-[300px]" />
+      <div className="pointer-events-none absolute -bottom-24 left-1/2 h-[350px] w-[500px] -translate-x-1/2 rounded-full bg-[rgba(var(--theme-accent-primary-rgb-raw),0.1)] blur-[130px] light:bg-emerald-300/20 lg:h-[450px] lg:w-[700px]" />
+      <div className="pointer-events-none absolute bottom-5 -left-20 h-[220px] w-[220px] rounded-full bg-[rgba(var(--theme-accent-secondary-rgb-raw),0.1)] blur-[100px] light:bg-cyan-300/15 lg:h-[300px] lg:w-[300px]" />
 
       {/* Main Glassmorphism Cyber Footer Card Container */}
-      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[20px] border border-emerald-400/20 bg-[#040a07]/90 p-4 shadow-[0_16px_50px_rgba(0,0,0,0.4)] backdrop-blur-xl light:border-emerald-800/15 light:bg-[linear-gradient(145deg,#f4faf6_0%,#e8f5ee_100%)] sm:p-6 md:p-8 lg:rounded-[32px] lg:p-12 xl:p-14">
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[20px] border border-[rgba(var(--theme-accent-primary-rgb-raw),0.2)] bg-[#040a07]/90 p-4 shadow-[0_16px_50px_rgba(0,0,0,0.4)] backdrop-blur-xl light:border-emerald-800/15 light:bg-[linear-gradient(145deg,#f4faf6_0%,#e8f5ee_100%)] sm:p-6 md:p-8 lg:rounded-[32px] lg:p-12 xl:p-14">
         
         {/* Top Watermark Decorative Branding Text */}
         <div className="pointer-events-none absolute -top-4 right-0 hidden select-none opacity-[0.03] sm:block light:opacity-[0.04]">
-          <span className="font-mono text-6xl sm:text-8xl font-black uppercase tracking-tighter text-emerald-300 light:text-emerald-900 lg:text-9xl">
+          <span className="font-mono text-6xl sm:text-8xl font-black uppercase tracking-tighter text-[var(--theme-accent-primary)] light:text-emerald-900 lg:text-9xl">
             NEXORA OS
           </span>
         </div>
