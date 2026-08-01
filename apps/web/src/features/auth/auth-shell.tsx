@@ -72,10 +72,10 @@ function AuthMascot() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute right-4 top-4 z-30 hidden md:block lg:right-5 lg:top-5"
+      className="pointer-events-none absolute right-3 top-3.5 sm:right-4 sm:top-4 z-30 lg:right-5 lg:top-5"
     >
       <motion.div
-        animate={{ y: [0, -8, 0], rotate: [-3, 2, -3] }}
+        animate={{ y: [0, -6, 0], rotate: [-3, 2, -3] }}
         transition={{ duration: 5.6, repeat: Infinity, ease: "easeInOut" }}
         className="relative"
       >
@@ -86,7 +86,7 @@ function AuthMascot() {
           height={200}
           unoptimized
           priority
-          className="h-[120px] w-[120px] object-contain lg:h-[135px] lg:w-[135px] xl:h-[170px] xl:w-[170px]"
+          className="h-[76px] w-[76px] sm:h-[100px] sm:w-[100px] md:h-[120px] md:w-[120px] lg:h-[135px] lg:w-[135px] xl:h-[170px] xl:w-[170px] object-contain drop-shadow-sm"
         />
       </motion.div>
     </div>
