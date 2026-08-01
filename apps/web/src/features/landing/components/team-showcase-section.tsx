@@ -146,28 +146,6 @@ export function TeamShowcaseSection() {
 
       <div className="relative mx-auto max-w-7xl px-5 md:px-8">
         <header className="mx-auto max-w-3xl text-center">
-          <style dangerouslySetInnerHTML={{
-            __html: `
-            @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
-            .font-3d-neon-script {
-              font-family: 'Pacifico', cursive;
-              background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
-                      drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
-              line-height: 1.25;
-              display: inline-block;
-            }
-
-            .light .font-3d-neon-script {
-              background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-              filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
-            }
-          `}} />
           <div className="overflow-visible inline-flex items-center justify-center">
             <span className="font-3d-neon-script text-xl sm:text-2xl md:text-3xl font-normal tracking-wide transform -rotate-2 select-none">
               Academic project team

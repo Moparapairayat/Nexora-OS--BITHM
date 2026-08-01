@@ -15,6 +15,7 @@ export function LandingNav() {
 
   useEffect(() => {
     let ticking = false;
+    let lastSection = "";
 
     const handlePageScroll = () => {
       if (!ticking) {
@@ -27,7 +28,7 @@ export function LandingNav() {
 
           // 2. Scroll spy to detect active section
           const sections = ["about", "platform", "how-it-works", "download", "team", "faq", "contact"];
-          let currentSection = "";
+          let currentSection = "#about";
 
           for (const sectionId of sections) {
             const el = document.getElementById(sectionId);
@@ -40,7 +41,10 @@ export function LandingNav() {
             }
           }
 
-          setActiveSection(currentSection || "#about");
+          if (currentSection !== lastSection) {
+            lastSection = currentSection;
+            setActiveSection(currentSection);
+          }
           ticking = false;
         });
         ticking = true;

@@ -229,30 +229,6 @@ export function WhyNexoraSection() {
 
       <div className="pointer-events-none absolute left-1/2 top-[46%] h-[72%] w-[72%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/6 light:border-emerald-900/7 hidden md:block" />
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-
-        .font-3d-neon-script {
-          font-family: 'Pacifico', cursive;
-          background: linear-gradient(180deg, #f7fee7 0%, #bef264 35%, #84cc16 70%, #3f6212 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          filter: drop-shadow(0px 3px 6px rgba(0,0,0,0.5))
-                  drop-shadow(0px 0px 12px rgba(190, 242, 100, 0.5));
-          line-height: 1.35;
-          padding: 0.15em 0.25em 0.35em;
-          display: inline-block;
-        }
-
-        .light .font-3d-neon-script {
-          background: linear-gradient(180deg, #047857 0%, #065f46 50%, #064e3b 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          filter: drop-shadow(0px 1px 3px rgba(5, 150, 105, 0.2));
-        }
-      `}} />
-
       <div className="relative mx-auto max-w-[1320px]">
         <ScrollReveal>
           <div className="mx-auto max-w-4xl text-center">
