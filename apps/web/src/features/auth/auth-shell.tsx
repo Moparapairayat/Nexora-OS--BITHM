@@ -30,16 +30,17 @@ export function AuthShell({
         initial={{ opacity: 0, scale: 0.97, y: 18 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        style={{ width: "calc(100vw - 1.5rem)", maxWidth: "1080px" }}
-        className="command-border relative grid min-w-0 max-w-[1080px] overflow-hidden rounded-[20px] sm:rounded-[28px] lg:rounded-[34px] border border-[var(--line-strong)] bg-[rgba(18,24,21,0.72)] shadow-[0_20px_60px_rgba(0,0,0,0.4),0_0_90px_rgba(50,245,154,0.08)] sm:shadow-[0_28px_90px_rgba(0,0,0,0.48),0_0_90px_rgba(50,245,154,0.08)] lg:shadow-[0_34px_120px_rgba(0,0,0,0.55),0_0_90px_rgba(50,245,154,0.08)] backdrop-blur-2xl lg:h-[min(680px,calc(100dvh-48px))] lg:grid-cols-[0.48fr_0.52fr] light:border-emerald-100 light:bg-slate-50 light:shadow-[0_16px_50px_rgba(21,92,61,0.12)] sm:light:shadow-[0_20px_70px_rgba(21,92,61,0.14)] lg:light:shadow-[0_28px_90px_rgba(21,92,61,0.16)]"
+        className="command-border relative grid w-full max-w-[460px] lg:max-w-[1080px] overflow-hidden rounded-[22px] sm:rounded-[28px] lg:rounded-[34px] border border-[var(--line-strong)] bg-[rgba(18,24,21,0.78)] shadow-[0_20px_60px_rgba(0,0,0,0.4),0_0_90px_rgba(50,245,154,0.08)] sm:shadow-[0_28px_90px_rgba(0,0,0,0.48),0_0_90px_rgba(50,245,154,0.08)] lg:shadow-[0_34px_120px_rgba(0,0,0,0.55),0_0_90px_rgba(50,245,154,0.08)] backdrop-blur-2xl lg:h-[min(680px,calc(100dvh-48px))] lg:grid-cols-[0.48fr_0.52fr] light:border-emerald-100 light:bg-slate-50 light:shadow-[0_16px_50px_rgba(21,92,61,0.12)] sm:light:shadow-[0_20px_70px_rgba(21,92,61,0.14)] lg:light:shadow-[0_28px_90px_rgba(21,92,61,0.16)]"
       >
-        <div className="relative order-1 flex min-w-0 flex-col overflow-hidden rounded-t-[20px] sm:rounded-t-[28px] lg:rounded-t-[34px] bg-[linear-gradient(180deg,rgba(245,247,242,0.055),rgba(217,255,87,0.025)),rgba(5,7,6,0.35)] p-4 sm:p-6 md:p-7 lg:order-2 lg:rounded-l-none lg:rounded-r-[34px] lg:px-8 lg:py-7 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfff8_64%,#fff8e8_100%)]">
+        <div className="relative flex min-w-0 flex-col overflow-hidden rounded-[22px] sm:rounded-[28px] lg:rounded-l-none lg:rounded-r-[34px] bg-[linear-gradient(180deg,rgba(245,247,242,0.055),rgba(217,255,87,0.025)),rgba(5,7,6,0.35)] p-5 sm:p-7 lg:order-2 lg:px-8 lg:py-7 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfff8_64%,#fff8e8_100%)]">
           <AuthMascot />
-          <div className="flex w-full min-w-0 flex-1 flex-col max-sm:mx-0 max-sm:max-w-full sm:mx-auto sm:max-w-none">
+          <div className="flex w-full min-w-0 flex-1 flex-col">
             {children}
           </div>
         </div>
-        <AuthPreviewPanel mode={mode} />
+        <div className="hidden lg:block lg:order-1 h-full w-full">
+          <AuthPreviewPanel mode={mode} />
+        </div>
       </motion.section>
     </main>
   );
@@ -196,12 +197,12 @@ function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
       : "Sign in to pick up where you left off.";
 
   return (
-    <div className="relative order-2 min-h-[250px] overflow-hidden p-0 sm:min-h-[320px] md:min-h-[380px] lg:order-1 lg:min-h-full">
+    <div className="relative h-full w-full overflow-hidden p-0">
       <motion.div
         initial={{ opacity: 0, y: 18, rotate: -1 }}
         animate={{ opacity: 1, y: 0, rotate: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative flex h-full min-h-[250px] flex-col justify-between overflow-hidden rounded-b-[20px] sm:rounded-b-[28px] lg:rounded-l-[34px] lg:rounded-r-none bg-[linear-gradient(145deg,#8f38ff_0%,#b64cf6_28%,#277df6_62%,#08d5df_100%)] p-4 text-white shadow-none sm:p-6 md:p-8 lg:p-10 lg:min-h-full light:shadow-none"
+        className="relative flex h-full min-h-full w-full flex-col justify-between overflow-hidden rounded-l-[34px] rounded-r-none bg-[linear-gradient(145deg,#8f38ff_0%,#b64cf6_28%,#277df6_62%,#08d5df_100%)] p-6 md:p-8 lg:p-10 text-white shadow-none light:shadow-none"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_8%,rgba(255,255,255,0.64),transparent_9rem),radial-gradient(circle_at_44%_16%,rgba(255,147,197,0.5),transparent_12rem),linear-gradient(135deg,rgba(255,255,255,0.14),transparent_46%)]" />
         <div className="absolute -right-16 -top-16 h-40 w-40 rounded-[44%] bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.78),rgba(255,147,197,0.52)_32%,rgba(139,35,255,0.74)_66%,rgba(94,33,205,0.92))] shadow-[inset_18px_22px_50px_rgba(255,255,255,0.22),0_24px_80px_rgba(76,16,176,0.38)] blur-[0.2px] sm:h-48 sm:w-48 md:h-52 md:w-52" />
