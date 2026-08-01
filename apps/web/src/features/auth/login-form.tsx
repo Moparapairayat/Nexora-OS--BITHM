@@ -185,13 +185,13 @@ export function LoginForm() {
             <input
               {...register("remember")}
               type="checkbox"
-              className="h-4 w-4 rounded border border-[var(--line)] bg-black/30 accent-[var(--theme-accent-primary)] hover:bg-black/50 transition-colors light:border-slate-300 light:bg-slate-100 light:accent-[var(--theme-accent-primary)] light:hover:bg-slate-200"
+              className="h-4 w-4 rounded border border-[var(--line)] bg-black/30 accent-[#32f59a] hover:bg-black/50 transition-colors light:border-slate-300 light:bg-slate-100 light:accent-emerald-600 light:hover:bg-slate-200"
             />
             <span className="font-medium">Remember me</span>
           </label>
           <button
             type="button"
-            className="nexora-focus rounded-md transition-all duration-200 hover:text-[var(--theme-accent-primary)] hover:underline light:hover:text-emerald-600 font-medium"
+            className="nexora-focus rounded-md transition-all duration-200 hover:text-[#32f59a] hover:underline light:hover:text-emerald-600 font-medium"
             onClick={() => setShowRecoveryHelp((current) => !current)}
             aria-expanded={showRecoveryHelp}
           >
@@ -200,8 +200,8 @@ export function LoginForm() {
         </div>
 
         {showRecoveryHelp ? (
-          <div className="flex gap-2 rounded-xl border border-[rgba(var(--theme-accent-primary-rgb-raw),0.25)] bg-[rgba(var(--theme-accent-primary-rgb-raw),0.07)] px-3 py-2.5 text-xs leading-5 text-[var(--muted)] light:border-[rgba(var(--theme-accent-primary-rgb-raw),0.3)] light:bg-[rgba(var(--theme-accent-primary-rgb-raw),0.08)] light:text-emerald-900">
-            <Info className="mt-0.5 h-4 w-4 shrink-0 text-[var(--theme-accent-primary)]" />
+          <div className="flex gap-2 rounded-xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.07)] px-3 py-2.5 text-xs leading-5 text-[var(--muted)] light:border-emerald-100 light:bg-emerald-50 light:text-emerald-900">
+            <Info className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand-emerald)]" />
             <p>
               Passwords are managed by BITHM. Contact your department admin to
               reset your access.

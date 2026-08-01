@@ -18,31 +18,31 @@ const demoLogins: Array<{
   password: string;
   route: string;
 }> = [
-  {
-    role: "student",
-    label: "Student Demo",
-    shortLabel: "Student",
-    email: "student@nexora.local",
-    password: "password123",
-    route: "/student/dashboard",
-  },
-  {
-    role: "teacher",
-    label: "Teacher Demo",
-    shortLabel: "Teacher",
-    email: "teacher@nexora.local",
-    password: "password123",
-    route: "/teacher/dashboard",
-  },
-  {
-    role: "admin",
-    label: "Admin Demo",
-    shortLabel: "Admin",
-    email: "admin@nexora.local",
-    password: "password123",
-    route: "/admin/dashboard",
-  },
-];
+    {
+      role: "student",
+      label: "Student Demo",
+      shortLabel: "Student",
+      email: "student@nexora.local",
+      password: "password123",
+      route: "/student/dashboard",
+    },
+    {
+      role: "teacher",
+      label: "Teacher Demo",
+      shortLabel: "Teacher",
+      email: "teacher@nexora.local",
+      password: "password123",
+      route: "/teacher/dashboard",
+    },
+    {
+      role: "admin",
+      label: "Admin Demo",
+      shortLabel: "Admin",
+      email: "admin@nexora.local",
+      password: "password123",
+      route: "/admin/dashboard",
+    },
+  ];
 
 export function DemoLoginButtons({
   className,
@@ -114,9 +114,9 @@ export function DemoLoginButtons({
               className={cn(
                 "rounded-xl sm:rounded-2xl text-[10px] sm:text-xs px-1 sm:px-3 h-9 font-semibold",
                 variant === "portal" &&
-                  "justify-center sm:justify-between border-[rgba(var(--theme-accent-primary-rgb-raw),0.25)] bg-[rgba(var(--theme-accent-primary-rgb-raw),0.07)] text-[var(--foreground)] hover:bg-[rgba(var(--theme-accent-primary-rgb-raw),0.14)]",
+                "justify-center sm:justify-between border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.07)] text-[var(--foreground)] hover:bg-[rgba(50,245,154,0.12)]",
                 onDark &&
-                  "border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/16 light:text-white",
+                "border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/16 light:text-white",
               )}
               disabled={loadingRole !== null}
               aria-busy={isLoading}
