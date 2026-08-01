@@ -202,7 +202,8 @@ function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
         initial={{ opacity: 0, y: 18, rotate: -1 }}
         animate={{ opacity: 1, y: 0, rotate: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative flex h-full min-h-full w-full flex-col justify-between overflow-hidden rounded-l-[34px] rounded-r-none bg-[linear-gradient(145deg,var(--theme-accent-solid)_0%,var(--theme-accent-primary)_45%,var(--theme-accent-secondary)_85%)] p-6 md:p-8 lg:p-10 text-white shadow-none light:shadow-none"
+        style={{ background: "var(--auth-preview-bg)" }}
+        className="relative flex h-full min-h-full w-full flex-col justify-between overflow-hidden rounded-l-[34px] rounded-r-none p-6 md:p-8 lg:p-10 text-white shadow-none light:shadow-none"
       >
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_8%,rgba(255,255,255,0.64),transparent_9rem),radial-gradient(circle_at_44%_16%,rgba(255,255,255,0.3),transparent_12rem),linear-gradient(135deg,rgba(255,255,255,0.14),transparent_46%)]" />
         <div className="absolute -right-16 -top-16 h-40 w-40 rounded-[44%] bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.78),rgba(var(--theme-accent-primary-rgb-raw),0.52)_32%,rgba(var(--theme-accent-primary-rgb-raw),0.92)_66%)] shadow-[inset_18px_22px_50px_rgba(255,255,255,0.22),0_24px_80px_rgba(0,0,0,0.38)] blur-[0.2px] sm:h-48 sm:w-48 md:h-52 md:w-52" />

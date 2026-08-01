@@ -605,6 +605,7 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
   --theme-accent-primary-rgb-raw: 50, 245, 154;
   --theme-accent-secondary-rgb-raw: 217, 255, 87;
   --theme-accent-solid-rgb-raw: 8, 122, 85;
+  --auth-preview-bg: linear-gradient(145deg, #8f38ff 0%, #b64cf6 28%, #277df6 62%, #08d5df 100%);
   --theme-emerald-50: #ecfdf5;
   --theme-emerald-100: #d1fae5;
   --theme-emerald-200: #a7f3d0;
@@ -628,6 +629,7 @@ html.theme-purple {
   --theme-accent-primary-rgb-raw: 168, 85, 247;
   --theme-accent-secondary-rgb-raw: 99, 102, 241;
   --theme-accent-solid-rgb-raw: 124, 58, 237;
+  --auth-preview-bg: linear-gradient(145deg, #5b21b6 0%, #7c3aed 35%, #a855f7 70%, #c084fc 100%);
   --theme-emerald-50: #faf5ff;
   --theme-emerald-100: #f3e8ff;
   --theme-emerald-200: #e9d5ff;
@@ -651,6 +653,7 @@ html.theme-amber {
   --theme-accent-primary-rgb-raw: 251, 146, 60;
   --theme-accent-secondary-rgb-raw: 252, 211, 77;
   --theme-accent-solid-rgb-raw: 234, 88, 12;
+  --auth-preview-bg: linear-gradient(145deg, #9a3412 0%, #ea580c 35%, #f97316 70%, #fbbf24 100%);
   --theme-emerald-50: #fffbeb;
   --theme-emerald-100: #fef3c7;
   --theme-emerald-200: #fde68a;
@@ -674,6 +677,7 @@ html.theme-rose {
   --theme-accent-primary-rgb-raw: 244, 63, 94;
   --theme-accent-secondary-rgb-raw: 236, 72, 153;
   --theme-accent-solid-rgb-raw: 219, 39, 119;
+  --auth-preview-bg: linear-gradient(145deg, #9f1239 0%, #e11d48 35%, #f43f5e 70%, #fb7185 100%);
   --theme-emerald-50: #fff1f2;
   --theme-emerald-100: #ffe4e6;
   --theme-emerald-200: #fecdd3;
