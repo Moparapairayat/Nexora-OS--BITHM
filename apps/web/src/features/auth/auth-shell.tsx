@@ -55,18 +55,45 @@ function AuthBackgroundBranding() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      <div className="absolute -left-[13rem] top-[7%] h-16 w-[46rem] -rotate-[31deg] bg-[linear-gradient(90deg,transparent_0%,#32f59a_18%,#36d9ff_72%,transparent_100%)] opacity-55 blur-[0.2px] sm:-left-[9rem] sm:h-20 light:opacity-65" />
-      <div className="absolute -left-[10rem] top-[11%] h-5 w-[42rem] -rotate-[31deg] bg-[#d9ff57] opacity-75 sm:h-7 light:opacity-85" />
-      <div className="absolute -left-8 -top-24 h-64 w-64 rotate-[24deg] rounded-[42px] bg-[linear-gradient(145deg,#8b5cf6,#5b3df5)] opacity-45 sm:-left-2 sm:-top-20 light:opacity-65" />
+      <div
+        style={{ background: "var(--beam-1)" }}
+        className="absolute -left-[13rem] top-[7%] h-16 w-[46rem] -rotate-[31deg] opacity-55 blur-[0.2px] sm:-left-[9rem] sm:h-20 light:opacity-65 transition-all duration-500"
+      />
+      <div
+        style={{ background: "var(--beam-2)" }}
+        className="absolute -left-[10rem] top-[11%] h-5 w-[42rem] -rotate-[31deg] opacity-75 sm:h-7 light:opacity-85 transition-all duration-500"
+      />
+      <div
+        style={{ background: "var(--beam-3)" }}
+        className="absolute -left-8 -top-24 h-64 w-64 rotate-[24deg] rounded-[42px] opacity-45 sm:-left-2 sm:-top-20 light:opacity-65 transition-all duration-500"
+      />
 
-      <div className="absolute -right-[17rem] top-[9%] h-24 w-[46rem] -rotate-[29deg] bg-[linear-gradient(90deg,transparent_0%,#18d4ff_20%,#32f59a_78%,transparent_100%)] opacity-50 sm:-right-[10rem] sm:h-28 light:opacity-70" />
-      <div className="absolute -right-[15rem] top-[16%] h-6 w-[42rem] -rotate-[29deg] bg-[#6cf6b3] opacity-70 sm:-right-[8rem] light:opacity-80" />
+      <div
+        style={{ background: "var(--beam-4)" }}
+        className="absolute -right-[17rem] top-[9%] h-24 w-[46rem] -rotate-[29deg] opacity-50 sm:-right-[10rem] sm:h-28 light:opacity-70 transition-all duration-500"
+      />
+      <div
+        style={{ background: "var(--beam-5)" }}
+        className="absolute -right-[15rem] top-[16%] h-6 w-[42rem] -rotate-[29deg] opacity-70 sm:-right-[8rem] light:opacity-80 transition-all duration-500"
+      />
 
-      <div className="absolute -bottom-28 -left-20 h-72 w-72 rounded-full border-[44px] border-cyan-400/35 sm:-bottom-16 sm:left-[5%] light:border-cyan-400/55" />
-      <div className="absolute -bottom-10 left-[8%] h-40 w-40 rounded-full bg-violet-500/30 mix-blend-screen sm:bottom-[5%] sm:left-[13%] light:bg-violet-500/45 light:mix-blend-multiply" />
+      <div
+        style={{ borderColor: "var(--beam-ring)" }}
+        className="absolute -bottom-28 -left-20 h-72 w-72 rounded-full border-[44px] sm:-bottom-16 sm:left-[5%] transition-all duration-500"
+      />
+      <div
+        style={{ background: "var(--beam-circle)" }}
+        className="absolute -bottom-10 left-[8%] h-40 w-40 rounded-full mix-blend-screen sm:bottom-[5%] sm:left-[13%] light:mix-blend-multiply transition-all duration-500"
+      />
 
-      <div className="absolute -bottom-28 right-[5%] h-28 w-[34rem] -rotate-[28deg] bg-[linear-gradient(90deg,transparent,#d9ff57_35%,#32f59a_72%,transparent)] opacity-35 light:opacity-55" />
-      <div className="absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/[0.055] blur-3xl light:bg-emerald-300/15" />
+      <div
+        style={{ background: "var(--beam-1)" }}
+        className="absolute -bottom-28 right-[5%] h-28 w-[34rem] -rotate-[28deg] opacity-35 light:opacity-55 transition-all duration-500"
+      />
+      <div
+        style={{ background: "var(--beam-glow)" }}
+        className="absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl transition-all duration-500"
+      />
     </div>
   );
 }
