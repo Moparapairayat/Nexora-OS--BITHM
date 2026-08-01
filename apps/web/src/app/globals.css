@@ -1262,28 +1262,25 @@ html:not(.light) .nexora-code-lab ::placeholder {
 }
 
 .auth-primary-action {
-  background: linear-gradient(135deg, var(--theme-accent-primary) 0%, var(--theme-accent-secondary) 100%) !important;
-  color: #07100b !important;
-  font-weight: 700 !important;
-  box-shadow: 0 10px 26px rgba(var(--theme-accent-primary-rgb-raw), 0.3) !important;
+  background: linear-gradient(135deg, #16b877 0%, #0c8f5b 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 26px rgba(12, 143, 91, 0.2) !important;
   filter: none !important;
-  transition: all 0.3s ease !important;
 }
 
 .auth-primary-action:hover {
-  background: linear-gradient(135deg, var(--theme-accent-secondary) 0%, var(--theme-accent-primary) 100%) !important;
-  box-shadow: 0 12px 28px rgba(var(--theme-accent-primary-rgb-raw), 0.45) !important;
-  filter: brightness(1.08) !important;
+  background: linear-gradient(135deg, #12a96c 0%, #087d4e 100%) !important;
+  box-shadow: 0 12px 28px rgba(12, 143, 91, 0.24) !important;
+  filter: none !important;
 }
 
 .light .auth-primary-action {
-  background: linear-gradient(135deg, var(--theme-accent-solid) 0%, var(--theme-accent-primary) 100%) !important;
-  color: #ffffff !important;
-  box-shadow: 0 9px 22px rgba(var(--theme-accent-primary-rgb-raw), 0.22) !important;
+  background: linear-gradient(135deg, #087a49 0%, #0aa75f 100%) !important;
+  box-shadow: 0 9px 22px rgba(8, 122, 73, 0.18) !important;
 }
 
 .light .auth-primary-action:hover {
-  background: linear-gradient(135deg, var(--theme-accent-primary) 0%, var(--theme-accent-solid) 100%) !important;
+  background: linear-gradient(135deg, #066b40 0%, #078f51 100%) !important;
 }
 
 .scrollbar-thin {

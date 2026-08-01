@@ -52,18 +52,18 @@ function AuthBackgroundBranding() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 overflow-hidden"
     >
-      <div className="absolute -left-[13rem] top-[7%] h-16 w-[46rem] -rotate-[31deg] bg-[linear-gradient(90deg,transparent_0%,var(--theme-accent-primary)_18%,var(--theme-accent-secondary)_72%,transparent_100%)] opacity-55 blur-[0.2px] sm:-left-[9rem] sm:h-20 light:opacity-65" />
-      <div className="absolute -left-[10rem] top-[11%] h-5 w-[42rem] -rotate-[31deg] bg-[var(--theme-accent-secondary)] opacity-75 sm:h-7 light:opacity-85" />
-      <div className="absolute -left-8 -top-24 h-64 w-64 rotate-[24deg] rounded-[42px] bg-[linear-gradient(145deg,var(--theme-accent-solid),var(--theme-accent-primary))] opacity-45 sm:-left-2 sm:-top-20 light:opacity-65" />
+      <div className="absolute -left-[13rem] top-[7%] h-16 w-[46rem] -rotate-[31deg] bg-[linear-gradient(90deg,transparent_0%,#32f59a_18%,#36d9ff_72%,transparent_100%)] opacity-55 blur-[0.2px] sm:-left-[9rem] sm:h-20 light:opacity-65" />
+      <div className="absolute -left-[10rem] top-[11%] h-5 w-[42rem] -rotate-[31deg] bg-[#d9ff57] opacity-75 sm:h-7 light:opacity-85" />
+      <div className="absolute -left-8 -top-24 h-64 w-64 rotate-[24deg] rounded-[42px] bg-[linear-gradient(145deg,#8b5cf6,#5b3df5)] opacity-45 sm:-left-2 sm:-top-20 light:opacity-65" />
 
-      <div className="absolute -right-[17rem] top-[9%] h-24 w-[46rem] -rotate-[29deg] bg-[linear-gradient(90deg,transparent_0%,var(--theme-accent-secondary)_20%,var(--theme-accent-primary)_78%,transparent_100%)] opacity-50 sm:-right-[10rem] sm:h-28 light:opacity-70" />
-      <div className="absolute -right-[15rem] top-[16%] h-6 w-[42rem] -rotate-[29deg] bg-[var(--theme-accent-primary)] opacity-70 sm:-right-[8rem] light:opacity-80" />
+      <div className="absolute -right-[17rem] top-[9%] h-24 w-[46rem] -rotate-[29deg] bg-[linear-gradient(90deg,transparent_0%,#18d4ff_20%,#32f59a_78%,transparent_100%)] opacity-50 sm:-right-[10rem] sm:h-28 light:opacity-70" />
+      <div className="absolute -right-[15rem] top-[16%] h-6 w-[42rem] -rotate-[29deg] bg-[#6cf6b3] opacity-70 sm:-right-[8rem] light:opacity-80" />
 
-      <div className="absolute -bottom-28 -left-20 h-72 w-72 rounded-full border-[44px] border-[rgba(var(--theme-accent-primary-rgb-raw),0.35)] sm:-bottom-16 sm:left-[5%] light:border-[rgba(var(--theme-accent-primary-rgb-raw),0.45)]" />
-      <div className="absolute -bottom-10 left-[8%] h-40 w-40 rounded-full bg-[rgba(var(--theme-accent-secondary-rgb-raw),0.35)] mix-blend-screen sm:bottom-[5%] sm:left-[13%] light:mix-blend-multiply" />
+      <div className="absolute -bottom-28 -left-20 h-72 w-72 rounded-full border-[44px] border-cyan-400/35 sm:-bottom-16 sm:left-[5%] light:border-cyan-400/55" />
+      <div className="absolute -bottom-10 left-[8%] h-40 w-40 rounded-full bg-violet-500/30 mix-blend-screen sm:bottom-[5%] sm:left-[13%] light:bg-violet-500/45 light:mix-blend-multiply" />
 
-      <div className="absolute -bottom-28 right-[5%] h-28 w-[34rem] -rotate-[28deg] bg-[linear-gradient(90deg,transparent,var(--theme-accent-secondary)_35%,var(--theme-accent-primary)_72%,transparent)] opacity-35 light:opacity-55" />
-      <div className="absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[rgba(var(--theme-accent-primary-rgb-raw),0.07)] blur-3xl light:bg-[rgba(var(--theme-accent-primary-rgb-raw),0.12)]" />
+      <div className="absolute -bottom-28 right-[5%] h-28 w-[34rem] -rotate-[28deg] bg-[linear-gradient(90deg,transparent,#d9ff57_35%,#32f59a_72%,transparent)] opacity-35 light:opacity-55" />
+      <div className="absolute left-1/2 top-1/2 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/[0.055] blur-3xl light:bg-emerald-300/15" />
     </div>
   );
 }
@@ -149,7 +149,7 @@ export function RoleTabs<TValue extends string>({
             {active ? (
               <motion.span
                 layoutId="auth-role-pill"
-                className="absolute inset-0 rounded-lg sm:rounded-xl bg-[linear-gradient(135deg,var(--theme-accent-primary),var(--theme-accent-secondary))] shadow-[0_8px_24px_rgba(var(--theme-accent-primary-rgb-raw),0.25)] sm:shadow-[0_10px_30px_rgba(var(--theme-accent-primary-rgb-raw),0.3)] light:bg-[linear-gradient(135deg,var(--theme-accent-solid),var(--theme-accent-primary))] light:shadow-[0_8px_20px_rgba(var(--theme-accent-primary-rgb-raw),0.25)] sm:light:shadow-[0_10px_22px_rgba(var(--theme-accent-primary-rgb-raw),0.3)]"
+                className="absolute inset-0 rounded-lg sm:rounded-xl bg-[linear-gradient(135deg,#d9ff57,#6cf6b3,#32f59a)] shadow-[0_8px_24px_rgba(50,245,154,0.18)] sm:shadow-[0_10px_30px_rgba(50,245,154,0.2)] light:bg-[linear-gradient(135deg,#079a56,#15c877)] light:shadow-[0_8px_20px_rgba(7,154,86,0.18)] sm:light:shadow-[0_10px_22px_rgba(7,154,86,0.22)]"
                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
               />
             ) : null}
@@ -187,7 +187,7 @@ export function AuthField({
 }
 
 export const authInputClass =
-  "nexora-focus h-11 sm:h-[46px] w-full min-w-0 rounded-xl sm:rounded-2xl border border-[var(--line)] bg-[rgba(245,247,242,0.055)] px-3.5 sm:px-4 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] transition-all duration-200 focus:border-[var(--theme-accent-primary)] focus:bg-[rgba(var(--theme-accent-primary-rgb-raw),0.08)] focus:shadow-[0_0_0_3px_rgba(var(--theme-accent-primary-rgb-raw),0.15)] light:border-slate-300 light:bg-white light:text-slate-900 light:placeholder:text-slate-400 light:shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:light:shadow-[0_4px_12px_rgba(0,0,0,0.06)] light:focus:border-[var(--theme-accent-primary)] light:focus:bg-emerald-50/40 light:focus:ring-4 light:focus:ring-emerald-100/50";
+  "nexora-focus h-11 sm:h-[46px] w-full min-w-0 rounded-xl sm:rounded-2xl border border-[var(--line)] bg-[rgba(245,247,242,0.055)] px-3.5 sm:px-4 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] transition-all duration-200 focus:border-[#32f59a] focus:bg-[rgba(50,245,154,0.08)] focus:shadow-[0_0_0_3px_rgba(50,245,154,0.12)] light:border-slate-300 light:bg-white light:text-slate-900 light:placeholder:text-slate-400 light:shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:light:shadow-[0_4px_12px_rgba(0,0,0,0.06)] light:focus:border-emerald-400 light:focus:bg-emerald-50 light:focus:ring-4 light:focus:ring-emerald-100/50";
 
 function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
   const title = mode === "register" ? "Create your account" : "Welcome back";
@@ -202,14 +202,14 @@ function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
         initial={{ opacity: 0, y: 18, rotate: -1 }}
         animate={{ opacity: 1, y: 0, rotate: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative flex h-full min-h-full w-full flex-col justify-between overflow-hidden rounded-l-[34px] rounded-r-none bg-[linear-gradient(145deg,var(--theme-accent-solid)_0%,var(--theme-accent-primary)_45%,var(--theme-accent-secondary)_85%)] p-6 md:p-8 lg:p-10 text-white shadow-none light:shadow-none"
+        className="relative flex h-full min-h-full w-full flex-col justify-between overflow-hidden rounded-l-[34px] rounded-r-none bg-[linear-gradient(145deg,#8f38ff_0%,#b64cf6_28%,#277df6_62%,#08d5df_100%)] p-6 md:p-8 lg:p-10 text-white shadow-none light:shadow-none"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_8%,rgba(255,255,255,0.64),transparent_9rem),radial-gradient(circle_at_44%_16%,rgba(255,255,255,0.3),transparent_12rem),linear-gradient(135deg,rgba(255,255,255,0.14),transparent_46%)]" />
-        <div className="absolute -right-16 -top-16 h-40 w-40 rounded-[44%] bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.78),rgba(var(--theme-accent-primary-rgb-raw),0.52)_32%,rgba(var(--theme-accent-primary-rgb-raw),0.92)_66%)] shadow-[inset_18px_22px_50px_rgba(255,255,255,0.22),0_24px_80px_rgba(0,0,0,0.38)] blur-[0.2px] sm:h-48 sm:w-48 md:h-52 md:w-52" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_8%,rgba(255,255,255,0.64),transparent_9rem),radial-gradient(circle_at_44%_16%,rgba(255,147,197,0.5),transparent_12rem),linear-gradient(135deg,rgba(255,255,255,0.14),transparent_46%)]" />
+        <div className="absolute -right-16 -top-16 h-40 w-40 rounded-[44%] bg-[radial-gradient(circle_at_35%_28%,rgba(255,255,255,0.78),rgba(255,147,197,0.52)_32%,rgba(139,35,255,0.74)_66%,rgba(94,33,205,0.92))] shadow-[inset_18px_22px_50px_rgba(255,255,255,0.22),0_24px_80px_rgba(76,16,176,0.38)] blur-[0.2px] sm:h-48 sm:w-48 md:h-52 md:w-52" />
         <motion.div
           animate={{ y: [0, -8, 0], rotate: [-8, -3, -8] }}
           transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -left-12 top-2 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_32%_30%,rgba(255,255,255,0.9),var(--theme-accent-primary)_38%,var(--theme-accent-secondary)_72%)] shadow-[inset_18px_18px_42px_rgba(255,255,255,0.2),0_24px_70px_rgba(0,0,0,0.3)] sm:h-36 sm:w-36 sm:top-4 md:h-44 md:w-44 lg:h-44 lg:w-44"
+          className="absolute -left-12 top-2 h-28 w-28 rounded-full bg-[radial-gradient(circle_at_32%_30%,rgba(71,232,255,0.98),rgba(8,173,223,0.88)_38%,rgba(26,68,255,0.94)_72%,rgba(33,22,190,0.98))] shadow-[inset_18px_18px_42px_rgba(255,255,255,0.18),0_24px_70px_rgba(0,126,255,0.34)] sm:h-36 sm:w-36 sm:top-4 md:h-44 md:w-44 lg:h-44 lg:w-44"
         >
           <div className="absolute left-[36%] top-[18%] h-14 w-14 rounded-full bg-[radial-gradient(circle_at_30%_28%,rgba(255,255,255,0.55),rgba(19,141,161,0.72)_45%,rgba(20,54,115,0.84))] shadow-[0_18px_42px_rgba(0,30,80,0.28)] sm:h-16 sm:w-16 md:h-20 md:w-20" />
         </motion.div>
