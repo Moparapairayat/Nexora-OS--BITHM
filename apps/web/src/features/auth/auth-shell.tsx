@@ -149,11 +149,11 @@ export function RoleTabs<TValue extends string>({
             {active ? (
               <motion.span
                 layoutId="auth-role-pill"
-                className="absolute inset-0 rounded-lg sm:rounded-xl bg-[linear-gradient(135deg,#d9ff57,#6cf6b3,#32f59a)] shadow-[0_8px_24px_rgba(50,245,154,0.18)] sm:shadow-[0_10px_30px_rgba(50,245,154,0.2)] light:bg-[linear-gradient(135deg,#079a56,#15c877)] light:shadow-[0_8px_20px_rgba(7,154,86,0.18)] sm:light:shadow-[0_10px_22px_rgba(7,154,86,0.22)]"
+                className="absolute inset-0 rounded-lg sm:rounded-xl bg-[linear-gradient(135deg,var(--theme-accent-primary),var(--theme-accent-secondary))] shadow-[0_8px_24px_rgba(var(--theme-accent-primary-rgb-raw),0.25)] sm:shadow-[0_10px_30px_rgba(var(--theme-accent-primary-rgb-raw),0.3)] light:bg-[linear-gradient(135deg,var(--theme-accent-solid),var(--theme-accent-primary))] light:shadow-[0_8px_20px_rgba(var(--theme-accent-primary-rgb-raw),0.25)] sm:light:shadow-[0_10px_22px_rgba(var(--theme-accent-primary-rgb-raw),0.3)]"
                 transition={{ type: "spring", stiffness: 380, damping: 32 }}
               />
             ) : null}
-            <span className="relative">{option.label}</span>
+            <span className="relative font-bold text-slate-950 light:text-white">{option.label}</span>
           </button>
         );
       })}
@@ -187,7 +187,7 @@ export function AuthField({
 }
 
 export const authInputClass =
-  "nexora-focus h-11 sm:h-[46px] w-full min-w-0 rounded-xl sm:rounded-2xl border border-[var(--line)] bg-[rgba(245,247,242,0.055)] px-3.5 sm:px-4 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] transition-all duration-200 focus:border-[#32f59a] focus:bg-[rgba(50,245,154,0.08)] focus:shadow-[0_0_0_3px_rgba(50,245,154,0.12)] light:border-slate-300 light:bg-white light:text-slate-900 light:placeholder:text-slate-400 light:shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:light:shadow-[0_4px_12px_rgba(0,0,0,0.06)] light:focus:border-emerald-400 light:focus:bg-emerald-50 light:focus:ring-4 light:focus:ring-emerald-100/50";
+  "nexora-focus h-11 sm:h-[46px] w-full min-w-0 rounded-xl sm:rounded-2xl border border-[var(--line)] bg-[rgba(245,247,242,0.055)] px-3.5 sm:px-4 text-sm text-[var(--foreground)] outline-none placeholder:text-[var(--text-muted)] transition-all duration-200 focus:border-[var(--theme-accent-primary)] focus:bg-[rgba(var(--theme-accent-primary-rgb-raw),0.08)] focus:shadow-[0_0_0_3px_rgba(var(--theme-accent-primary-rgb-raw),0.15)] light:border-slate-300 light:bg-white light:text-slate-900 light:placeholder:text-slate-400 light:shadow-[0_2px_8px_rgba(0,0,0,0.04)] sm:light:shadow-[0_4px_12px_rgba(0,0,0,0.06)] light:focus:border-[var(--theme-accent-primary)] light:focus:bg-emerald-50/40 light:focus:ring-4 light:focus:ring-emerald-100/50";
 
 function AuthPreviewPanel({ mode }: { mode: "login" | "register" }) {
   const title = mode === "register" ? "Create your account" : "Welcome back";
