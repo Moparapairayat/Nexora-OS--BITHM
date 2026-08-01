@@ -926,7 +926,7 @@ export function LandingPage() {
       <section id="available-now" className="relative overflow-hidden border-y border-white/8 bg-[#07100b] px-5 py-16 light:border-emerald-950/8 light:bg-[radial-gradient(circle_at_76%_40%,rgba(16,185,129,0.085),transparent_38%),linear-gradient(180deg,#ffffff_0%,#f8fbf9_100%)] md:px-8 sm:py-20">
         {/* Next-Gen Brand Divider with Running Laser & HUD Seal */}
         <NextGenBrandDivider toBgColorClass="fill-[#070d0a] light:fill-[#ffffff]" badgeText="AVAILABLE NOW" />
-        <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-emerald-500/7 blur-[110px] light:bg-emerald-300/14" />
+        <div className="pointer-events-none absolute -left-32 top-24 h-72 w-72 rounded-full bg-[rgba(var(--theme-accent-primary-rgb-raw),0.12)] blur-[110px] light:bg-emerald-300/14" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 hidden light:block"
