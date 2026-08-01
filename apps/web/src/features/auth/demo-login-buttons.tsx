@@ -13,6 +13,7 @@ type DemoRole = "student" | "teacher" | "admin";
 const demoLogins: Array<{
   role: DemoRole;
   label: string;
+  shortLabel: string;
   email: string;
   password: string;
   route: string;
@@ -20,6 +21,7 @@ const demoLogins: Array<{
   {
     role: "student",
     label: "Student Demo",
+    shortLabel: "Student",
     email: "student@nexora.local",
     password: "password123",
     route: "/student/dashboard",
@@ -27,6 +29,7 @@ const demoLogins: Array<{
   {
     role: "teacher",
     label: "Teacher Demo",
+    shortLabel: "Teacher",
     email: "teacher@nexora.local",
     password: "password123",
     route: "/teacher/dashboard",
@@ -34,6 +37,7 @@ const demoLogins: Array<{
   {
     role: "admin",
     label: "Admin Demo",
+    shortLabel: "Admin",
     email: "admin@nexora.local",
     password: "password123",
     route: "/admin/dashboard",
@@ -95,9 +99,8 @@ export function DemoLoginButtons({
     >
       <div
         className={cn(
-          "grid",
-          variant === "portal" ? "sm:grid-cols-1" : "sm:grid-cols-3",
-          variant === "portal" ? "gap-2" : "gap-1.5",
+          "grid grid-cols-3",
+          variant === "portal" ? "gap-1.5 sm:gap-2" : "gap-1 sm:gap-1.5",
         )}
       >
         {demoLogins.map((account) => {
@@ -109,10 +112,9 @@ export function DemoLoginButtons({
               type="button"
               variant={variant === "portal" ? "secondary" : "ghost"}
               className={cn(
-                "rounded-2xl text-xs",
-                variant === "portal" ? "h-10" : "h-9",
+                "rounded-xl sm:rounded-2xl text-[10px] sm:text-xs px-1 sm:px-3 h-9 font-semibold",
                 variant === "portal" &&
-                  "justify-between border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.07)] text-[var(--foreground)] hover:bg-[rgba(50,245,154,0.12)]",
+                  "justify-center sm:justify-between border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.07)] text-[var(--foreground)] hover:bg-[rgba(50,245,154,0.12)]",
                 onDark &&
                   "border-white/20 bg-white/10 text-white hover:border-white/30 hover:bg-white/16 light:text-white",
               )}
@@ -121,15 +123,16 @@ export function DemoLoginButtons({
               onClick={() => void signInDemo(account)}
             >
               {isLoading ? (
-                <span className="mx-auto">Signing in...</span>
+                <span className="mx-auto text-[10px] sm:text-xs">Signing in...</span>
               ) : (
-                <span className="inline-flex items-center gap-2">
-                  <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                  {account.label}
+                <span className="inline-flex items-center gap-1 sm:gap-1.5 truncate">
+                  <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" aria-hidden="true" />
+                  <span className="hidden sm:inline">{account.label}</span>
+                  <span className="inline sm:hidden">{account.shortLabel}</span>
                 </span>
               )}
               {variant === "portal" && !isLoading ? (
-                <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                <ArrowRight className="hidden sm:block h-3.5 w-3.5" aria-hidden="true" />
               ) : null}
             </Button>
           );
