@@ -432,27 +432,27 @@ export function LandingPage() {
         <div className="pointer-events-none absolute -left-36 -bottom-10 z-0 h-[540px] w-[540px] rounded-full bg-amber-400/10 blur-[140px] light:bg-[#fce5cb]/80" />
         <div className="pointer-events-none absolute -right-36 -top-10 z-0 h-[580px] w-[580px] rounded-full bg-emerald-500/15 blur-[150px] light:bg-[#c9ead9]/85" />
 
-        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-5 md:grid-cols-2 md:px-8 lg:gap-16">
-          <div className="relative w-full max-w-[560px]">
+        <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-10 px-4 sm:px-6 md:grid-cols-2 md:px-8 lg:gap-14 xl:gap-16">
+          <div className="relative w-full max-w-[560px] mx-auto md:mx-0">
 
             <div className="mb-2 overflow-visible inline-block">
               <span className="font-3d-neon-script text-sm sm:text-base font-normal tracking-wide select-none !py-0 !px-0">
                 Nexora OS · BITHM Academic Platform
               </span>
             </div>
-            <h1 className="text-balance text-4xl font-extrabold leading-[1.12] tracking-tight sm:text-5xl lg:text-[54px] text-white light:text-slate-800">
+            <h1 className="text-balance text-3xl xs:text-4xl font-extrabold leading-[1.14] tracking-tight sm:text-5xl lg:text-[54px] text-white light:text-slate-800">
               A practical place to{" "}
               <span className="bg-gradient-to-r from-accent-secondary to-accent-primary bg-clip-text text-transparent light:from-emerald-700 light:to-emerald-500">
                 study, build, and submit
               </span>{" "}
               your work.
             </h1>
-            <p className="mt-6 max-w-xl text-base leading-7 text-slate-300 light:text-slate-600 sm:text-lg">
+            <p className="mt-4 sm:mt-6 max-w-xl text-base leading-7 text-slate-300 light:text-slate-600 sm:text-lg">
               Keep assignments, lab work, coding tools, feedback, and course
               administration close at hand.
             </p>
 
-            <div className="relative mt-8 flex flex-wrap items-center gap-4 z-10">
+            <div className="relative mt-6 sm:mt-8 flex flex-wrap items-center gap-3.5 sm:gap-4 z-10">
               <div className="relative inline-block">
                 <div className="pointer-events-none absolute top-1/2 -left-6 h-[72px] w-[72px] -translate-y-1/2 rounded-full bg-emerald-500/20 blur-[24px]" />
                 <Link
@@ -473,7 +473,7 @@ export function LandingPage() {
               </a>
             </div>
 
-            <div className="mt-10 flex items-center gap-4 text-sm text-slate-400 light:text-slate-600">
+            <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3.5 sm:gap-4 text-xs sm:text-sm text-slate-400 light:text-slate-600">
               <div className="flex -space-x-2">
                 {[
                   { src: "/landing/team/ayat.png", alt: "Mopara Pair Ayat" },
@@ -482,7 +482,7 @@ export function LandingPage() {
                 ].map((avatar, index) => (
                   <div
                     key={avatar.alt}
-                    className="h-10 w-10 rounded-full border-2 border-[#060907] overflow-hidden light:border-[#f8fbf9] shadow-md"
+                    className="h-9 w-9 sm:h-10 sm:w-10 rounded-full border-2 border-[#060907] overflow-hidden light:border-[#f8fbf9] shadow-md"
                     style={{ zIndex: 3 - index }}
                   >
                     <Image
@@ -505,35 +505,37 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="landing-float relative flex w-full max-w-[660px] select-none items-center justify-center justify-self-center md:justify-self-end">
-            {/* Giant Background Text */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/20 dark:text-white/15 light:text-slate-900/10 text-[6.5rem] sm:text-[9.5rem] md:text-[8rem] lg:text-[11.5rem] uppercase pointer-events-none transition-all duration-300">
+          <div className="landing-float relative flex w-full max-w-[360px] xs:max-w-[440px] sm:max-w-[500px] md:max-w-[540px] lg:max-w-[640px] select-none items-center justify-center justify-self-center md:justify-self-end mt-4 md:mt-0">
+            {/* Giant Watermark Background Text */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 select-none font-black tracking-tighter text-white/15 dark:text-white/12 light:text-slate-900/8 text-[5rem] xs:text-[6.5rem] sm:text-[8rem] md:text-[6.5rem] lg:text-[9rem] xl:text-[10.5rem] uppercase pointer-events-none transition-all duration-300">
               NEXORA
             </div>
 
             {/* Floating Decorative Shape 03 near image illustration */}
             <motion.div
-              animate={{ y: [0, 12, 0], rotate: [0, -8, 0] }}
+              animate={{ y: [0, 10, 0], rotate: [0, -6, 0] }}
               transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
-              className="pointer-events-none absolute -top-4 -right-4 sm:-top-8 sm:-right-8 z-30 hidden sm:block drop-shadow-xl"
+              className="pointer-events-none absolute -top-2 -right-2 sm:-top-6 sm:-right-6 z-30 hidden sm:block drop-shadow-xl"
             >
               <Image
                 src="/landing/shape-03.png"
                 alt="Decorative accent shape"
                 width={68}
                 height={94}
-                className="h-14 w-auto sm:h-20 object-contain opacity-90"
+                className="h-12 w-auto sm:h-16 lg:h-20 object-contain opacity-90"
               />
             </motion.div>
 
-            <div className="landing-orbit absolute -inset-8 rounded-full border border-emerald-300/10 before:absolute before:left-1/2 before:top-0 before:h-2 before:w-2 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10 hidden sm:block" />
+            {/* Ambient Glass Orbit Halo */}
+            <div className="landing-orbit absolute inset-1 sm:inset-2 md:inset-3 rounded-full border border-emerald-400/20 bg-emerald-500/5 backdrop-blur-[2px] before:absolute before:left-1/2 before:top-0 before:h-2.5 before:w-2.5 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10 hidden sm:block pointer-events-none" />
+            
             <Image
               src="/landing/mentor-modern/hero-image.png"
               alt="Student using Nexora OS for academic work"
               width={720}
               height={620}
               priority
-              className="relative z-20 h-auto w-full animate-[float_4s_ease-in-out_infinite]"
+              className="relative z-20 h-auto w-full max-w-full animate-[float_4s_ease-in-out_infinite]"
             />
           </div>
         </div>
