@@ -160,7 +160,7 @@ export function LandingNav() {
 
         .hk-button:hover {
           transform: scale(1.05);
-          box-shadow: 0 0 16px rgba(var(--theme-accent-primary-rgb-raw), 0.45);
+          box-shadow: 0 0 16px rgba(50, 245, 154, 0.35);
         }
         .hk-button:hover::before {
           animation-duration: 1.5s;
@@ -333,11 +333,10 @@ export function LandingNav() {
               key={l.href}
               href={l.href}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                activeSection === l.href
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${activeSection === l.href
                   ? "bg-emerald-500/10 text-[#32f59a] light:bg-emerald-50 light:text-[#065f46]"
                   : "text-slate-300 hover:bg-white/8 hover:text-white light:text-slate-700 light:hover:bg-slate-100 light:hover:text-slate-900"
-              }`}
+                }`}
             >
               {l.label}
             </a>

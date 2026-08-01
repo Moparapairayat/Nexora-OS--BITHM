@@ -420,10 +420,7 @@ export function LandingPage() {
   };
 
   return (
-    <main
-      style={{ background: "var(--theme-page-aura), var(--theme-page-bg)" }}
-      className="relative min-h-screen overflow-x-clip text-white transition-colors duration-500 light:bg-[radial-gradient(circle_at_12%_85%,rgba(252,228,198,0.55),transparent_42%),radial-gradient(circle_at_88%_12%,rgba(195,236,220,0.65),transparent_45%),linear-gradient(130deg,#fcf8f3_0%,#f5faf7_50%,#f2f8f5_100%)] light:text-[#15251f]"
-    >
+    <main className="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_50%_0%,rgba(var(--theme-accent-primary-rgb-raw),0.13),transparent_42rem),radial-gradient(circle_at_92%_32%,rgba(20,184,108,0.07),transparent_30rem),linear-gradient(180deg,rgba(18,24,21,0.98)_0%,rgba(7,13,10,0.99)_38%,rgba(5,7,6,1)_100%)] text-white light:bg-[radial-gradient(circle_at_12%_85%,rgba(252,228,198,0.55),transparent_42%),radial-gradient(circle_at_88%_12%,rgba(195,236,220,0.65),transparent_45%),linear-gradient(130deg,#fcf8f3_0%,#f5faf7_50%,#f2f8f5_100%)] light:text-[#15251f]">
       <div className="absolute inset-0 bg-dot-grid pointer-events-none z-0" />
       <LandingNav />
 
@@ -531,7 +528,7 @@ export function LandingPage() {
 
             {/* Ambient Glass Orbit Halo */}
             <div className="landing-orbit absolute inset-1 sm:inset-2 md:inset-3 rounded-full border border-emerald-400/20 bg-emerald-500/5 backdrop-blur-[2px] before:absolute before:left-1/2 before:top-0 before:h-2.5 before:w-2.5 before:-translate-y-1/2 before:rounded-full before:bg-emerald-300 before:shadow-[0_0_18px_rgba(110,255,185,0.9)] z-10 hidden sm:block pointer-events-none" />
-            
+
             <Image
               src="/landing/mentor-modern/hero-image.png"
               alt="Student using Nexora OS for academic work"
@@ -885,8 +882,8 @@ export function LandingPage() {
                     }}
                     aria-label={`Go to slide ${dotIdx + 1}`}
                     className={`h-1.5 rounded-full transition-all duration-300 ${activeIdx === dotIdx + 1
-                        ? "w-4 bg-accent-primary light:bg-accent-solid"
-                        : "w-1.5 bg-white/20 hover:bg-white/40 light:bg-black/10 light:hover:bg-black/25"
+                      ? "w-4 bg-accent-primary light:bg-accent-solid"
+                      : "w-1.5 bg-white/20 hover:bg-white/40 light:bg-black/10 light:hover:bg-black/25"
                       }`}
                   />
                 ))}
