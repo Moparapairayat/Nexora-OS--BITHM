@@ -1,0 +1,82 @@
+﻿services:
+  # --- API Service (Express.js + Prisma) ---
+  - type: web
+    name: nexora-api
+    runtime: docker
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 8311
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: AI_MODE
+        value: api
+      - key: STORAGE_MODE
+        value: local
+      - key: UPLOAD_DIR
+        value: ./storage/uploads
+      - key: MAX_UPLOAD_MB
+        value: 25
+      - key: AUDIT_LOG_MODE
+        value: database
+      - key: NEXORA_DATA_MODE
+        value: database
+      - key: DATA_EXPORT_MODE
+        value: database-json
+      - key: DATA_SYNC_STRATEGY
+        value: prisma
+      - key: SESSION_COOKIE_NAME
+        value: nexora_session
+      - key: NEXORA_DEMO_LOGIN_ENABLED
+        value: true
+      - key: CODE_RUN_TIMEOUT_MS
+        value: 4000
+
+  # --- Web Service (Next.js) ---
+  - type: web
+    name: nexora-web
+    runtime: docker
+    dockerfilePath: apps/web/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+
+  # --- ML NLP Service (Python FastAPI) ---
+  - type: web
+    name: nexora-ml
+    runtime: docker
+    dockerfilePath: services/ml-nlp/Dockerfile
+    dockerContext: services/ml-nlp
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8010
