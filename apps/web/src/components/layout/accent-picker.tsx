@@ -180,7 +180,7 @@ export function AccentPicker({ variant = "floating" }: AccentPickerProps) {
         <div className="absolute top-14 right-0 mt-2 w-64 rounded-2xl border border-white/15 light:border-slate-200/90 bg-[rgba(10,15,12,0.94)] light:bg-[rgba(255,255,255,0.96)] p-3.5 shadow-[0_20px_50px_rgba(0,0,0,0.5)] light:shadow-[0_15px_35px_rgba(0,0,0,0.12)] backdrop-blur-2xl animate-in fade-in zoom-in-95 slide-in-from-top-2 duration-200 cursor-default">
           <div className="flex items-center justify-between pb-2.5 mb-2.5 border-b border-white/10 light:border-slate-200">
             <div className="flex items-center gap-2">
-              <GripVertical className="h-3.5 w-3.5 text-slate-400/80 cursor-grab" title="Drag widget anywhere" />
+              <GripVertical className="h-3.5 w-3.5 text-slate-400/80 cursor-grab" aria-label="Drag widget anywhere" />
               <Palette className="h-4 w-4" style={{ color: currentTheme.accentHex }} />
               <span className="text-xs font-bold tracking-wide text-slate-200 light:text-slate-800">
                 Accent Theme
