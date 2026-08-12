@@ -424,7 +424,7 @@ async function logAiRequest(
         mode,
         prompt,
         response: asInputJson(response ?? {}),
-        latencyMs: Date.now() - startedAt,
+        executionTime: Date.now() - startedAt,
       },
     })
     .catch(() => undefined);

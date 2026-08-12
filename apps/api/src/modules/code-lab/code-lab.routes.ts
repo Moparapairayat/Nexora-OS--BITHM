@@ -1714,7 +1714,7 @@ codeLabRouter.post("/assistant", requireAuth, async (request, response) => {
       mode: aiResponse.mode,
       prompt,
       response: aiResponse.output as Prisma.InputJsonValue,
-      latencyMs: Date.now() - startedAt,
+      executionTime: Date.now() - startedAt,
     },
   });
 

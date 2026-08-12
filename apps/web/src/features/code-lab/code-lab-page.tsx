@@ -3952,7 +3952,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
           language: currentLanguage,
           code,
           stdin,
-          testCases: tests.map(({ id, input, expected }) => ({
+          testCases: tests.map(({ id, input, expected }: TestCase) => ({
             id,
             input,
             expected,
@@ -3976,7 +3976,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
           code,
           stdin,
           files: buildRunnerFiles(),
-          testCases: tests.map(({ id, input, expected }) => ({
+          testCases: tests.map(({ id, input, expected }: TestCase) => ({
             id,
             input,
             expected,
@@ -4074,7 +4074,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
           language: currentLanguage,
           code,
           stdin,
-          testCases: tests.map(({ id, input, expected }) => ({
+          testCases: tests.map(({ id, input, expected }: TestCase) => ({
             id,
             input,
             expected,
@@ -4098,7 +4098,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
           code,
           stdin,
           files: buildRunnerFiles(),
-          testCases: tests.map(({ id, input, expected }) => ({
+          testCases: tests.map(({ id, input, expected }: TestCase) => ({
             id,
             input,
             expected,
@@ -4127,7 +4127,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       const resultMap = new Map(
         (result.testResults ?? []).map((item) => [item.id, item]),
       );
-      const nextTests: TestCase[] = tests.map((test) => {
+      const nextTests: TestCase[] = tests.map((test: TestCase) => {
         const resultItem = resultMap.get(test.id);
         const passed =
           resultItem?.passed ??
