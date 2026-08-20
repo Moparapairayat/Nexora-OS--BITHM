@@ -57,8 +57,29 @@ export const codeRunner: CodeRunner = {
 
         if (res.ok) {
           const data = await res.json();
+          if (data.success || (data.stdout && !data.stderr && !data.errorMessage)) {
+            return {
+              stdout: data.stdout || (data.success ? "Execution completed without stdout." : ""),
+              stderr: data.stderr || "",
+              success: data.success,
+              executionTime: data.executionTimeMs || 0,
+              errorMessage: data.errorMessage,
+              adapter: `piston-engine:${data.provider || "api"}`,
+              language,
+            };
+          }
+
+          // Fall back to client browser runner for JavaScript/TypeScript when backend fails
+          if (language === "javascript" || language === "typescript") {
+            console.warn("[codeRunner] Backend returned error, falling back to local browser runner:", data.errorMessage || data.stderr);
+            return runnerFor(language).runCode({
+              ...input,
+              language,
+            });
+          }
+
           return {
-            stdout: data.stdout || (data.success ? "Execution completed without stdout." : ""),
+            stdout: data.stdout || "",
             stderr: data.stderr || "",
             success: data.success,
             executionTime: data.executionTimeMs || 0,
@@ -96,6 +117,27 @@ export const codeRunner: CodeRunner = {
 
         if (res.ok) {
           const data = await res.json();
+          if (data.success) {
+            return {
+              stdout: data.stdout || "",
+              stderr: data.stderr || "",
+              success: data.success,
+              executionTime: data.executionTimeMs || 0,
+              testResults: data.testResults,
+              errorMessage: data.errorMessage,
+              adapter: `piston-engine:${data.provider || "api"}`,
+              language,
+            };
+          }
+
+          if (language === "javascript" || language === "typescript") {
+            console.warn("[codeRunner] Backend test runner returned error, falling back to local browser test runner:", data.errorMessage);
+            return runnerFor(language).runTests({
+              ...input,
+              language,
+            });
+          }
+
           return {
             stdout: data.stdout || "",
             stderr: data.stderr || "",

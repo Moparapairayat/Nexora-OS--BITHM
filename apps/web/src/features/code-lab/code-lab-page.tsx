@@ -2012,7 +2012,7 @@ function CodeEditorPanel({
         <span className="text-[#CBD5E1] dark:text-[#334155]">/</span>
         <span className="text-[#5D6B82] dark:text-[#94A3B8]">src</span>
         <span className="text-[#CBD5E1] dark:text-[#334155]">/</span>
-        <span className="font-bold text-[#0B1B33] dark:text-[#E2E8F0]">{activeFile?.name ?? "main.py"}</span>
+        <span className="font-bold text-[#0B1B33] dark:text-[#E2E8F0]">{activeFile?.name ?? "main.js"}</span>
         <span className="ml-auto rounded-full bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 text-[10px] font-mono font-bold text-[#00804A] dark:text-[#32F59A] border border-[#DFF8EA] dark:border-[#009B5A]/40">
           {editorLanguage}
         </span>
@@ -2166,20 +2166,20 @@ function TerminalPanel({
   }
 
   return (
-    <div className="grid h-full min-h-[150px] grid-rows-[auto_minmax(0,1fr)_auto] overflow-hidden rounded-xl border border-[#24342F] bg-[#0D1110] text-[#D6F7E7] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
-      <div className="flex min-h-9 items-center justify-between gap-2 border-b border-[#1F2B27] bg-[#111816] px-2.5">
+    <div className="flex flex-col h-full min-h-[160px] w-full overflow-hidden rounded-xl border border-[#E2E8F0] dark:border-[#273240] bg-[#FFFFFF] dark:bg-[#0B0F17] text-[#0F172A] dark:text-[#E2E8F0] shadow-xs select-text">
+      <div className="flex min-h-9 shrink-0 items-center justify-between gap-2 border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#111827] px-3 select-none">
         <div className="flex min-w-0 items-center gap-2">
           <button
             type="button"
             onClick={() => inputRef.current?.focus()}
-            className="inline-flex h-7 max-w-[220px] items-center gap-2 rounded-md bg-[#1E2B26] px-2.5 text-xs font-semibold text-[#F5F7F2] border border-[#2A3B35]"
+            className="inline-flex h-6 max-w-[240px] items-center gap-2 rounded-md bg-[#F1F5F9] dark:bg-[#1E293B] px-2.5 text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] border border-[#E2E8F0] dark:border-[#334155]"
             title="nexora-sandbox"
           >
-            <span className="h-2 w-2 rounded-full bg-[#009B5A] animate-pulse" />
-            <span className="truncate">nexora-sandbox (python3)</span>
+            <span className="h-2 w-2 rounded-full bg-[#009B5A] dark:bg-[#10B981] animate-pulse" />
+            <span className="truncate">nexora-sandbox (node.js)</span>
           </button>
-          <span className="rounded bg-[#16241F] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#009B5A] border border-[#263E34]">
-            Judge0 CE
+          <span className="rounded bg-[#EFFFF5] dark:bg-[#1E293B] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#00804A] dark:text-[#34D399] border border-[#DFF8EA] dark:border-[#334155]">
+            Judge0 / Sandbox
           </span>
           <button
             type="button"
@@ -2187,25 +2187,25 @@ function TerminalPanel({
               onCommandChange("help");
               inputRef.current?.focus();
             }}
-            className="grid h-7 w-7 place-items-center rounded-md text-[#A7B3AA] transition hover:bg-[#1E2B26] hover:text-[#009B5A]"
+            className="grid h-6 w-6 place-items-center rounded-md text-[#64748B] dark:text-[#94A3B8] transition hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] hover:text-[#009B5A] dark:hover:text-[#34D399]"
             aria-label="New terminal"
             title="New terminal"
           >
             <Plus className="h-3.5 w-3.5" />
           </button>
         </div>
-        <div className="flex items-center gap-2 text-[11px] font-semibold text-[#7B8C82]">
-          <span className="flex items-center gap-1 font-mono text-[10px] text-[#009B5A] bg-[#16241F] px-2 py-0.5 rounded border border-[#263E34]">
+        <div className="flex items-center gap-2 text-[11px] font-semibold text-[#64748B] dark:text-[#94A3B8]">
+          <span className="flex items-center gap-1 font-mono text-[10px] text-[#00804A] dark:text-[#34D399] bg-[#EFFFF5] dark:bg-[#064E3B]/40 px-2 py-0.5 rounded border border-[#DFF8EA] dark:border-[#059669]/30">
             ⚡ ~11ms
           </span>
-          <span className="flex items-center gap-1">
-            <span className={cn("h-1.5 w-1.5 rounded-full", isRunning ? "bg-[#FFB020] animate-ping" : "bg-[#009B5A]")} />
+          <span className="flex items-center gap-1.5 text-[11px] text-[#64748B] dark:text-[#94A3B8]">
+            <span className={cn("h-1.5 w-1.5 rounded-full", isRunning ? "bg-[#F59E0B] animate-ping" : "bg-[#009B5A] dark:bg-[#10B981]")} />
             {isRunning ? "running" : "ready"}
           </span>
           <button
             type="button"
             onClick={onClear}
-            className="grid h-7 w-7 place-items-center rounded-md text-[#A7B3AA] transition hover:bg-[#2A1515] hover:text-[#FFB4A8]"
+            className="grid h-6 w-6 place-items-center rounded-md text-[#64748B] dark:text-[#94A3B8] transition hover:bg-[#FEE2E2] dark:hover:bg-[#7F1D1D]/40 hover:text-[#DC2626] dark:hover:text-[#FCA5A5]"
             aria-label="Kill terminal"
             title="Kill terminal"
           >
@@ -2216,54 +2216,54 @@ function TerminalPanel({
 
       <div
         ref={scrollRef}
-        className="min-h-0 overflow-auto px-3 py-2 font-mono text-[12.5px] leading-[21px]"
+        className="flex-1 min-h-0 overflow-auto bg-[#FFFFFF] dark:bg-[#0B0F17] p-3.5 font-mono text-[12.5px] leading-[22px] text-[#0F172A] dark:text-[#E2E8F0]"
         onClick={() => inputRef.current?.focus()}
       >
         {history.length === 0 ? (
-          <div className="text-[#7B8C82]">
-            Nexora Code Lab terminal. Type{" "}
-            <span className="text-[#D9FF57]">help</span>.
+          <div className="text-[#64748B] dark:text-[#94A3B8]">
+            Nexora Code Lab Terminal v2.1. Type{" "}
+            <span className="text-[#009B5A] dark:text-[#34D399] font-bold">help</span> to view available commands.
           </div>
         ) : null}
         {history.map((entry) => (
-          <div key={entry.id} className="py-1">
+          <div key={entry.id} className="py-1.5">
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-[#32F59A]">{entry.cwd}</span>
-              <span className="text-[#D9FF57]">$</span>
-              <span className="text-[#F5F7F2]">{entry.command}</span>
+              <span className="text-[#0284C7] dark:text-[#38BDF8] font-bold">{entry.cwd}</span>
+              <span className="text-[#009B5A] dark:text-[#34D399] font-bold">$</span>
+              <span className="text-[#0F172A] dark:text-[#F8FAFC] font-semibold">{entry.command}</span>
               {entry.executionTimeMs !== undefined ? (
-                <span className="ml-auto text-[10px] uppercase text-[#6E7A72]">
+                <span className="ml-auto text-[10px] uppercase text-[#94A3B8] dark:text-[#64748B]">
                   {entry.adapter === "nexora-docker-sandbox"
                     ? "docker"
-                    : "safe"}{" "}
+                    : "sandbox"}{" "}
                   · {entry.executionTimeMs}ms
                 </span>
               ) : null}
             </div>
             {entry.stdout ? (
-              <pre className="mt-1 whitespace-pre-wrap break-words text-[#D6F7E7]">
+              <pre className="mt-1 whitespace-pre-wrap break-words text-[#0F172A] dark:text-[#E2E8F0] font-mono leading-relaxed bg-[#F8FAFC] dark:bg-[#111827]/60 rounded-md p-2 border border-[#E2E8F0] dark:border-[#1E293B]/60">
                 {entry.stdout}
               </pre>
             ) : null}
             {entry.stderr ? (
-              <pre className="mt-1 whitespace-pre-wrap break-words text-[#FFB4A8]">
+              <pre className="mt-1 whitespace-pre-wrap break-words text-[#DC2626] dark:text-[#F87171] font-mono leading-relaxed bg-[#FEF2F2] dark:bg-[#7F1D1D]/20 rounded-md p-2 border border-[#FECACA] dark:border-[#991B1B]/40">
                 {entry.stderr}
               </pre>
             ) : null}
           </div>
         ))}
         {isRunning ? (
-          <div className="py-1">
+          <div className="py-1.5 text-[#F59E0B]">
             <PenguinLoadingSpinner
               size="sm"
               showText={true}
-              text="Executing command"
+              text="Executing command..."
             />
           </div>
         ) : null}
       </div>
 
-      <div className="border-t border-[#1F2B27] bg-[#0B0F0D] px-3 py-2">
+      <div className="shrink-0 border-t border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#111827] px-3 py-2">
         {matchingSuggestions.length > 0 && command.trim() ? (
           <div className="mb-2 flex flex-wrap gap-1.5">
             {matchingSuggestions.map((item) => (
@@ -2274,7 +2274,7 @@ function TerminalPanel({
                   onCommandChange(item);
                   inputRef.current?.focus();
                 }}
-                className="rounded-md border border-[#263E34] bg-[#101A16] px-2 py-0.5 text-[11px] font-semibold text-[#A7B3AA] transition hover:border-[#32F59A66] hover:text-[#D9FF57]"
+                className="rounded-md border border-[#E2E8F0] dark:border-[#334155] bg-[#FFFFFF] dark:bg-[#1E2B26] px-2 py-0.5 text-[11px] font-semibold text-[#64748B] dark:text-[#94A3B8] transition hover:border-[#009B5A] dark:hover:border-[#34D399] hover:text-[#009B5A] dark:hover:text-[#34D399]"
               >
                 {item}
               </button>
@@ -2289,16 +2289,16 @@ function TerminalPanel({
           }}
           className="flex items-center gap-2"
         >
-          <span className="shrink-0 text-[#32F59A]">{promptCwd}</span>
-          <span className="shrink-0 text-[#D9FF57]">$</span>
+          <span className="shrink-0 text-[#0284C7] dark:text-[#38BDF8] font-bold font-mono text-[13px]">{promptCwd}</span>
+          <span className="shrink-0 text-[#009B5A] dark:text-[#34D399] font-bold font-mono text-[13px]">$</span>
           <input
             ref={inputRef}
             value={command}
             onChange={(event) => onCommandChange(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="python main.py"
+            placeholder="node main.js"
             disabled={isRunning}
-            className="h-7 min-w-0 flex-1 bg-transparent font-mono text-[13px] text-[#F5F7F2] caret-[#D9FF57] outline-none placeholder:text-[#4E5B54] disabled:opacity-60"
+            className="h-7 min-w-0 flex-1 bg-transparent font-mono text-[13px] text-[#0F172A] dark:text-[#F8FAFC] caret-[#009B5A] dark:caret-[#34D399] outline-none placeholder:text-[#94A3B8] dark:placeholder:text-[#64748B] disabled:opacity-60"
           />
         </form>
       </div>
@@ -2514,7 +2514,14 @@ function ConsolePanel({
       </header>
 
       {!collapsed ? (
-        <div className="min-h-0 flex-1 overflow-auto bg-[#FAFCFC] dark:bg-[#080E1A] p-3 font-mono text-[13px] leading-[22px] text-[#0B1B33] dark:text-[#E2E8F0]">
+        <div
+          className={cn(
+            "min-h-0 flex-1 overflow-auto font-mono text-[13px] leading-[22px]",
+            tab === "terminal"
+              ? "flex flex-col p-2 bg-[#F8FAFC] dark:bg-[#080E1A]"
+              : "bg-[#FAFCFC] dark:bg-[#080E1A] p-3 text-[#0B1B33] dark:text-[#E2E8F0]",
+          )}
+        >
           {tab === "console" ? (
             <pre className="m-0 whitespace-pre-wrap break-words">
               {consoleOutput || "Ready."}
@@ -2861,9 +2868,9 @@ function InstructionPanel({
   ];
 
   const requirements = [
-    "Read an integer input",
-    "Return factorial",
-    "Handle invalid inputs",
+    "Process batch student scores",
+    "Calculate 4.00-scaled CGPA",
+    "Classify academic honours & standing",
   ];
   const aiActions: { id: AiAction; label: string }[] = [
     { id: "explain", label: "Explain this code" },
@@ -3034,9 +3041,9 @@ function InstructionPanel({
         {tab === "examples" ? (
           <div className="grid gap-3">
             {[
-              { input: "0", output: "1" },
-              { input: "5", output: "120" },
-              { input: "7", output: "5040" },
+              { input: "100, 100, 100", output: "4" },
+              { input: "85, 90, 95", output: "3.6" },
+              { input: "75, 75, 75", output: "3" },
             ].map((example) => (
               <div
                 key={example.input}
@@ -3053,9 +3060,9 @@ function InstructionPanel({
           <div className="grid gap-3 text-sm text-[#3D4A63]">
             <ul className="grid gap-2">
               {[
-                "Use a base case: factorial(0) returns 1",
-                "Validate the input is a non-negative integer",
-                "Print the formatted result with f-strings",
+                "Use reduce() to compute total marks and calculate average",
+                "Scale average score to 4.00 standard GPA grade scale",
+                "Log structured performance audit metrics with student details",
               ].map((tip) => (
                 <li key={tip} className="flex items-start gap-2">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#009B5A]" />
@@ -3075,7 +3082,7 @@ function InstructionPanel({
 export function CodeLabPage({ role }: { role: AppRole }) {
   const roleData = roleDashboards[role];
 
-  const [language, setLanguage] = useState<LanguageId>("python");
+  const [language, setLanguage] = useState<LanguageId>("javascript");
   const [environment, setEnvironment] = useState<EnvironmentId>("standard");
   const [workspaceId, setWorkspaceId] = useState<string | null>(null);
   const [workspaceTitle, setWorkspaceTitle] = useState("Code Lab Workspace");
@@ -3086,8 +3093,8 @@ export function CodeLabPage({ role }: { role: AppRole }) {
 
   const allFiles = useMemo(() => flattenFiles(folders), [folders]);
 
-  const [openFileIds, setOpenFileIds] = useState<string[]>(["main.py"]);
-  const [activeFileId, setActiveFileId] = useState<string>("main.py");
+  const [openFileIds, setOpenFileIds] = useState<string[]>(["main.js"]);
+  const [activeFileId, setActiveFileId] = useState<string>("main.js");
   const [fileContents, setFileContents] = useState<Record<string, string>>(() =>
     Object.fromEntries(
       flattenFiles(initialFolders).map((file) => [file.id, file.content]),
@@ -3224,7 +3231,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
   function applyDatabaseWorkspace(workspace: CodeLabApiWorkspace) {
     const nextFolders = foldersFromApiFiles(workspace.files);
     const nextActiveFileId =
-      workspace.activeFileId ?? workspace.files[0]?.id ?? "main.py";
+      workspace.activeFileId ?? workspace.files[0]?.id ?? "main.js";
     const hydratedFolders =
       nextFolders.length > 0 ? nextFolders : initialFolders;
     const hydratedContents = fileContentsFromFolders(hydratedFolders);
@@ -3241,7 +3248,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     setLanguage(
       runnerLanguageFor(
         flattenFiles(nextFolders).find((file) => file.id === nextActiveFileId),
-        "python",
+        "javascript",
       ) as LanguageId,
     );
     setVersionHistory(
@@ -3289,7 +3296,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
               )
             : await apiPost<WorkspaceResponse>("/code-lab/workspaces", {
                 title: "Code Lab Workspace",
-                activeFileName: "main.py",
+                activeFileName: "main.js",
                 files: initialFolders.flatMap((folder) =>
                   folder.files.map((file, index) => ({
                     id: file.id,
@@ -3328,14 +3335,14 @@ export function CodeLabPage({ role }: { role: AppRole }) {
           setOpenFileIds(
             restoredWorkspace.openFileIds?.length
               ? restoredWorkspace.openFileIds
-              : ["main.py"],
+              : ["main.js"],
           );
           setActiveFileId(
             restoredWorkspace.activeFileId ??
               restoredWorkspace.openFileIds?.[0] ??
-              "main.py",
+              "main.js",
           );
-          setLanguage(restoredWorkspace.language ?? "python");
+          setLanguage(restoredWorkspace.language ?? "javascript");
           setVersionHistory(restoredWorkspace.versions ?? []);
           setDbStatus("draft");
           setConsoleOutput(
@@ -3818,7 +3825,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     const payload = {
       title: workspaceTitle,
       activeFileId,
-      activeFileName: activeFile?.name ?? "main.py",
+      activeFileName: activeFile?.name ?? "main.js",
       files: buildApiFiles(),
     };
     const response = workspaceId
@@ -3860,7 +3867,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       {
         title: workspaceTitle,
         activeFileId,
-        activeFileName: activeFile?.name ?? "main.py",
+        activeFileName: activeFile?.name ?? "main.js",
         files,
       },
     );

@@ -18,6 +18,25 @@ const JUDGE0_LANGUAGE_IDS: Record<SupportedLanguage, number> = {
   html: 0,
 };
 
+function encodeBase64(str: string): string {
+  if (typeof Buffer !== "undefined") {
+    return Buffer.from(str, "utf-8").toString("base64");
+  }
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+function decodeBase64(str: string | null | undefined): string {
+  if (!str) return "";
+  try {
+    if (typeof Buffer !== "undefined") {
+      return Buffer.from(str, "base64").toString("utf-8");
+    }
+    return decodeURIComponent(escape(atob(str)));
+  } catch {
+    return str;
+  }
+}
+
 export class Judge0Provider extends BaseExecutionProvider {
   public readonly id: ExecutionProviderId = "judge0";
   public readonly name: string = "Judge0 CE Execution API";
@@ -38,8 +57,8 @@ export class Judge0Provider extends BaseExecutionProvider {
     const code = input.code || (input.files && input.files[0]?.content) || "";
     const payload = {
       language_id: languageId,
-      source_code: code,
-      stdin: input.stdin || "",
+      source_code: encodeBase64(code),
+      stdin: encodeBase64(input.stdin || ""),
     };
 
     const timeoutMs = input.timeoutMs || 8000;
@@ -47,7 +66,7 @@ export class Judge0Provider extends BaseExecutionProvider {
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-      const response = await fetch("https://ce.judge0.com/submissions?wait=true", {
+      const response = await fetch("https://ce.judge0.com/submissions?base64_encoded=true&wait=true", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -63,8 +82,9 @@ export class Judge0Provider extends BaseExecutionProvider {
 
       const data = await response.json();
       const executionTimeMs = Date.now() - startTime;
-      const stdout = data.stdout || "";
-      const stderr = data.stderr || data.compile_output || "";
+      const stdout = decodeBase64(data.stdout);
+      const stderr = decodeBase64(data.stderr) || decodeBase64(data.compile_output);
+      const compileOutput = decodeBase64(data.compile_output);
       const isSuccess = data.status?.id === 3; // 3 = Accepted in Judge0
 
       let status: StandardExecutionResult["status"] = isSuccess ? "success" : "runtime_error";
@@ -75,14 +95,14 @@ export class Judge0Provider extends BaseExecutionProvider {
         success: isSuccess,
         stdout,
         stderr,
-        compileOutput: data.compile_output || "",
+        compileOutput,
         status,
         exitCode: isSuccess ? 0 : 1,
         executionTimeMs: Math.round(parseFloat(data.time || "0") * 1000) || executionTimeMs,
         memoryUsageKb: data.memory || 0,
         provider: this.id,
         language: lang,
-        errorMessage: isSuccess ? undefined : data.status?.description || stderr,
+        errorMessage: isSuccess ? undefined : decodeBase64(data.message) || data.status?.description || stderr,
         timestamp: new Date().toISOString(),
       };
     } catch (err: any) {
@@ -92,3 +112,4 @@ export class Judge0Provider extends BaseExecutionProvider {
     }
   }
 }
+

@@ -61,37 +61,110 @@ export const initialFolders: FolderNode[] = [
     name: "main",
     files: [
       {
-        id: "main.py",
-        name: "main.py",
-        language: "python",
-        content: `# Nexora OS - Code Lab
-# Write your code here
+        id: "main.js",
+        name: "main.js",
+        language: "javascript",
+        content: `// Nexora OS - Academic Code Lab
+// Student Evaluation & CGPA Calculation Engine
 
-def factorial(n):
-    if n == 0:
-        return 1
-    return n * factorial(n - 1)
+function calculateGPA(marks) {
+  if (!marks || marks.length === 0) return 0;
+  const total = marks.reduce((sum, mark) => sum + mark, 0);
+  const average = total / marks.length;
+  // Scaled 4.0 GPA scale (e.g. 100 -> 4.0, 85 -> 3.4)
+  return Number(((average / 100) * 4.0).toFixed(2));
+}
 
-def main():
-    num = int(input("Enter a number: "))
-    result = factorial(num)
-    print(f"Factorial of {num} is {result}")
+function evaluateStudent(student) {
+  const gpa = calculateGPA(student.marks);
+  let status = "Needs Improvement";
+  let grade = "C";
 
-if __name__ == "__main__":
-    main()
+  if (gpa >= 3.75) {
+    status = "Distinction (Honors)";
+    grade = "A+";
+  } else if (gpa >= 3.50) {
+    status = "Excellent";
+    grade = "A";
+  } else if (gpa >= 3.00) {
+    status = "Passed with Merit";
+    grade = "B";
+  } else if (gpa >= 2.00) {
+    status = "Passed";
+    grade = "C";
+  } else {
+    status = "Failed";
+    grade = "F";
+  }
+
+  return { ...student, gpa, grade, status };
+}
+
+function main() {
+  // If test input is provided via stdin (e.g. Test Suite)
+  const rawInput = typeof input === "function" ? input() : "";
+  if (rawInput && rawInput.trim() !== "") {
+    const marks = rawInput
+      .split(",")
+      .map((n) => parseFloat(n.trim()))
+      .filter((n) => !isNaN(n));
+    if (marks.length > 0) {
+      console.log(calculateGPA(marks));
+      return;
+    }
+  }
+
+  console.log("==================================================");
+  console.log("🎓 NEXORA OS — ACADEMIC EVALUATION & LAB ENGINE 🎓");
+  console.log("==================================================\\n");
+
+  const students = [
+    { id: "NX-101", name: "Sadia Khan", dept: "Computer Science", marks: [95, 92, 88, 94, 98] },
+    { id: "NX-102", name: "Rafiq Ahmed", dept: "Software Engineering", marks: [85, 78, 90, 82, 86] },
+    { id: "NX-103", name: "Tanvir Hasan", dept: "Data Science", marks: [74, 80, 78, 85, 72] }
+  ];
+
+  console.log("📊 [1/2] Processing Batch Student Evaluations...\\n");
+
+  const evaluated = students.map(evaluateStudent);
+
+  evaluated.forEach((s) => {
+    console.log(\`👤 [\${s.id}] \${s.name} (\${s.dept})\`);
+    console.log(\`   ├─ CGPA: \${s.gpa.toFixed(2)} / 4.00 (Grade: \${s.grade})\`);
+    console.log(\`   └─ Status: \${s.status}\\n\`);
+  });
+
+  const avgCGPA = (
+    evaluated.reduce((sum, s) => sum + s.gpa, 0) / evaluated.length
+  ).toFixed(2);
+
+  console.log("--------------------------------------------------");
+  console.log(\`✨ Total Evaluated: \${evaluated.length} Students\`);
+  console.log(\`📈 Batch Average CGPA: \${avgCGPA} / 4.00\`);
+  console.log("✅ Academic Integrity & Evaluation Audit Complete!");
+  console.log("==================================================");
+}
+
+main();
 `,
       },
       {
-        id: "utils.py",
-        name: "utils.py",
-        language: "python",
-        content: `# Helper utilities for the factorial lab.
+        id: "utils.js",
+        name: "utils.js",
+        language: "javascript",
+        content: `// Helper utilities for the Academic Evaluation Lab.
 
-def is_non_negative_int(value):
-    try:
-        return int(value) >= 0
-    except (TypeError, ValueError):
-        return False
+function isValidScore(score) {
+  return typeof score === "number" && score >= 0 && score <= 100;
+}
+
+function getLetterGrade(gpa) {
+  if (gpa >= 3.75) return "A+";
+  if (gpa >= 3.50) return "A";
+  if (gpa >= 3.00) return "B";
+  if (gpa >= 2.00) return "C";
+  return "F";
+}
 `,
       },
       {
@@ -99,38 +172,68 @@ def is_non_negative_int(value):
         name: "data.json",
         language: "json",
         content: `{
-  "sample_inputs": [0, 1, 5, 7, 10],
-  "expected_outputs": [1, 1, 120, 5040, 3628800]
+  "academic_year": "2025-2026",
+  "course": "BITHM / OTHM Level 5 - Software Engineering",
+  "students": [
+    {
+      "id": "NX-101",
+      "name": "Sadia Khan",
+      "marks": [95, 92, 88, 94, 98]
+    },
+    {
+      "id": "NX-102",
+      "name": "Rafiq Ahmed",
+      "marks": [85, 78, 90, 82, 86]
+    },
+    {
+      "id": "NX-103",
+      "name": "Tanvir Hasan",
+      "marks": [74, 80, 78, 85, 72]
+    }
+  ]
 }
 `,
       },
     ],
   },
   {
-    id: "modules",
-    name: "modules",
+    id: "config",
+    name: "config",
     files: [
       {
-        id: "requirements.txt",
-        name: "requirements.txt",
-        language: "text",
-        content: `# Python dependencies for this workspace
-# (No external libraries required for the factorial lab)
+        id: "package.json",
+        name: "package.json",
+        language: "json",
+        content: `{
+  "name": "nexora-academic-evaluation-lab",
+  "version": "1.0.0",
+  "description": "Student grading and CGPA analytics module for Nexora OS",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "node main.js"
+  }
+}
 `,
       },
       {
         id: "README.md",
         name: "README.md",
         language: "markdown",
-        content: `# Factorial Calculator
+        content: `# Nexora OS - Academic Evaluation Lab
 
-Write a program that reads an integer \`n\` from input and prints \`n!\`.
+Calculate student grade points, weighted CGPA averages, and academic performance classifications.
 
-## Run
+## Execution
 
 \`\`\`bash
-python main.py
+node main.js
 \`\`\`
+
+## Features
+- Real-time CGPA Calculation (4.00 scale)
+- Distinction & Honors status classification
+- Multi-student batch evaluation audit
 `,
       },
     ],
@@ -138,9 +241,9 @@ python main.py
 ];
 
 export const initialTests: TestCase[] = [
-  { id: "t1", input: "0", expected: "1", status: "pending" },
-  { id: "t2", input: "5", expected: "120", status: "pending" },
-  { id: "t3", input: "7", expected: "5040", status: "pending" },
+  { id: "t1", input: "100, 100, 100", expected: "4", status: "pending" },
+  { id: "t2", input: "85, 90, 95", expected: "3.6", status: "pending" },
+  { id: "t3", input: "75, 75, 75", expected: "3", status: "pending" },
 ];
 
 export const initialConsole =
@@ -149,21 +252,21 @@ export const initialConsole =
 export const recentWorkspaces: RecentWorkspace[] = [
   {
     id: "w1",
-    title: "Sorting Algorithm",
-    language: "python",
-    lastOpened: "2h ago",
+    title: "Academic Evaluation Engine",
+    language: "javascript",
+    lastOpened: "10m ago",
   },
   {
     id: "w2",
-    title: "Data Structure Lab",
-    language: "python",
-    lastOpened: "1 day ago",
+    title: "Student CGPA Analytics",
+    language: "javascript",
+    lastOpened: "2h ago",
   },
   {
     id: "w3",
-    title: "Web Scraper",
-    language: "python",
-    lastOpened: "3 days ago",
+    title: "Algorithm & Sorting Lab",
+    language: "javascript",
+    lastOpened: "1 day ago",
   },
 ];
 
@@ -175,3 +278,4 @@ export const codeStats = {
   // 14-day mini trend used by the sparkline (relative values, 0–100).
   trend: [42, 55, 48, 62, 70, 65, 74, 78, 72, 84, 80, 88, 91, 87],
 };
+
