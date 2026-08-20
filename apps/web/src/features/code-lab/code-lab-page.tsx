@@ -960,7 +960,14 @@ function monacoLanguageFor(file: FileNode | undefined, fallback: LanguageId) {
 }
 
 function useMonacoTheme() {
-  const [theme, setTheme] = useState("nexora-code-light");
+  const [theme, setTheme] = useState(() => {
+    if (typeof document !== "undefined") {
+      return document.documentElement.classList.contains("light")
+        ? "nexora-code-light"
+        : "nexora-code-dark";
+    }
+    return "nexora-code-light";
+  });
 
   useEffect(() => {
     const root = document.documentElement;
@@ -976,7 +983,14 @@ function useMonacoTheme() {
     const observer = new MutationObserver(syncTheme);
     observer.observe(root, { attributes: true, attributeFilter: ["class"] });
 
-    return () => observer.disconnect();
+    window.addEventListener("nexora-theme-change", syncTheme);
+    window.addEventListener("storage", syncTheme);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("nexora-theme-change", syncTheme);
+      window.removeEventListener("storage", syncTheme);
+    };
   }, []);
 
   return theme;
@@ -4540,9 +4554,9 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     >
       <div
         className={cn(
-          "nexora-code-lab code-lab-ide-shell grid grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[18px] border border-[#DCE7E2] bg-white shadow-[0_12px_34px_rgba(15,23,42,0.06)]",
+          "nexora-code-lab code-lab-ide-shell grid grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[18px] border border-[#DCE7E2] dark:border-[#1E293B] bg-white dark:bg-[#0E1726] shadow-[0_12px_34px_rgba(15,23,42,0.06)] dark:shadow-none",
           workspaceExpanded
-            ? "nexora-code-lab-fullscreen fixed inset-3 z-[100] h-[calc(100dvh-1.5rem)] min-h-0 max-h-[calc(100dvh-1.5rem)] rounded-[24px] border border-[#DDEAE5] bg-[#F8FCFA] shadow-[0_30px_90px_rgba(15,23,42,0.22)] lg:h-[calc(100dvh-1.5rem)] lg:min-h-0 2xl:min-h-0"
+            ? "nexora-code-lab-fullscreen fixed inset-3 z-[100] h-[calc(100dvh-1.5rem)] min-h-0 max-h-[calc(100dvh-1.5rem)] rounded-[24px] border border-[#DDEAE5] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#0B111E] shadow-[0_30px_90px_rgba(15,23,42,0.22)] lg:h-[calc(100dvh-1.5rem)] lg:min-h-0 2xl:min-h-0"
             : "lg:h-[calc(100dvh-132px)] lg:min-h-[620px] 2xl:min-h-[720px]",
         )}
       >
@@ -4588,7 +4602,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
 
         <section
           className={cn(
-            "grid min-h-0 overflow-hidden bg-white",
+            "grid min-h-0 overflow-hidden bg-white dark:bg-[#0E1726]",
             workspaceExpanded
               ? "h-full grid-rows-[minmax(0,1fr)_auto]"
               : "lg:grid-rows-[minmax(0,1fr)_auto]",

@@ -32,11 +32,13 @@ export function ThemeToggle() {
 
   useEffect(() => {
     document.documentElement.classList.toggle("light", isLight);
+    document.documentElement.classList.toggle("dark", !isLight);
   }, [isLight]);
 
   function toggleTheme() {
     const next = !isLight;
     document.documentElement.classList.toggle("light", next);
+    document.documentElement.classList.toggle("dark", !next);
     window.localStorage.setItem("nexora-theme", next ? "light" : "dark");
     window.dispatchEvent(new Event("nexora-theme-change"));
   }
