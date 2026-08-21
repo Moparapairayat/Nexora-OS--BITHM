@@ -15,6 +15,9 @@ const pyodidePythonRunner = createPyodidePythonRunner(mockRunner);
 function normalizeLanguage(language: string): CodeRunnerLanguage {
   const value = language.toLowerCase().trim();
 
+  if (["c"].includes(value)) return "c" as any;
+  if (["cpp", "c++", "cxx"].includes(value)) return "cpp" as any;
+  if (["java"].includes(value)) return "java" as any;
   if (["js", "javascript", "node"].includes(value)) return "javascript";
   if (["ts", "typescript"].includes(value)) return "typescript";
   if (["py", "python", "python3"].includes(value)) return "python";

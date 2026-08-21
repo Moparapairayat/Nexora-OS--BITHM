@@ -2,19 +2,28 @@
 
 import {
   Activity,
+  AlertCircle,
+  ArrowDownRight,
   ArrowRight,
+  ArrowUpRight,
   Bell,
   Bot,
+  BookOpen,
   BookOpenCheck,
   CalendarClock,
   CalendarDays,
   ChartNoAxesCombined,
+  CheckCircle2,
   ChevronRight,
   ClipboardCheck,
+  Clock,
   Code2,
   FilePlus2,
+  FileSearch,
   FileText,
   FlaskConical,
+  GraduationCap,
+  Play,
   ShieldAlert,
   Sparkles,
   Target,
@@ -30,6 +39,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { AppShell } from "@/components/layout/app-shell";
+import { cn } from "@/lib/utils";
 import {
   BentoCard,
   CommandLinkRow,
@@ -52,6 +62,7 @@ import {
   writingRiskDisclaimer,
   type AppRole,
   type RoleDashboardData,
+  type StatItem,
 } from "@/data/dashboard.mock";
 import { apiGet } from "@/services/api-client";
 
@@ -140,14 +151,22 @@ export function RoleDashboard({ role }: { role: AppRole }) {
     };
   }, [role]);
 
+  const effectiveData: RoleDashboardData = {
+    ...data,
+    stats: runtimeData?.stats?.length ? runtimeData.stats : data.stats,
+    workflows: runtimeData?.workflows?.length ? runtimeData.workflows : data.workflows,
+    activity: runtimeData?.activity?.length ? runtimeData.activity : data.activity,
+    skillData: runtimeData?.skillData?.length ? runtimeData.skillData : data.skillData,
+  };
+
   return (
     <AppShell
       role={role}
-      title={data.title}
-      subtitle={data.subtitle}
-      nav={data.nav}
-      navGroups={data.navGroups}
-      accountEmail={data.accountEmail}
+      title={effectiveData.title}
+      subtitle={effectiveData.subtitle}
+      nav={effectiveData.nav}
+      navGroups={effectiveData.navGroups}
+      accountEmail={effectiveData.accountEmail}
     >
       <p className="sr-only" role="status" aria-live="polite">
         {dashboardStatus === "loading"
@@ -157,7 +176,11 @@ export function RoleDashboard({ role }: { role: AppRole }) {
             : "Showing your most recent dashboard information."}
       </p>
       {role === "student" ? (
-        <StudentAcademicDashboard data={data} />
+        <StudentAcademicDashboard
+          data={effectiveData}
+          runtimeData={runtimeData}
+          status={dashboardStatus}
+        />
       ) : (
         <div className="grid gap-5">
           <PageHeader
@@ -239,285 +262,1007 @@ export function RoleDashboard({ role }: { role: AppRole }) {
   );
 }
 
-function StudentAcademicDashboard({ data }: { data: RoleDashboardData }) {
-  const statIcons = [FileText, FlaskConical, Bell, ChartNoAxesCombined];
-  const quickActions = [
-    {
-      title: "Assignment Reports",
-      detail: "Review your coursework",
-      href: "/student/assignments",
-      icon: FilePlus2,
-      tone: "bg-[linear-gradient(145deg,#6b62cc,#5148aa)] shadow-[0_7px_16px_rgba(81,72,170,0.20)]",
-      comingSoon: true,
-    },
-    {
-      title: "Coding Lab",
-      detail: "Resume your practice",
-      href: "/student/code-lab",
-      icon: Code2,
-      tone: "bg-[linear-gradient(145deg,#3298aa,#25798d)] shadow-[0_7px_16px_rgba(37,121,141,0.18)]",
-      comingSoon: false,
-    },
-    {
-      title: "Code Support",
-      detail: "Review coding guidance",
-      href: "/student/code-doctor",
-      icon: Bot,
-      tone: "bg-[linear-gradient(145deg,#6b62cc,#5148aa)] shadow-[0_7px_16px_rgba(81,72,170,0.20)]",
-      comingSoon: true,
-    },
-    {
-      title: "Lab Reports",
-      detail: "Review your reports",
-      href: "/student/lab-reports",
-      icon: ClipboardCheck,
-      tone: "bg-[linear-gradient(145deg,#238e6a,#176f53)] shadow-[0_7px_16px_rgba(23,111,83,0.18)]",
-      comingSoon: true,
-    },
-    {
-      title: "Originality Check",
-      detail: "Review your writing",
-      href: "/student/academic-shield",
-      icon: ShieldCheck,
-      tone: "bg-[linear-gradient(145deg,#6b62cc,#5148aa)] shadow-[0_7px_16px_rgba(81,72,170,0.20)]",
-      comingSoon: false,
-    },
-    {
-      title: "Research Resources",
-      detail: "Explore study materials",
-      href: "/student/research-assistant",
-      icon: Search,
-      tone: "bg-[linear-gradient(145deg,#3298aa,#25798d)] shadow-[0_7px_16px_rgba(37,121,141,0.18)]",
-      comingSoon: true,
-    },
-  ];
-  const deadlines = [
-    ["Assignment Report (LO3)", "Due 15 July at 23:59", "2 days left"],
-    ["Lab Report - Validation", "Due 18 July at 23:59", "5 days left"],
-    ["LiveLab Task - DOM", "Due 20 July at 18:00", "7 days left"],
-  ];
-  const submissions = [
-    ["Task 1 Report - LO2 & LO3", "Submitted 2h ago", "Under Review"],
-    ["Lab Report - Validation", "Submitted 1d ago", "Submitted"],
-    ["LiveLab Task - DOM Manipulation", "Submitted 2d ago", "Reviewed"],
-  ];
+function StudentAcademicDashboard({
+  data,
+  runtimeData,
+  status,
+}: {
+  data: RoleDashboardData;
+  runtimeData?: DashboardRuntimeData | null;
+  status?: "loading" | "live" | "saved";
+}) {
+  const currentDateStr = new Date().toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
+  const emailPrefix = data.accountEmail?.split("@")[0] || "student";
+  const nickname = emailPrefix === "student" ? "Alex" : emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
 
   return (
-    <div className="student-dashboard grid gap-4">
-      <section className="relative overflow-hidden rounded-[24px] border border-[color:var(--border-emerald)] bg-[linear-gradient(180deg,#10201a_0%,#0b1915_48%,#040c0c_100%)] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.36),0_0_70px_rgba(50,245,154,0.08)] backdrop-blur light:border-slate-200/80 light:bg-[linear-gradient(180deg,#f6fcf2_0%,#f5fcf2_50%,#f4fcef_100%)] light:shadow-[0_20px_54px_rgba(33,45,74,0.08)]">
-        <div className="absolute inset-0 bg-transparent" />
-        <div className="relative grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)] lg:items-stretch 2xl:grid-cols-[minmax(0,1.08fr)_minmax(440px,0.92fr)]">
-          <div className="min-w-0">
-            <p className="text-sm font-medium text-slate-300 light:text-slate-700">
-              Welcome back,{" "}
-              <span className="font-semibold text-[var(--brand-emerald)] light:text-emerald-700">
-                Ayat!
-              </span>{" "}
-              👋
-            </p>
-            <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-normal text-[var(--foreground)] sm:text-3xl light:text-slate-950">
-              Here&apos;s your{" "}
-              <span className="text-[var(--brand-lime)] light:text-emerald-600">
-                academic work for today
-              </span>
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-5 text-slate-400 light:text-slate-600">
-              Review your deadlines, continue your lab work, and check your
-              latest feedback.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Link
-                href="/student/code-lab"
-                className="student-hero-primary nexora-focus inline-flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-[rgba(217,255,87,0.58)] bg-[linear-gradient(135deg,#d9ff57_0%,#6cf6b3_46%,#32f59a_100%)] px-4 text-sm font-semibold text-[#07100b] shadow-[0_14px_42px_rgba(50,245,154,0.22)] transition hover:brightness-110 sm:w-auto light:border-emerald-800 light:bg-[linear-gradient(135deg,#087a49_0%,#0aa75f_58%,#16bb70_100%)] light:text-white light:shadow-[0_10px_24px_rgba(7,122,73,0.2)]"
-              >
-                Resume lab
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </Link>
-              <Link
-                href="/student/assignments"
-                className="nexora-focus inline-flex h-9 w-full items-center justify-center rounded-xl border border-[var(--line)] bg-[rgba(18,24,21,0.72)] px-4 text-sm font-semibold text-[var(--foreground)] transition hover:border-[color:var(--border-emerald)] sm:w-auto light:bg-white/88 light:text-[#15251f]"
-              >
-                View deadlines
-              </Link>
-            </div>
-          </div>
-
-          <AcademicHeroVisual />
-        </div>
-      </section>
-
-      <nav
-        aria-label="Quick actions"
-        className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6"
-      >
-        {quickActions.map(
-          ({ title, detail, href, icon: Icon, tone, comingSoon }) => (
-            <Link
-              key={title}
-              href={href}
-              className="quick-action-card nexora-focus group flex min-w-0 items-center gap-2 rounded-2xl border border-[var(--line)] bg-[var(--surface-elevated)] px-2.5 py-2.5 shadow-[var(--shadow-command)] transition hover:border-[var(--line-strong)] 2xl:gap-3 2xl:px-3 2xl:py-3"
-            >
-              <span
-                className={`quick-action-icon relative grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-xl text-white 2xl:h-10 2xl:w-10 ${tone}`}
-              >
-                <Icon
-                  className="quick-action-glyph relative z-10 h-5 w-5 text-white"
-                  aria-hidden="true"
-                />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="flex min-w-0 items-center gap-1.5">
-                  <span className="quick-action-title block truncate text-xs font-semibold text-[var(--foreground)]">
-                    {title}
-                  </span>
-                  {comingSoon ? (
-                    <span className="shrink-0 rounded-full bg-white/8 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wide text-slate-400 light:bg-slate-100 light:text-slate-500">
-                      Soon
-                    </span>
-                  ) : null}
-                </span>
-                <span className="quick-action-detail mt-1 block truncate text-[11px] text-[var(--text-muted)]">
-                  {detail}
-                </span>
-              </span>
-              <ChevronRight className="quick-action-chevron h-3.5 w-3.5 shrink-0 text-[var(--text-muted)]" />
-            </Link>
-          ),
-        )}
-      </nav>
-
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 2xl:gap-4">
-        {data.stats.map((stat, index) => {
-          const Icon = statIcons[index] ?? Activity;
-          return (
-            <section
-              key={stat.label}
-              className="student-standard-card relative min-w-0 overflow-hidden rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-3 shadow-[0_18px_44px_rgba(0,0,0,0.26)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]"
-            >
-              <div className="absolute -right-10 -top-12 h-28 w-28 rounded-full bg-[rgba(50,245,154,0.14)] blur-2xl light:bg-emerald-100/70" />
-              <div className="relative flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="min-h-[2.5rem] text-sm font-semibold leading-5 text-[var(--foreground)] light:text-slate-900">
-                    {stat.label}
-                  </p>
-                  <p className="mt-1 font-mono text-3xl font-semibold leading-none text-[var(--brand-emerald)] light:text-emerald-600">
-                    {stat.value}
-                  </p>
-                </div>
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.10)] text-[var(--brand-lime)] light:border-transparent light:bg-emerald-50 light:text-emerald-600">
-                  <Icon className="h-5 w-5" aria-hidden="true" />
-                </span>
-              </div>
-              <div className="relative mt-3 flex min-w-0 items-center justify-between gap-2 sm:gap-3">
-                <p className="min-w-0 truncate text-xs text-slate-400 light:text-slate-500">
-                  {stat.trend}
-                </p>
-                <MiniSparkline
-                  variant={index}
-                  tone={
-                    index === 2 ? "amber" : index === 3 ? "violet" : "emerald"
-                  }
-                />
-              </div>
-            </section>
-          );
-        })}
-        <section className="student-standard-card relative min-w-0 overflow-hidden rounded-[20px] border border-white/10 bg-[linear-gradient(180deg,rgba(18,24,21,0.88)_0%,rgba(9,13,11,0.92)_100%)] p-3 shadow-[0_18px_44px_rgba(0,0,0,0.26)] light:border-slate-200/80 light:bg-[linear-gradient(180deg,#ffffff_0%,#fbfffd_100%)] light:shadow-[0_18px_44px_rgba(33,45,74,0.07)]">
-          <div className="absolute -right-10 -top-12 h-28 w-28 rounded-full bg-violet-500/12 blur-2xl light:bg-violet-100/70" />
-          <div className="relative flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="text-sm font-semibold text-[var(--foreground)] light:text-slate-900">
-                Weekly Goal Progress
-              </p>
-              <p className="mt-1 font-mono text-2xl font-semibold text-[#a78bfa] light:text-violet-600">
-                75%
-              </p>
-            </div>
-            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl border border-violet-300/20 bg-violet-500/10 text-violet-300 light:border-transparent light:bg-violet-50 light:text-violet-600">
-              <Target className="h-5 w-5" aria-hidden="true" />
+    <div className="student-dashboard grid gap-3.5 sm:gap-4">
+      {/* Top Personalized Welcome Heading & Quick Actions */}
+      <div className="flex flex-wrap items-end justify-between gap-3.5 pb-1 px-1">
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            Welcome back, <span className="text-emerald-600 dark:text-emerald-400">{nickname}</span> 👋
+          </h1>
+          <p className="mt-1 flex flex-wrap items-center gap-2 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+            <span>Today is {currentDateStr}</span>
+            <span className="text-slate-300 dark:text-slate-600">•</span>
+            <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              {status === "live"
+                ? "Everything is synced and up to date"
+                : "All systems ready"}
             </span>
-          </div>
-          <div className="relative mt-1">
-            <p className="text-[11px] text-slate-400 light:text-slate-500">
-              You&apos;ve completed most of this week&apos;s planned work.
-            </p>
-            <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/8 light:bg-slate-200">
-              <div className="h-full w-3/4 rounded-full bg-[linear-gradient(90deg,#8b5cf6,#6cf6b3)]" />
-            </div>
-            <p className="mt-1 text-[11px] text-slate-400 light:text-slate-500">
-              6 of 8 planned tasks complete
-            </p>
-          </div>
-        </section>
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/student/code-lab"
+            className="bento-primary-btn inline-flex h-9 items-center gap-1.5 rounded-xl px-4 text-xs font-bold !text-white shadow-[0_3px_12px_rgba(8,122,73,0.25)] transition hover:brightness-110 active:scale-[0.98]"
+          >
+            <Play className="h-3.5 w-3.5 fill-white !text-white" />
+            <span className="!text-white font-bold">Continue Lab</span>
+          </Link>
+          <Link
+            href="/student/assignments"
+            className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3.5 text-xs font-semibold text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300 dark:border-white/10 dark:bg-[#121715] dark:text-slate-200 dark:hover:bg-white/5"
+          >
+            <CalendarClock className="h-3.5 w-3.5 text-slate-400" />
+            Deadlines
+          </Link>
+        </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)_minmax(0,0.78fr)] 2xl:gap-5">
-        <WorkflowTimeline items={data.workflows} />
+      {/* 1. Academic Overview (Hero 4-Column Bento Stat Cards) */}
+      <AcademicOverviewStats stats={data.stats} />
 
-        <DashboardCard
-          title="Weekly Progress"
-          detail="A summary of your coursework, labs, and feedback this week."
-          icon={CalendarDays}
-          tone="emerald"
-        >
-          <div className="h-32 min-w-0">
-            <ThroughputChart />
-          </div>
-          <div className="mt-2 grid grid-cols-2 gap-1.5 sm:grid-cols-4">
-            {[
-              ["3", "Due this week"],
-              ["2", "Feedback notes"],
-              ["6/8", "Weekly tasks"],
-              ["4h 12m", "Study time"],
-            ].map(([value, label]) => (
-              <div
-                key={label}
-                className="rounded-xl border border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.08)] px-1.5 py-1.5 text-center light:border-transparent light:bg-emerald-50/80"
-              >
-                <p className="font-mono text-base font-semibold text-[var(--brand-lime)] light:text-emerald-700">
-                  {value}
-                </p>
-                <p className="mt-0.5 text-[10px] font-medium text-slate-400 light:text-slate-600">
-                  {label}
-                </p>
-              </div>
-            ))}
-          </div>
-        </DashboardCard>
-
-        <DashboardCard
-          title="Skills Overview"
-          detail="How your recent work is contributing to key academic and technical skills."
-          icon={ChartNoAxesCombined}
-          tone="violet"
-          className="lg:col-span-1"
-        >
-          <div className="h-36">
-            <SkillRadarChart data={data.skillData} />
-          </div>
-        </DashboardCard>
+      {/* 2. Middle Visual Analytics Grid (Responsive Split on Large Displays, Graceful Stack on Laptops/Tablets) */}
+      <div className="grid gap-3.5 sm:gap-4 xl:grid-cols-12">
+        <div className="xl:col-span-7 2xl:col-span-8">
+          <WeeklyStudyStackedChart />
+        </div>
+        <div className="xl:col-span-5 2xl:col-span-4">
+          <RadialHealthMeter stats={data.stats} />
+        </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,0.9fr)_minmax(0,1fr)] 2xl:gap-5">
-        <StudentListCard
-          title="Upcoming Deadlines"
-          icon={CalendarClock}
-          rows={deadlines}
-          action="View all deadlines"
-          href="/student/assignments"
-        />
-        <StudentListCard
-          title="Recent Submissions"
-          icon={ClipboardCheck}
-          rows={submissions}
-          action="View all submissions"
-          href="/student/submissions"
-        />
-        <div className="lg:col-span-1">
-          <StudentAssistantPanel activity={data.activity} />
+      {/* 3. Bottom Unified Bento Workspace (Expansive 2-Card Layout matching Analytics Grid) */}
+      <div className="grid gap-3.5 sm:gap-4 xl:grid-cols-12">
+        <div className="xl:col-span-7 2xl:col-span-8">
+          <UnifiedLearningAndLabHub skillData={data.skillData} labStat={data.stats?.[1]} />
+        </div>
+        <div className="xl:col-span-5 2xl:col-span-4">
+          <UpcomingDeadlinesCard workflows={data.workflows} />
         </div>
       </div>
     </div>
+  );
+}
+
+function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
+  const stat0 = stats?.[0] ?? { label: "Active Assignments", value: "3", trend: "Next due 15 July" };
+  const stat1 = stats?.[1] ?? { label: "Lab Sessions", value: "2", trend: "Next lab: Thursday at 10:00" };
+  const stat2 = stats?.[2] ?? { label: "Feedback to Check", value: "1", trend: "1 note from teacher" };
+  const stat3 = stats?.[3] ?? { label: "Skill Mastery", value: "78%", trend: "Great progress this week!" };
+
+  return (
+    <div className="grid gap-3.5 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* 1. Vibrant Aurora Emerald Hero Card - Topographical Wave Contour Background */}
+      <div className="group relative overflow-hidden rounded-[22px] border border-emerald-400/30 bg-[linear-gradient(135deg,#0aa75f_0%,#087a49_45%,#043d27_100%)] p-4 sm:p-4.5 text-white shadow-[0_14px_32px_rgba(8,122,73,0.24)] transition-all duration-300 hover:shadow-[0_18px_40px_rgba(8,122,73,0.32)] hover:-translate-y-0.5">
+        {/* Vector Topographical Wave Mesh Background (Signature Style) */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-35 overflow-hidden select-none"
+          viewBox="0 0 320 160"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path d="M-20 30 C50 10 110 50 180 35 C240 20 280 45 340 25" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.25" />
+          <path d="M-20 48 C50 28 110 68 180 53 C240 38 280 63 340 43" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.35" />
+          <path d="M-20 66 C50 46 110 86 180 71 C240 56 280 81 340 61" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.45" />
+          <path d="M-20 84 C50 64 110 104 180 89 C240 74 280 99 340 79" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.55" />
+          <path d="M-20 102 C50 82 110 122 180 107 C240 92 280 117 340 97" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.65" />
+          <path d="M-20 120 C50 100 110 140 180 125 C240 110 280 135 340 115" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.75" />
+          <path d="M-20 138 C50 118 110 158 180 143 C240 128 280 153 340 133" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.85" />
+        </svg>
+
+        <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[radial-gradient(circle,rgba(217,255,87,0.30),transparent_70%)] blur-lg" />
+        <div className="relative z-10 flex items-center justify-between">
+          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-white/25 bg-white/20 text-white shadow-xs backdrop-blur-md">
+            <BookOpen className="h-4.5 w-4.5" />
+          </span>
+          <span className="rounded-full border border-white/20 bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+            Core Unit
+          </span>
+        </div>
+        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-100">
+              Active Coursework
+            </p>
+            <p className="mt-0.5 font-mono text-2xl font-extrabold tracking-tight !text-white sm:text-3xl">
+              {stat0.value} <span className="text-sm font-medium text-emerald-200">Ongoing</span>
+            </p>
+          </div>
+          {/* Sparkline */}
+          <div className="h-7 w-16 shrink-0 sm:w-20">
+            <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
+              <defs>
+                <linearGradient id="hero-spark" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity="0.35" />
+                  <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M 0 26 Q 25 22, 45 24 T 75 14 T 100 4 L 100 32 L 0 32 Z"
+                fill="url(#hero-spark)"
+              />
+              <path
+                d="M 0 26 Q 25 22, 45 24 T 75 14 T 100 4"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <circle cx="100" cy="4" r="3" fill="#ffffff" />
+            </svg>
+          </div>
+        </div>
+        <div className="relative z-10 mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-emerald-100 truncate">
+          <span className="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-full bg-white/20 text-white">
+            <ArrowUpRight className="h-2.5 w-2.5 stroke-[3]" />
+          </span>
+          <span className="truncate">{stat0.trend}</span>
+        </div>
+      </div>
+
+      {/* 2. Active Labs Card - Circuit Matrix Background */}
+      <div className="command-surface group relative overflow-hidden rounded-[22px] p-4 sm:p-4.5 shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+        {/* Vector High-Tech Matrix Circuit Traces */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-10 dark:opacity-20 overflow-hidden select-none"
+          viewBox="0 0 320 160"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path d="M0 25 H80 L110 55 H190 L220 25 H320" stroke="#10b981" strokeWidth="1.2" strokeDasharray="3 3" />
+          <path d="M0 65 H50 L85 100 H165 L190 75 H260 L285 100 H320" stroke="#10b981" strokeWidth="1.3" />
+          <path d="M0 120 H105 L130 95 H210 L235 120 H320" stroke="#10b981" strokeWidth="1.2" strokeDasharray="4 4" />
+          <circle cx="110" cy="55" r="3.5" fill="#10b981" />
+          <circle cx="190" cy="75" r="3.5" fill="#10b981" />
+          <circle cx="260" cy="75" r="3" fill="#10b981" />
+          <circle cx="130" cy="95" r="3" fill="#10b981" />
+        </svg>
+
+        <div className="relative z-10 flex items-center justify-between">
+          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400 shadow-xs">
+            <FlaskConical className="h-4.5 w-4.5" />
+          </span>
+          <span className="grid h-6 w-6 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
+            <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5]" />
+          </span>
+        </div>
+        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Lab Sessions
+            </p>
+            <p className="mt-0.5 font-mono text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
+              {stat1.value} <span className="text-sm font-normal text-slate-400">Booked</span>
+            </p>
+          </div>
+          {/* Sparkline */}
+          <div className="h-7 w-16 shrink-0 sm:w-20">
+            <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
+              <defs>
+                <linearGradient id="lab-spark" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M 0 28 Q 20 26, 40 18 T 75 16 T 100 4 L 100 32 L 0 32 Z"
+                fill="url(#lab-spark)"
+              />
+              <path
+                d="M 0 28 Q 20 26, 40 18 T 75 16 T 100 4"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <circle cx="100" cy="4" r="3" fill="#10b981" />
+            </svg>
+          </div>
+        </div>
+        <div className="relative z-10 mt-2.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+          <span className="font-bold text-emerald-600 dark:text-emerald-400">{stat1.trend}</span>
+        </div>
+      </div>
+
+      {/* 3. Revisions Needed / Fix Requests - Isometric Diamond Mesh Background */}
+      <div className="command-surface group relative overflow-hidden rounded-[22px] p-4 sm:p-4.5 shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+        {/* Vector Isometric Diamond Wireframe Grid */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.08] dark:opacity-[0.16] overflow-hidden select-none"
+          viewBox="0 0 320 160"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path d="M40 -30 L180 190 M110 -30 L250 190 M180 -30 L320 190 M-30 -30 L110 190" stroke="#f59e0b" strokeWidth="1.1" />
+          <path d="M180 -30 L40 190 M250 -30 L110 190 M320 -30 L180 190 M390 -30 L250 190" stroke="#f59e0b" strokeWidth="1.1" />
+          <circle cx="180" cy="80" r="3.5" fill="#f59e0b" />
+          <circle cx="110" cy="80" r="3" fill="#f59e0b" />
+          <circle cx="250" cy="80" r="3" fill="#f59e0b" />
+        </svg>
+
+        <div className="relative z-10 flex items-center justify-between">
+          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-500 dark:bg-amber-500/15 dark:text-amber-400 shadow-xs">
+            <FileText className="h-4.5 w-4.5" />
+          </span>
+          <span className="grid h-6 w-6 place-items-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
+            <ArrowDownRight className="h-3.5 w-3.5 stroke-[2.5]" />
+          </span>
+        </div>
+        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Tasks to Review
+            </p>
+            <p className="mt-0.5 font-mono text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
+              {stat2.value} <span className="text-sm font-normal text-slate-400">Pending</span>
+            </p>
+          </div>
+          {/* Sparkline */}
+          <div className="h-7 w-16 shrink-0 sm:w-20">
+            <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
+              <defs>
+                <linearGradient id="amber-spark" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M 0 6 Q 25 8, 50 16 T 80 20 T 100 26 L 100 32 L 0 32 Z"
+                fill="url(#amber-spark)"
+              />
+              <path
+                d="M 0 6 Q 25 8, 50 16 T 80 20 T 100 26"
+                fill="none"
+                stroke="#f59e0b"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <circle cx="100" cy="26" r="3" fill="#f59e0b" />
+            </svg>
+          </div>
+        </div>
+        <div className="relative z-10 mt-2.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+          <span className="font-bold text-amber-600 dark:text-amber-400">{stat2.trend}</span>
+        </div>
+      </div>
+
+      {/* 4. Skills Progress - Concentric Orbital Radar Background */}
+      <div className="command-surface group relative overflow-hidden rounded-[22px] p-4 sm:p-4.5 shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+        {/* Vector Concentric Sonar Orbital Radar Element */}
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-10 dark:opacity-20 overflow-hidden select-none"
+          viewBox="0 0 320 160"
+          fill="none"
+        >
+          <circle cx="270" cy="35" r="45" stroke="#06b6d4" strokeWidth="1" strokeDasharray="3 3" />
+          <circle cx="270" cy="35" r="85" stroke="#06b6d4" strokeWidth="1.2" />
+          <circle cx="270" cy="35" r="125" stroke="#06b6d4" strokeWidth="1" strokeDasharray="4 4" />
+          <circle cx="270" cy="35" r="165" stroke="#06b6d4" strokeWidth="1" strokeOpacity="0.5" />
+          <circle cx="185" cy="35" r="3.5" fill="#06b6d4" />
+          <circle cx="270" cy="120" r="3.5" fill="#06b6d4" />
+          <circle cx="270" cy="35" r="5" fill="#06b6d4" fillOpacity="0.4" />
+        </svg>
+
+        <div className="relative z-10 flex items-center justify-between">
+          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-500 dark:bg-cyan-500/15 dark:text-cyan-400 shadow-xs">
+            <Target className="h-4.5 w-4.5" />
+          </span>
+          <span className="rounded-full bg-cyan-500/10 px-2.5 py-0.5 text-[9.5px] font-bold text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-400">
+            Goal: 85%
+          </span>
+        </div>
+        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Skill Mastery
+            </p>
+            <p className="mt-0.5 font-mono text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
+              {stat3.value.includes("%") ? stat3.value : `${stat3.value}%`}
+            </p>
+          </div>
+          {/* Sparkline */}
+          <div className="h-7 w-16 shrink-0 sm:w-20">
+            <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
+              <defs>
+                <linearGradient id="cyan-spark" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M 0 26 Q 25 24, 50 16 T 80 14 T 100 4 L 100 32 L 0 32 Z"
+                fill="url(#cyan-spark)"
+              />
+              <path
+                d="M 0 26 Q 25 24, 50 16 T 80 14 T 100 4"
+                fill="none"
+                stroke="#06b6d4"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+              />
+              <circle cx="100" cy="4" r="3" fill="#06b6d4" />
+            </svg>
+          </div>
+        </div>
+        <div className="relative z-10 mt-2.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+          {stat3.trend}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WeeklyStudyStackedChart() {
+  const [activeDayIndex, setActiveDayIndex] = useState(2); // Wednesday active
+
+  const daysData = [
+    { day: "Mon", fullDay: "Monday", hours: "6.5h", val: 6.5 },
+    { day: "Tue", fullDay: "Tuesday", hours: "5.2h", val: 5.2 },
+    { day: "Wed", fullDay: "Wednesday", hours: "7.8h", val: 7.8, isPeak: true },
+    { day: "Thu", fullDay: "Thursday", hours: "4.0h", val: 4.0 },
+    { day: "Fri", fullDay: "Friday", hours: "6.0h", val: 6.0 },
+    { day: "Sat", fullDay: "Saturday", hours: "3.0h", val: 3.0 },
+    { day: "Sun", fullDay: "Sunday", hours: "1.5h", val: 1.5 },
+  ];
+
+  const yBase = 180;
+  const maxVal = 8.0;
+  const maxH = 120;
+  const colW = 50;
+  const startX = 55;
+  const stepX = 78;
+  const slantX = 14;
+  const slantY = -9;
+
+  return (
+    <section className="command-surface relative flex h-full flex-col justify-between rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-base font-bold text-slate-900 dark:text-white">
+            Your Weekly Study Rhythm
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Daily study hours and hands-on coding practice
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+            34.0 hours logged this week
+          </span>
+        </div>
+      </div>
+
+      {/* 3D Isometric Chart Container (Expansive & Tall) */}
+      <div className="relative my-auto py-2 w-full">
+        <svg viewBox="0 0 620 215" className="w-full h-56 sm:h-64 select-none overflow-visible">
+          <defs>
+            {/* Diagonal Hatch Stripe Pattern for Normal Bars */}
+            <pattern
+              id="diagonal-stripes"
+              width="8"
+              height="8"
+              patternTransform="rotate(45 0 0)"
+              patternUnits="userSpaceOnUse"
+            >
+              <line
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="8"
+                stroke="#ffffff"
+                strokeWidth="3.2"
+                strokeOpacity="0.45"
+              />
+            </pattern>
+
+            {/* Normal 3D Bar Base Gradient */}
+            <linearGradient id="bar-emerald-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#10b981" />
+              <stop offset="100%" stopColor="#047857" />
+            </linearGradient>
+
+            {/* Active Hero 3D Bar Gradient */}
+            <linearGradient id="active-bar-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#04432c" />
+              <stop offset="60%" stopColor="#0aa75f" />
+              <stop offset="100%" stopColor="#65a30d" />
+            </linearGradient>
+
+            {/* Active Column Frosted Spotlight Backdrop */}
+            <linearGradient id="spotlight-grad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#10b981" stopOpacity="0.22" />
+              <stop offset="100%" stopColor="#10b981" stopOpacity="0.03" />
+            </linearGradient>
+          </defs>
+
+          {/* Y-Axis Grid Lines & Labels */}
+          {[
+            { val: "8h", y: yBase - maxH },
+            { val: "6h", y: yBase - (maxH * 6) / 8 },
+            { val: "4h", y: yBase - (maxH * 4) / 8 },
+            { val: "2h", y: yBase - (maxH * 2) / 8 },
+            { val: "0h", y: yBase },
+          ].map((g) => (
+            <g key={g.val}>
+              <text
+                x="32"
+                y={g.y + 4}
+                textAnchor="end"
+                className="fill-slate-400 dark:fill-slate-500 font-mono text-[11px] font-semibold"
+              >
+                {g.val}
+              </text>
+              <line
+                x1="42"
+                y1={g.y}
+                x2="610"
+                y2={g.y}
+                stroke="currentColor"
+                strokeDasharray="4 4"
+                className="text-slate-200/80 dark:text-white/10"
+              />
+            </g>
+          ))}
+
+          {/* 3D Columns */}
+          {daysData.map((d, i) => {
+            const x = startX + i * stepX;
+            const barH = (d.val / maxVal) * maxH;
+            const yTop = yBase - barH;
+            const isActive = activeDayIndex === i;
+
+            return (
+              <g
+                key={d.day}
+                className="cursor-pointer transition-all duration-300 group"
+                onClick={() => setActiveDayIndex(i)}
+              >
+                {/* Spotlight Backdrop for Active / Hovered Column */}
+                {isActive && (
+                  <rect
+                    x={x - 8}
+                    y={10}
+                    width={colW + 16}
+                    height={yBase - 10 + 4}
+                    rx={10}
+                    fill="url(#spotlight-grad)"
+                    className="transition-all duration-300"
+                  />
+                )}
+
+                {/* Header Label & Value above Bar */}
+                <text
+                  x={x + colW / 2}
+                  y="25"
+                  textAnchor="middle"
+                  className={`text-xs font-semibold transition ${isActive
+                      ? "fill-slate-950 dark:fill-white font-extrabold"
+                      : "fill-slate-500 dark:fill-slate-400"
+                    }`}
+                >
+                  {d.day}
+                </text>
+                <text
+                  x={x + colW / 2}
+                  y="42"
+                  textAnchor="middle"
+                  className={`font-mono text-sm font-extrabold transition ${isActive
+                      ? "fill-slate-950 dark:fill-white text-base font-black"
+                      : "fill-slate-700 dark:fill-slate-300"
+                    }`}
+                >
+                  {d.hours}
+                </text>
+
+                {/* 3D Right Side Extrusion (Shadow Depth) */}
+                <polygon
+                  points={`${x + colW},${yTop} ${x + colW + slantX},${yTop + slantY} ${x + colW + slantX},${yBase + slantY} ${x + colW},${yBase}`}
+                  fill={isActive ? "#033221" : "#045239"}
+                  opacity={isActive ? 0.95 : 0.7}
+                  className="transition-all duration-300 group-hover:brightness-110"
+                />
+
+                {/* 3D Top Cap (Perspective Reflection) */}
+                <polygon
+                  points={`${x},${yTop} ${x + slantX},${yTop + slantY} ${x + colW + slantX},${yTop + slantY} ${x + colW},${yTop}`}
+                  fill={isActive ? "#86efac" : "#6ee7b7"}
+                  className="transition-all duration-300 group-hover:brightness-110"
+                />
+
+                {/* Front Face (Solid for Active, Diagonal Stripes for Others) */}
+                <rect
+                  x={x}
+                  y={yTop}
+                  width={colW}
+                  height={barH}
+                  fill={isActive ? "url(#active-bar-grad)" : "url(#bar-emerald-grad)"}
+                  className="transition-all duration-300 group-hover:brightness-105"
+                />
+                {!isActive && (
+                  <rect
+                    x={x}
+                    y={yTop}
+                    width={colW}
+                    height={barH}
+                    fill="url(#diagonal-stripes)"
+                    className="pointer-events-none"
+                  />
+                )}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Footer Metrics */}
+      <div className="mt-2 flex flex-wrap items-center justify-between border-t border-slate-200/80 dark:border-white/10 pt-2.5 text-xs">
+        <div className="flex items-center gap-3.5">
+          <div className="flex items-center gap-1.5">
+            <span className="h-3 w-3 rounded-xs bg-[linear-gradient(135deg,#0aa75f_0%,#04432c_100%)] shadow-xs" />
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
+              Most active day: {daysData[activeDayIndex]?.fullDay} ({daysData[activeDayIndex]?.hours})
+            </span>
+          </div>
+          <div className="hidden sm:flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+            <span className="h-2.5 w-2.5 rounded-xs bg-[#10b981]/60" />
+            <span>Target Pace</span>
+          </div>
+        </div>
+        <span className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">
+          Daily average: <strong className="text-emerald-600 dark:text-emerald-400">4.85h / day</strong>
+        </span>
+      </div>
+    </section>
+  );
+}
+
+function RadialHealthMeter({ stats }: { stats?: StatItem[] }) {
+  const skillVal = Number(stats?.[3]?.value?.replace(/[^0-9]/g, "")) || 78;
+  const revisionsCount = Number(stats?.[2]?.value?.replace(/[^0-9]/g, "")) || 1;
+  const healthScore = Math.min(98, Math.max(65, Math.round(skillVal * 0.4 + (100 - revisionsCount * 6) * 0.3 + 98 * 0.3)));
+
+  const totalTicks = 28;
+  const activeTicks = Math.round((healthScore / 100) * totalTicks);
+
+  return (
+    <section className="command-surface relative flex h-full flex-col justify-between rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-base font-bold text-slate-900 dark:text-white">
+            Academic Health
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Originality score, lab tests & timely progress
+          </p>
+        </div>
+        <Link
+          href="/student/academic-shield"
+          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-xs font-bold text-emerald-600 shadow-2xs transition hover:bg-emerald-50 dark:border-white/10 dark:bg-white/5 dark:text-emerald-400"
+        >
+          <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+          Shield Active →
+        </Link>
+      </div>
+
+      {/* High-Tech Radial Dial SVG (Large & Expansive) */}
+      <div className="relative my-auto flex flex-col items-center justify-center py-2">
+        <svg viewBox="0 0 240 215" className="h-52 sm:h-60 w-full overflow-visible select-none">
+          <defs>
+            <radialGradient id="center-pod-grad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="rgba(16, 185, 129, 0.10)" />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
+          </defs>
+
+          {/* Center Ambient Pod Background */}
+          <circle cx="120" cy="110" r="66" fill="url(#center-pod-grad)" />
+
+          {/* Concentric Inner Baseline Track */}
+          <path
+            d="M 46 142 A 76 76 0 1 1 194 142"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeDasharray="4 4"
+            className="text-slate-200 dark:text-white/15"
+          />
+
+          {/* 28 Segmented Radial Dial Ticks */}
+          {Array.from({ length: totalTicks }).map((_, i) => {
+            const angle = -215 + (i / (totalTicks - 1)) * 250;
+            const rad = (angle * Math.PI) / 180;
+            const rInner = 76;
+            const rOuter = 95;
+            const x1 = Math.round((120 + rInner * Math.cos(rad)) * 100) / 100;
+            const y1 = Math.round((110 + rInner * Math.sin(rad)) * 100) / 100;
+            const x2 = Math.round((120 + rOuter * Math.cos(rad)) * 100) / 100;
+            const y2 = Math.round((110 + rOuter * Math.sin(rad)) * 100) / 100;
+            const isActive = i < activeTicks;
+
+            const strokeColor = isActive
+              ? i < 7
+                ? "#06b6d4" // Cyan
+                : i < 15
+                  ? "#0aa75f" // Aurora Emerald
+                  : i < 22
+                    ? "#10b981" // Mint Emerald
+                    : "#a3e635" // Neon Lime
+              : "rgba(148, 163, 184, 0.18)";
+
+            return (
+              <line
+                key={i}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke={strokeColor}
+                strokeWidth={isActive ? "5.5" : "3.8"}
+                strokeLinecap="round"
+                className="transition-all duration-500"
+              />
+            );
+          })}
+        </svg>
+
+        {/* Center Content Badge */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+          <div className="flex flex-col items-center pb-2">
+            <span className="font-mono text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
+              {healthScore}<span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">%</span>
+            </span>
+            <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              All Clear & On Track
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Mini Metrics Pods */}
+      <div className="mt-2 grid grid-cols-2 gap-2.5 border-t border-slate-200/80 dark:border-white/10 pt-3">
+        <Link
+          href="/student/academic-shield"
+          className="group rounded-xl border border-slate-200/70 bg-slate-50/70 p-2 transition hover:border-emerald-300 dark:border-white/5 dark:bg-[#121715] dark:hover:border-emerald-500/30"
+        >
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-slate-500 dark:text-slate-400 font-medium group-hover:text-emerald-600">Originality</span>
+            <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">98% Clean</span>
+          </div>
+          <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-200/60 dark:bg-white/10">
+            <div className="h-full w-[98%] rounded-full bg-emerald-500" />
+          </div>
+        </Link>
+
+        <Link
+          href="/student/code-lab"
+          className="group rounded-xl border border-slate-200/70 bg-slate-50/70 p-2 transition hover:border-cyan-300 dark:border-white/5 dark:bg-[#121715] dark:hover:border-cyan-500/30"
+        >
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-slate-500 dark:text-slate-400 font-medium group-hover:text-cyan-600">Code Pass</span>
+            <span className="font-mono font-bold text-cyan-600 dark:text-cyan-400">100% Tests</span>
+          </div>
+          <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-200/60 dark:bg-white/10">
+            <div className="h-full w-full rounded-full bg-cyan-500" />
+          </div>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+function UnifiedLearningAndLabHub({
+  skillData,
+  labStat,
+}: {
+  skillData?: RoleDashboardData["skillData"];
+  labStat?: StatItem;
+}) {
+  const defaultSubjects = [
+    { name: "Web Application Dev", pct: "35%", color: "bg-[#0aa75f]" },
+    { name: "Data Structures & Algo", pct: "30%", color: "bg-cyan-500" },
+    { name: "Database & SQL", pct: "20%", color: "bg-amber-400" },
+    { name: "Software Architecture", pct: "15%", color: "bg-emerald-400" },
+  ];
+
+  const subjects =
+    skillData && skillData.length > 0
+      ? skillData.slice(0, 4).map((s, idx) => ({
+        name: s.skill,
+        pct: typeof s.score === "number" ? `${Math.round(s.score)}%` : String(s.score),
+        color: [
+          "bg-[#0aa75f]",
+          "bg-cyan-500",
+          "bg-amber-400",
+          "bg-emerald-400",
+        ][idx % 4] ?? "bg-[#0aa75f]",
+      }))
+      : defaultSubjects;
+
+  return (
+    <section className="command-surface group relative flex h-full flex-col justify-between overflow-hidden rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+      {/* Header Bar */}
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-white/10 pb-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-bold text-slate-900 dark:text-white">
+              Learning &amp; Lab Workspace
+            </h2>
+            <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+              4 Core Units
+            </span>
+          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Curriculum mastery &amp; instant browser coding sandbox
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Link
+            href="/student/assignments"
+            className="text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+          >
+            All Modules →
+          </Link>
+        </div>
+      </div>
+
+      {/* 2-Column Split Body inside this unified card */}
+      <div className="relative z-10 my-auto grid grid-cols-1 gap-4 py-3 md:grid-cols-2 xl:grid-cols-12 md:items-center">
+        {/* Left Side: Curriculum Unit Audit & Progress Ledger */}
+        <div className="md:col-span-1 xl:col-span-6 2xl:col-span-5 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-200/80 dark:border-white/10 pb-3 md:pb-0 md:pr-4">
+          <div className="flex items-center justify-between pb-2">
+            <span className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <BookOpenCheck className="h-3.5 w-3.5 text-emerald-500" />
+              Unit Progress Ledger
+            </span>
+            <Link
+              href="/student/assignments"
+              className="text-[10.5px] font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+            >
+              Audit Log →
+            </Link>
+          </div>
+
+          <div className="grid gap-2">
+            {[
+              { code: "WA", name: "Web Application Dev", pct: 82, status: "Active", tone: "emerald" },
+              { code: "DS", name: "Data Structures & Algo", pct: 68, status: "Active", tone: "cyan" },
+              { code: "DB", name: "Database Design & SQL", pct: 74, status: "Verified", tone: "emerald" },
+              { code: "SA", name: "Software Architecture", pct: 88, status: "Verified", tone: "emerald" },
+            ].map((u) => (
+              <div
+                key={u.code}
+                className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2.5 rounded-xl border border-slate-200/60 bg-white/60 dark:bg-white/[0.03] dark:border-white/5 p-2 transition hover:border-emerald-400/30"
+              >
+                <span className={cn(
+                  "grid h-7 w-7 shrink-0 place-items-center rounded-lg font-mono text-[10px] font-black text-white shadow-2xs",
+                  u.tone === "cyan" ? "bg-cyan-600" : "bg-[#0aa75f]"
+                )}>
+                  {u.code}
+                </span>
+                <div className="min-w-0 overflow-hidden">
+                  <p className="truncate text-xs font-bold text-slate-800 dark:text-slate-200">{u.name}</p>
+                  <div className="mt-0.5 flex items-center gap-2">
+                    <div className="h-1.5 min-w-[36px] flex-1 max-w-[100px] sm:max-w-[120px] overflow-hidden rounded-full bg-slate-200/70 dark:bg-white/10">
+                      <div
+                        className={cn("h-full rounded-full", u.tone === "cyan" ? "bg-cyan-500" : "bg-[#0aa75f]")}
+                        style={{ width: `${u.pct}%` }}
+                      />
+                    </div>
+                    <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">{u.pct}%</span>
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-extrabold uppercase text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                  {u.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Right Side: Active Code Lab Launcher & Sandbox */}
+        <div className="md:col-span-1 xl:col-span-6 2xl:col-span-7 flex flex-col justify-between gap-2.5 md:pl-2">
+          <Link
+            href="/student/code-lab"
+            className="group block rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 shadow-xs transition hover:border-emerald-300 dark:border-white/10 dark:bg-[#121715] dark:hover:border-emerald-500/30"
+          >
+            <div className="grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-2.5">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-xs group-hover:scale-105 transition-transform">
+                <Code2 className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 overflow-hidden">
+                <p className="truncate text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  JavaScript Form Validation
+                </p>
+                <p className="truncate text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                  DOM APIs • LiveLab Sandbox
+                </p>
+              </div>
+              <span className="shrink-0 flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9.5px] font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                {labStat?.value ? `${labStat.value} Booked` : "Ready"}
+              </span>
+            </div>
+
+            <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/80 dark:border-white/10 pt-2 text-xs">
+              <span className="font-medium text-slate-500 dark:text-slate-400">Test Suite:</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">3 of 3 Tests Passing (100%)</span>
+            </div>
+          </Link>
+
+          <Link
+            href="/student/code-lab"
+            className="bento-primary-btn nexora-focus group inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold !text-white shadow-[0_4px_14px_rgba(8,122,73,0.25)] transition hover:brightness-110 active:scale-[0.98]"
+          >
+            <Play className="h-3.5 w-3.5 fill-white !text-white" />
+            <span className="!text-white font-bold">Continue Coding Lab</span>
+            <ArrowRight className="h-3.5 w-3.5 !text-white transition-transform group-hover:translate-x-0.5" />
+          </Link>
+        </div>
+      </div>
+
+      {/* Footer Meta */}
+      <div className="relative z-10 flex items-center justify-between border-t border-slate-200/80 dark:border-white/10 pt-2.5 text-[11px] text-slate-500 dark:text-slate-400">
+        <span>Sandbox: <strong className="font-semibold text-slate-800 dark:text-slate-200">Piston &amp; Pyodide</strong></span>
+        <span>Autosave: <strong className="font-semibold text-emerald-600 dark:text-emerald-400">Synced &amp; Saved</strong></span>
+      </div>
+    </section>
+  );
+}
+
+function UpcomingDeadlinesCard({ workflows }: { workflows?: RoleDashboardData["workflows"] }) {
+  // Normalize backend/mock records into natural, human student milestones
+  const defaultMilestones = [
+    {
+      title: "Web Architecture & System Design",
+      subtitle: "OTHM Unit 4 • Assignment Brief 1",
+      detail: "Submission under review by course tutor",
+      status: "Under Review",
+      tone: "cyan" as const,
+      dueText: "Feedback Soon",
+      icon: FileSearch,
+      iconBg: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20",
+      badgeClass: "border-cyan-400/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
+      href: "/student/submissions",
+    },
+    {
+      title: "JavaScript Form Validation Lab",
+      subtitle: "LiveLab DOM Sandbox • Practical Task",
+      detail: "1 revision note from Dr. Sarah • Field check fix",
+      status: "Action Required",
+      tone: "amber" as const,
+      dueText: "Due in 2 days",
+      icon: AlertCircle,
+      iconBg: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+      badgeClass: "border-amber-400/30 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+      href: "/student/teacher-feedback",
+    },
+    {
+      title: "Database Design & SQL Brief",
+      subtitle: "Database Unit 16 • Coursework",
+      detail: "Objective & ERD schema sections ready to draft",
+      status: "Draft Ready",
+      tone: "emerald" as const,
+      dueText: "Due 24 July",
+      icon: BookOpen,
+      iconBg: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+      badgeClass: "border-emerald-400/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+      href: "/student/assignments",
+    },
+  ];
+
+  const items = (workflows && workflows.length > 0 ? workflows : []).map((w, idx) => {
+    const fallback = defaultMilestones[idx % defaultMilestones.length];
+    const isAmber = w.tone === "amber" || w.status?.toLowerCase().includes("action") || w.status?.toLowerCase().includes("revision") || w.label?.toLowerCase().includes("lab");
+    const isCyan = w.tone === "cyan" || w.status?.toLowerCase().includes("review") || w.label?.toLowerCase().includes("architecture") || w.label?.toLowerCase().includes("task");
+
+    return {
+      title: w.label || fallback.title,
+      detail: w.detail || fallback.detail,
+      status: w.status?.includes("submission") ? "Under Review" : w.status?.includes("session") ? "In Progress" : w.status?.includes("report") ? "Action Required" : w.status || fallback.status,
+      tone: isAmber ? ("amber" as const) : isCyan ? ("cyan" as const) : ("emerald" as const),
+      dueText: isAmber ? "Due in 2 days" : isCyan ? "Review Pending" : "Due 24 July",
+      icon: isAmber ? AlertCircle : isCyan ? FileSearch : BookOpen,
+      iconBg: isAmber
+        ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+        : isCyan
+          ? "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20"
+          : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+      badgeClass: isAmber
+        ? "border-amber-400/30 bg-amber-500/10 text-amber-700 dark:text-amber-300"
+        : isCyan
+          ? "border-cyan-400/30 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300"
+          : "border-emerald-400/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+      href: isAmber
+        ? "/student/teacher-feedback"
+        : isCyan
+          ? "/student/submissions"
+          : "/student/assignments",
+    };
+  });
+
+  const displayItems = items.length > 0 ? items : defaultMilestones;
+
+  return (
+    <section className="command-surface group relative flex h-full flex-col justify-between overflow-hidden rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+      {/* Header Bar */}
+      <div className="relative z-10 flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-3">
+        <div>
+          <h2 className="text-base font-bold text-slate-900 dark:text-white">
+            What&apos;s Coming Up
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Upcoming tasks and submission milestones
+          </p>
+        </div>
+        <Link
+          href="/student/assignments"
+          className="text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+        >
+          View All →
+        </Link>
+      </div>
+
+      {/* Task Milestones List */}
+      <div className="relative z-10 my-auto grid gap-2.5 py-3">
+        {displayItems.map((item) => (
+          <Link
+            key={item.title}
+            href={item.href}
+            className="group grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-2.5 sm:gap-3 rounded-xl border border-slate-200/80 bg-white/80 dark:bg-[#121715] dark:border-white/10 px-3 py-2.5 sm:px-3.5 sm:py-3 shadow-2xs transition-all duration-200 hover:border-emerald-400/40 hover:bg-emerald-50/15 dark:hover:border-emerald-500/30 dark:hover:bg-white/5"
+          >
+            <span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-xl border shadow-xs transition-transform group-hover:scale-105", item.iconBg)}>
+              <item.icon className="h-4.5 w-4.5" />
+            </span>
+
+            <div className="min-w-0 overflow-hidden">
+              <p className="truncate text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                {item.title}
+              </p>
+              <p className="truncate text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+                {item.detail}
+              </p>
+            </div>
+
+            <div className="flex shrink-0 flex-col items-end gap-1 pl-1 text-right">
+              <span className={cn("rounded-full px-2 py-0.5 text-[9px] sm:text-[9.5px] font-bold border whitespace-nowrap shadow-2xs", item.badgeClass)}>
+                {item.status}
+              </span>
+              <span className="text-[9.5px] sm:text-[10px] font-semibold text-slate-400 dark:text-slate-500 whitespace-nowrap">
+                {item.dueText}
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Footer Alert */}
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-1.5 border-t border-slate-200/80 dark:border-white/10 pt-2.5 text-[11px]">
+        <span className="text-slate-500 dark:text-slate-400 font-medium">Priority milestone:</span>
+        <span className="font-bold text-amber-600 dark:text-amber-400">⚡ 15 July at 11:59 PM (in 2 days)</span>
+      </div>
+    </section>
   );
 }
 

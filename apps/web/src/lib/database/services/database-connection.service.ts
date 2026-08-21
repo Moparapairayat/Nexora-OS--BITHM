@@ -7,18 +7,18 @@ import { DatabaseHealthStatus } from "../types/database.types";
 
 export class DatabaseConnectionService {
   /**
-   * Performs a health check against Supabase PostgreSQL database.
+   * Performs a health check against Neon PostgreSQL database.
    */
   public static async checkHealth(): Promise<DatabaseHealthStatus> {
     const startTime = Date.now();
     try {
-      // Simple lightweight raw query to test Supabase PostgreSQL connectivity
+      // Simple lightweight raw query to test Neon PostgreSQL connectivity
       await prisma.$queryRaw`SELECT 1`;
       const latencyMs = Date.now() - startTime;
 
       return {
         connected: true,
-        provider: "Supabase PostgreSQL",
+        provider: "Neon PostgreSQL",
         latencyMs,
         timestamp: new Date().toISOString(),
       };
@@ -28,7 +28,7 @@ export class DatabaseConnectionService {
 
       return {
         connected: false,
-        provider: "Supabase PostgreSQL",
+        provider: "Neon PostgreSQL",
         latencyMs,
         error: err.message,
         timestamp: new Date().toISOString(),

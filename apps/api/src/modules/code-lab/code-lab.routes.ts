@@ -178,8 +178,17 @@ function normalizeRunPayload(body: Record<string, unknown>) {
     body.result && typeof body.result === "object"
       ? (body.result as BrowserRunResult)
       : ({} as BrowserRunResult);
-  const stdout = String(result.stdout ?? body.stdout ?? "");
-  const stderr = String(result.stderr ?? body.stderr ?? "");
+  const rawStdout = String(result.stdout ?? body.stdout ?? "");
+  const rawStderr = String(result.stderr ?? body.stderr ?? "");
+  const MAX_DB_LOG_CHARS = 16000;
+  const stdout =
+    rawStdout.length > MAX_DB_LOG_CHARS
+      ? rawStdout.slice(0, MAX_DB_LOG_CHARS) + "\n... [Output truncated for database storage]"
+      : rawStdout;
+  const stderr =
+    rawStderr.length > MAX_DB_LOG_CHARS
+      ? rawStderr.slice(0, MAX_DB_LOG_CHARS) + "\n... [Error truncated for database storage]"
+      : rawStderr;
   const success =
     typeof result.success === "boolean"
       ? result.success

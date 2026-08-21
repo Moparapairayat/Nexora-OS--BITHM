@@ -1,19 +1,18 @@
-# 🚀 Nexora OS — Production Database Migration Guide (Docker → Supabase)
+# 🚀 Nexora OS — Production Database Migration Guide (Docker → Neon PostgreSQL)
 
-Welcome to the official documentation for the **Nexora OS Database Migration** to **Supabase PostgreSQL**.
+Welcome to the official documentation for the **Nexora OS Database Migration** to **Neon Serverless PostgreSQL**.
 
 ---
 
 ## 📌 1. Executive Summary
 
-This guide outlines the production migration of Nexora OS from local Docker PostgreSQL to **Supabase PostgreSQL**.
+This guide outlines the production migration of Nexora OS from local Docker PostgreSQL to **Neon Serverless PostgreSQL**.
 
 ### Key Architectural Changes:
 * **Zero Docker Requirement**: Completely removed `compose.yaml`, `compose.database.yaml`, `.docker-data`, and local Postgres container dependencies.
 * **Dual Connection String Strategy**:
-  * **`DATABASE_URL`**: Transaction pooled connection (Port 6543 / Supabase Transaction Pooler with `pgbouncer=true`) for fast runtime application queries.
-  * **`DIRECT_URL`**: Direct session connection (Port 5432) for Prisma CLI schema migrations, DDL statements, and database seeding.
-* **Supabase Storage Service**: Established modular storage architecture in `apps/web/src/lib/storage/supabase-storage.service.ts`.
+  * **`DATABASE_URL`**: Transaction pooled connection (Neon Connection Pooler with `sslmode=require`) for fast runtime application queries.
+  * **`DIRECT_URL`**: Direct session connection for Prisma CLI schema migrations, DDL statements, and database seeding.
 * **Clean Repository & Service Pattern**: Established organized database repositories under `apps/web/src/lib/database/repositories/`.
 
 ---
@@ -30,19 +29,19 @@ This guide outlines the production migration of Nexora OS from local Docker Post
                   |                                 |
                   v                                 v
         Prisma CLI Migrations              Runtime App Queries
-         (DIRECT_URL :5432)                (DATABASE_URL :6543)
+          (DIRECT_URL)                      (DATABASE_URL)
                   |                                 |
                   v                                 v
         +------------------+              +-------------------+
-        | Supabase Direct  |              | Supabase Connection|
-        | Session Engine   |              | Transaction Pooler|
+        |   Neon Direct    |              |  Neon Connection  |
+        | Session Compute  |              |      Pooler       |
         +--------+---------+              +---------+---------+
                  |                                  |
                  +----------------+-----------------+
                                   v
                       +------------------------+
-                      | Supabase PostgreSQL DB |
-                      |    (Managed Cloud)     |
+                      |   Neon PostgreSQL DB   |
+                      | (Serverless AWS Cloud) |
                       +------------------------+
 ```
 
@@ -50,32 +49,25 @@ This guide outlines the production migration of Nexora OS from local Docker Post
 
 ## 🔑 3. Environment Variables Configuration
 
-Declare the following environment variables in `.env` and `apps/web/.env`:
+Declare the following environment variables in `.env`:
 
 ```env
 # ==============================================================================
-# Supabase PostgreSQL Connection Strings
+# Neon PostgreSQL Connection Strings
 # ==============================================================================
 
-# Transaction Pooled Connection (Port 6543) - Used for runtime app queries
-DATABASE_URL="postgresql://postgres.[YOUR-PROJECT-REF]:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true"
+# Transaction Pooled Connection - Used for runtime app queries
+DATABASE_URL="postgresql://neondb_owner:[PASSWORD]@[HOST]-pooler.[REGION].aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 
-# Direct Session Connection (Port 5432) - Used for Prisma CLI migrations & schema push
-DIRECT_URL="postgresql://postgres.[YOUR-PROJECT-REF]:[YOUR-PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres"
-
-# ==============================================================================
-# Supabase API & Storage Configuration
-# ==============================================================================
-NEXT_PUBLIC_SUPABASE_URL="https://[YOUR-PROJECT-REF].supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-supabase-anon-key-here"
-SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key-here"
+# Direct Session Connection - Used for Prisma CLI migrations & schema push
+DIRECT_URL="postgresql://neondb_owner:[PASSWORD]@[HOST].[REGION].aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 ```
 
 ---
 
 ## 🛠️ 4. Prisma Schema Configuration
 
-The Prisma schema (`prisma/schema.prisma`) is configured with dual datasources for full Supabase connection pool compatibility:
+The Prisma schema (`prisma/schema.prisma`) is configured with dual datasources for full connection pool compatibility:
 
 ```prisma
 generator client {
@@ -93,13 +85,13 @@ datasource db {
 
 ## 🚀 5. Database Deployment & Seeding Workflow
 
-### Step 1: Deploy Schema Migrations to Supabase
-Run the direct Prisma schema push to create all tables, indexes, cascade rules, and enums in Supabase PostgreSQL:
+### Step 1: Deploy Schema Migrations to Neon
+Run the direct Prisma schema push to create all tables, indexes, cascade rules, and enums in Neon PostgreSQL:
 ```bash
 npm run db:push
 ```
 
-### Step 2: Seed Academic Data into Supabase
+### Step 2: Seed Academic Data into Neon
 Run the automated seed script to populate users, courses, assignments, lab sessions, and RBAC permissions:
 ```bash
 npm run db:seed
@@ -122,8 +114,6 @@ apps/web/src/lib/
 │   ├── types/
 │   │   └── database.types.ts          # Database TypeScript interfaces
 │   └── index.ts                       # Public database exports
-├── storage/
-│   └── supabase-storage.service.ts    # Supabase Storage bucket & upload architecture
 └── prisma.ts                          # Singleton Prisma client instance
 ```
 

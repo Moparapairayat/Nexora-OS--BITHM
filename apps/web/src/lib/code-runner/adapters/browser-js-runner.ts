@@ -19,13 +19,26 @@ function elapsedFrom(startedAt: number) {
   return Math.max(1, Math.round(performance.now() - startedAt));
 }
 
-function outputMatchesExpected(stdout: string, expected: string) {
-  const output = stdout.trim();
-  return (
-    output === expected ||
-    output.endsWith(expected) ||
-    output.split(/\s+/).includes(expected)
-  );
+function outputMatchesExpected(actualStdout: string, expected: string): boolean {
+  const cleanActual = (actualStdout || "").trim();
+  const cleanExpected = (expected || "").trim();
+
+  if (cleanActual === cleanExpected) return true;
+
+  // Check line-by-line whitespace-trimmed comparison
+  const actualLines = cleanActual.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const expectedLines = cleanExpected.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+  if (actualLines.length > 0 && actualLines.join("\n") === expectedLines.join("\n")) return true;
+
+  // Floating-point precision tolerance (within 1e-6)
+  const numActual = parseFloat(cleanActual);
+  const numExpected = parseFloat(cleanExpected);
+  if (!isNaN(numActual) && !isNaN(numExpected) && !isNaN(Number(cleanActual)) && !isNaN(Number(cleanExpected))) {
+    return Math.abs(numActual - numExpected) < 1e-6;
+  }
+
+  return false;
 }
 
 function transpileTypeScriptForBrowser(code: string) {

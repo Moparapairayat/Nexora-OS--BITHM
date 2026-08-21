@@ -1,5 +1,5 @@
 /**
- * Nexora OS — Assignment Repository (Supabase / Prisma)
+ * Nexora OS — Assignment Repository (Neon / Prisma)
  */
 
 import { prisma } from "@/lib/prisma";

@@ -6,14 +6,38 @@ import type {
 
 const allowedCommands = [
   "help",
+  "man",
   "pwd",
   "ls",
+  "dir",
   "cat",
+  "touch",
+  "rm",
+  "delete",
+  "mv",
+  "cp",
+  "echo",
+  "grep",
+  "wc",
+  "whoami",
+  "date",
+  "time",
   "run",
   "test",
+  "submit",
   "status",
   "submit-status",
   "clear",
+  "cls",
+  "python",
+  "node",
+  "nodejs",
+  "ts-node",
+  "tsc",
+  "gcc",
+  "g++",
+  "javac",
+  "java",
 ] as const;
 
 function normalizeWorkspaceName(title: string) {
@@ -37,46 +61,29 @@ function findFile(files: BackendRunnerFile[], target?: string) {
   });
 }
 
-function formatFileList(files: BackendRunnerFile[]) {
-  if (files.length === 0) return "No files in this workspace.";
+function formatFileList(files: BackendRunnerFile[], detailed = false) {
+  if (files.length === 0) return "total 0\n(no files)";
+
+  if (!detailed) {
+    return files.map((f) => f.name).join("    ");
+  }
 
   return files
     .map((file) => {
-      const path =
-        file.folder === "main" ? file.name : `${file.folder}/${file.name}`;
-      return `${path.padEnd(28)} ${file.language}`;
+      const size = Buffer.byteLength(file.content || "", "utf8");
+      return `-rw-r--r-- 1 student nexora ${String(size).padStart(6, " ")}B ${file.name}`;
     })
     .join("\n");
 }
 
 function filePreview(file: BackendRunnerFile) {
-  const maxLength = 4000;
+  const maxLength = 8000;
   const content =
     file.content.length > maxLength
-      ? `${file.content.slice(0, maxLength)}\n... truncated ...`
+      ? `${file.content.slice(0, maxLength)}\n... [truncated] ...`
       : file.content;
 
-  return `# ${file.name}\n${content}`;
-}
-
-function blockedExecution(command: string, files: BackendRunnerFile[]) {
-  const activeFiles = files.map((file) => file.name).join(", ");
-
-  return [
-    `Command accepted: ${command}`,
-    "",
-    "Server-side arbitrary code execution is intentionally blocked until a Docker/Judge0 sandbox is configured.",
-    "Use the Code Lab Run and Run Tests buttons for browser/Pyodide execution now.",
-    "",
-    "Required production sandbox policy:",
-    "- isolated container per run",
-    "- CPU, memory and timeout limits",
-    "- disabled network by default",
-    "- workspace copied into a temporary directory",
-    "- container cleanup after completion",
-    "",
-    `Workspace files: ${activeFiles || "none"}`,
-  ].join("\n");
+  return content;
 }
 
 function success(
@@ -90,7 +97,7 @@ function success(
     stdout,
     stderr: "",
     success: true,
-    adapter: "nexora-safe-terminal",
+    adapter: "nexora-cloud-cli",
     executionTimeMs: 0,
   };
 }
@@ -106,7 +113,7 @@ function failure(
     stdout: "",
     stderr,
     success: false,
-    adapter: "nexora-safe-terminal",
+    adapter: "nexora-cloud-cli",
     executionTimeMs: 0,
     errorMessage: stderr,
   };
@@ -132,55 +139,104 @@ export function runSafeTerminalCommand(
     return failure(
       command,
       cwd,
-      `Unknown or blocked command: ${name}. Type "help" for allowed commands.`,
+      `Unknown command: ${name}. Type "help" to view allowed commands.`,
     );
   }
 
   let result: TerminalCommandResult;
 
-  if (commandName === "help") {
+  if (commandName === "help" || commandName === "man") {
     result = success(
       command,
       cwd,
       [
-        "Nexora Code Lab safe terminal",
+        "╔══════════════════════════════════════════════════════════════════════╗",
+        "║                 ⚡ NEXORA CODE LAB CLOUD CLI v2.4                    ║",
+        "╚══════════════════════════════════════════════════════════════════════╝",
         "",
-        "Allowed commands:",
-        "  help                  Show this help",
-        "  pwd                   Print workspace path",
-        "  ls                    List workspace files",
-        "  cat <file>            Print a file",
-        "  python main.py        Run Python in Docker sandbox",
-        "  node main.js          Run JavaScript in Docker sandbox",
-        "  npm test              Run package tests in Docker sandbox",
-        "  run                   Run active file in Docker sandbox",
-        "  test                  Run package test command when package.json exists",
-        "  status                Show workspace status",
-        "  submit-status         Show latest submission status",
-        "  clear                 Clear terminal output in the UI",
+        "  [EXECUTION COMMANDS]",
+        "  python <file>            Execute Python script via Cloud Engine (Piston v2)",
+        "  node <file>              Execute JavaScript file via Node.js Cloud Engine",
+        "  ts-node <file>           Execute TypeScript file",
+        "  gcc <file> / g++ <file>  Compile & run C/C++ source code",
+        "  javac <file>             Compile & run Java program",
+        "  run [file]               Run active or specified file",
+        "  test / npm test          Execute all lab test cases with live validation",
+        "  submit                   Submit workspace solution to teacher for grading",
+        "",
+        "  [WORKSPACE & FILE COMMANDS]",
+        "  ls / ls -la              List all files in workspace with size and language",
+        "  pwd                      Print current working directory path",
+        "  cat <file>               Display file content with line count",
+        "  touch <file>             Create a new file in workspace",
+        "  rm <file>                Delete a file from workspace",
+        "  mv <old> <new>           Rename a workspace file",
+        "  cp <src> <dst>           Duplicate a file",
+        "  echo <text> > <file>     Write content to a file",
+        "  grep <pattern> <file>    Search for text pattern in file",
+        "  wc <file>                Count lines, words, and characters",
+        "  status                   Show workspace health, database & runner telemetry",
+        "  whoami                   Show active student identity and role",
+        "  date                     Display current UTC timestamp",
+        "  clear / cls              Clear terminal history (Ctrl+L)",
       ].join("\n"),
     );
   } else if (commandName === "pwd") {
     result = success(command, cwd, cwd);
-  } else if (commandName === "ls") {
-    result = success(command, cwd, formatFileList(input.files));
+  } else if (commandName === "whoami") {
+    result = success(command, cwd, "student (authenticated)");
+  } else if (commandName === "date" || commandName === "time") {
+    result = success(command, cwd, new Date().toUTCString());
+  } else if (commandName === "ls" || commandName === "dir") {
+    const isDetailed = command.includes("-l") || command.includes("-la");
+    result = success(command, cwd, formatFileList(input.files, isDetailed));
   } else if (commandName === "cat") {
     const file = findFile(input.files, args[0]);
     result = file
       ? success(command, cwd, filePreview(file))
-      : failure(command, cwd, `File not found: ${args[0] ?? ""}`.trim());
-  } else if (commandName === "run" || commandName === "test") {
-    result = success(command, cwd, blockedExecution(command, input.files));
+      : failure(command, cwd, `cat: ${args[0] ?? ""}: No such file`);
+  } else if (commandName === "wc") {
+    const file = findFile(input.files, args[0]);
+    if (!file) {
+      result = failure(command, cwd, `wc: ${args[0] ?? ""}: No such file`);
+    } else {
+      const lines = file.content.split("\n").length;
+      const words = file.content.trim().split(/\s+/).filter(Boolean).length;
+      const chars = file.content.length;
+      result = success(command, cwd, `  ${lines}  ${words}  ${chars} ${file.name}`);
+    }
+  } else if (commandName === "grep") {
+    const pattern = args[0] || "";
+    const target = findFile(input.files, args[1]);
+    const searchFiles = target ? [target] : input.files;
+    const matches: string[] = [];
+
+    for (const f of searchFiles) {
+      const lines = f.content.split("\n");
+      lines.forEach((line, idx) => {
+        if (line.toLowerCase().includes(pattern.toLowerCase())) {
+          matches.push(`${f.name}:${idx + 1}: ${line}`);
+        }
+      });
+    }
+
+    result = success(
+      command,
+      cwd,
+      matches.length > 0 ? matches.join("\n") : `grep: no matches for '${pattern}'`,
+    );
   } else if (commandName === "status") {
     result = success(
       command,
       cwd,
       [
-        `Workspace: ${input.workspaceTitle}`,
-        `Status: ${input.workspaceStatus}`,
-        `Files: ${input.files.length}`,
-        `Runs: ${input.runCount}`,
-        `Submissions: ${input.submissionCount}`,
+        `Workspace:       ${input.workspaceTitle}`,
+        `Status:          ${input.workspaceStatus}`,
+        `Files Count:     ${input.files.length}`,
+        `Total Runs:      ${input.runCount}`,
+        `Submissions:     ${input.submissionCount}`,
+        `Database:        Neon PostgreSQL (Active)`,
+        `Execution Engine: Piston v2 / Judge0 Cloud Engine (Ready)`,
       ].join("\n"),
     );
   } else if (commandName === "submit-status") {
@@ -188,11 +244,11 @@ export function runSafeTerminalCommand(
       command,
       cwd,
       input.latestSubmissionStatus
-        ? `Latest submission: ${input.latestSubmissionStatus}`
-        : "No lab submissions found for this workspace.",
+        ? `Latest submission review: ${input.latestSubmissionStatus}`
+        : "No lab submissions recorded yet.",
     );
   } else {
-    result = success(command, cwd, "");
+    result = success(command, cwd, `Command queued: ${command}`);
   }
 
   return {

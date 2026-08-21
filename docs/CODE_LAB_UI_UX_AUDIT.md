@@ -35,7 +35,7 @@
 
 ### Area 2: Top Action Toolbar
 - Added status indicators:
-  - 🟢 **Supabase Cloud DB**: PostgreSQL 17.6 active
+  - 🟢 **Neon Cloud DB**: PostgreSQL 17.6 active
   - ⚡ **Execution Engine**: `Piston API v2 / Judge0 CE`
   - 🤖 **AI Assistant**: `Gemini 2.5 Flash / Groq`
   - ☁️ **Autosave Status**: Real-time sync pulse
@@ -72,7 +72,7 @@
 - Integrated safe terminal emulator with command history (`help`, `ls`, `cat`, `run`, `status`).
 
 ### Area 10: Status Bar
-- Shows Git Branch (`main*`), Language, Encoding (`UTF-8`), Spaces (`2`), Execution Engine (`Judge0 CE`), AI Status, DB Status (`Supabase`), Latency (`~15ms`).
+- Shows Git Branch (`main*`), Language, Encoding (`UTF-8`), Spaces (`2`), Execution Engine (`Judge0 CE`), AI Status, DB Status (`Neon`), Latency (`~15ms`).
 
 ### Area 11–13: Smart Micro-Interactions & Academic Integration
 - Smooth glassmorphism accents (`#009B5A`), zero flashy distractions, clear focus states.

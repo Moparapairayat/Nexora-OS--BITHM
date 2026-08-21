@@ -16,6 +16,9 @@ import { ModuleExperiencePage } from "@/features/dashboard/module-experience-pag
 import { DashboardCard, PageHeader } from "@/components/ui/command-primitives";
 import { DataHubPage } from "@/features/data-hub/data-hub-page";
 import { OperationsPage } from "@/features/operations/operations-page";
+import { SkillDnaPage } from "@/features/skill-dna/skill-dna-page";
+import { LearningRoadmapPage } from "@/features/learning-roadmap/learning-roadmap-page";
+import { PortfolioBuilderPage } from "@/features/portfolio/portfolio-builder-page";
 import {
   isRoleRouteAllowed,
   roleDashboards,
@@ -39,6 +42,24 @@ export function ModulePage({ role, slug }: { role: AppRole; slug: string[] }) {
   const isDatabaseVisualizer =
     (role === "student" || role === "teacher") &&
     slug[0] === "database-visualizer";
+  const isSkillDna =
+    (role === "student" || role === "teacher") && slug[0] === "skill-dna";
+  const isLearningRoadmap =
+    (role === "student" || role === "teacher") && slug[0] === "learning-roadmap";
+  const isPortfolio =
+    (role === "student" || role === "teacher") && slug[0] === "portfolio";
+
+  if (isSkillDna) {
+    return <SkillDnaPage role={role} />;
+  }
+
+  if (isLearningRoadmap) {
+    return <LearningRoadmapPage role={role} />;
+  }
+
+  if (isPortfolio) {
+    return <PortfolioBuilderPage role={role} />;
+  }
 
   if (comingSoonSection) {
     return (

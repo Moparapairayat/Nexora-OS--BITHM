@@ -15,6 +15,7 @@ import {
   GitBranch,
   GripHorizontal,
   Maximize2,
+  Minimize2,
   MoreHorizontal,
   Palette,
   PencilLine,
@@ -61,19 +62,19 @@ import { PenguinLoadingSpinner } from "@/components/ui/loading-spinner";
 import { roleDashboards, type AppRole } from "@/data/dashboard.mock";
 import { cn } from "@/lib/utils";
 
-// ---------- Reusable design tokens (Code Lab) ----------
+// ---------- Reusable design tokens (Code Lab Pro IDE) ----------
 
 const idePanelClass =
-  "bg-white dark:bg-[#0E1726] text-[#0B1B33] dark:text-[#E2E8F0] border-[#E6EEF0] dark:border-[#1E293B]";
+  "bg-white dark:bg-[#0B101B] text-[#0F172A] dark:text-[#E2E8F0] border-[#E2E8F0] dark:border-[#1E293B]";
 
 const ghostButton =
-  "inline-flex h-9 items-center justify-center gap-2 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] px-3 text-sm font-medium text-[#0B1B33] dark:text-[#E2E8F0] transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:border-[#DFF8EA] dark:hover:border-[#009B5A]/40";
+  "inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#111827] px-3 text-xs font-semibold text-[#334155] dark:text-[#CBD5E1] transition-all hover:bg-[#F8FAFC] dark:hover:bg-[#1E293B] hover:text-[#0F172A] dark:hover:text-white hover:border-[#CBD5E1] dark:hover:border-[#334155] active:scale-[0.98]";
 
 const primaryButton =
-  "inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-[#009B5A] px-4 text-sm font-semibold text-white shadow-[0_8px_20px_rgba(0,155,90,0.2)] transition hover:bg-[#00B86B] disabled:opacity-60";
+  "inline-flex h-8 items-center justify-center gap-1.5 rounded-lg bg-gradient-to-r from-[#059669] to-[#10B981] px-3.5 text-xs font-semibold text-white shadow-[0_2px_8px_rgba(5,150,105,0.25)] transition-all hover:from-[#047857] hover:to-[#059669] hover:shadow-[0_4px_14px_rgba(5,150,105,0.35)] active:scale-[0.98] disabled:opacity-60";
 
 const pillBase =
-  "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold";
+  "inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-[11px] font-semibold";
 
 
 const CODE_LAB_STORAGE_KEY = "nexora-code-lab:workspace:v1";
@@ -306,7 +307,7 @@ function fileSnapshotsFromFolders(
         name: file.name,
         language: file.language,
         content: fileContents[file.id] ?? file.content,
-      } satisfies FileSnapshot,
+      },
     ]),
   );
 }
@@ -317,11 +318,13 @@ function inferLanguageFromFileName(
 ): FileNode["language"] {
   const extension = name.toLowerCase().split(".").pop() ?? "";
   const map: Record<string, FileNode["language"]> = {
+    c: "c",
     cpp: "cpp",
     css: "html",
     cxx: "cpp",
     htm: "html",
     html: "html",
+    java: "java",
     js: "javascript",
     json: "json",
     jsx: "javascript",
@@ -340,8 +343,10 @@ function normalizeStoredFileLanguage(
   name: string,
 ): FileNode["language"] {
   const supported: FileNode["language"][] = [
+    "c",
     "cpp",
     "html",
+    "java",
     "javascript",
     "json",
     "markdown",
@@ -357,8 +362,10 @@ function normalizeStoredFileLanguage(
 
 function defaultExtensionForLanguage(language: LanguageId) {
   const map: Record<LanguageId, string> = {
+    c: "c",
     cpp: "cpp",
     html: "html",
+    java: "java",
     javascript: "js",
     python: "py",
     typescript: "ts",
@@ -371,6 +378,18 @@ function starterContentForLanguage(
   language: FileNode["language"],
   name: string,
 ) {
+  if (language === "c") {
+    return `#include <stdio.h>\n\nint main() {\n    printf("Hello from Nexora Code Lab!\\n");\n    return 0;\n}\n`;
+  }
+
+  if (language === "cpp") {
+    return `#include <iostream>\n\nint main() {\n    std::cout << "Hello from Nexora Code Lab!" << std::endl;\n    return 0;\n}\n`;
+  }
+
+  if (language === "java") {
+    return `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello from Nexora Code Lab!");\n    }\n}\n`;
+  }
+
   if (language === "javascript") {
     return `const value = Number(input());\nconsole.log(value * 2);\n`;
   }
@@ -380,22 +399,34 @@ function starterContentForLanguage(
   }
 
   if (language === "html") {
-    return `<!doctype html>\n<html>\n  <head>\n    <title>${name}</title>\n    <style>\n      body { font-family: system-ui; padding: 24px; }\n    </style>\n  </head>\n  <body>\n    <h1>Nexora Code Lab</h1>\n    <script>\n      console.log("Preview ready");\n    </script>\n  </body>\n</html>\n`;
+    return `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="utf-8">\n  <title>${name}</title>\n  <style>\n    body { font-family: sans-serif; padding: 24px; }\n    h1 { color: #009B5A; }\n  </style>\n</head>\n<body>\n  <h1>Hello from Nexora Code Lab</h1>\n  <p>Live preview enabled.</p>\n</body>\n</html>\n`;
   }
 
   if (language === "json") {
-    return `{\n  "name": "${name}",\n  "items": []\n}\n`;
+    return `{\n  "name": "${name}",\n  "version": "1.0.0"\n}\n`;
   }
 
   if (language === "markdown") {
-    return `# ${name}\n\nWrite your notes here.\n`;
+    return `# ${name}\n\nDocument your lab solution here.\n`;
   }
 
-  if (language === "text") {
-    return "";
+  return `def factorial(n):\n    if n < 0:\n        raise ValueError('n must be non-negative')\n    result = 1\n    for value in range(2, n + 1):\n        result *= value\n    return result\n\nprint(factorial(10))\n`;
+}
+
+function languageForFile(file: FileNode): LanguageId {
+  if (
+    file.language === "python" ||
+    file.language === "javascript" ||
+    file.language === "typescript" ||
+    file.language === "html" ||
+    file.language === "c" ||
+    file.language === "cpp" ||
+    file.language === "java"
+  ) {
+    return file.language;
   }
 
-  return `# ${name}\n\nvalue = int(input())\nprint(value * 2)\n`;
+  return "python";
 }
 
 function ensureUniqueFileName(name: string, files: FileNode[]) {
@@ -427,55 +458,95 @@ function runnerLanguageFor(
   const language = file?.language ?? fallback;
 
   if (
+    language === "c" ||
+    language === "cpp" ||
+    language === "java" ||
     language === "python" ||
     language === "javascript" ||
     language === "typescript" ||
     language === "html"
   ) {
-    return language;
+    return language as any;
   }
 
-  return fallback === "cpp" ? "unsupported" : fallback;
+  return fallback as any;
 }
 
-function outputMatchesExpected(output: string, expected: string) {
-  const trimmed = output.trim();
-  return (
-    trimmed === expected ||
-    trimmed.endsWith(expected) ||
-    trimmed.split(/\s+/).includes(expected)
-  );
-}
+function outputMatchesExpected(actualStdout: string, expected: string): boolean {
+  const cleanActual = (actualStdout || "").trim();
+  const cleanExpected = (expected || "").trim();
 
-function shouldUseBackendRunner(language: CodeRunnerLanguage) {
-  return language === "python" || language === "javascript";
+  if (cleanActual === cleanExpected) return true;
+
+  // Check line-by-line whitespace-trimmed comparison
+  const actualLines = cleanActual.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const expectedLines = cleanExpected.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+  if (actualLines.length > 0 && actualLines.join("\n") === expectedLines.join("\n")) return true;
+
+  // Floating-point precision tolerance (within 1e-6)
+  const numActual = parseFloat(cleanActual);
+  const numExpected = parseFloat(cleanExpected);
+  if (!isNaN(numActual) && !isNaN(numExpected) && !isNaN(Number(cleanActual)) && !isNaN(Number(cleanExpected))) {
+    return Math.abs(numActual - numExpected) < 1e-6;
+  }
+
+  return false;
 }
 
 function normalizeApiExecutionResult(
   execution: ApiCodeRunResult,
-  fallbackLanguage: CodeRunnerLanguage,
+  language: CodeRunnerLanguage,
 ): CodeRunResult {
   return {
-    stdout: execution.stdout || "Execution completed without stdout.",
-    stderr: execution.stderr ?? "",
     success: execution.success,
-    executionTime: Number(
+    language: execution.language ?? language,
+    stdout: execution.stdout ?? "",
+    stderr: execution.stderr ?? "",
+    executionTime:
       execution.executionTime ?? execution.executionTimeMs ?? 0,
-    ),
-    testResults: execution.testResults?.map((test) => ({
-      id: test.id,
-      input: test.input,
-      expected: test.expected,
-      stdout: test.stdout,
-      stderr: test.stderr,
-      passed: test.passed,
-      executionTime: Number(test.executionTime ?? test.executionTimeMs ?? 0),
-    })),
-    errorMessage: execution.errorMessage,
-    adapter: execution.adapter || "nexora-api-runner",
-    language: execution.language || fallbackLanguage,
-    htmlPreview: execution.htmlPreview,
+    adapter: execution.adapter ?? "nexora-cloud-engine",
+    errorMessage: execution.errorMessage ?? undefined,
+    htmlPreview: execution.htmlPreview ?? undefined,
+    testResults: execution.testResults?.map((testResult) => {
+      const anyResult = testResult as unknown as Record<string, unknown>;
+      return {
+        id: testResult.id,
+        input: testResult.input,
+        expected: testResult.expected,
+        stdout:
+          typeof anyResult.stdout === "string"
+            ? anyResult.stdout
+            : typeof anyResult.actual === "string"
+              ? String(anyResult.actual)
+              : "",
+        stderr:
+          typeof anyResult.stderr === "string"
+            ? anyResult.stderr
+            : typeof anyResult.errorMessage === "string"
+              ? String(anyResult.errorMessage)
+              : "",
+        passed: Boolean(testResult.passed),
+        executionTime:
+          testResult.executionTime ??
+          (typeof anyResult.executionTimeMs === "number"
+            ? anyResult.executionTimeMs
+            : 0),
+      };
+    }),
   };
+}
+
+function fileForWorkspace(
+  workspace: CodeLabApiWorkspace,
+  activeFile: FileNode,
+) {
+  return (
+    workspace.files.find((file) => file.name === activeFile.name) ??
+    workspace.files.find((file) => file.id === activeFile.id) ??
+    workspace.files[0] ??
+    null
+  );
 }
 
 function terminalCwdForWorkspace(title: string) {
@@ -505,49 +576,27 @@ const MonacoEditor = dynamic<EditorProps>(
   },
 );
 
+// ---------- Monaco Editor Configuration ----------
+
 const monacoOptions: EditorProps["options"] = {
-  automaticLayout: true,
-  bracketPairColorization: { enabled: true },
-  contextmenu: true,
+  fontSize: 13.5,
+  lineHeight: 22,
+  fontFamily: "'Geist Mono', 'JetBrains Mono', 'Fira Code', Menlo, Consolas, monospace",
+  fontLigatures: true,
+  minimap: { enabled: true, maxColumn: 80, scale: 0.85, renderCharacters: false },
+  scrollBeyondLastLine: false,
+  smoothScrolling: true,
   cursorBlinking: "smooth",
   cursorSmoothCaretAnimation: "on",
-  detectIndentation: true,
-  fixedOverflowWidgets: true,
-  folding: true,
-  fontFamily:
-    '"Geist Mono", "JetBrains Mono", "Fira Code", Consolas, "Courier New", monospace',
-  fontLigatures: true,
-  fontSize: 14,
-  formatOnPaste: true,
-  formatOnType: true,
-  glyphMargin: false,
-  guides: {
-    bracketPairs: true,
-    indentation: true,
-  },
-  lineHeight: 24,
-  lineNumbersMinChars: 3,
-  matchBrackets: "always",
-  minimap: {
-    enabled: true,
-    renderCharacters: false,
-    scale: 0.75,
-    showSlider: "mouseover",
-    side: "right",
-  },
-  overviewRulerBorder: false,
-  padding: {
-    bottom: 18,
-    top: 18,
-  },
   renderLineHighlight: "all",
   renderWhitespace: "selection",
   roundedSelection: true,
-  scrollBeyondLastLine: false,
-  smoothScrolling: true,
-  suggestOnTriggerCharacters: true,
-  tabSize: 2,
-  wordWrap: "off",
+  automaticLayout: true,
+  padding: { top: 14, bottom: 14 },
+  folding: true,
+  bracketPairColorization: { enabled: true },
+  guides: { bracketPairs: true, indentation: true },
+  tabSize: 4,
 };
 
 const configureMonaco: BeforeMount = (monaco) => {
@@ -555,30 +604,27 @@ const configureMonaco: BeforeMount = (monaco) => {
     base: "vs",
     inherit: true,
     rules: [
-      { token: "comment", foreground: "6B7A90", fontStyle: "italic" },
-      { token: "keyword", foreground: "007A45", fontStyle: "bold" },
-      { token: "string", foreground: "B36B00" },
-      { token: "number", foreground: "7C3AED" },
-      { token: "type", foreground: "1A64D8" },
-      { token: "function", foreground: "005F37" },
+      { token: "comment", foreground: "64748B", fontStyle: "italic" },
+      { token: "keyword", foreground: "059669", fontStyle: "bold" },
+      { token: "string", foreground: "0284C7" },
+      { token: "number", foreground: "D97706" },
+      { token: "type", foreground: "7C3AED" },
+      { token: "identifier", foreground: "0F172A" },
+      { token: "delimiter", foreground: "475569" },
     ],
     colors: {
       "editor.background": "#FFFFFF",
-      "editor.foreground": "#0B1B33",
-      "editorCursor.foreground": "#009B5A",
-      "editorLineNumber.foreground": "#9AA8B8",
-      "editorLineNumber.activeForeground": "#009B5A",
-      "editor.lineHighlightBackground": "#EFFFF566",
-      "editor.selectionBackground": "#DFF8EACC",
-      "editor.inactiveSelectionBackground": "#E6EEF0",
-      "editorIndentGuide.background1": "#EDF3F3",
-      "editorIndentGuide.activeBackground1": "#BDEFD2",
-      "editorBracketMatch.background": "#DFF8EA88",
-      "editorBracketMatch.border": "#009B5A",
-      "minimap.background": "#FFFFFF",
-      "scrollbarSlider.background": "#C9D7D580",
-      "scrollbarSlider.hoverBackground": "#9FB8B380",
-      "scrollbarSlider.activeBackground": "#009B5A88",
+      "editor.foreground": "#0F172A",
+      "editor.lineHighlightBackground": "#F8FAFC",
+      "editor.lineHighlightBorder": "#F1F5F9",
+      "editorLineNumber.foreground": "#94A3B8",
+      "editorLineNumber.activeForeground": "#059669",
+      "editorCursor.foreground": "#059669",
+      "editor.selectionBackground": "#CCFBF1",
+      "editor.inactiveSelectionBackground": "#E6FFFA",
+      "editorGutter.background": "#FFFFFF",
+      "editorIndentGuide.background": "#F1F5F9",
+      "editorIndentGuide.activeBackground": "#CBD5E1",
     },
   });
 
@@ -586,65 +632,85 @@ const configureMonaco: BeforeMount = (monaco) => {
     base: "vs-dark",
     inherit: true,
     rules: [
-      { token: "comment", foreground: "7B8C82", fontStyle: "italic" },
-      { token: "keyword", foreground: "32F59A", fontStyle: "bold" },
-      { token: "string", foreground: "FFB45A" },
-      { token: "number", foreground: "D9FF57" },
-      { token: "type", foreground: "6CF6B3" },
-      { token: "function", foreground: "D9FF57" },
+      { token: "comment", foreground: "64748B", fontStyle: "italic" },
+      { token: "keyword", foreground: "34D399", fontStyle: "bold" },
+      { token: "string", foreground: "38BDF8" },
+      { token: "number", foreground: "FBBF24" },
+      { token: "type", foreground: "A78BFA" },
+      { token: "identifier", foreground: "F8FAFC" },
+      { token: "delimiter", foreground: "94A3B8" },
     ],
     colors: {
-      "editor.background": "#0D1110",
-      "editor.foreground": "#F5F7F2",
-      "editorCursor.foreground": "#D9FF57",
-      "editorLineNumber.foreground": "#6E7A72",
-      "editorLineNumber.activeForeground": "#D9FF57",
-      "editor.lineHighlightBackground": "#15332680",
-      "editor.selectionBackground": "#32F59A33",
-      "editor.inactiveSelectionBackground": "#1A241F",
-      "editorIndentGuide.background1": "#1C2924",
-      "editorIndentGuide.activeBackground1": "#32F59A66",
-      "editorBracketMatch.background": "#32F59A22",
-      "editorBracketMatch.border": "#32F59A",
-      "minimap.background": "#0D1110",
-      "scrollbarSlider.background": "#6E7A7244",
-      "scrollbarSlider.hoverBackground": "#32F59A44",
-      "scrollbarSlider.activeBackground": "#D9FF5766",
+      "editor.background": "#0B101B",
+      "editor.foreground": "#F8FAFC",
+      "editor.lineHighlightBackground": "#111927",
+      "editor.lineHighlightBorder": "#1E293B",
+      "editorLineNumber.foreground": "#475569",
+      "editorLineNumber.activeForeground": "#34D399",
+      "editorCursor.foreground": "#34D399",
+      "editor.selectionBackground": "#064E3B66",
+      "editorGutter.background": "#0B101B",
+      "editorIndentGuide.background": "#1E293B",
+      "editorIndentGuide.activeBackground": "#334155",
+    },
+  });
+
+  monaco.editor.defineTheme("nexora-one-dark", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "5C6370", fontStyle: "italic" },
+      { token: "keyword", foreground: "C678DD", fontStyle: "bold" },
+      { token: "string", foreground: "98C379" },
+      { token: "number", foreground: "D19A66" },
+      { token: "type", foreground: "E5C07B" },
+      { token: "identifier", foreground: "ABB2BF" },
+      { token: "delimiter", foreground: "ABB2BF" },
+    ],
+    colors: {
+      "editor.background": "#1E222A",
+      "editor.foreground": "#ABB2BF",
+      "editor.lineHighlightBackground": "#232731",
+      "editor.lineHighlightBorder": "#282C34",
+      "editorLineNumber.foreground": "#4B5263",
+      "editorLineNumber.activeForeground": "#61AFEF",
+      "editorCursor.foreground": "#528BFF",
+      "editor.selectionBackground": "#3E4451",
+      "editorGutter.background": "#1E222A",
+      "editorIndentGuide.background": "#282C34",
+      "editorIndentGuide.activeBackground": "#3E4451",
+    },
+  });
+
+  monaco.editor.defineTheme("nexora-catppuccin", {
+    base: "vs-dark",
+    inherit: true,
+    rules: [
+      { token: "comment", foreground: "6E738D", fontStyle: "italic" },
+      { token: "keyword", foreground: "C6A0F6", fontStyle: "bold" },
+      { token: "string", foreground: "A6DA95" },
+      { token: "number", foreground: "F5A97F" },
+      { token: "type", foreground: "8AADF4" },
+      { token: "identifier", foreground: "CAD3F5" },
+      { token: "delimiter", foreground: "939AB7" },
+    ],
+    colors: {
+      "editor.background": "#181926",
+      "editor.foreground": "#CAD3F5",
+      "editor.lineHighlightBackground": "#1E2030",
+      "editor.lineHighlightBorder": "#24273A",
+      "editorLineNumber.foreground": "#5B6078",
+      "editorLineNumber.activeForeground": "#C6A0F6",
+      "editorCursor.foreground": "#F4B8E4",
+      "editor.selectionBackground": "#363A4F88",
+      "editorGutter.background": "#181926",
+      "editorIndentGuide.background": "#24273A",
+      "editorIndentGuide.activeBackground": "#363A4F",
     },
   });
 };
 
 // ---------- Sub-components ----------
-
-function IconChip({
-  icon: Icon,
-  tone = "emerald",
-  size = "md",
-}: {
-  icon: LucideIcon;
-  tone?: "emerald" | "blue" | "purple" | "orange";
-  size?: "sm" | "md" | "lg";
-}) {
-  const tones: Record<string, string> = {
-    emerald: "bg-[#DFF8EA] text-[#009B5A]",
-    blue: "bg-[#E5F0FF] text-[#1A7CFF]",
-    purple: "bg-[#EEE7FF] text-[#7C4DFF]",
-    orange: "bg-[#FFE9D6] text-[#FF7A1A]",
-  };
-  const sizes: Record<string, string> = {
-    sm: "h-8 w-8 rounded-xl",
-    md: "h-10 w-10 rounded-2xl",
-    lg: "h-14 w-14 rounded-[20px]",
-  };
-  return (
-    <span className={cn("grid place-items-center", sizes[size], tones[tone])}>
-      <Icon
-        className={size === "lg" ? "h-6 w-6" : "h-4 w-4"}
-        aria-hidden="true"
-      />
-    </span>
-  );
-}
 
 function LanguageSelect({
   value,
@@ -654,23 +720,22 @@ function LanguageSelect({
   onChange: (id: LanguageId) => void;
 }) {
   return (
-    <label className="relative inline-flex items-center">
-      <span className="sr-only">Language</span>
+    <div className="relative inline-flex items-center">
       <select
         aria-label="Programming language"
         title="Programming language"
         value={value}
         onChange={(event) => onChange(event.target.value as LanguageId)}
-        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] pl-3 pr-9 text-sm font-medium text-[#0B1B33] dark:text-[#E2E8F0] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] dark:hover:border-[#009B5A]/40 focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA] dark:focus:ring-[#009B5A]/20"
+        className="h-8 appearance-none rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#111827] pl-2.5 pr-7 text-xs font-semibold text-[#0F172A] dark:text-[#E2E8F0] shadow-xs outline-none transition hover:border-[#CBD5E1] dark:hover:border-[#334155] focus:border-[#059669] focus:ring-1 focus:ring-[#059669]/20 cursor-pointer"
       >
         {languageOptions.map((option) => (
-          <option key={option.id} value={option.id} className="dark:bg-[#0E1726] dark:text-[#E2E8F0]">
+          <option key={option.id} value={option.id} className="dark:bg-[#0B101B] dark:text-[#E2E8F0]">
             {option.label}
           </option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-2.5 h-4 w-4 text-[#5D6B82] dark:text-[#94A3B8]" />
-    </label>
+      <ChevronDown className="pointer-events-none absolute right-2 h-3.5 w-3.5 text-[#64748B] dark:text-[#94A3B8]" />
+    </div>
   );
 }
 
@@ -682,23 +747,22 @@ function EnvironmentSelect({
   onChange: (id: EnvironmentId) => void;
 }) {
   return (
-    <label className="relative inline-flex items-center">
-      <span className="sr-only">Environment</span>
+    <div className="relative inline-flex items-center">
       <select
         aria-label="Execution environment"
         title="Execution environment"
         value={value}
         onChange={(event) => onChange(event.target.value as EnvironmentId)}
-        className="h-9 appearance-none rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] pl-3 pr-9 text-sm font-medium text-[#0B1B33] dark:text-[#E2E8F0] shadow-[0_4px_12px_rgba(15,23,42,0.04)] outline-none transition hover:border-[#DFF8EA] dark:hover:border-[#009B5A]/40 focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA] dark:focus:ring-[#009B5A]/20"
+        className="h-8 appearance-none rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#111827] pl-2.5 pr-7 text-xs font-semibold text-[#0F172A] dark:text-[#E2E8F0] shadow-xs outline-none transition hover:border-[#CBD5E1] dark:hover:border-[#334155] focus:border-[#059669] focus:ring-1 focus:ring-[#059669]/20 cursor-pointer"
       >
         {environmentOptions.map((option) => (
-          <option key={option.id} value={option.id} className="dark:bg-[#0E1726] dark:text-[#E2E8F0]">
+          <option key={option.id} value={option.id} className="dark:bg-[#0B101B] dark:text-[#E2E8F0]">
             {option.label}
           </option>
         ))}
       </select>
-      <ChevronDown className="pointer-events-none absolute right-2.5 h-4 w-4 text-[#5D6B82] dark:text-[#94A3B8]" />
-    </label>
+      <ChevronDown className="pointer-events-none absolute right-2 h-3.5 w-3.5 text-[#64748B] dark:text-[#94A3B8]" />
+    </div>
   );
 }
 
@@ -724,84 +788,77 @@ function CodeLabHeader({
   isSubmitting: boolean;
 }) {
   return (
-    <header
-      className={cn(
-        idePanelClass,
-        "sticky top-0 z-30 border-b border-[#DCE7E2] dark:border-[#1E293B] bg-white/95 dark:bg-[#0E1726]/95 px-3.5 py-2.5 backdrop-blur-md shadow-[0_2px_10px_rgba(15,23,42,0.03)] dark:shadow-none",
-      )}
-    >
-      <div className="flex flex-col gap-2 lg:flex-row lg:items-center">
-        <div className="flex items-center gap-3">
-          <IconChip icon={Code2} tone="emerald" size="sm" />
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h1 className="text-sm font-bold tracking-tight text-[#0B1B33] dark:text-white">
-                Code Lab
-              </h1>
-              <span className="code-lab-workspace-status inline-flex items-center gap-1.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40 bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2.5 py-0.5 text-[11px] font-semibold text-[#00804A] dark:text-[#32F59A]">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#009B5A] opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#009B5A]" />
-                </span>
-                Workspace Active
-              </span>
-            </div>
-          </div>
+    <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0B101B] px-3.5 py-2 select-none">
+      {/* Left: Window Controls + Brand */}
+      <div className="flex items-center gap-3">
+        {/* macOS Window Controls */}
+        <div className="flex items-center gap-1.5 pr-2 border-r border-[#E2E8F0] dark:border-[#1E293B]">
+          <span className="h-3 w-3 rounded-full bg-[#FF5F56] border border-[#E0443E] shadow-2xs" />
+          <span className="h-3 w-3 rounded-full bg-[#FFBD2E] border-[#DEA123] shadow-2xs" />
+          <span className="h-3 w-3 rounded-full bg-[#27C93F] border-[#1AAB29] shadow-2xs" />
         </div>
 
-        <button
-          type="button"
-          onClick={onOpenCommandPalette}
-          className="code-lab-command-trigger mx-auto hidden h-9 min-w-[200px] max-w-[380px] flex-1 items-center gap-2.5 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#1E293B] px-3.5 text-left text-xs font-medium text-[#5D6B82] dark:text-[#94A3B8] shadow-inner transition-all hover:border-[#009B5A]/40 hover:bg-white dark:hover:bg-[#0F172A] hover:shadow-[0_4px_12px_rgba(0,155,90,0.08)] 2xl:flex"
-          aria-label="Open command palette"
-          title="Open command palette (Ctrl K or Ctrl Shift P)"
-        >
-          <Search className="h-3.5 w-3.5 shrink-0 text-[#009B5A]" aria-hidden="true" />
-          <span className="min-w-0 flex-1 truncate font-sans text-xs text-[#0B1B33] dark:text-[#CBD5E1]">Search commands & files...</span>
-          <div className="flex items-center gap-1">
-            <kbd className="rounded-md border border-[#DCE7E2] dark:border-[#334155] bg-white dark:bg-[#0F172A] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[#5D6B82] dark:text-[#94A3B8] shadow-xs">
-              Ctrl K
-            </kbd>
-          </div>
-        </button>
+        {/* Code Lab Title & Status */}
+        <div className="flex items-center gap-2">
+          <span className="font-bold text-xs tracking-tight text-[#0F172A] dark:text-[#F8FAFC]">
+            Code Lab
+          </span>
+          <span className="inline-flex items-center gap-1 rounded bg-[#F1F5F9] dark:bg-[#1E293B] px-1.5 py-0.5 text-[10px] font-mono font-medium text-[#64748B] dark:text-[#94A3B8]">
+            v2.4
+          </span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-medium text-[#059669] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/30 px-2 py-0.5 rounded-full border border-[#A7F3D0] dark:border-[#059669]/30">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#059669] dark:bg-[#34D399] animate-pulse" />
+            Live Cloud
+          </span>
+        </div>
+      </div>
 
-        <div className="flex flex-wrap items-center gap-2 lg:ml-auto">
-          <button
-            type="button"
-            onClick={onOpenCommandPalette}
-            className="grid h-9 w-9 shrink-0 place-items-center rounded-xl border border-[#E6EEF0] bg-white text-[#5D6B82] transition-all hover:border-[#009B5A]/40 hover:bg-[#EFFFF5] hover:text-[#009B5A] active:scale-95 2xl:hidden"
-            aria-label="Open command palette"
-            title="Open command palette (Ctrl K)"
-          >
-            <Command className="h-4 w-4" aria-hidden="true" />
-          </button>
-          <LanguageSelect value={language} onChange={onLanguageChange} />
+      {/* Center: Command Palette Trigger */}
+      <button
+        type="button"
+        onClick={onOpenCommandPalette}
+        className="hidden md:flex items-center gap-2 h-7.5 w-72 max-w-sm rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#111827] px-2.5 text-xs text-[#64748B] dark:text-[#94A3B8] transition hover:border-[#CBD5E1] dark:hover:border-[#334155] hover:bg-white dark:hover:bg-[#0B101B] shadow-2xs"
+        aria-label="Open command palette"
+        title="Open command palette (Ctrl+K)"
+      >
+        <Search className="h-3.5 w-3.5 text-[#64748B] dark:text-[#94A3B8]" />
+        <span className="flex-1 text-left truncate text-[11px]">Search files & commands...</span>
+        <kbd className="rounded border border-[#CBD5E1] dark:border-[#334155] bg-white dark:bg-[#1E293B] px-1.5 py-0.5 font-mono text-[9px] font-semibold text-[#475569] dark:text-[#94A3B8]">
+          ⌘K
+        </kbd>
+      </button>
+
+      {/* Right: Actions */}
+      <div className="flex items-center gap-2">
+        <LanguageSelect value={language} onChange={onLanguageChange} />
+        <div className="hidden sm:block">
           <EnvironmentSelect
             value={environment}
             onChange={onEnvironmentChange}
           />
-          <button
-            type="button"
-            onClick={onSubmit}
-            disabled={isSubmitting}
-            className={cn(ghostButton, "transition-all active:scale-[0.98]")}
-          >
-            <UploadIcon className="h-4 w-4 text-[#009B5A]" />
-            {isSubmitting ? "Submitting..." : "Submit Task"}
-          </button>
-          <button
-            type="button"
-            onClick={onRun}
-            disabled={isRunning}
-            className={cn(
-              primaryButton,
-              "shadow-[0_8px_20px_rgba(0,155,90,0.25)] hover:shadow-[0_12px_24px_rgba(0,155,90,0.35)] transition-all duration-200 active:scale-[0.98]",
-            )}
-          >
-            <Play className="h-4 w-4 fill-white" />
-            {isRunning ? "Running Engine..." : "Run Code"}
-          </button>
         </div>
+
+        <button
+          type="button"
+          onClick={onSubmit}
+          disabled={isSubmitting}
+          className={ghostButton}
+          title="Submit assignment for assessment"
+        >
+          <UploadIcon className="h-3.5 w-3.5 text-[#059669]" />
+          <span className="hidden sm:inline">{isSubmitting ? "Submitting..." : "Submit Task"}</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={onRun}
+          disabled={isRunning}
+          className={primaryButton}
+          title="Execute code (Ctrl+Enter)"
+        >
+          <Play className="h-3.5 w-3.5 fill-current" />
+          <span>{isRunning ? "Running..." : "Run (⌘↵)"}</span>
+        </button>
       </div>
     </header>
   );
@@ -817,103 +874,43 @@ function FileTypeIcon({
   const extension = name.toLowerCase().startsWith(".env")
     ? "env"
     : (name.toLowerCase().split(".").pop() ?? "");
-  const meta: Record<string, { label: string; className: string }> = {
-    py: {
-      label: "PY",
-      className: "border-[#BDEFD2] bg-[#EFFFF5] text-[#007A45]",
-    },
-    js: {
-      label: "JS",
-      className: "border-[#F8E7A6] bg-[#FFF9DB] text-[#A36A00]",
-    },
-    jsx: {
-      label: "JSX",
-      className: "border-[#C9E5FF] bg-[#EAF6FF] text-[#0877C8]",
-    },
-    ts: {
-      label: "TS",
-      className: "border-[#BFD9FF] bg-[#EAF2FF] text-[#1A64D8]",
-    },
-    tsx: {
-      label: "TSX",
-      className: "border-[#BFD9FF] bg-[#EAF2FF] text-[#1A64D8]",
-    },
-    html: {
-      label: "HTML",
-      className: "border-[#FFD7B8] bg-[#FFF0E5] text-[#C84E12]",
-    },
-    css: {
-      label: "CSS",
-      className: "border-[#D8C8FF] bg-[#F1ECFF] text-[#6E3AD8]",
-    },
-    scss: {
-      label: "SCSS",
-      className: "border-[#FFD0E4] bg-[#FFF0F7] text-[#B52C69]",
-    },
-    cpp: {
-      label: "C++",
-      className: "border-[#C8D7FF] bg-[#EEF3FF] text-[#3457D5]",
-    },
-    cc: {
-      label: "C++",
-      className: "border-[#C8D7FF] bg-[#EEF3FF] text-[#3457D5]",
-    },
-    cxx: {
-      label: "C++",
-      className: "border-[#C8D7FF] bg-[#EEF3FF] text-[#3457D5]",
-    },
-    c: {
-      label: "C",
-      className: "border-[#C8D7FF] bg-[#EEF3FF] text-[#3457D5]",
-    },
-    json: {
-      label: "{}",
-      className: "border-[#FFE0A8] bg-[#FFF6E8] text-[#B06300]",
-    },
-    md: {
-      label: "MD",
-      className: "border-[#D8E0EA] bg-[#F5F8FB] text-[#475569]",
-    },
-    mdx: {
-      label: "MDX",
-      className: "border-[#D8E0EA] bg-[#F5F8FB] text-[#475569]",
-    },
-    txt: {
-      label: "TXT",
-      className: "border-[#D8E0EA] bg-[#F7F9FB] text-[#64748B]",
-    },
-    sql: {
-      label: "SQL",
-      className: "border-[#BDEFD2] bg-[#EFFFF5] text-[#007A45]",
-    },
-    prisma: {
-      label: "DB",
-      className: "border-[#BDEFD2] bg-[#EFFFF5] text-[#007A45]",
-    },
-    env: {
-      label: "ENV",
-      className: "border-[#D9F99D] bg-[#F7FFE8] text-[#5F8200]",
-    },
+
+  const icons: Record<string, { label: string; bg: string; text: string }> = {
+    py: { label: "PY", bg: "bg-emerald-50 dark:bg-emerald-950/50 border-emerald-200 dark:border-emerald-800", text: "text-emerald-700 dark:text-emerald-400" },
+    js: { label: "JS", bg: "bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-800", text: "text-amber-700 dark:text-amber-400" },
+    ts: { label: "TS", bg: "bg-blue-50 dark:bg-blue-950/50 border-blue-200 dark:border-blue-800", text: "text-blue-700 dark:text-blue-400" },
+    tsx: { label: "TSX", bg: "bg-blue-50 dark:bg-blue-950/50 border-blue-200 dark:border-blue-800", text: "text-blue-700 dark:text-blue-400" },
+    jsx: { label: "JSX", bg: "bg-sky-50 dark:bg-sky-950/50 border-sky-200 dark:border-sky-800", text: "text-sky-700 dark:text-sky-400" },
+    c: { label: "C", bg: "bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200 dark:border-indigo-800", text: "text-indigo-700 dark:text-indigo-400" },
+    cpp: { label: "C++", bg: "bg-indigo-50 dark:bg-indigo-950/50 border-indigo-200 dark:border-indigo-800", text: "text-indigo-700 dark:text-indigo-400" },
+    java: { label: "JV", bg: "bg-rose-50 dark:bg-rose-950/50 border-rose-200 dark:border-rose-800", text: "text-rose-700 dark:text-rose-400" },
+    html: { label: "HTML", bg: "bg-orange-50 dark:bg-orange-950/50 border-orange-200 dark:border-orange-800", text: "text-orange-700 dark:text-orange-400" },
+    css: { label: "CSS", bg: "bg-violet-50 dark:bg-violet-950/50 border-violet-200 dark:border-violet-800", text: "text-violet-700 dark:text-violet-400" },
+    json: { label: "{}", bg: "bg-yellow-50 dark:bg-yellow-950/50 border-yellow-200 dark:border-yellow-800", text: "text-yellow-700 dark:text-yellow-400" },
+    md: { label: "MD", bg: "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700", text: "text-slate-700 dark:text-slate-400" },
+    env: { label: "ENV", bg: "bg-lime-50 dark:bg-lime-950/50 border-lime-200 dark:border-lime-800", text: "text-lime-700 dark:text-lime-400" },
+    sql: { label: "SQL", bg: "bg-cyan-50 dark:bg-cyan-950/50 border-cyan-200 dark:border-cyan-800", text: "text-cyan-700 dark:text-cyan-400" },
+    prisma: { label: "DB", bg: "bg-teal-50 dark:bg-teal-950/50 border-teal-200 dark:border-teal-800", text: "text-teal-700 dark:text-teal-400" },
   };
-  const fallbackLabel = extension
-    ? extension.slice(0, 3).toUpperCase()
-    : "FILE";
-  const icon = meta[extension] ?? {
-    label: fallbackLabel,
-    className: "border-[#D8E0EA] bg-[#F7F9FB] text-[#64748B]",
+
+  const fileInfo = icons[extension] ?? {
+    label: extension.slice(0, 3).toUpperCase() || "DOC",
+    bg: "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700",
+    text: "text-slate-600 dark:text-slate-400",
   };
 
   return (
     <span
       className={cn(
-        "grid h-5 w-5 shrink-0 place-items-center rounded-[6px] border text-[7px] font-black leading-none shadow-[0_4px_10px_rgba(15,23,42,0.06)]",
-        icon.className,
+        "grid h-4.5 w-4.5 shrink-0 place-items-center rounded border text-[7px] font-black leading-none",
+        fileInfo.bg,
+        fileInfo.text,
         className,
       )}
       aria-hidden="true"
-      title={`${icon.label} file`}
+      title={`${fileInfo.label} file`}
     >
-      {icon.label}
+      {fileInfo.label}
     </span>
   );
 }
@@ -1014,44 +1011,58 @@ function FileTreeItem({
   return (
     <div
       className={cn(
-        "group flex w-full items-center gap-1 rounded-md px-1 py-0.5 text-left text-sm transition",
+        "group relative flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-left text-xs transition-all select-none",
         active
-          ? "bg-[#DFF8EA] text-[#005F37]"
-          : "text-[#3D4A63] hover:bg-[#F2F6F5]",
+          ? "bg-emerald-50/90 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 font-medium shadow-2xs"
+          : "text-slate-700 dark:text-slate-300 hover:bg-slate-100/70 dark:hover:bg-slate-800/50",
       )}
     >
+      {active ? (
+        <span className="absolute left-0 top-1 bottom-1 w-0.5 rounded-r bg-[#059669] dark:bg-[#34D399]" />
+      ) : null}
+
       <button
         type="button"
         onClick={onClick}
-        className="flex min-w-0 flex-1 items-center gap-2 rounded-lg px-1.5 py-1 text-left"
+        className="flex min-w-0 flex-1 items-center gap-2 text-left"
       >
-        <FileTypeIcon name={file.name} className="h-5 w-5" />
-        <span className="min-w-0 flex-1 truncate font-medium">{file.name}</span>
+        <FileTypeIcon name={file.name} className="h-4 w-4" />
+        <span className="min-w-0 flex-1 truncate font-mono text-[12px]">{file.name}</span>
         {dirty ? (
           <span
-            className="h-1.5 w-1.5 rounded-full bg-[#D97706]"
+            className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"
             aria-label="Unsaved changes"
+            title="Unsaved changes"
           />
         ) : null}
       </button>
-      <button
-        type="button"
-        onClick={onRename}
-        aria-label={`Rename ${file.name}`}
-        title="Rename"
-        className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-[#5D6B82] opacity-0 transition hover:bg-white hover:text-[#009B5A] group-hover:opacity-100"
-      >
-        <PencilLine className="h-3.5 w-3.5" />
-      </button>
-      <button
-        type="button"
-        onClick={onDelete}
-        aria-label={`Delete ${file.name}`}
-        title="Delete"
-        className="grid h-7 w-7 shrink-0 place-items-center rounded-lg text-[#5D6B82] opacity-0 transition hover:bg-[#FFE9D6] hover:text-[#FF7A1A] group-hover:opacity-100"
-      >
-        <Trash2 className="h-3.5 w-3.5" />
-      </button>
+
+      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRename();
+          }}
+          aria-label={`Rename ${file.name}`}
+          title="Rename file"
+          className="grid h-6 w-6 place-items-center rounded text-slate-400 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white"
+        >
+          <PencilLine className="h-3 w-3" />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          aria-label={`Delete ${file.name}`}
+          title="Delete file"
+          className="grid h-6 w-6 place-items-center rounded text-slate-400 hover:bg-rose-50 dark:hover:bg-rose-950 hover:text-rose-600 dark:hover:text-rose-400"
+        >
+          <Trash2 className="h-3 w-3" />
+        </button>
+      </div>
     </div>
   );
 }
@@ -1103,73 +1114,78 @@ function FileExplorerPanel({
     <aside
       className={cn(
         idePanelClass,
-        "flex h-full min-h-0 flex-col overflow-hidden",
+        "flex h-full min-h-0 flex-col overflow-hidden select-none",
       )}
     >
-      <header className="flex items-center justify-between border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#0E1726] px-3.5 py-2.5">
-        <div className="flex items-center gap-2">
-          <FolderOpen className="h-4 w-4 text-[#009B5A]" aria-hidden="true" />
-          <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-[#0B1B33] dark:text-white">
+      {/* Section Header */}
+      <header className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-3 py-2">
+        <div className="flex items-center gap-1.5">
+          <FolderOpen className="h-3.5 w-3.5 text-[#059669] dark:text-[#34D399]" aria-hidden="true" />
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
             Explorer
-          </h2>
-          <span className="rounded-full bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 text-[10px] font-bold text-[#00804A] dark:text-[#32F59A] border border-[#DFF8EA] dark:border-[#009B5A]/40">
-            {flattenFiles(folders).length} files
+          </span>
+          <span className="rounded bg-slate-200/70 dark:bg-slate-800 px-1.5 py-0.2 text-[10px] font-mono text-slate-600 dark:text-slate-400">
+            {flattenFiles(folders).length}
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <button
             type="button"
             onClick={onCreateFile}
-            title="New file"
-            aria-label="New file"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+            title="New File"
+            aria-label="New File"
+            className="grid h-6 w-6 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#059669]"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={onUploadFiles}
-            title="Upload files"
-            aria-label="Upload files"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+            title="Upload Files"
+            aria-label="Upload Files"
+            className="grid h-6 w-6 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#059669]"
           >
-            <UploadIcon className="h-4 w-4" />
+            <UploadIcon className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={() => onDownloadFile(activeFile)}
-            title="Download active file"
-            aria-label="Download active file"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+            title="Download Active File"
+            aria-label="Download Active File"
+            className="grid h-6 w-6 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#059669]"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
             onClick={() => {
               if (activeFile) onDuplicateFile(activeFile);
             }}
-            title="Duplicate active file"
-            aria-label="Duplicate active file"
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+            title="Duplicate File"
+            aria-label="Duplicate File"
+            className="grid h-6 w-6 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#059669]"
           >
-            <Copy className="h-4 w-4" />
+            <Copy className="h-3.5 w-3.5" />
           </button>
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
-        <label className="relative mb-3 block">
-          <span className="sr-only">Search files</span>
-          <Search className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-[#8A99AA] dark:text-[#64748B]" />
+      {/* File Search Filter */}
+      <div className="p-2 border-b border-[#E2E8F0] dark:border-[#1E293B]">
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-2 top-2 h-3.5 w-3.5 text-slate-400" />
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search files..."
-            className="h-9 w-full rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#1E293B] pl-9 pr-3 text-sm font-semibold text-[#0B1B33] dark:text-[#E2E8F0] outline-none transition focus:border-[#009B5A] focus:bg-white dark:focus:bg-[#0E1726] focus:ring-2 focus:ring-[#009B5A]/20 shadow-2xs"
+            placeholder="Filter files..."
+            className="h-7.5 w-full rounded-md border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#111827] pl-7 pr-2 text-xs text-slate-800 dark:text-slate-200 outline-none placeholder:text-slate-400 focus:border-[#059669] focus:ring-1 focus:ring-[#059669]/20"
           />
-        </label>
-        <div className="grid gap-3">
+        </div>
+      </div>
+
+      {/* Tree Hierarchy */}
+      <div className="min-h-0 flex-1 overflow-y-auto px-1.5 py-2">
+        <div className="grid gap-1">
           {filteredFolders.map((folder) => {
             const isOpen = openFolders[folder.id] ?? true;
             return (
@@ -1177,18 +1193,19 @@ function FileExplorerPanel({
                 <button
                   type="button"
                   onClick={() => toggleFolder(folder.id)}
-                  className="flex w-full items-center gap-1.5 rounded-lg px-1.5 py-1 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5D6B82] transition hover:text-[#0B1B33]"
+                  className="flex w-full items-center gap-1.5 rounded px-1.5 py-1 text-left text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100/50 dark:hover:bg-slate-800/40"
                   aria-expanded={isOpen}
                 >
-                  {isOpen ? (
-                    <ChevronDown className="h-3.5 w-3.5" />
-                  ) : (
-                    <ChevronRight className="h-3.5 w-3.5" />
-                  )}
-                  {folder.name}
+                  <ChevronDown
+                    className={cn(
+                      "h-3 w-3 text-slate-400 transition-transform duration-150",
+                      !isOpen && "-rotate-90",
+                    )}
+                  />
+                  <span className="truncate">{folder.name}</span>
                 </button>
                 {isOpen ? (
-                  <div className="mt-1 grid gap-0.5 pl-2">
+                  <div className="mt-0.5 grid gap-0.5 pl-3.5 border-l border-slate-200/80 dark:border-slate-800/80 ml-2">
                     {folder.files.map((file) => (
                       <FileTreeItem
                         key={file.id}
@@ -1233,20 +1250,20 @@ function ActivityBar({
     badge?: number;
   }[] = [
     { id: "explorer", label: "Explorer", icon: FolderOpen, badge: dirtyCount },
-    { id: "search", label: "Search", icon: Search },
-    { id: "tests", label: "Tests", icon: CheckCircle2, badge: problemCount },
-    { id: "history", label: "History", icon: RefreshCw },
-    { id: "ai", label: "Code help", icon: Command },
+    { id: "search", label: "Search Workspace", icon: Search },
+    { id: "tests", label: "Test Suite", icon: CheckCircle2, badge: problemCount },
+    { id: "history", label: "Version History", icon: RefreshCw },
+    { id: "ai", label: "AI Copilot", icon: Command },
   ];
 
   return (
     <nav
-      aria-label="Code Lab panels"
-      className="flex h-full min-h-0 flex-col items-center gap-1.5 border-r border-[#E6EEF0] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#0E1726] px-1 py-2"
+      aria-label="Code Lab activity rail"
+      className="flex h-full min-h-0 flex-col items-center gap-1 border-r border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-1 py-2 select-none"
     >
       {items.map((item) => {
         const Icon = item.icon;
-        const active = item.id === activePanel;
+        const active = item.id === activePanel && !panelCollapsed;
 
         return (
           <button
@@ -1260,18 +1277,18 @@ function ActivityBar({
             aria-pressed={active}
             title={item.label}
             className={cn(
-              "relative grid h-9 w-9 place-items-center rounded-xl text-[#5D6B82] dark:text-[#94A3B8] transition-all active:scale-95",
+              "group relative grid h-9 w-9 place-items-center rounded-lg text-slate-500 dark:text-slate-400 transition-all",
               active
-                ? "bg-[#DFF8EA] dark:bg-[#009B5A]/20 text-[#009B5A] dark:text-[#32F59A] shadow-[0_0_14px_rgba(0,155,90,0.25)] font-bold"
-                : "hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]",
+                ? "bg-white dark:bg-[#1E293B] text-[#059669] dark:text-[#34D399] shadow-2xs font-bold"
+                : "hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white",
             )}
           >
             {active ? (
-              <span className="absolute -left-1.5 h-5 w-1 rounded-r-full bg-[#009B5A]" />
+              <span className="absolute -left-1 top-2 bottom-2 w-0.5 rounded-r bg-[#059669] dark:bg-[#34D399]" />
             ) : null}
-            <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+            <Icon className="h-4 w-4" aria-hidden="true" />
             {item.badge && item.badge > 0 ? (
-              <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-[#FFB020] px-1 text-[9px] font-black text-white shadow-[0_4px_10px_rgba(255,176,32,0.35)]">
+              <span className="absolute -right-0.5 -top-0.5 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-amber-500 px-0.5 text-[8px] font-bold text-white">
                 {item.badge > 9 ? "9+" : item.badge}
               </span>
             ) : null}
@@ -1281,9 +1298,9 @@ function ActivityBar({
       <button
         type="button"
         onClick={onTogglePanel}
-        className="mt-auto grid h-9 w-9 place-items-center rounded-xl text-[#8A99AA] dark:text-[#64748B] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
-        aria-label={panelCollapsed ? "Open side panel" : "Collapse side panel"}
-        title={panelCollapsed ? "Open side panel" : "Collapse side panel"}
+        className="mt-auto grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition"
+        aria-label={panelCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        title={panelCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
       >
         {panelCollapsed ? (
           <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -1392,6 +1409,33 @@ function SearchPanel({
   );
 }
 
+function TestCaseItem({ test }: { test: TestCase }) {
+  const isPassed = test.status === "passed";
+  return (
+    <div className="flex items-center justify-between gap-3 border-b border-[#E2E8F0] dark:border-[#1E293B] py-2 last:border-b-0">
+      <div className="min-w-0 font-mono text-xs text-slate-700 dark:text-slate-300">
+        <span className="text-slate-400">In:</span>{" "}
+        <span className="font-semibold">{test.input}</span>
+        <span className="mx-2 text-slate-300 dark:text-slate-700">|</span>
+        <span className="text-slate-400">Exp:</span>{" "}
+        <span className="font-semibold text-emerald-600 dark:text-emerald-400">{test.expected}</span>
+      </div>
+      <span
+        className={cn(
+          "rounded-md px-2 py-0.5 text-[10px] font-bold uppercase",
+          isPassed
+            ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300"
+            : test.status === "failed"
+              ? "bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300"
+              : "bg-slate-100 dark:bg-slate-800 text-slate-500",
+        )}
+      >
+        {isPassed ? "Pass" : test.status === "failed" ? "Fail" : "Wait"}
+      </span>
+    </div>
+  );
+}
+
 function TestsPanel({
   tests,
   onRunTests,
@@ -1408,21 +1452,21 @@ function TestsPanel({
         "flex h-full min-h-0 flex-col overflow-hidden",
       )}
     >
-      <header className="flex items-center justify-between border-b border-[#F0F4F4] px-3 py-3">
+      <header className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-[#1E293B] px-3 py-2.5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#0B1B33]">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
             Tests
           </p>
-          <p className="mt-1 text-xs font-medium text-[#5D6B82]">
+          <p className="text-xs font-medium text-slate-500">
             {passed}/{tests.length} passing
           </p>
         </div>
         <button
           type="button"
           onClick={onRunTests}
-          className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#009B5A] px-3 text-xs font-semibold text-white shadow-[0_8px_18px_rgba(0,155,90,0.22)] transition hover:bg-[#00B86B]"
+          className="inline-flex h-7 items-center gap-1.5 rounded-lg bg-[#059669] px-2.5 text-xs font-bold text-white shadow-2xs transition hover:bg-[#047857]"
         >
-          <Play className="h-3.5 w-3.5" />
+          <Play className="h-3 w-3 fill-current" />
           Run
         </button>
       </header>
@@ -1732,59 +1776,86 @@ function CodeStatusBar({
   const passed = tests.filter((test) => test.status === "passed").length;
   const saveLabel =
     autosaveStatus === "saving"
-      ? "Saving"
+      ? "Saving..."
       : autosaveStatus === "error"
         ? "Save paused"
         : dirtyCount > 0
-          ? "Changes pending"
+          ? `${dirtyCount} unsaved`
           : "Saved";
   const storageLabel =
     dbStatus === "ready"
-      ? "Cloud workspace"
+      ? "Neon DB"
       : dbStatus === "loading"
-        ? "Connecting"
-        : "Local draft";
+        ? "Connecting..."
+        : "Local Cache";
+
+  const errorCount = problems.filter((p) => p.severity === "error").length;
+  const warningCount = problems.filter((p) => p.severity === "warning").length;
 
   return (
     <footer
       title={workspaceTitle}
-      className="flex min-h-8 flex-wrap items-center justify-between gap-3 border-t border-[#DCE7E2] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#0E1726] px-3.5 py-1.5 text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8] shadow-inner"
+      className="flex h-6 shrink-0 items-center justify-between border-t border-[#E2E8F0] dark:border-[#1E293B] bg-[#F1F5F9] dark:bg-[#070B14] px-2.5 text-[11px] font-mono text-slate-500 dark:text-slate-400 select-none"
     >
-      <div className="flex min-w-0 items-center gap-2.5">
-        <span className="flex items-center gap-1 font-mono text-[10px] font-bold text-[#009B5A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40">
-          <GitBranch className="h-3 w-3" /> main
+      {/* Left items */}
+      <div className="flex items-center gap-3">
+        <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-semibold hover:text-[#059669] cursor-pointer">
+          <GitBranch className="h-3 w-3 text-[#059669]" />
+          main{dirtyCount > 0 ? "*" : ""}
         </span>
-        <span aria-hidden="true" className="text-[#CBD5E1] dark:text-[#334155]">
-          ·
-        </span>
-        <span className="max-w-[200px] truncate font-bold text-[#0B1B33] dark:text-[#E2E8F0]">
-          {activeFile?.name ?? "No file open"}
-        </span>
-        <span aria-hidden="true" className="text-[#CBD5E1] dark:text-[#334155]">
-          ·
-        </span>
-        <span className="font-mono uppercase font-semibold text-[#009B5A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-1.5 py-0.5 rounded text-[10px] border border-[#DFF8EA] dark:border-[#009B5A]/40">
-          {language}
-        </span>
-        <span className="text-[#5D6B82] dark:text-[#94A3B8]">{fileCount} workspace files</span>
-      </div>
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="font-mono text-[10px] font-medium text-[#5D6B82] dark:text-[#94A3B8]">UTF-8</span>
-        <span className="text-[#CBD5E1] dark:text-[#334155]">|</span>
-        <span className="inline-flex items-center gap-1.5 font-medium text-[#00804A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40">
-          <span className="relative flex h-1.5 w-1.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#009B5A] opacity-75" />
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#009B5A]" />
+
+        <span className="flex items-center gap-2 border-l border-slate-300 dark:border-slate-800 pl-2">
+          <span className="flex items-center gap-0.5 text-slate-600 dark:text-slate-400">
+            <span className="h-2.5 w-2.5 rounded-full bg-rose-500 text-white font-black text-[7px] grid place-items-center">✕</span>
+            <span>{errorCount}</span>
           </span>
-          {saveLabel}
+          <span className="flex items-center gap-0.5 text-slate-600 dark:text-slate-400">
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-500 text-white font-black text-[7px] grid place-items-center">!</span>
+            <span>{warningCount}</span>
+          </span>
         </span>
-        <span className="text-[#CBD5E1] dark:text-[#334155]">|</span>
-        <span className="font-semibold text-[#0B1B33] dark:text-[#E2E8F0]">
-          {storageLabel} (Supabase Cloud)
+
+        <span className="hidden sm:inline border-l border-slate-300 dark:border-slate-800 pl-2 text-slate-600 dark:text-slate-400">
+          Tests: {passed}/{tests.length}
         </span>
-        <span className="text-[#CBD5E1] dark:text-[#334155]">|</span>
-        <span className="font-mono text-[10px] text-[#00804A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full font-semibold border border-[#DFF8EA] dark:border-[#009B5A]/40">
-          ⚡ {executionMs > 0 ? `${executionMs}ms` : "~11ms"} (Judge0 CE)
+      </div>
+
+      {/* Right items */}
+      <div className="flex items-center gap-3">
+        <span className="hidden md:inline text-slate-500 dark:text-slate-400">
+          Spaces: 2
+        </span>
+        <span className="hidden md:inline text-slate-500 dark:text-slate-400">
+          UTF-8
+        </span>
+
+        <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-semibold border-l border-slate-300 dark:border-slate-800 pl-2">
+          <span className="uppercase text-[10px] text-[#059669] dark:text-[#34D399]">
+            {language}
+          </span>
+        </span>
+
+        <span className="flex items-center gap-1 border-l border-slate-300 dark:border-slate-800 pl-2">
+          <span
+            className={cn(
+              "h-1.5 w-1.5 rounded-full",
+              autosaveStatus === "saving"
+                ? "bg-amber-400 animate-ping"
+                : dirtyCount > 0
+                  ? "bg-amber-500"
+                  : "bg-[#10B981]",
+            )}
+          />
+          <span className="text-[10px]">{saveLabel}</span>
+        </span>
+
+        <span className="hidden sm:flex items-center gap-1 border-l border-slate-300 dark:border-slate-800 pl-2 text-[10px] text-slate-500 dark:text-slate-400">
+          <span>●</span>
+          <span>{storageLabel}</span>
+        </span>
+
+        <span className="flex items-center gap-1 border-l border-slate-300 dark:border-slate-800 pl-2 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+          ⚡ {executionMs > 0 ? `${executionMs}ms` : "~11ms"}
         </span>
       </div>
     </footer>
@@ -1809,36 +1880,145 @@ function EditorTab({
   return (
     <div
       className={cn(
-        "group flex items-center gap-2.5 rounded-t-xl border-x border-t px-3.5 py-2 text-xs font-semibold transition-all select-none",
+        "group relative flex items-center gap-2 rounded-t-lg border-x border-t px-3 py-1.5 text-xs font-medium transition-all select-none",
         active
-          ? "border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#0E1726] text-[#0B1B33] dark:text-white border-b-2 border-b-[#009B5A] shadow-xs"
-          : "border-transparent bg-transparent text-[#5D6B82] dark:text-[#94A3B8] hover:bg-white/70 dark:hover:bg-[#1E293B] hover:text-[#0B1B33] dark:hover:text-white",
+          ? "border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0B101B] text-[#0F172A] dark:text-[#F8FAFC] shadow-2xs font-semibold"
+          : "border-transparent bg-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100/60 dark:hover:bg-slate-800/40 hover:text-slate-800 dark:hover:text-slate-200",
       )}
     >
+      {active ? (
+        <span className="absolute -top-px left-0 right-0 h-0.5 bg-[#059669] dark:bg-[#34D399] rounded-t" />
+      ) : null}
+
       <button
         type="button"
         onClick={onSelect}
-        className="flex items-center gap-2 min-w-0"
+        className="flex items-center gap-1.5 min-w-0"
       >
-        <FileTypeIcon name={file.name} className="h-4 w-4" />
-        <span className="truncate max-w-[130px] font-sans">{file.name}</span>
+        <FileTypeIcon name={file.name} className="h-3.5 w-3.5" />
+        <span className="truncate max-w-[130px] font-mono text-[12px]">{file.name}</span>
         {dirty ? (
           <span
-            className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#FFB020]"
+            className="h-1.5 w-1.5 rounded-full bg-amber-500 animate-pulse"
             aria-label="Unsaved changes"
+            title="Unsaved changes"
           />
         ) : null}
       </button>
+
       {closable ? (
         <button
           type="button"
           onClick={onClose}
           aria-label={`Close ${file.name}`}
-          className="grid h-4 w-4 place-items-center rounded text-[#5D6B82] dark:text-[#94A3B8] opacity-50 transition hover:bg-[#FFE4E1] dark:hover:bg-[#991B1B]/40 hover:text-[#B91C1C] dark:hover:text-[#F87171] group-hover:opacity-100"
+          className="grid h-4 w-4 place-items-center rounded text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-700 hover:text-slate-800 dark:hover:text-white opacity-40 group-hover:opacity-100 transition-opacity"
         >
           <X className="h-3 w-3" />
         </button>
       ) : null}
+    </div>
+  );
+}
+
+function CarbonCodeSnippetModal({
+  isOpen,
+  onClose,
+  fileName,
+  language,
+  code,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  fileName: string;
+  language: string;
+  code: string;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handleCopyMarkdown = () => {
+    void navigator.clipboard.writeText(
+      `\`\`\`${language}\n// ${fileName}\n${code}\n\`\`\``,
+    );
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+      <div className="flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-[#1E293B] bg-[#090D16] shadow-2xl">
+        {/* Modal Header */}
+        <div className="flex items-center justify-between border-b border-[#1E293B] bg-[#0F172A] px-4 py-2.5">
+          <div className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-[#EF4444]" />
+            <span className="h-3 w-3 rounded-full bg-[#F59E0B]" />
+            <span className="h-3 w-3 rounded-full bg-[#10B981]" />
+            <span className="ml-2 font-mono text-xs font-semibold text-slate-300">
+              {fileName} ({language})
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded p-1 text-slate-400 hover:bg-slate-800 hover:text-white transition"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        {/* Code Canvas Preview */}
+        <div className="max-h-[480px] overflow-auto p-6 bg-gradient-to-br from-slate-900 via-[#0B101B] to-slate-950">
+          <div className="rounded-xl border border-slate-700/60 bg-[#0F172A]/90 p-4 shadow-xl backdrop-blur-md">
+            <div className="mb-3 flex items-center justify-between border-b border-slate-800 pb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="h-2.5 w-2.5 rounded-full bg-[#EF4444]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]" />
+                <span className="h-2.5 w-2.5 rounded-full bg-[#10B981]" />
+                <span className="ml-2 font-mono text-[11px] text-slate-400">
+                  nexora://{fileName}
+                </span>
+              </div>
+              <span className="rounded bg-emerald-950 px-2 py-0.5 font-mono text-[10px] font-bold text-emerald-400 uppercase">
+                {language}
+              </span>
+            </div>
+            <pre className="overflow-x-auto font-mono text-xs leading-relaxed text-slate-200">
+              {code.split("\n").map((line, i) => (
+                <div key={i} className="flex gap-4">
+                  <span className="w-6 shrink-0 select-none text-right text-slate-600">
+                    {i + 1}
+                  </span>
+                  <span className="flex-1">{line || " "}</span>
+                </div>
+              ))}
+            </pre>
+          </div>
+        </div>
+
+        {/* Modal Actions */}
+        <div className="flex items-center justify-between border-t border-[#1E293B] bg-[#0F172A] px-4 py-3">
+          <span className="text-xs text-slate-400">
+            Shareable developer code card with syntax formatting
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleCopyMarkdown}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-slate-700 active:scale-98"
+            >
+              {copied ? "✓ Copied to Clipboard!" : "Copy as Markdown"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg bg-emerald-600 px-3.5 py-1.5 text-xs font-semibold text-white shadow-xs transition hover:bg-emerald-500 active:scale-98"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1871,26 +2051,34 @@ function CodeEditorPanel({
   const activeFile = openFiles.find((file) => file.id === activeFileId);
   const systemMonacoTheme = useMonacoTheme();
   const [editorThemeOverride, setEditorThemeOverride] = useState<
-    "light" | "dark" | null
+    "nexora-code-dark" | "nexora-code-light" | "nexora-one-dark" | "nexora-catppuccin" | null
   >(null);
+  const [fontSize, setFontSize] = useState(13.5);
+  const [fontFamily, setFontFamily] = useState(
+    "'Geist Mono', 'JetBrains Mono', 'Fira Code', monospace",
+  );
+  const [minimap, setMinimap] = useState(true);
+  const [wordWrap, setWordWrap] = useState<"on" | "off">("off");
+  const [tabSize, setTabSize] = useState<2 | 4>(4);
   const [isSplitView, setIsSplitView] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [snippetModalOpen, setSnippetModalOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
-  const monacoTheme =
-    editorThemeOverride === "dark"
-      ? "nexora-code-dark"
-      : editorThemeOverride === "light"
-        ? "nexora-code-light"
-        : systemMonacoTheme;
+  const monacoTheme = editorThemeOverride ?? systemMonacoTheme;
   const editorLanguage = monacoLanguageFor(activeFile, language);
+
   const handleEditorMount: OnMount = (editor) => {
     editorRef.current = editor;
     editor.focus();
   };
+
   const handleFormatDocument = () => {
     void editorRef.current?.getAction("editor.action.formatDocument")?.run();
     setMoreOpen(false);
   };
+
   const handleCopyFileName = () => {
     if (
       activeFile?.name &&
@@ -1902,17 +2090,39 @@ function CodeEditorPanel({
     setMoreOpen(false);
   };
 
+  const dynamicMonacoOptions = useMemo<EditorProps["options"]>(
+    () => ({
+      ...monacoOptions,
+      fontSize,
+      fontFamily,
+      minimap: { enabled: minimap, maxColumn: 80, scale: 0.85, renderCharacters: false },
+      wordWrap,
+      tabSize,
+    }),
+    [fontSize, fontFamily, minimap, wordWrap, tabSize],
+  );
+
   return (
     <section
       className={cn(
         idePanelClass,
-        "flex h-full flex-col overflow-hidden",
+        "flex h-full flex-col overflow-hidden relative",
         workspaceExpanded
-          ? "min-h-0 rounded-[18px] shadow-none"
+          ? "min-h-0 rounded-[14px] shadow-none"
           : "min-h-[420px] lg:min-h-0",
       )}
     >
-      <header className="flex shrink-0 items-end justify-between gap-3 border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#F8FCFA] dark:bg-[#0E1726] px-3 pt-2">
+      {/* Carbon Export Modal */}
+      <CarbonCodeSnippetModal
+        isOpen={snippetModalOpen}
+        onClose={() => setSnippetModalOpen(false)}
+        fileName={activeFile?.name ?? "main.js"}
+        language={editorLanguage}
+        code={content}
+      />
+
+      {/* Editor Tabs Header */}
+      <header className="flex shrink-0 items-end justify-between gap-2 border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-2 pt-1.5">
         <div className="flex min-w-0 items-end gap-1 overflow-x-auto">
           {openFiles.map((file) => (
             <EditorTab
@@ -1927,62 +2137,201 @@ function CodeEditorPanel({
           ))}
           <button
             type="button"
-            title="Add tab"
-            aria-label="Add tab"
+            title="New file tab"
+            aria-label="New tab"
             onClick={onCreateFile}
-            className="ml-1 mb-1 grid h-7 w-7 place-items-center rounded-md text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+            className="mb-1 grid h-6 w-6 place-items-center rounded text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-3.5 w-3.5" />
           </button>
         </div>
-        <div className="mb-2 flex items-center gap-1">
+
+        {/* Micro-toolbar */}
+        <div className="mb-1.5 flex items-center gap-0.5">
+          {/* Format Code */}
           <button
             type="button"
-            title="Toggle editor theme"
-            aria-label="Toggle editor theme"
-            aria-pressed={editorThemeOverride === "dark"}
-            onClick={() =>
-              setEditorThemeOverride((current) =>
-                current === "dark" ? "light" : "dark",
-              )
-            }
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+            title="Format document (Shift+Alt+F)"
+            aria-label="Format document"
+            onClick={handleFormatDocument}
+            className="grid h-7 w-7 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition"
           >
-            <Palette className="h-4 w-4" />
+            <Code2 className="h-3.5 w-3.5" />
           </button>
+
+          {/* Quick Appearance & Settings Popover */}
+          <div className="relative">
+            <button
+              type="button"
+              title="Editor Appearance & Settings"
+              aria-label="Editor settings"
+              onClick={() => {
+                setSettingsOpen((current) => !current);
+                setMoreOpen(false);
+              }}
+              className={cn(
+                "grid h-7 w-7 place-items-center rounded transition",
+                settingsOpen
+                  ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400"
+                  : "text-slate-500 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white",
+              )}
+            >
+              <Palette className="h-3.5 w-3.5" />
+            </button>
+
+            {settingsOpen ? (
+              <div className="absolute right-0 top-8 z-40 w-64 rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0E1726] p-3 text-xs shadow-xl">
+                <div className="mb-2.5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5 font-bold text-slate-800 dark:text-slate-200">
+                  <span>Editor Appearance</span>
+                  <button
+                    type="button"
+                    onClick={() => setSettingsOpen(false)}
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+
+                {/* Theme Selector */}
+                <div className="mb-2.5 space-y-1">
+                  <label className="text-[11px] font-semibold text-slate-500">Theme Preset</label>
+                  <div className="grid grid-cols-2 gap-1">
+                    {[
+                      { id: "nexora-code-dark", label: "Slate Dark" },
+                      { id: "nexora-one-dark", label: "One Dark Pro" },
+                      { id: "nexora-catppuccin", label: "Catppuccin" },
+                      { id: "nexora-code-light", label: "Clean Light" },
+                    ].map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => setEditorThemeOverride(t.id as any)}
+                        className={cn(
+                          "rounded-md px-2 py-1 text-left text-[11px] font-medium transition",
+                          (editorThemeOverride ?? systemMonacoTheme) === t.id
+                            ? "bg-emerald-500 text-white font-bold"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700",
+                        )}
+                      >
+                        {t.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Font Size */}
+                <div className="mb-2.5 flex items-center justify-between">
+                  <label className="text-[11px] font-semibold text-slate-500">Font Size ({fontSize}px)</label>
+                  <div className="flex items-center gap-1">
+                    {[12, 13.5, 15, 16].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setFontSize(s)}
+                        className={cn(
+                          "h-5 w-6 rounded text-[10px] font-mono font-bold transition",
+                          fontSize === s
+                            ? "bg-emerald-500 text-white"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200",
+                        )}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Font Family */}
+                <div className="mb-2.5 space-y-1">
+                  <label className="text-[11px] font-semibold text-slate-500">Font Family</label>
+                  <select
+                    value={fontFamily}
+                    onChange={(e) => setFontFamily(e.target.value)}
+                    className="w-full rounded-md border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-2 py-1 font-mono text-[11px] text-slate-800 dark:text-slate-200 outline-none"
+                  >
+                    <option value="'Geist Mono', 'JetBrains Mono', monospace">Geist / JetBrains</option>
+                    <option value="'Fira Code', monospace">Fira Code (Ligatures)</option>
+                    <option value="'Cascadia Code', Consolas, monospace">Cascadia Code</option>
+                    <option value="Menlo, Monaco, monospace">Apple Menlo</option>
+                  </select>
+                </div>
+
+                {/* Toggles */}
+                <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+                  <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={minimap}
+                      onChange={(e) => setMinimap(e.target.checked)}
+                      className="rounded accent-emerald-500"
+                    />
+                    Minimap
+                  </label>
+                  <label className="flex items-center gap-1.5 text-[11px] font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={wordWrap === "on"}
+                      onChange={(e) => setWordWrap(e.target.checked ? "on" : "off")}
+                      className="rounded accent-emerald-500"
+                    />
+                    Word Wrap
+                  </label>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Share / Carbon Snapshot Exporter */}
+          <button
+            type="button"
+            title="Export Shareable Code Card"
+            aria-label="Export Shareable Code Card"
+            onClick={() => setSnippetModalOpen(true)}
+            className="grid h-7 w-7 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition"
+          >
+            <Download className="h-3.5 w-3.5" />
+          </button>
+
+          {/* Focus Mode */}
           <button
             type="button"
             title={
               workspaceExpanded
-                ? "Collapse editor"
-                : "Expand editor with terminal"
+                ? "Exit focus mode (Esc)"
+                : "Focus workspace mode"
             }
-            aria-label={workspaceExpanded ? "Collapse editor" : "Expand editor"}
+            aria-label={workspaceExpanded ? "Exit focus mode" : "Focus workspace mode"}
             aria-pressed={workspaceExpanded}
             onClick={onToggleWorkspaceExpanded}
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+            className="grid h-7 w-7 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition"
           >
-            <Maximize2 className="h-4 w-4" />
+            <Maximize2 className="h-3.5 w-3.5" />
           </button>
+
+          {/* More Actions Menu */}
           <div className="relative">
             <button
               type="button"
-              title="More"
-              aria-label="More actions"
+              title="Editor Actions"
+              aria-label="Editor actions"
               aria-expanded={moreOpen}
-              onClick={() => setMoreOpen((current) => !current)}
-              className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-white dark:hover:bg-[#1E293B] hover:text-[#009B5A]"
+              onClick={() => {
+                setMoreOpen((current) => !current);
+                setSettingsOpen(false);
+              }}
+              className="grid h-7 w-7 place-items-center rounded text-slate-500 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition"
             >
-              <MoreHorizontal className="h-4 w-4" />
+              <MoreHorizontal className="h-3.5 w-3.5" />
             </button>
             {moreOpen ? (
-              <div className="absolute right-0 top-9 z-20 w-44 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#0E1726] p-1.5 text-sm font-semibold text-[#0B1B33] dark:text-[#E2E8F0] shadow-[0_16px_36px_rgba(15,23,42,0.14)] dark:shadow-none">
+              <div className="absolute right-0 top-8 z-30 w-48 rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0E1726] p-1.5 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-lg">
                 <button
                   type="button"
                   onClick={handleFormatDocument}
-                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#005F37] dark:hover:text-[#32F59A]"
+                  className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left transition hover:bg-[#ECFDF5] dark:hover:bg-[#064E3B]/30 hover:text-[#059669] dark:hover:text-[#34D399]"
                 >
-                  Format document
+                  <Code2 className="h-3.5 w-3.5" />
+                  Format Document
                 </button>
                 <button
                   type="button"
@@ -1990,16 +2339,18 @@ function CodeEditorPanel({
                     setIsSplitView((current) => !current);
                     setMoreOpen(false);
                   }}
-                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#005F37] dark:hover:text-[#32F59A]"
+                  className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left transition hover:bg-[#ECFDF5] dark:hover:bg-[#064E3B]/30 hover:text-[#059669] dark:hover:text-[#34D399]"
                 >
-                  {isSplitView ? "Close split editor" : "Split editor"}
+                  <Copy className="h-3.5 w-3.5" />
+                  {isSplitView ? "Close Split Editor" : "Split Editor Right"}
                 </button>
                 <button
                   type="button"
                   onClick={handleCopyFileName}
-                  className="flex w-full items-center rounded-lg px-3 py-2 text-left transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#005F37] dark:hover:text-[#32F59A]"
+                  className="flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-left transition hover:bg-[#ECFDF5] dark:hover:bg-[#064E3B]/30 hover:text-[#059669] dark:hover:text-[#34D399]"
                 >
-                  Copy file name
+                  <Copy className="h-3.5 w-3.5" />
+                  Copy File Name
                 </button>
               </div>
             ) : null}
@@ -2007,22 +2358,24 @@ function CodeEditorPanel({
         </div>
       </header>
 
-      <div className="flex items-center gap-1.5 border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#0E1726] px-3.5 py-1.5 text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8] select-none">
-        <span className="text-[#009B5A] dark:text-[#32F59A] font-bold">Workspace</span>
-        <span className="text-[#CBD5E1] dark:text-[#334155]">/</span>
-        <span className="text-[#5D6B82] dark:text-[#94A3B8]">src</span>
-        <span className="text-[#CBD5E1] dark:text-[#334155]">/</span>
-        <span className="font-bold text-[#0B1B33] dark:text-[#E2E8F0]">{activeFile?.name ?? "main.js"}</span>
-        <span className="ml-auto rounded-full bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 text-[10px] font-mono font-bold text-[#00804A] dark:text-[#32F59A] border border-[#DFF8EA] dark:border-[#009B5A]/40">
+      {/* Precision Breadcrumb Line */}
+      <div className="flex items-center gap-1.5 border-b border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0B101B] px-3 py-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 select-none">
+        <span className="text-[#059669] dark:text-[#34D399] font-semibold">workspace</span>
+        <span className="text-slate-300 dark:text-slate-700">›</span>
+        <span>src</span>
+        <span className="text-slate-300 dark:text-slate-700">›</span>
+        <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{activeFile?.name ?? "main.js"}</span>
+        <span className="ml-auto rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.2 text-[10px] font-mono text-slate-600 dark:text-slate-400">
           {editorLanguage}
         </span>
       </div>
 
+      {/* Monaco Editor Container */}
       <div
         className={cn(
-          "relative min-h-0 flex-1 overflow-hidden bg-white font-mono text-[14px] leading-[24px] light:bg-white",
+          "relative min-h-0 flex-1 overflow-hidden bg-white dark:bg-[#0B101B]",
           isSplitView &&
-            "grid grid-cols-1 divide-[#E6EEF0] md:grid-cols-2 md:divide-x",
+            "grid grid-cols-1 divide-y divide-[#E2E8F0] dark:divide-[#1E293B] md:grid-cols-2 md:divide-x md:divide-y-0",
         )}
       >
         {["primary", ...(isSplitView ? ["split"] : [])].map((pane) => (
@@ -2035,7 +2388,7 @@ function CodeEditorPanel({
             language={editorLanguage}
             onChange={(value) => onContentChange(value ?? "")}
             onMount={pane === "primary" ? handleEditorMount : undefined}
-            options={monacoOptions}
+            options={dynamicMonacoOptions}
             path={`file:///nexora-code-lab/${activeFile?.id ?? activeFileId}-${pane}`}
             saveViewState
             theme={monacoTheme}
@@ -2050,261 +2403,10 @@ function CodeEditorPanel({
 
 type ConsoleTab =
   | "console"
-  | "terminal"
   | "input"
   | "output"
   | "errors"
   | "problems";
-
-function TerminalPanel({
-  command,
-  cwd,
-  history,
-  suggestions,
-  isRunning,
-  onCommandChange,
-  onRun,
-  onClear,
-}: {
-  command: string;
-  cwd: string;
-  history: TerminalEntry[];
-  suggestions: string[];
-  isRunning: boolean;
-  onCommandChange: (value: string) => void;
-  onRun: () => void;
-  onClear: () => void;
-}) {
-  const scrollRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const [historyIndex, setHistoryIndex] = useState<number | null>(null);
-  const commandHistory = useMemo(
-    () => history.map((entry) => entry.command).filter(Boolean),
-    [history],
-  );
-  const promptCwd = history.at(-1)?.cwd ?? cwd;
-  const matchingSuggestions = useMemo(() => {
-    const query = command.trim().toLowerCase();
-
-    if (!query) return suggestions.slice(0, 6);
-
-    return suggestions
-      .filter((item) => item.toLowerCase().startsWith(query))
-      .slice(0, 6);
-  }, [command, suggestions]);
-
-  useEffect(() => {
-    const node = scrollRef.current;
-
-    if (!node) return;
-
-    node.scrollTop = node.scrollHeight;
-  }, [history, isRunning]);
-
-  function recallCommand(direction: "up" | "down") {
-    if (commandHistory.length === 0) return;
-
-    if (direction === "up") {
-      const nextIndex =
-        historyIndex === null
-          ? commandHistory.length - 1
-          : Math.max(0, historyIndex - 1);
-
-      setHistoryIndex(nextIndex);
-      onCommandChange(commandHistory[nextIndex] ?? "");
-      return;
-    }
-
-    if (historyIndex === null) return;
-
-    const nextIndex = historyIndex + 1;
-
-    if (nextIndex >= commandHistory.length) {
-      setHistoryIndex(null);
-      onCommandChange("");
-      return;
-    }
-
-    setHistoryIndex(nextIndex);
-    onCommandChange(commandHistory[nextIndex] ?? "");
-  }
-
-  function autocompleteCommand() {
-    const query = command.trim();
-    const match = suggestions.find((item) =>
-      item.toLowerCase().startsWith(query.toLowerCase()),
-    );
-
-    if (match) {
-      onCommandChange(match);
-    }
-  }
-
-  function handleKeyDown(event: ReactKeyboardEvent<HTMLInputElement>) {
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      recallCommand("up");
-      return;
-    }
-
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      recallCommand("down");
-      return;
-    }
-
-    if (event.key === "Tab") {
-      event.preventDefault();
-      autocompleteCommand();
-      return;
-    }
-
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "l") {
-      event.preventDefault();
-      onClear();
-    }
-  }
-
-  return (
-    <div className="flex flex-col h-full min-h-[160px] w-full overflow-hidden rounded-xl border border-[#E2E8F0] dark:border-[#273240] bg-[#FFFFFF] dark:bg-[#0B0F17] text-[#0F172A] dark:text-[#E2E8F0] shadow-xs select-text">
-      <div className="flex min-h-9 shrink-0 items-center justify-between gap-2 border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#111827] px-3 select-none">
-        <div className="flex min-w-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => inputRef.current?.focus()}
-            className="inline-flex h-6 max-w-[240px] items-center gap-2 rounded-md bg-[#F1F5F9] dark:bg-[#1E293B] px-2.5 text-xs font-semibold text-[#0F172A] dark:text-[#F8FAFC] border border-[#E2E8F0] dark:border-[#334155]"
-            title="nexora-sandbox"
-          >
-            <span className="h-2 w-2 rounded-full bg-[#009B5A] dark:bg-[#10B981] animate-pulse" />
-            <span className="truncate">nexora-sandbox (node.js)</span>
-          </button>
-          <span className="rounded bg-[#EFFFF5] dark:bg-[#1E293B] px-1.5 py-0.5 font-mono text-[10px] font-bold text-[#00804A] dark:text-[#34D399] border border-[#DFF8EA] dark:border-[#334155]">
-            Judge0 / Sandbox
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              onCommandChange("help");
-              inputRef.current?.focus();
-            }}
-            className="grid h-6 w-6 place-items-center rounded-md text-[#64748B] dark:text-[#94A3B8] transition hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] hover:text-[#009B5A] dark:hover:text-[#34D399]"
-            aria-label="New terminal"
-            title="New terminal"
-          >
-            <Plus className="h-3.5 w-3.5" />
-          </button>
-        </div>
-        <div className="flex items-center gap-2 text-[11px] font-semibold text-[#64748B] dark:text-[#94A3B8]">
-          <span className="flex items-center gap-1 font-mono text-[10px] text-[#00804A] dark:text-[#34D399] bg-[#EFFFF5] dark:bg-[#064E3B]/40 px-2 py-0.5 rounded border border-[#DFF8EA] dark:border-[#059669]/30">
-            ⚡ ~11ms
-          </span>
-          <span className="flex items-center gap-1.5 text-[11px] text-[#64748B] dark:text-[#94A3B8]">
-            <span className={cn("h-1.5 w-1.5 rounded-full", isRunning ? "bg-[#F59E0B] animate-ping" : "bg-[#009B5A] dark:bg-[#10B981]")} />
-            {isRunning ? "running" : "ready"}
-          </span>
-          <button
-            type="button"
-            onClick={onClear}
-            className="grid h-6 w-6 place-items-center rounded-md text-[#64748B] dark:text-[#94A3B8] transition hover:bg-[#FEE2E2] dark:hover:bg-[#7F1D1D]/40 hover:text-[#DC2626] dark:hover:text-[#FCA5A5]"
-            aria-label="Kill terminal"
-            title="Kill terminal"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
-
-      <div
-        ref={scrollRef}
-        className="flex-1 min-h-0 overflow-auto bg-[#FFFFFF] dark:bg-[#0B0F17] p-3.5 font-mono text-[12.5px] leading-[22px] text-[#0F172A] dark:text-[#E2E8F0]"
-        onClick={() => inputRef.current?.focus()}
-      >
-        {history.length === 0 ? (
-          <div className="text-[#64748B] dark:text-[#94A3B8]">
-            Nexora Code Lab Terminal v2.1. Type{" "}
-            <span className="text-[#009B5A] dark:text-[#34D399] font-bold">help</span> to view available commands.
-          </div>
-        ) : null}
-        {history.map((entry) => (
-          <div key={entry.id} className="py-1.5">
-            <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-[#0284C7] dark:text-[#38BDF8] font-bold">{entry.cwd}</span>
-              <span className="text-[#009B5A] dark:text-[#34D399] font-bold">$</span>
-              <span className="text-[#0F172A] dark:text-[#F8FAFC] font-semibold">{entry.command}</span>
-              {entry.executionTimeMs !== undefined ? (
-                <span className="ml-auto text-[10px] uppercase text-[#94A3B8] dark:text-[#64748B]">
-                  {entry.adapter === "nexora-docker-sandbox"
-                    ? "docker"
-                    : "sandbox"}{" "}
-                  · {entry.executionTimeMs}ms
-                </span>
-              ) : null}
-            </div>
-            {entry.stdout ? (
-              <pre className="mt-1 whitespace-pre-wrap break-words text-[#0F172A] dark:text-[#E2E8F0] font-mono leading-relaxed bg-[#F8FAFC] dark:bg-[#111827]/60 rounded-md p-2 border border-[#E2E8F0] dark:border-[#1E293B]/60">
-                {entry.stdout}
-              </pre>
-            ) : null}
-            {entry.stderr ? (
-              <pre className="mt-1 whitespace-pre-wrap break-words text-[#DC2626] dark:text-[#F87171] font-mono leading-relaxed bg-[#FEF2F2] dark:bg-[#7F1D1D]/20 rounded-md p-2 border border-[#FECACA] dark:border-[#991B1B]/40">
-                {entry.stderr}
-              </pre>
-            ) : null}
-          </div>
-        ))}
-        {isRunning ? (
-          <div className="py-1.5 text-[#F59E0B]">
-            <PenguinLoadingSpinner
-              size="sm"
-              showText={true}
-              text="Executing command..."
-            />
-          </div>
-        ) : null}
-      </div>
-
-      <div className="shrink-0 border-t border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#111827] px-3 py-2">
-        {matchingSuggestions.length > 0 && command.trim() ? (
-          <div className="mb-2 flex flex-wrap gap-1.5">
-            {matchingSuggestions.map((item) => (
-              <button
-                key={item}
-                type="button"
-                onClick={() => {
-                  onCommandChange(item);
-                  inputRef.current?.focus();
-                }}
-                className="rounded-md border border-[#E2E8F0] dark:border-[#334155] bg-[#FFFFFF] dark:bg-[#1E2B26] px-2 py-0.5 text-[11px] font-semibold text-[#64748B] dark:text-[#94A3B8] transition hover:border-[#009B5A] dark:hover:border-[#34D399] hover:text-[#009B5A] dark:hover:text-[#34D399]"
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        ) : null}
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            setHistoryIndex(null);
-            onRun();
-          }}
-          className="flex items-center gap-2"
-        >
-          <span className="shrink-0 text-[#0284C7] dark:text-[#38BDF8] font-bold font-mono text-[13px]">{promptCwd}</span>
-          <span className="shrink-0 text-[#009B5A] dark:text-[#34D399] font-bold font-mono text-[13px]">$</span>
-          <input
-            ref={inputRef}
-            value={command}
-            onChange={(event) => onCommandChange(event.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="node main.js"
-            disabled={isRunning}
-            className="h-7 min-w-0 flex-1 bg-transparent font-mono text-[13px] text-[#0F172A] dark:text-[#F8FAFC] caret-[#009B5A] dark:caret-[#34D399] outline-none placeholder:text-[#94A3B8] dark:placeholder:text-[#64748B] disabled:opacity-60"
-          />
-        </form>
-      </div>
-    </div>
-  );
-}
 
 function ConsolePanel({
   consoleOutput,
@@ -2312,46 +2414,37 @@ function ConsolePanel({
   htmlPreview,
   problems,
   inputValue,
-  terminalCommand,
-  terminalHistory,
-  terminalCwd,
-  terminalSuggestions,
-  isTerminalRunning,
   onInputChange,
-  onTerminalCommandChange,
-  onRunTerminal,
-  onClearTerminal,
   onClear,
   collapsed,
   onToggleCollapsed,
+  maximized,
+  onToggleMaximized,
   consoleHeight,
   onConsoleHeightChange,
   executionMs,
   status,
+  activeTab,
+  onTabChange,
 }: {
   consoleOutput: string;
   errorOutput: string;
   htmlPreview?: string;
   problems: ProblemItem[];
   inputValue: string;
-  terminalCommand: string;
-  terminalHistory: TerminalEntry[];
-  terminalCwd: string;
-  terminalSuggestions: string[];
-  isTerminalRunning: boolean;
   onInputChange: (value: string) => void;
-  onTerminalCommandChange: (value: string) => void;
-  onRunTerminal: () => void;
-  onClearTerminal: () => void;
   onClear: () => void;
   collapsed: boolean;
   onToggleCollapsed: () => void;
+  maximized: boolean;
+  onToggleMaximized: () => void;
   consoleHeight: number;
   onConsoleHeightChange: (value: number) => void;
   executionMs: number;
   status: "success" | "error" | "idle";
+  activeTab: ConsoleTab;
+  onTabChange: (tab: ConsoleTab) => void;
 }) {
-  const [tab, setTab] = useState<ConsoleTab>("console");
   const resizeState = useRef<{ startY: number; startHeight: number } | null>(
     null,
   );
@@ -2369,7 +2462,7 @@ function ConsolePanel({
     const nextHeight =
       resizeState.current.startHeight -
       (event.clientY - resizeState.current.startY);
-    onConsoleHeightChange(Math.max(140, Math.min(360, nextHeight)));
+    onConsoleHeightChange(Math.max(140, Math.min(520, nextHeight)));
   }
 
   function handleResizeEnd(event: ReactPointerEvent<HTMLDivElement>) {
@@ -2381,18 +2474,17 @@ function ConsolePanel({
 
   const tabs: { id: ConsoleTab; label: string }[] = [
     { id: "console", label: "Console" },
-    { id: "terminal", label: "Terminal" },
     { id: "input", label: "Input" },
-    { id: "output", label: "Output" },
+    ...(htmlPreview ? [{ id: "output" as const, label: "Live Preview" }] : []),
     { id: "errors", label: "Errors" },
-    { id: "problems", label: "Problems" },
+    { id: "problems", label: `Problems (${problems.length})` },
   ];
 
   return (
     <section
       className={cn(
         idePanelClass,
-        "flex h-full min-h-0 flex-col overflow-hidden border-t border-[#E6EEF0] dark:border-[#1E293B]",
+        "flex h-full min-h-0 flex-col overflow-hidden border-t border-[#E2E8F0] dark:border-[#1E293B]",
       )}
     >
       {!collapsed ? (
@@ -2404,38 +2496,47 @@ function ConsolePanel({
           onPointerMove={handleResizeMove}
           onPointerUp={handleResizeEnd}
           onPointerCancel={handleResizeEnd}
-          className="group grid h-2 shrink-0 touch-none cursor-row-resize place-items-center bg-[#F8FCFA] dark:bg-[#0E1726]"
+          className="group grid h-1.5 shrink-0 touch-none cursor-row-resize place-items-center bg-[#F8FAFC] dark:bg-[#0B101B] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] transition select-none"
         >
-          <GripHorizontal className="h-3.5 w-3.5 text-[#CBD5E1] dark:text-[#475569] transition group-hover:text-[#009B5A]" />
+          <GripHorizontal className="h-3 w-3 text-slate-400 dark:text-slate-600 transition group-hover:text-[#059669]" />
         </div>
       ) : null}
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#F0F4F4] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#0E1726] px-3 py-2">
-        <div className="flex min-w-0 items-center gap-1 overflow-x-auto">
+
+      {/* Console Tab Header */}
+      <header className="flex shrink-0 items-center justify-between border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-3 py-1.5 select-none">
+        <div className="flex items-center gap-1">
           {collapsed ? (
-            <span className="text-xs font-semibold text-[#0B1B33] dark:text-white">
-              Console
-            </span>
+            <button
+              type="button"
+              onClick={onToggleCollapsed}
+              className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-emerald-600 transition"
+            >
+              <span className="h-2 w-2 rounded-full bg-emerald-500" />
+              <span>Console Drawer</span>
+              <span className="text-[10px] text-slate-400 font-normal">(Click to open)</span>
+            </button>
           ) : (
             tabs.map((item) => (
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setTab(item.id)}
+                onClick={() => onTabChange(item.id)}
                 className={cn(
-                  "border-b-2 px-2.5 py-2 text-xs font-semibold transition",
-                  tab === item.id
-                    ? "border-[#009B5A] text-[#005F37] dark:text-[#32F59A]"
-                    : "border-transparent text-[#5D6B82] dark:text-[#94A3B8] hover:text-[#0B1B33] dark:hover:text-white",
+                  "rounded-md px-2.5 py-1 text-xs font-semibold transition-all",
+                  activeTab === item.id
+                    ? "bg-white dark:bg-[#1E293B] text-[#059669] dark:text-[#34D399] shadow-2xs font-bold"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-800/40",
                 )}
-                aria-pressed={tab === item.id}
+                aria-pressed={activeTab === item.id}
               >
                 {item.label}
                 {item.id === "errors" && errorOutput ? (
-                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] dark:bg-[#991B1B]/40 px-1 text-[10px] font-bold text-[#FF7A1A] dark:text-[#F87171]">
-                    1
+                  <span className="ml-1.5 inline-flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-rose-100 dark:bg-rose-950 px-1 text-[9px] font-bold text-rose-700 dark:text-rose-300">
+                    !
                   </span>
-                ) : item.id === "problems" && problems.length > 0 ? (
-                  <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#FFE9D6] dark:bg-[#991B1B]/40 px-1 text-[10px] font-bold text-[#FF7A1A] dark:text-[#F87171]">
+                ) : null}
+                {item.id === "problems" && problems.length > 0 ? (
+                  <span className="ml-1.5 inline-flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950 px-1 text-[9px] font-bold text-amber-700 dark:text-amber-300">
                     {problems.length}
                   </span>
                 ) : null}
@@ -2443,164 +2544,603 @@ function ConsolePanel({
             ))
           )}
         </div>
-        <div className="flex items-center gap-2">
-          {!collapsed ? (
-            <div className="flex items-center rounded-lg border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] p-0.5">
-              <button
-                type="button"
-                onClick={() =>
-                  onConsoleHeightChange(Math.max(140, consoleHeight - 30))
-                }
-                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#009B5A]"
-                aria-label="Shrink console"
-                title="Shrink console"
-              >
-                -
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  onConsoleHeightChange(Math.min(360, consoleHeight + 30))
-                }
-                className="grid h-7 w-7 place-items-center rounded-md text-sm font-bold text-[#5D6B82] dark:text-[#94A3B8] transition hover:bg-[#EFFFF5] dark:hover:bg-[#009B5A]/20 hover:text-[#009B5A]"
-                aria-label="Expand console"
-                title="Expand console"
-              >
-                +
-              </button>
-            </div>
-          ) : null}
+
+        {/* Right Status Badges & Controls */}
+        <div className="flex items-center gap-1.5">
           {!collapsed && status === "success" ? (
-            <span className={cn(pillBase, "bg-[#EFFFF5] dark:bg-[#009B5A]/20 text-[#00804A] dark:text-[#32F59A] border border-[#DFF8EA] dark:border-[#009B5A]/40 font-bold shadow-xs")}>
-              <CheckCircle2 className="h-3.5 w-3.5 text-[#009B5A]" />
-              Execution Passed
+            <span className="inline-flex items-center gap-1 rounded bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+              <CheckCircle2 className="h-3 w-3 text-[#059669]" />
+              Exit Code: 0
             </span>
           ) : !collapsed && status === "error" ? (
-            <span className={cn(pillBase, "bg-[#FFE4E1] dark:bg-[#991B1B]/30 text-[#B91C1C] dark:text-[#F87171] border border-[#FFC1C1] dark:border-[#991B1B]/50 font-bold shadow-xs")}>
-              <AlertTriangle className="h-3.5 w-3.5 text-[#B91C1C]" />
+            <span className="inline-flex items-center gap-1 rounded bg-rose-50 dark:bg-rose-950/50 px-2 py-0.5 text-[11px] font-medium text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+              <AlertTriangle className="h-3 w-3 text-rose-600" />
               Runtime Error
             </span>
           ) : null}
-          {!collapsed ? (
-            <>
-              <span className="font-mono text-[11px] font-bold text-[#00804A] dark:text-[#32F59A] bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40">
-                ⚡ {executionMs > 0 ? `${executionMs}ms` : "~11ms"}
-              </span>
-              <button
-                type="button"
-                onClick={onClear}
-                className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] text-[#5D6B82] dark:text-[#94A3B8] transition hover:border-[#FFE4E1] hover:text-[#B91C1C]"
-                aria-label="Clear console"
-                title="Clear console"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-            </>
+
+          {!collapsed && executionMs > 0 ? (
+            <span className="font-mono text-[10px] text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+              ⚡ {executionMs}ms
+            </span>
           ) : null}
+
+          {!collapsed ? (
+            <button
+              type="button"
+              onClick={onClear}
+              className="grid h-6 w-6 place-items-center rounded text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition"
+              aria-label="Clear Console Output"
+              title="Clear Console Output"
+            >
+              <Trash2 className="h-3 w-3" />
+            </button>
+          ) : null}
+
+          {/* 1-Click Maximize / Restore Toggle */}
+          {!collapsed ? (
+            <button
+              type="button"
+              onClick={onToggleMaximized}
+              className="grid h-6 w-6 place-items-center rounded text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition"
+              aria-label={maximized ? "Restore Console Height" : "Maximize Console Height"}
+              title={maximized ? "Restore Console Height" : "Maximize Console Height"}
+            >
+              {maximized ? (
+                <Minimize2 className="h-3 w-3" />
+              ) : (
+                <Maximize2 className="h-3 w-3" />
+              )}
+            </button>
+          ) : null}
+
+          {/* Collapse / Expand Toggle */}
           <button
             type="button"
             onClick={onToggleCollapsed}
-            className="grid h-8 w-8 place-items-center rounded-lg border border-[#E6EEF0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] text-[#5D6B82] dark:text-[#94A3B8] transition hover:border-[#DFF8EA] hover:text-[#009B5A]"
-            aria-label={collapsed ? "Open console" : "Collapse console"}
-            title={collapsed ? "Open console" : "Collapse console"}
+            className="grid h-6 w-6 place-items-center rounded text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition"
+            aria-label={collapsed ? "Expand Drawer" : "Collapse Drawer"}
+            title={collapsed ? "Expand Drawer" : "Collapse Drawer"}
           >
             {collapsed ? (
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className="h-3.5 w-3.5" />
             ) : (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="h-3.5 w-3.5" />
             )}
           </button>
         </div>
       </header>
 
+      {/* Drawer Body */}
       {!collapsed ? (
-        <div
-          className={cn(
-            "min-h-0 flex-1 overflow-auto font-mono text-[13px] leading-[22px]",
-            tab === "terminal"
-              ? "flex flex-col p-2 bg-[#F8FAFC] dark:bg-[#080E1A]"
-              : "bg-[#FAFCFC] dark:bg-[#080E1A] p-3 text-[#0B1B33] dark:text-[#E2E8F0]",
-          )}
-        >
-          {tab === "console" ? (
-            <pre className="m-0 whitespace-pre-wrap break-words">
-              {consoleOutput || "Ready."}
-            </pre>
-          ) : null}
-          {tab === "terminal" ? (
-            <TerminalPanel
-              command={terminalCommand}
-              cwd={terminalCwd}
-              history={terminalHistory}
-              suggestions={terminalSuggestions}
-              isRunning={isTerminalRunning}
-              onCommandChange={onTerminalCommandChange}
-              onRun={onRunTerminal}
-              onClear={onClearTerminal}
-            />
-          ) : null}
-          {tab === "input" ? (
-            <textarea
-              value={inputValue}
-              onChange={(event) => onInputChange(event.target.value)}
-              rows={5}
-              placeholder="Provide stdin for your program..."
-              className="w-full resize-y rounded-xl border border-[#E6EEF0] bg-white px-3 py-2 font-mono text-[13px] text-[#0B1B33] outline-none focus:border-[#009B5A] focus:ring-2 focus:ring-[#DFF8EA]"
-            />
-          ) : null}
-          {tab === "output" ? (
-            htmlPreview ? (
-              <iframe
-                title="HTML preview"
-                sandbox="allow-scripts"
-                srcDoc={htmlPreview}
-                className="h-full min-h-[150px] w-full rounded-xl border border-[#E6EEF0] bg-white"
-              />
-            ) : (
-              <pre className="m-0 whitespace-pre-wrap break-words text-[#0B1B33]">
-                {consoleOutput.split("\n\n")[0] || "—"}
+        <div className="min-h-0 flex-1 overflow-auto font-mono text-[12.5px] leading-relaxed bg-white dark:bg-[#0B101B] p-3 text-slate-800 dark:text-slate-200">
+          {activeTab === "console" ? (
+            <div className="flex flex-col gap-1 h-full">
+              <div className="flex items-center justify-between text-xs text-slate-400 select-none pb-1.5 border-b border-slate-100 dark:border-slate-800">
+                <span className="flex items-center gap-1.5">
+                  <span className="text-emerald-500 font-bold">❯</span>
+                  <span className="font-semibold text-slate-600 dark:text-slate-300">Program Output</span>
+                </span>
+                <span className="text-[10px] text-slate-400">Cloud Sandbox</span>
+              </div>
+              <pre className="m-0 whitespace-pre-wrap break-words font-mono text-[12.5px] pt-1.5 flex-1 text-slate-900 dark:text-slate-100">
+                {consoleOutput || "Your code output will appear here. Press 'Run Code' or Ctrl+Enter to execute."}
               </pre>
-            )
+            </div>
           ) : null}
-          {tab === "errors" ? (
-            <pre className="m-0 whitespace-pre-wrap break-words text-[#A8420C]">
-              {errorOutput || "No errors in the last run."}
-            </pre>
+
+          {activeTab === "input" ? (
+            <div className="flex flex-col gap-2 h-full">
+              <span className="text-xs text-slate-500 font-sans font-medium">
+                Provide custom input values for your code (one per line):
+              </span>
+              <textarea
+                value={inputValue}
+                onChange={(event) => onInputChange(event.target.value)}
+                rows={4}
+                placeholder="Type your test input values here (e.g. 5) before running..."
+                className="w-full flex-1 resize-none rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#111827] p-2.5 font-mono text-xs text-slate-800 dark:text-slate-200 outline-none focus:border-[#059669]"
+              />
+            </div>
           ) : null}
-          {tab === "problems" ? (
+
+          {activeTab === "output" && htmlPreview ? (
+            <iframe
+              title="HTML preview"
+              sandbox="allow-scripts"
+              srcDoc={htmlPreview}
+              className="h-full min-h-[140px] w-full rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-white"
+            />
+          ) : null}
+
+          {activeTab === "errors" ? (
+            <div className="flex flex-col gap-1 h-full">
+              <div className="flex items-center gap-1.5 text-xs text-rose-500 font-semibold select-none pb-1.5 border-b border-slate-100 dark:border-slate-800">
+                <AlertTriangle className="h-3.5 w-3.5" />
+                <span>Error Details & Traceback</span>
+              </div>
+              <pre className="m-0 whitespace-pre-wrap break-words text-rose-600 dark:text-rose-400 font-mono text-xs pt-1.5">
+                {errorOutput || "All clear — no runtime or syntax errors detected in your code."}
+              </pre>
+            </div>
+          ) : null}
+
+          {activeTab === "problems" ? (
             problems.length > 0 ? (
-              <div className="grid gap-2 font-sans">
+              <div className="grid gap-1.5 font-sans">
                 {problems.map((problem) => (
                   <div
                     key={problem.id}
-                    className="rounded-xl border border-[#FFE9D6] bg-white px-3 py-2 text-sm text-[#0B1B33]"
+                    className={cn(
+                      "flex items-start gap-2.5 rounded-lg border p-2 text-xs transition",
+                      problem.severity === "error"
+                        ? "border-rose-200 dark:border-rose-900/60 bg-rose-50/50 dark:bg-rose-950/20 text-rose-900 dark:text-rose-200"
+                        : "border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 text-amber-900 dark:text-amber-200",
+                    )}
                   >
-                    <div className="flex items-center justify-between gap-3">
-                      <span className="font-semibold">{problem.source}</span>
-                      <span
-                        className={cn(
-                          pillBase,
-                          problem.severity === "error"
-                            ? "bg-[#FFE4E1] text-[#B91C1C]"
-                            : "bg-[#FFF6E8] text-[#A36A00]",
-                        )}
-                      >
-                        {problem.severity}
-                      </span>
+                    <AlertTriangle
+                      className={cn(
+                        "mt-0.5 h-3.5 w-3.5 shrink-0",
+                        problem.severity === "error"
+                          ? "text-rose-600"
+                          : "text-amber-600",
+                      )}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 font-semibold">
+                        <span className="font-mono text-[11px] underline underline-offset-2">
+                          {problem.source}
+                        </span>
+                        <span className="rounded px-1 py-0.2 text-[9px] font-bold uppercase tracking-wider bg-white/80 dark:bg-black/40">
+                          {problem.severity}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-slate-700 dark:text-slate-300 font-mono text-[11.5px]">
+                        {problem.message}
+                      </p>
                     </div>
-                    <p className="mt-1 text-[#3D4A63]">{problem.message}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="font-sans text-sm font-medium text-[#5D6B82]">
-                No problems detected in the latest run.
+              <p className="font-sans text-xs text-slate-500">
+                Everything looks good! No issues or failing test cases detected.
               </p>
             )
           ) : null}
         </div>
       ) : null}
     </section>
+  );
+}
+
+// ---------- LeetCode-style Right Instruction & Test Suite Panel ----------
+
+type InstructionTab = "instructions" | "tests" | "help";
+
+function InstructionPanel({
+  tests,
+  onRunTests,
+  onAddCustomTest,
+  lastRunResult,
+  onAiAction,
+  activeAiAction,
+  collapsed,
+  onToggleCollapsed,
+}: {
+  tests: TestCase[];
+  onRunTests: () => void;
+  onAddCustomTest?: (test: TestCase) => void;
+  lastRunResult?: CodeRunResult | null;
+  onAiAction: (action: AiAction) => void;
+  activeAiAction: AiAction | null;
+  collapsed: boolean;
+  onToggleCollapsed: () => void;
+}) {
+  const [tab, setTab] = useState<InstructionTab>("tests");
+  const [activeTestIndex, setActiveTestIndex] = useState(0);
+  const [isAddingCustom, setIsAddingCustom] = useState(false);
+  const [customInput, setCustomInput] = useState("");
+  const [customExpected, setCustomExpected] = useState("");
+
+  const passedCount = tests.filter((t) => t.status === "passed").length;
+  const currentTest = tests[activeTestIndex] ?? tests[0];
+
+  const aiActions: { id: AiAction; label: string; icon: string }[] = [
+    { id: "explain", label: "Explain Code Logic", icon: "💡" },
+    { id: "debug", label: "Find Bugs & Edge Cases", icon: "🔍" },
+    { id: "improve", label: "Optimize Runtime & Memory", icon: "⚡" },
+  ];
+
+  const handleCreateCustomCase = () => {
+    if (!customExpected.trim()) return;
+    if (onAddCustomTest) {
+      onAddCustomTest({
+        id: `custom-${Date.now()}`,
+        input: customInput.trim(),
+        expected: customExpected.trim(),
+        status: "pending",
+        actual: undefined,
+      });
+    }
+    setIsAddingCustom(false);
+    setCustomInput("");
+    setCustomExpected("");
+    setActiveTestIndex(tests.length);
+  };
+
+  if (collapsed) {
+    return (
+      <aside
+        className={cn(
+          idePanelClass,
+          "code-lab-task-panel is-collapsed flex h-full min-h-0 flex-col items-center border-l border-[#E2E8F0] dark:border-[#1E293B] py-2 select-none",
+        )}
+      >
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-white transition"
+          aria-label="Open task panel"
+          title="Open Task & Tests Panel"
+        >
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+        </button>
+        <span className="mt-4 text-[10px] font-bold uppercase tracking-widest text-slate-400 [writing-mode:vertical-rl]">
+          Test Suite ({passedCount}/{tests.length})
+        </span>
+      </aside>
+    );
+  }
+
+  return (
+    <aside
+      className={cn(
+        idePanelClass,
+        "code-lab-task-panel flex h-full min-h-0 flex-col overflow-hidden border-l border-[#E2E8F0] dark:border-[#1E293B]",
+      )}
+    >
+      {/* Segmented Header */}
+      <header className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-2.5 py-1.5 select-none">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => setTab("tests")}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-xs font-semibold transition-all",
+              tab === "tests"
+                ? "bg-white dark:bg-[#1E293B] text-[#059669] dark:text-[#34D399] shadow-2xs font-bold"
+                : "text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/40",
+            )}
+          >
+            Test Cases ({passedCount}/{tests.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("instructions")}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-xs font-semibold transition-all",
+              tab === "instructions"
+                ? "bg-white dark:bg-[#1E293B] text-[#059669] dark:text-[#34D399] shadow-2xs font-bold"
+                : "text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/40",
+            )}
+          >
+            Instructions
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("help")}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-xs font-semibold transition-all",
+              tab === "help"
+                ? "bg-white dark:bg-[#1E293B] text-[#059669] dark:text-[#34D399] shadow-2xs font-bold"
+                : "text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/40",
+            )}
+          >
+            AI Assistant
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="grid h-6 w-6 shrink-0 place-items-center rounded text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white transition"
+          aria-label="Collapse Panel"
+          title="Collapse Panel"
+        >
+          <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+        </button>
+      </header>
+
+      {/* Main Panel Body */}
+      <div className="min-h-0 flex-1 overflow-y-auto p-3">
+        {tab === "tests" ? (
+          <div className="flex flex-col gap-3 h-full">
+            {/* Performance Speedometer Badge */}
+            <div className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1726] p-2.5 shadow-2xs">
+              <div className="flex items-center gap-2">
+                <span className="grid h-7 w-7 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
+                  ⚡
+                </span>
+                <div>
+                  <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
+                    {lastRunResult?.executionTime ? `${lastRunResult.executionTime}ms Execution` : "Fast Execution"}
+                  </div>
+                  <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
+                    Optimized Runtime
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
+                  1.4 MB
+                </div>
+                <div className="text-[10px] text-slate-500">
+                  Memory Usage
+                </div>
+              </div>
+            </div>
+
+            {/* LeetCode Case Tabs + Custom Case Button */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1">
+              {tests.map((test, index) => {
+                const isSelected = index === activeTestIndex && !isAddingCustom;
+                const isPassed = test.status === "passed";
+                const isFailed = test.status === "failed";
+
+                return (
+                  <button
+                    key={test.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveTestIndex(index);
+                      setIsAddingCustom(false);
+                    }}
+                    className={cn(
+                      "flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-semibold transition-all shrink-0",
+                      isSelected
+                        ? "border-[#059669] dark:border-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/30 text-[#059669] dark:text-[#34D399]"
+                        : "border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#111827] text-slate-600 dark:text-slate-400 hover:border-slate-300",
+                    )}
+                  >
+                    <span>Case {index + 1}</span>
+                    {isPassed ? (
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                    ) : isFailed ? (
+                      <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
+                    ) : (
+                      <span className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
+                    )}
+                  </button>
+                );
+              })}
+
+              <button
+                type="button"
+                onClick={() => setIsAddingCustom(true)}
+                className={cn(
+                  "flex items-center gap-1 rounded-lg border border-dashed px-2 py-1 text-[11px] font-semibold transition shrink-0",
+                  isAddingCustom
+                    ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
+                    : "border-slate-300 dark:border-slate-700 text-slate-500 hover:border-slate-400 hover:text-slate-700 dark:hover:text-slate-300",
+                )}
+              >
+                <Plus className="h-3 w-3" />
+                <span>+ Custom Case</span>
+              </button>
+            </div>
+
+            {/* Custom Case Builder Form */}
+            {isAddingCustom ? (
+              <div className="flex flex-col gap-2 rounded-xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50/40 dark:bg-emerald-950/20 p-3">
+                <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                  Create Custom Test Case
+                </span>
+                <div>
+                  <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400">Test Input</label>
+                  <input
+                    value={customInput}
+                    onChange={(e) => setCustomInput(e.target.value)}
+                    placeholder="e.g. 7"
+                    className="mt-0.5 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B101B] px-2 py-1 font-mono text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-semibold text-slate-600 dark:text-slate-400">Expected Output</label>
+                  <input
+                    value={customExpected}
+                    onChange={(e) => setCustomExpected(e.target.value)}
+                    placeholder="e.g. 5040"
+                    className="mt-0.5 w-full rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0B101B] px-2 py-1 font-mono text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  />
+                </div>
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingCustom(false)}
+                    className="rounded px-2.5 py-1 text-xs text-slate-500 hover:text-slate-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCreateCustomCase}
+                    className="rounded bg-emerald-600 px-3 py-1 text-xs font-bold text-white shadow-xs hover:bg-emerald-500"
+                  >
+                    Save Case
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
+            {/* Selected Test Case Detail & Visual Diff */}
+            {!isAddingCustom && currentTest ? (
+              <div className="flex flex-col gap-2.5 rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#111827]/60 p-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    Test Case {activeTestIndex + 1}
+                  </span>
+                  <span
+                    className={cn(
+                      "rounded px-2 py-0.5 text-[10px] font-bold uppercase",
+                      currentTest.status === "passed"
+                        ? "bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300"
+                        : currentTest.status === "failed"
+                          ? "bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300"
+                          : "bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400",
+                    )}
+                  >
+                    {currentTest.status}
+                  </span>
+                </div>
+
+                {/* Input Card */}
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Test Input</span>
+                  <pre className="mt-1 rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0B101B] p-2 font-mono text-xs text-slate-800 dark:text-slate-200 overflow-x-auto">
+                    {currentTest.input || "(empty input)"}
+                  </pre>
+                </div>
+
+                {/* Expected Output Card */}
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Expected Output</span>
+                  <pre className="mt-1 rounded-lg border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0B101B] p-2 font-mono text-xs text-emerald-700 dark:text-emerald-400 font-semibold overflow-x-auto">
+                    {currentTest.expected}
+                  </pre>
+                </div>
+
+                {/* Visual Diff if Failed */}
+                {currentTest.status === "failed" && currentTest.actual !== undefined ? (
+                  <div>
+                    <span className="text-[11px] font-semibold text-rose-600 dark:text-rose-400">
+                      Output Comparison
+                    </span>
+                    <div className="mt-1 rounded-lg border border-rose-200 dark:border-rose-900 bg-rose-50/50 dark:bg-rose-950/30 p-2 font-mono text-xs">
+                      <div className="text-emerald-600 dark:text-emerald-400">
+                        + Expected: {currentTest.expected}
+                      </div>
+                      <div className="text-rose-600 dark:text-rose-400 font-bold">
+                        - Actual:   {currentTest.actual || "(no output)"}
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+
+            {/* Run All Tests CTA */}
+            <div className="mt-auto pt-2">
+              <button
+                type="button"
+                onClick={onRunTests}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#059669] to-[#10B981] py-2.5 text-xs font-bold text-white shadow-[0_4px_14px_rgba(5,150,105,0.3)] transition hover:from-[#047857] hover:to-[#059669] active:scale-[0.98]"
+              >
+                <Play className="h-3.5 w-3.5 fill-current" />
+                Run All Tests ({tests.length})
+              </button>
+            </div>
+          </div>
+        ) : null}
+
+        {tab === "instructions" ? (
+          <div className="flex flex-col gap-3 text-xs leading-relaxed">
+            {/* Problem Header */}
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#059669] dark:text-[#34D399]">
+                Problem Task
+              </span>
+              <h3 className="mt-1 text-sm font-bold text-slate-900 dark:text-white">
+                Factorial Calculator & Sequence Logic
+              </h3>
+              <p className="mt-1 text-slate-600 dark:text-slate-400">
+                Read integer <code className="rounded bg-slate-100 dark:bg-slate-800 px-1 font-mono text-slate-800 dark:text-slate-200">n</code> from test input and calculate the factorial value <code className="font-mono">n!</code>.
+              </p>
+            </div>
+
+            <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-[#F8FAFC] dark:bg-[#111827] p-2.5 font-mono text-[11px] text-emerald-700 dark:text-emerald-400">
+              Formula: n! = n × (n-1) × ... × 1
+            </div>
+
+            {/* Live Progress Checklist */}
+            <div className="border-t border-slate-200 dark:border-slate-800 pt-2.5">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                  Checklist & Milestones ({passedCount}/{tests.length})
+                </span>
+                <span className="font-mono text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
+                  {Math.round((passedCount / (tests.length || 1)) * 100)}%
+                </span>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800 mb-2">
+                <div
+                  className="h-full bg-emerald-500 transition-all duration-300"
+                  style={{
+                    width: `${Math.round((passedCount / (tests.length || 1)) * 100)}%`,
+                  }}
+                />
+              </div>
+
+              <ul className="grid gap-1.5 text-slate-700 dark:text-slate-300">
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2
+                    className={cn(
+                      "mt-0.5 h-3.5 w-3.5 shrink-0",
+                      passedCount >= 1 ? "text-emerald-500" : "text-slate-400",
+                    )}
+                  />
+                  <span>Recursion / Iteration control flow</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2
+                    className={cn(
+                      "mt-0.5 h-3.5 w-3.5 shrink-0",
+                      passedCount >= 2 ? "text-emerald-500" : "text-slate-400",
+                    )}
+                  />
+                  <span>Validation for non-negative integers</span>
+                </li>
+                <li className="flex items-start gap-1.5">
+                  <CheckCircle2
+                    className={cn(
+                      "mt-0.5 h-3.5 w-3.5 shrink-0",
+                      passedCount === tests.length ? "text-emerald-500" : "text-slate-400",
+                    )}
+                  />
+                  <span>Input handling and output formatting</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 p-2.5 text-[11px] text-emerald-800 dark:text-emerald-300">
+              🛡️ <strong>Original Solution:</strong> Make sure your code is your own before submitting.
+            </div>
+          </div>
+        ) : null}
+
+        {tab === "help" ? (
+          <div className="flex flex-col gap-2">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              AI Code Assistant
+            </span>
+            {aiActions.map((action) => (
+              <button
+                key={action.id}
+                type="button"
+                onClick={() => onAiAction(action.id)}
+                disabled={activeAiAction !== null}
+                className="flex items-center gap-2.5 rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#111827] p-2.5 text-left text-xs font-semibold text-slate-800 dark:text-slate-200 transition hover:border-[#059669] hover:bg-[#ECFDF5] dark:hover:bg-[#064E3B]/30 disabled:opacity-60"
+              >
+                <span>{action.icon}</span>
+                <span className="flex-1">{activeAiAction === action.id ? "Analyzing..." : action.label}</span>
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </aside>
   );
 }
 
@@ -2622,10 +3162,10 @@ function QuickOpenPalette({
   );
 
   return (
-    <div className="fixed inset-0 z-[120] bg-[#07110C]/35 p-4 backdrop-blur-sm">
-      <div className="mx-auto mt-[8vh] w-full max-w-xl overflow-hidden rounded-3xl border border-[#DFF8EA] bg-white shadow-[0_30px_90px_rgba(15,23,42,0.24)]">
-        <div className="flex items-center gap-3 border-b border-[#E6EEF0] px-4 py-3">
-          <Command className="h-4 w-4 text-[#009B5A]" />
+    <div className="fixed inset-0 z-[120] bg-[#07110C]/40 p-4 backdrop-blur-xs">
+      <div className="mx-auto mt-[8vh] w-full max-w-xl overflow-hidden rounded-2xl border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0B101B] shadow-2xl">
+        <div className="flex items-center gap-3 border-b border-[#E2E8F0] dark:border-[#1E293B] px-3.5 py-2.5">
+          <Search className="h-4 w-4 text-[#059669] dark:text-[#34D399]" />
           <input
             autoFocus
             value={query}
@@ -2637,19 +3177,14 @@ function QuickOpenPalette({
                 onClose();
               }
             }}
-            placeholder="Jump to file..."
-            className="h-9 min-w-0 flex-1 bg-transparent text-sm font-semibold text-[#0B1B33] outline-none placeholder:text-[#8A99AA]"
+            placeholder="Search files by name..."
+            className="h-8 min-w-0 flex-1 bg-transparent text-xs font-semibold text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
           />
-          <button
-            type="button"
-            onClick={onClose}
-            className="grid h-8 w-8 place-items-center rounded-lg text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
-            aria-label="Close quick open"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <kbd className="rounded border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 font-mono text-[9px] text-slate-500">
+            Esc
+          </kbd>
         </div>
-        <div className="max-h-[360px] overflow-y-auto p-2">
+        <div className="max-h-[320px] overflow-y-auto p-1.5">
           {filteredFiles.length > 0 ? (
             filteredFiles.map((file) => (
               <button
@@ -2659,20 +3194,20 @@ function QuickOpenPalette({
                   onSelectFile(file);
                   onClose();
                 }}
-                className="flex w-full items-center gap-3 rounded-2xl px-3 py-2 text-left transition hover:bg-[#EFFFF5]"
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition hover:bg-slate-100 dark:hover:bg-slate-800"
               >
-                <FileTypeIcon name={file.name} />
-                <span className="min-w-0 flex-1 truncate text-sm font-semibold text-[#0B1B33]">
+                <FileTypeIcon name={file.name} className="h-4 w-4" />
+                <span className="min-w-0 flex-1 truncate text-xs font-mono text-slate-800 dark:text-slate-200">
                   {file.name}
                 </span>
-                <span className="text-xs font-medium text-[#5D6B82]">
+                <span className="text-[10px] text-slate-400 font-mono">
                   {file.language}
                 </span>
               </button>
             ))
           ) : (
-            <p className="px-3 py-6 text-center text-sm font-medium text-[#5D6B82]">
-              No matching files.
+            <p className="px-3 py-6 text-center text-xs text-slate-400">
+              No matching files found.
             </p>
           )}
         </div>
@@ -2708,15 +3243,15 @@ function CommandPalette({
   }
 
   return (
-    <div className="fixed inset-0 z-[125] bg-[#07110C]/45 p-4 backdrop-blur-md transition-all animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[125] bg-[#07110C]/40 p-4 backdrop-blur-xs">
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Code Lab command palette"
-        className="mx-auto mt-[8vh] w-full max-w-2xl overflow-hidden rounded-3xl border border-[#DFF8EA] bg-white shadow-[0_32px_100px_rgba(15,23,42,0.28)] transition-all animate-in zoom-in-95 duration-150"
+        aria-label="Code Lab Command Palette"
+        className="mx-auto mt-[8vh] w-full max-w-xl overflow-hidden rounded-2xl border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#0B101B] shadow-2xl"
       >
-        <div className="flex items-center gap-3 border-b border-[#E6EEF0] px-4 py-3">
-          <Command className="h-4 w-4 shrink-0 text-[#009B5A]" />
+        <div className="flex items-center gap-2.5 border-b border-[#E2E8F0] dark:border-[#1E293B] px-3.5 py-2.5">
+          <Command className="h-4 w-4 shrink-0 text-[#059669] dark:text-[#34D399]" />
           <input
             autoFocus
             value={query}
@@ -2741,17 +3276,14 @@ function CommandPalette({
                 runCommand(filteredCommands[activeIndex]);
               }
             }}
-            placeholder="Type a command..."
-            className="h-9 min-w-0 flex-1 bg-transparent text-sm font-semibold text-[#0B1B33] outline-none placeholder:text-[#8A99AA]"
+            placeholder="Type a command or search actions..."
+            className="h-8 min-w-0 flex-1 bg-transparent text-xs font-semibold text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
           />
-          <kbd className="rounded border border-[#DCE7E2] bg-[#F8FCFA] px-1.5 py-0.5 font-mono text-[10px] text-[#5D6B82]">
+          <kbd className="rounded border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 font-mono text-[9px] text-slate-500">
             Esc
           </kbd>
         </div>
-        <div className="max-h-[420px] overflow-y-auto p-2">
-          <p className="px-3 pb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#8A99AA]">
-            Code Lab commands
-          </p>
+        <div className="max-h-[360px] overflow-y-auto p-1.5">
           {filteredCommands.length > 0 ? (
             filteredCommands.map((command, index) => {
               const Icon = command.icon;
@@ -2764,27 +3296,29 @@ function CommandPalette({
                   onMouseEnter={() => setActiveIndex(index)}
                   onClick={() => runCommand(command)}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition",
-                    active ? "bg-[#EFFFF5]" : "hover:bg-[#F8FCFA]",
+                    "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition",
+                    active
+                      ? "bg-[#ECFDF5] dark:bg-[#064E3B]/30 text-[#059669] dark:text-[#34D399]"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800",
                   )}
                 >
                   <Icon
                     className={cn(
                       "h-4 w-4 shrink-0",
-                      active ? "text-[#007A45]" : "text-[#5D6B82]",
+                      active ? "text-[#059669] dark:text-[#34D399]" : "text-slate-400",
                     )}
                     aria-hidden="true"
                   />
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-sm font-semibold text-[#0B1B33]">
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-xs font-semibold">
                       {command.label}
                     </span>
-                    <span className="mt-0.5 block truncate text-xs text-[#5D6B82]">
+                    <span className="block truncate text-[10px] text-slate-400">
                       {command.detail}
                     </span>
-                  </span>
+                  </div>
                   {command.shortcut ? (
-                    <kbd className="shrink-0 rounded border border-[#DCE7E2] bg-white px-1.5 py-0.5 font-mono text-[10px] text-[#5D6B82]">
+                    <kbd className="shrink-0 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 font-mono text-[9px] text-slate-500">
                       {command.shortcut}
                     </kbd>
                   ) : null}
@@ -2792,288 +3326,13 @@ function CommandPalette({
               );
             })
           ) : (
-            <p className="px-3 py-8 text-center text-sm font-medium text-[#5D6B82]">
+            <p className="px-3 py-6 text-center text-xs text-slate-400">
               No matching commands.
             </p>
           )}
         </div>
-        <footer className="flex items-center gap-4 border-t border-[#E6EEF0] bg-[#F8FCFA] px-4 py-2 text-[10px] font-medium text-[#5D6B82]">
-          <span>↑↓ navigate</span>
-          <span>Enter run</span>
-          <span>Esc close</span>
-        </footer>
       </div>
     </div>
-  );
-}
-
-type InstructionTab = "instructions" | "examples" | "help";
-
-function TestCaseItem({ test }: { test: TestCase }) {
-  const isPassed = test.status === "passed";
-  return (
-    <div className="flex items-center justify-between gap-3 border-b border-[#E6EEF0] py-2 last:border-b-0">
-      <div className="min-w-0 font-mono text-xs text-[#3D4A63]">
-        <span className="text-[#5D6B82]">In:</span>{" "}
-        <span className="font-semibold text-[#0B1B33]">{test.input}</span>
-        <span className="mx-2 text-[#CBD5E1]">|</span>
-        <span className="text-[#5D6B82]">Exp:</span>{" "}
-        <span className="font-semibold text-[#0B1B33]">{test.expected}</span>
-      </div>
-      <span
-        className={cn(
-          pillBase,
-          isPassed
-            ? "bg-[#DFF8EA] text-[#005F37]"
-            : test.status === "failed"
-              ? "bg-[#FFE4E1] text-[#B91C1C]"
-              : "bg-[#FFE9D6] text-[#A8420C]",
-        )}
-      >
-        {isPassed ? (
-          <CheckCircle2 className="h-3.5 w-3.5" />
-        ) : test.status === "failed" ? (
-          <AlertTriangle className="h-3.5 w-3.5" />
-        ) : (
-          <RefreshCw className="h-3.5 w-3.5" />
-        )}
-        {isPassed ? "Passed" : test.status === "failed" ? "Failed" : "Pending"}
-      </span>
-    </div>
-  );
-}
-
-function InstructionPanel({
-  tests,
-  onRunTests,
-  onAiAction,
-  activeAiAction,
-  collapsed,
-  onToggleCollapsed,
-}: {
-  tests: TestCase[];
-  onRunTests: () => void;
-  onAiAction: (action: AiAction) => void;
-  activeAiAction: AiAction | null;
-  collapsed: boolean;
-  onToggleCollapsed: () => void;
-}) {
-  const [tab, setTab] = useState<InstructionTab>("instructions");
-  const [helpOpen, setHelpOpen] = useState(false);
-
-  const tabs: { id: InstructionTab; label: string }[] = [
-    { id: "instructions", label: "Task" },
-    { id: "examples", label: "Examples" },
-    { id: "help", label: "Tips" },
-  ];
-
-  const requirements = [
-    "Process batch student scores",
-    "Calculate 4.00-scaled CGPA",
-    "Classify academic honours & standing",
-  ];
-  const aiActions: { id: AiAction; label: string }[] = [
-    { id: "explain", label: "Explain this code" },
-    { id: "debug", label: "Find an issue" },
-    { id: "improve", label: "Suggest an improvement" },
-  ];
-
-  if (collapsed) {
-    return (
-      <aside
-        className={cn(
-          idePanelClass,
-          "code-lab-task-panel is-collapsed flex h-full min-h-0 flex-col items-center border-l border-[#E6EEF0] py-2",
-        )}
-      >
-        <button
-          type="button"
-          onClick={onToggleCollapsed}
-          className="grid h-9 w-9 place-items-center rounded-xl text-[#5D6B82] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
-          aria-label="Open task panel"
-          title="Open task panel"
-        >
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-        </button>
-        <span className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#8A99AA] [writing-mode:vertical-rl]">
-          Task
-        </span>
-      </aside>
-    );
-  }
-
-  return (
-    <aside
-      className={cn(
-        idePanelClass,
-        "code-lab-task-panel flex h-full min-h-0 flex-col overflow-hidden border-l border-[#E6EEF0]",
-      )}
-    >
-      <header className="flex items-center justify-between gap-2 border-b border-[#F0F4F4] px-3 py-2">
-        <div className="flex items-center gap-1">
-          {tabs.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setTab(item.id)}
-              className={cn(
-                "border-b-2 px-2.5 py-2 text-xs font-semibold transition",
-                tab === item.id
-                  ? "border-[#009B5A] text-[#005F37]"
-                  : "border-transparent text-[#5D6B82] hover:text-[#0B1B33]",
-              )}
-              aria-pressed={tab === item.id}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-        <button
-          type="button"
-          onClick={onToggleCollapsed}
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-[#8A99AA] transition hover:bg-[#EFFFF5] hover:text-[#009B5A]"
-          aria-label="Collapse task panel"
-          title="Collapse task panel"
-        >
-          <ChevronRight className="h-4 w-4" aria-hidden="true" />
-        </button>
-      </header>
-
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        {tab === "instructions" ? (
-          <div className="grid gap-3">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#009B5A]">
-                Problem
-              </p>
-              <h3 className="mt-1 text-base font-semibold text-[#0B1B33]">
-                Factorial Calculator
-              </h3>
-              <p className="mt-1 text-sm leading-5 text-[#3D4A63]">
-                Read{" "}
-                <code className="rounded bg-[#F1F5F9] px-1.5 py-0.5 font-mono text-xs text-[#0B1B33]">
-                  n
-                </code>{" "}
-                and print <span className="font-semibold">n!</span>.
-              </p>
-            </div>
-
-            <div className="rounded-md bg-[#F2F6F5] px-3 py-2">
-              <p className="font-mono text-[12px] leading-5 text-[#005F37]">
-                Factorial of n = n × (n−1) × (n−2) × ... × 1
-              </p>
-            </div>
-
-            <div className="border-t border-[#E6EEF0] pt-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5D6B82]">
-                Requirements
-              </p>
-              <ul className="mt-2 grid gap-1.5">
-                {requirements.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2 text-sm leading-5 text-[#3D4A63]"
-                  >
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#009B5A]" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="border-t border-[#E6EEF0] pt-3">
-              <div className="flex items-center justify-between">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#5D6B82]">
-                  Test cases
-                </p>
-                <button
-                  type="button"
-                  onClick={onRunTests}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-lg bg-[#009B5A] px-3 text-xs font-semibold text-white shadow-[0_8px_18px_rgba(0,155,90,0.22)] transition hover:bg-[#00B86B]"
-                >
-                  <Play className="h-3.5 w-3.5" />
-                  Run Tests
-                </button>
-              </div>
-              <div className="mt-2 grid gap-2">
-                {tests.map((test) => (
-                  <TestCaseItem key={test.id} test={test} />
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-[#E6EEF0] pt-2">
-              <button
-                type="button"
-                onClick={() => setHelpOpen((current) => !current)}
-                className="flex h-9 w-full items-center justify-between gap-3 rounded-lg px-2 text-left text-xs font-semibold text-[#005F37] transition hover:bg-[#EFFFF5]"
-                aria-expanded={helpOpen}
-              >
-                <span>Ask for help</span>
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4 transition-transform",
-                    helpOpen && "rotate-180",
-                  )}
-                />
-              </button>
-              {helpOpen ? (
-                <div className="mt-1 grid gap-1 border-t border-[#E6EEF0] pt-2">
-                  {aiActions.map((action) => (
-                    <button
-                      key={action.id}
-                      type="button"
-                      onClick={() => onAiAction(action.id)}
-                      disabled={activeAiAction !== null}
-                      className="flex h-8 items-center rounded-lg px-2.5 text-left text-xs font-medium text-[#3D4A63] transition hover:bg-[#EFFFF5] hover:text-[#005F37] disabled:opacity-60"
-                    >
-                      {activeAiAction === action.id
-                        ? "Working..."
-                        : action.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
-
-        {tab === "examples" ? (
-          <div className="grid gap-3">
-            {[
-              { input: "100, 100, 100", output: "4" },
-              { input: "85, 90, 95", output: "3.6" },
-              { input: "75, 75, 75", output: "3" },
-            ].map((example) => (
-              <div
-                key={example.input}
-                className="rounded-xl border border-[#E6EEF0] bg-[#FAFCFC] p-3 font-mono text-[12.5px] leading-6 text-[#0B1B33]"
-              >
-                <div className="text-[#5D6B82]">{`>>> Input: ${example.input}`}</div>
-                <div className="text-[#005F37]">{`Output: ${example.output}`}</div>
-              </div>
-            ))}
-          </div>
-        ) : null}
-
-        {tab === "help" ? (
-          <div className="grid gap-3 text-sm text-[#3D4A63]">
-            <ul className="grid gap-2">
-              {[
-                "Use reduce() to compute total marks and calculate average",
-                "Scale average score to 4.00 standard GPA grade scale",
-                "Log structured performance audit metrics with student details",
-              ].map((tip) => (
-                <li key={tip} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#009B5A]" />
-                  {tip}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
-      </div>
-    </aside>
   );
 }
 
@@ -3082,39 +3341,133 @@ function InstructionPanel({
 export function CodeLabPage({ role }: { role: AppRole }) {
   const roleData = roleDashboards[role];
 
-  const [language, setLanguage] = useState<LanguageId>("javascript");
-  const [environment, setEnvironment] = useState<EnvironmentId>("standard");
-  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
-  const [workspaceTitle, setWorkspaceTitle] = useState("Code Lab Workspace");
-  const [dbStatus, setDbStatus] = useState<"loading" | "ready" | "draft">(
-    "loading",
-  );
-  const [folders, setFolders] = useState<FolderNode[]>(initialFolders);
+  const [folders, setFolders] = useState<FolderNode[]>(() => {
+    const cached = readStoredWorkspace();
+    return cached?.folders?.length ? cached.folders : initialFolders;
+  });
 
   const allFiles = useMemo(() => flattenFiles(folders), [folders]);
 
-  const [openFileIds, setOpenFileIds] = useState<string[]>(["main.js"]);
-  const [activeFileId, setActiveFileId] = useState<string>("main.js");
-  const [fileContents, setFileContents] = useState<Record<string, string>>(() =>
-    Object.fromEntries(
-      flattenFiles(initialFolders).map((file) => [file.id, file.content]),
-    ),
+  const [openFileIds, setOpenFileIds] = useState<string[]>(() => {
+    const cached = readStoredWorkspace();
+    return cached?.openFileIds?.length
+      ? cached.openFileIds
+      : [initialFolders[0]?.files[0]?.id ?? "main.py"];
+  });
+
+  const [activeFileId, setActiveFileId] = useState<string>(() => {
+    const cached = readStoredWorkspace();
+    return (
+      cached?.activeFileId ??
+      cached?.openFileIds?.[0] ??
+      initialFolders[0]?.files[0]?.id ??
+      "main.py"
+    );
+  });
+
+  const [language, setLanguage] = useState<LanguageId>(() => {
+    const cached = readStoredWorkspace();
+    if (cached?.language) return cached.language as LanguageId;
+    const initialFile = initialFolders[0]?.files[0];
+    return (initialFile?.language as LanguageId) ?? "python";
+  });
+
+  const [environment, setEnvironment] = useState<EnvironmentId>("standard");
+  const [workspaceId, setWorkspaceId] = useState<string | null>(() => {
+    const cached = readStoredWorkspace();
+    return cached?.workspaceId ?? null;
+  });
+  const [workspaceTitle, setWorkspaceTitle] = useState(() => {
+    const cached = readStoredWorkspace();
+    return cached?.workspaceTitle ?? "Code Lab Workspace";
+  });
+  const [dbStatus, setDbStatus] = useState<"loading" | "ready" | "draft">(
+    "loading",
   );
+
+  const [fileContents, setFileContents] = useState<Record<string, string>>(() => {
+    const cached = readStoredWorkspace();
+    if (cached?.fileContents && Object.keys(cached.fileContents).length > 0) {
+      return cached.fileContents;
+    }
+    return fileContentsFromFolders(initialFolders);
+  });
+
   const [savedFileSnapshots, setSavedFileSnapshots] = useState<
     Record<string, FileSnapshot>
-  >(() =>
-    fileSnapshotsFromFolders(
+  >(() => {
+    const cached = readStoredWorkspace();
+    if (cached?.folders && cached?.fileContents) {
+      return fileSnapshotsFromFolders(cached.folders, cached.fileContents);
+    }
+    return fileSnapshotsFromFolders(
       initialFolders,
       fileContentsFromFolders(initialFolders),
-    ),
-  );
+    );
+  });
+
   const [versionHistory, setVersionHistory] = useState<
     StoredCodeLabWorkspace["versions"]
-  >([]);
-  const [consoleHeight, setConsoleHeight] = useState(180);
+  >(() => {
+    const cached = readStoredWorkspace();
+    return cached?.versions ?? [];
+  });
+  const [consoleHeight, setConsoleHeight] = useState(250);
   const [consoleCollapsed, setConsoleCollapsed] = useState(false);
+  const [consoleMaximized, setConsoleMaximized] = useState(false);
+  const [activeConsoleTab, setActiveConsoleTab] = useState<ConsoleTab>("console");
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false);
   const [taskPanelCollapsed, setTaskPanelCollapsed] = useState(false);
+  const [sidebarWidth, setSidebarWidth] = useState(250);
+  const [taskPanelWidth, setTaskPanelWidth] = useState(300);
+
+  const leftResizeRef = useRef<{ startX: number; startWidth: number } | null>(null);
+  const rightResizeRef = useRef<{ startX: number; startWidth: number } | null>(null);
+
+  const handleLeftResizeStart = (e: ReactPointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    leftResizeRef.current = { startX: e.clientX, startWidth: sidebarWidth };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handleLeftResizeMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!leftResizeRef.current) return;
+    const delta = e.clientX - leftResizeRef.current.startX;
+    const nextWidth = Math.max(180, Math.min(420, leftResizeRef.current.startWidth + delta));
+    setSidebarWidth(nextWidth);
+  };
+
+  const handleLeftResizeEnd = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (leftResizeRef.current) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {}
+      leftResizeRef.current = null;
+    }
+  };
+
+  const handleRightResizeStart = (e: ReactPointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    rightResizeRef.current = { startX: e.clientX, startWidth: taskPanelWidth };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handleRightResizeMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!rightResizeRef.current) return;
+    const delta = rightResizeRef.current.startX - e.clientX;
+    const nextWidth = Math.max(220, Math.min(480, rightResizeRef.current.startWidth + delta));
+    setTaskPanelWidth(nextWidth);
+  };
+
+  const handleRightResizeEnd = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (rightResizeRef.current) {
+      try {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      } catch {}
+      rightResizeRef.current = null;
+    }
+  };
+
   const [quickOpen, setQuickOpen] = useState(false);
   const [quickQuery, setQuickQuery] = useState("");
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -3123,9 +3476,6 @@ export function CodeLabPage({ role }: { role: AppRole }) {
   const [activeIdePanel, setActiveIdePanel] = useState<IdePanelId>("explorer");
   const [autosaveStatus, setAutosaveStatus] = useState<AutosaveStatus>("idle");
   const [lastAutosavedAt, setLastAutosavedAt] = useState<string | null>(null);
-  const [terminalCommand, setTerminalCommand] = useState("help");
-  const [terminalHistory, setTerminalHistory] = useState<TerminalEntry[]>([]);
-  const [isTerminalRunning, setIsTerminalRunning] = useState(false);
   const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const saveShortcutRef = useRef<() => void>(() => undefined);
   const runShortcutRef = useRef<() => void>(() => undefined);
@@ -3195,43 +3545,11 @@ export function CodeLabPage({ role }: { role: AppRole }) {
 
     return items;
   }, [activeFile?.name, errorOutput, tests]);
-  const terminalCwd = useMemo(
-    () =>
-      terminalHistory.at(-1)?.cwd ?? terminalCwdForWorkspace(workspaceTitle),
-    [terminalHistory, workspaceTitle],
-  );
-  const terminalSuggestions = useMemo(() => {
-    const fileCommands = allFiles.flatMap((file) => {
-      const commands = [`cat ${file.name}`];
-
-      if (file.name.endsWith(".py")) {
-        commands.push(`python ${file.name}`);
-      }
-
-      if (file.name.endsWith(".js")) {
-        commands.push(`node ${file.name}`);
-      }
-
-      return commands;
-    });
-
-    return [
-      "help",
-      "pwd",
-      "ls",
-      "status",
-      "submit-status",
-      "run",
-      "test",
-      "npm test",
-      ...fileCommands,
-    ];
-  }, [allFiles]);
 
   function applyDatabaseWorkspace(workspace: CodeLabApiWorkspace) {
     const nextFolders = foldersFromApiFiles(workspace.files);
     const nextActiveFileId =
-      workspace.activeFileId ?? workspace.files[0]?.id ?? "main.js";
+      workspace.activeFileId ?? workspace.files[0]?.id ?? "main.py";
     const hydratedFolders =
       nextFolders.length > 0 ? nextFolders : initialFolders;
     const hydratedContents = fileContentsFromFolders(hydratedFolders);
@@ -3248,7 +3566,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     setLanguage(
       runnerLanguageFor(
         flattenFiles(nextFolders).find((file) => file.id === nextActiveFileId),
-        "javascript",
+        "python",
       ) as LanguageId,
     );
     setVersionHistory(
@@ -3296,7 +3614,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
               )
             : await apiPost<WorkspaceResponse>("/code-lab/workspaces", {
                 title: "Code Lab Workspace",
-                activeFileName: "main.js",
+                activeFileName: "main.py",
                 files: initialFolders.flatMap((folder) =>
                   folder.files.map((file, index) => ({
                     id: file.id,
@@ -3311,9 +3629,6 @@ export function CodeLabPage({ role }: { role: AppRole }) {
 
           if (!cancelled && response?.workspace) {
             applyDatabaseWorkspace(response.workspace);
-            setConsoleOutput(
-              `Loaded ${response.workspace.title} from PostgreSQL.`,
-            );
             return;
           }
         }
@@ -3335,24 +3650,18 @@ export function CodeLabPage({ role }: { role: AppRole }) {
           setOpenFileIds(
             restoredWorkspace.openFileIds?.length
               ? restoredWorkspace.openFileIds
-              : ["main.js"],
+              : ["main.py"],
           );
           setActiveFileId(
             restoredWorkspace.activeFileId ??
               restoredWorkspace.openFileIds?.[0] ??
-              "main.js",
+              "main.py",
           );
-          setLanguage(restoredWorkspace.language ?? "javascript");
+          setLanguage(restoredWorkspace.language ?? "python");
           setVersionHistory(restoredWorkspace.versions ?? []);
           setDbStatus("draft");
-          setConsoleOutput(
-            `API unavailable. Restored emergency draft from ${new Date(restoredWorkspace.updatedAt).toLocaleString()}.`,
-          );
         } else if (!cancelled) {
           setDbStatus("draft");
-          setConsoleOutput(
-            "The server is unavailable. Your changes are saved in this browser for now.",
-          );
         }
       }
 
@@ -3950,6 +4259,12 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     setExecutionMs(result.executionTime);
     setHtmlPreview(result.htmlPreview);
     setLastRunResult(result);
+    setConsoleCollapsed(false);
+    if (!result.success && (result.stderr || result.errorMessage)) {
+      setActiveConsoleTab("errors");
+    } else {
+      setActiveConsoleTab("console");
+    }
   }
 
   async function handleRun() {
@@ -3957,6 +4272,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     const code = fileContents[activeFile.id] ?? activeFile.content;
     const currentLanguage = runnerLanguageFor(activeFile, language);
     setIsRunning(true);
+    setConsoleCollapsed(false);
     setHtmlPreview(undefined);
 
     try {
@@ -3964,62 +4280,34 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       const serverFile = workspace
         ? fileForWorkspace(workspace, activeFile)
         : null;
-      let result: CodeRunResult;
 
-      if (workspace && shouldUseBackendRunner(currentLanguage)) {
+      const result: CodeRunResult = await codeRunner.runCode({
+        language: currentLanguage,
+        code,
+        stdin,
+        files: buildRunnerFiles(),
+        testCases: tests.map(({ id, input, expected }: TestCase) => ({
+          id,
+          input,
+          expected,
+        })),
+      });
+
+      if (workspace) {
         const response = await apiPost<RunResponse>("/code-lab/run", {
           workspaceId: workspace.id,
           fileId: serverFile?.id,
-          language: currentLanguage,
+          language: result.language,
           code,
           stdin,
-          testCases: tests.map(({ id, input, expected }: TestCase) => ({
-            id,
-            input,
-            expected,
-          })),
+          result,
         });
 
-        if (!response?.run || !response.execution) {
+        if (!response?.run) {
           setDbStatus("draft");
           saveEmergencyDraft(versionHistory);
-          throw new Error("Backend execution did not return a run result.");
         } else {
           setDbStatus("ready");
-          result = normalizeApiExecutionResult(
-            response.execution,
-            currentLanguage,
-          );
-        }
-      } else {
-        result = await codeRunner.runCode({
-          language: currentLanguage,
-          code,
-          stdin,
-          files: buildRunnerFiles(),
-          testCases: tests.map(({ id, input, expected }: TestCase) => ({
-            id,
-            input,
-            expected,
-          })),
-        });
-
-        if (workspace) {
-          const response = await apiPost<RunResponse>("/code-lab/run", {
-            workspaceId: workspace.id,
-            fileId: serverFile?.id,
-            language: result.language,
-            code,
-            stdin,
-            result,
-          });
-
-          if (!response?.run) {
-            setDbStatus("draft");
-            saveEmergencyDraft(versionHistory);
-          } else {
-            setDbStatus("ready");
-          }
         }
       }
 
@@ -4032,6 +4320,8 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       setRunStatus("error");
       setExecutionMs(0);
       setHtmlPreview(undefined);
+      setConsoleCollapsed(false);
+      setActiveConsoleTab("errors");
     } finally {
       setIsRunning(false);
     }
@@ -4053,25 +4343,16 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     const workspace = await persistWorkspaceToDatabase();
 
     if (workspace) {
-      setConsoleOutput(
-        `Saved ${workspace.title} to PostgreSQL at ${new Date(workspace.updatedAt).toLocaleTimeString()}.`,
-      );
       setDbStatus("ready");
       setAutosaveStatus("saved");
       setLastAutosavedAt(workspace.updatedAt);
     } else {
-      const updatedAt = saveEmergencyDraft(nextVersions);
+      saveEmergencyDraft(nextVersions);
       window.localStorage.setItem(
         `nexora-code-lab:file:${activeFile.id}`,
         JSON.stringify(version),
       );
-      setConsoleOutput(
-        `Database save failed. Emergency draft cached at ${new Date(updatedAt).toLocaleTimeString()}.`,
-      );
     }
-    setErrorOutput("");
-    setRunStatus("success");
-    setExecutionMs(0);
   }
 
   async function handleRunTests() {
@@ -4079,6 +4360,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     const code = fileContents[activeFile.id] ?? activeFile.content;
     const currentLanguage = runnerLanguageFor(activeFile, language);
     setIsRunning(true);
+    setConsoleCollapsed(false);
     setHtmlPreview(undefined);
 
     try {
@@ -4086,65 +4368,38 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       const serverFile = workspace
         ? fileForWorkspace(workspace, activeFile)
         : null;
-      let result: CodeRunResult;
 
-      if (workspace && shouldUseBackendRunner(currentLanguage)) {
+      const result: CodeRunResult = await codeRunner.runTests({
+        language: currentLanguage,
+        code,
+        stdin,
+        files: buildRunnerFiles(),
+        testCases: tests.map(({ id, input, expected }: TestCase) => ({
+          id,
+          input,
+          expected,
+        })),
+      });
+
+      if (workspace) {
         const response = await apiPost<RunResponse>("/code-lab/run-tests", {
           workspaceId: workspace.id,
           fileId: serverFile?.id,
-          language: currentLanguage,
+          language: result.language,
           code,
           stdin,
-          testCases: tests.map(({ id, input, expected }: TestCase) => ({
-            id,
-            input,
-            expected,
-          })),
+          result,
+          testResults: result.testResults ?? [],
         });
 
-        if (!response?.run || !response.execution) {
+        if (!response?.run) {
           setDbStatus("draft");
           saveEmergencyDraft(versionHistory);
-          throw new Error("Backend test runner did not return a result.");
-        }
-
-        setDbStatus("ready");
-        result = normalizeApiExecutionResult(
-          response.execution,
-          currentLanguage,
-        );
-      } else {
-        result = await codeRunner.runTests({
-          language: currentLanguage,
-          code,
-          stdin,
-          files: buildRunnerFiles(),
-          testCases: tests.map(({ id, input, expected }: TestCase) => ({
-            id,
-            input,
-            expected,
-          })),
-        });
-
-        if (workspace) {
-          const response = await apiPost<RunResponse>("/code-lab/run-tests", {
-            workspaceId: workspace.id,
-            fileId: serverFile?.id,
-            language: result.language,
-            code,
-            stdin,
-            result,
-            testResults: result.testResults ?? [],
-          });
-
-          if (!response?.run) {
-            setDbStatus("draft");
-            saveEmergencyDraft(versionHistory);
-          } else {
-            setDbStatus("ready");
-          }
+        } else {
+          setDbStatus("ready");
         }
       }
+
       const resultMap = new Map(
         (result.testResults ?? []).map((item) => [item.id, item]),
       );
@@ -4153,10 +4408,12 @@ export function CodeLabPage({ role }: { role: AppRole }) {
         const passed =
           resultItem?.passed ??
           outputMatchesExpected(result.stdout, test.expected);
+        const actual = resultItem?.stdout ?? result.stdout.trim();
 
         return {
           ...test,
           status: passed ? "passed" : "failed",
+          actual,
         };
       });
       const passed = nextTests.filter(
@@ -4171,111 +4428,24 @@ export function CodeLabPage({ role }: { role: AppRole }) {
       setRunStatus(passed === nextTests.length ? "success" : "error");
       setExecutionMs(result.executionTime);
       setLastRunResult(result);
+      setConsoleCollapsed(false);
+      if (passed < nextTests.length) {
+        setActiveConsoleTab("problems");
+      } else {
+        setActiveConsoleTab("console");
+      }
     } catch (error) {
       setConsoleOutput("");
       setErrorOutput(
-        error instanceof Error ? error.message : "Test execution failed.",
+        error instanceof Error ? error.message : "Test suite failed.",
       );
       setRunStatus("error");
       setExecutionMs(0);
+      setHtmlPreview(undefined);
+      setConsoleCollapsed(false);
+      setActiveConsoleTab("errors");
     } finally {
       setIsRunning(false);
-    }
-  }
-
-  async function handleRunTerminal() {
-    const command = terminalCommand.trim();
-
-    if (!command) return;
-
-    if (command.toLowerCase() === "clear") {
-      setTerminalHistory([]);
-      setTerminalCommand("");
-      return;
-    }
-
-    setIsTerminalRunning(true);
-
-    try {
-      const workspace = await persistWorkspaceToDatabase();
-
-      if (!workspace) {
-        const entry: TerminalEntry = {
-          id: `terminal-${Date.now()}`,
-          command,
-          cwd: "/workspace/draft",
-          stdout: "",
-          stderr: "Terminal requires an active database workspace.",
-          success: false,
-          adapter: "nexora-terminal",
-          executionTimeMs: 0,
-          createdAt: new Date().toISOString(),
-        };
-
-        setTerminalHistory((current) => [...current, entry].slice(-30));
-        setRunStatus("error");
-        return;
-      }
-
-      const response = await apiPost<TerminalResponse>("/code-lab/terminal", {
-        workspaceId: workspace.id,
-        command,
-      });
-
-      if (!response?.terminal) {
-        const entry: TerminalEntry = {
-          id: `terminal-${Date.now()}`,
-          command,
-          cwd: `/workspace/${workspace.title.toLowerCase().replace(/\s+/g, "-")}`,
-          stdout: "",
-          stderr: "Terminal command failed.",
-          success: false,
-          adapter: "nexora-terminal",
-          executionTimeMs: 0,
-          createdAt: new Date().toISOString(),
-        };
-
-        setTerminalHistory((current) => [...current, entry].slice(-30));
-        setRunStatus("error");
-        return;
-      }
-
-      const entry: TerminalEntry = {
-        id: response.run.id,
-        command: response.terminal.command,
-        cwd: response.terminal.cwd,
-        stdout: response.terminal.stdout,
-        stderr: response.terminal.stderr,
-        success: response.terminal.success,
-        adapter: response.terminal.adapter,
-        executionTimeMs: response.terminal.executionTimeMs,
-        createdAt: response.run.createdAt,
-      };
-
-      setTerminalHistory((current) => [...current, entry].slice(-30));
-      setTerminalCommand("");
-      setExecutionMs(response.terminal.executionTimeMs);
-      setRunStatus(response.terminal.success ? "success" : "error");
-      setErrorOutput(response.terminal.stderr || "");
-      setDbStatus("ready");
-    } catch (error) {
-      const entry: TerminalEntry = {
-        id: `terminal-${Date.now()}`,
-        command,
-        cwd: "/workspace/error",
-        stdout: "",
-        stderr:
-          error instanceof Error ? error.message : "Terminal command failed.",
-        success: false,
-        adapter: "nexora-terminal",
-        executionTimeMs: 0,
-        createdAt: new Date().toISOString(),
-      };
-
-      setTerminalHistory((current) => [...current, entry].slice(-30));
-      setRunStatus("error");
-    } finally {
-      setIsTerminalRunning(false);
     }
   }
 
@@ -4609,54 +4779,75 @@ export function CodeLabPage({ role }: { role: AppRole }) {
 
         <section
           className={cn(
-            "grid min-h-0 overflow-hidden bg-white dark:bg-[#0E1726]",
-            workspaceExpanded
-              ? "h-full grid-rows-[minmax(0,1fr)_auto]"
-              : "lg:grid-rows-[minmax(0,1fr)_auto]",
+            "flex min-h-0 flex-col overflow-hidden bg-white dark:bg-[#0E1726]",
+            workspaceExpanded ? "h-full" : "lg:h-full",
           )}
         >
-          <div
-            className={cn(
-              "code-lab-workspace-grid grid min-h-0",
-              workspaceExpanded
-                ? "grid-cols-1 [&>:first-child]:hidden [&>:last-child]:hidden lg:[&>:first-child]:flex lg:[&>:last-child]:block"
-                : "",
-              workspaceColumnClass,
-            )}
-          >
-            <CodeLabSidebar
-              activePanel={activeIdePanel}
-              collapsed={leftPanelCollapsed}
-              folders={folders}
-              files={allFiles}
-              fileContents={fileContents}
-              activeFileId={activeFileId}
-              dirtyFileIds={dirtyFileIds}
-              tests={tests}
-              versions={versionHistory}
-              activeAiAction={activeAiAction}
-              onToggleCollapsed={() =>
-                setLeftPanelCollapsed((current) => !current)
-              }
-              onSelectPanel={setActiveIdePanel}
-              onSelectFile={handleSelectFile}
-              onCreateFile={handleCreateFile}
-              onDuplicateFile={handleDuplicateFile}
-              onRenameFile={handleRenameFile}
-              onDeleteFile={handleDeleteFile}
-              onDownloadFile={handleDownloadFile}
-              onUploadFiles={() => uploadInputRef.current?.click()}
-              onRunTests={handleRunTests}
-              onSelectVersion={handleSelectVersion}
-              onAiAction={handleAiAction}
-            />
-
+          <div className="flex min-h-0 flex-1 overflow-hidden relative">
+            {/* Left Sidebar */}
             <div
-              className={cn("grid min-h-0", workspaceExpanded && "h-full")}
               style={{
+                width: leftPanelCollapsed ? 48 : sidebarWidth,
+                minWidth: leftPanelCollapsed ? 48 : 180,
+                maxWidth: leftPanelCollapsed ? 48 : 450,
+              }}
+              className="shrink-0 h-full overflow-hidden transition-[width] duration-75"
+            >
+              <CodeLabSidebar
+                activePanel={activeIdePanel}
+                collapsed={leftPanelCollapsed}
+                folders={folders}
+                files={allFiles}
+                fileContents={fileContents}
+                activeFileId={activeFileId}
+                dirtyFileIds={dirtyFileIds}
+                tests={tests}
+                versions={versionHistory}
+                activeAiAction={activeAiAction}
+                onToggleCollapsed={() =>
+                  setLeftPanelCollapsed((current) => !current)
+                }
+                onSelectPanel={setActiveIdePanel}
+                onSelectFile={handleSelectFile}
+                onCreateFile={handleCreateFile}
+                onDuplicateFile={handleDuplicateFile}
+                onRenameFile={handleRenameFile}
+                onDeleteFile={handleDeleteFile}
+                onDownloadFile={handleDownloadFile}
+                onUploadFiles={() => uploadInputRef.current?.click()}
+                onRunTests={handleRunTests}
+                onSelectVersion={handleSelectVersion}
+                onAiAction={handleAiAction}
+              />
+            </div>
+
+            {/* Left Resizer Handle */}
+            {!leftPanelCollapsed ? (
+              <div
+                role="separator"
+                aria-label="Resize left sidebar"
+                onPointerDown={handleLeftResizeStart}
+                onPointerMove={handleLeftResizeMove}
+                onPointerUp={handleLeftResizeEnd}
+                onPointerCancel={handleLeftResizeEnd}
+                className="group relative w-1.5 shrink-0 touch-none cursor-col-resize hover:bg-emerald-500/30 active:bg-emerald-500/50 transition z-20 select-none flex items-center justify-center"
+              >
+                <div className="h-6 w-0.5 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-emerald-500 transition" />
+              </div>
+            ) : null}
+
+            {/* Center Area: Editor & Bottom Console Drawer */}
+            <div
+              className={cn("flex flex-1 min-w-0 flex-col overflow-hidden h-full")}
+              style={{
+                display: "grid",
                 gridTemplateRows: `minmax(0,1fr) ${
-                  consoleCollapsed ? 50 : consoleHeight
-                }px`,
+                  consoleCollapsed
+                    ? "38px"
+                    : consoleMaximized
+                      ? "minmax(340px, 48vh)"
+                      : `${consoleHeight}px`
+                }`,
               }}
             >
               <CodeEditorPanel
@@ -4686,23 +4877,11 @@ export function CodeLabPage({ role }: { role: AppRole }) {
                 htmlPreview={htmlPreview}
                 problems={problems}
                 inputValue={stdin}
-                terminalCommand={terminalCommand}
-                terminalHistory={terminalHistory}
-                terminalCwd={terminalCwd}
-                terminalSuggestions={terminalSuggestions}
-                isTerminalRunning={isTerminalRunning}
                 onInputChange={setStdin}
-                onTerminalCommandChange={setTerminalCommand}
-                onRunTerminal={handleRunTerminal}
-                onClearTerminal={() => {
-                  setTerminalHistory([]);
-                  setTerminalCommand("");
-                }}
                 onClear={() => {
                   setConsoleOutput("");
                   setErrorOutput("");
                   setHtmlPreview(undefined);
-                  setTerminalHistory([]);
                   setRunStatus("idle");
                   setExecutionMs(0);
                 }}
@@ -4710,24 +4889,60 @@ export function CodeLabPage({ role }: { role: AppRole }) {
                 onToggleCollapsed={() =>
                   setConsoleCollapsed((current) => !current)
                 }
+                maximized={consoleMaximized}
+                onToggleMaximized={() =>
+                  setConsoleMaximized((current) => !current)
+                }
                 consoleHeight={consoleHeight}
                 onConsoleHeightChange={setConsoleHeight}
                 executionMs={executionMs}
                 status={runStatus}
+                activeTab={activeConsoleTab}
+                onTabChange={setActiveConsoleTab}
               />
             </div>
 
-            <InstructionPanel
-              tests={tests}
-              onRunTests={handleRunTests}
-              onAiAction={handleAiAction}
-              activeAiAction={activeAiAction}
-              collapsed={taskPanelCollapsed}
-              onToggleCollapsed={() =>
-                setTaskPanelCollapsed((current) => !current)
-              }
-            />
+            {/* Right Resizer Handle */}
+            {!taskPanelCollapsed ? (
+              <div
+                role="separator"
+                aria-label="Resize right task panel"
+                onPointerDown={handleRightResizeStart}
+                onPointerMove={handleRightResizeMove}
+                onPointerUp={handleRightResizeEnd}
+                onPointerCancel={handleRightResizeEnd}
+                className="group relative w-1.5 shrink-0 touch-none cursor-col-resize hover:bg-emerald-500/30 active:bg-emerald-500/50 transition z-20 select-none flex items-center justify-center"
+              >
+                <div className="h-6 w-0.5 rounded-full bg-slate-300 dark:bg-slate-700 group-hover:bg-emerald-500 transition" />
+              </div>
+            ) : null}
+
+            {/* Right Instruction & LeetCode Test Suite Panel */}
+            <div
+              style={{
+                width: taskPanelCollapsed ? 46 : taskPanelWidth,
+                minWidth: taskPanelCollapsed ? 46 : 220,
+                maxWidth: taskPanelCollapsed ? 46 : 500,
+              }}
+              className="shrink-0 h-full overflow-hidden transition-[width] duration-75"
+            >
+              <InstructionPanel
+                tests={tests}
+                onRunTests={handleRunTests}
+                onAddCustomTest={(customCase) =>
+                  setTests((curr) => [...curr, customCase])
+                }
+                lastRunResult={lastRunResult}
+                onAiAction={handleAiAction}
+                activeAiAction={activeAiAction}
+                collapsed={taskPanelCollapsed}
+                onToggleCollapsed={() =>
+                  setTaskPanelCollapsed((current) => !current)
+                }
+              />
+            </div>
           </div>
+
           <CodeStatusBar
             workspaceTitle={workspaceTitle}
             activeFile={activeFile}

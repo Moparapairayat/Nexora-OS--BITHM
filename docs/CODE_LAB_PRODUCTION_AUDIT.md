@@ -25,7 +25,7 @@
 | **Architecture** | **68 / 100** | ⚠️ Warning | Single-file 4.6k-line frontend monolith; direct CLI spawn in HTTP handler |
 | **Frontend UI/UX** | **72 / 100** | 🟡 Acceptable | Rich UI, but heavy re-renders and un-disposed Monaco models on rapid file switch |
 | **Backend Infrastructure** | **70 / 100** | ⚠️ Warning | Missing Redis/BullMQ task queue for server-side code execution |
-| **Database Architecture** | **84 / 100** | ✅ Good | Well-indexed Prisma models (`CodeWorkspace`, `CodeSnippet`, `CodeRun`) on Supabase |
+| **Database Architecture** | **84 / 100** | ✅ Good | Well-indexed Prisma models (`CodeWorkspace`, `CodeSnippet`, `CodeRun`) on Neon PostgreSQL |
 | **Monaco Editor Integration** | **78 / 100** | 🟡 Acceptable | Excellent feature set; needs strict disposal lifecycle for dynamic models |
 | **Code Execution & Isolation** | **65 / 100** | ⚠️ Warning | Dual execution mode (Browser WASM / Docker), but lacks worker queue isolation |
 | **Security & Hardening** | **65 / 100** | 🔴 Critical | Wildcard `postMessage("*")` origin target; missing rate limits on API execution routes |
@@ -51,7 +51,7 @@
   * Missing per-user rate limiting on code execution routes.
 
 ### Area 3: Database Audit (`prisma/schema.prisma`)
-* **Strengths**: Outstanding schema design! Models `CodeWorkspace`, `CodeSnippet`, `CodeRun`, `CodeVersion`, `CodeReview`, `CodeTestResult` feature proper foreign key constraints (`onDelete: Cascade`), clean composite indexes (`@@index([userId])`, `@@index([workspaceId])`), and compatible dual connection handling on Supabase PostgreSQL.
+* **Strengths**: Outstanding schema design! Models `CodeWorkspace`, `CodeSnippet`, `CodeRun`, `CodeVersion`, `CodeReview`, `CodeTestResult` feature proper foreign key constraints (`onDelete: Cascade`), clean composite indexes (`@@index([userId])`, `@@index([workspaceId])`), and compatible dual connection handling on Neon PostgreSQL.
 * **Weaknesses**: Large `stdout` / `stderr` text logs in `CodeRun` table lack character truncation before DB insertion, creating potential database bloat.
 
 ### Area 4: Monaco Editor Audit

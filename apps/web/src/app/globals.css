@@ -514,6 +514,22 @@ html:not(.light) .student-dashboard .quick-action-card:hover {
     0 5px 12px rgba(39, 53, 86, 0.16);
 }
 
+.bento-primary-btn {
+  background: linear-gradient(135deg, #0aa75f 0%, #087a49 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(8, 122, 73, 0.28) !important;
+}
+
+.bento-primary-btn:hover {
+  filter: brightness(1.08);
+}
+
+.bento-primary-btn * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
 .student-dashboard .student-hero-primary {
   color: #07100b !important;
 }

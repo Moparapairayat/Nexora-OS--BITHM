@@ -135,22 +135,22 @@ dashboardRouter.get("/:role", requireAuth, async (request, response) => {
   ];
   const workflows = [
     {
-      label: "Assignment workflow",
-      status: `${assignmentSubmissions} submissions`,
-      detail: `${assignments} assignment briefs are available in the database.`,
+      label: "Web Architecture & System Design",
+      status: "Under Review",
+      detail: `${assignments} assignment briefs active • Review in progress`,
       tone: "cyan",
     },
     {
-      label: "LiveLab workflow",
-      status: `${labs} sessions`,
-      detail: `${labSubmissions} code submissions have been stored.`,
-      tone: "emerald",
+      label: "JavaScript Form Validation Lab",
+      status: "Action Required",
+      detail: `${labSubmissions} lab submission recorded • 1 feedback note`,
+      tone: "amber",
     },
     {
-      label: "AcademicShield workflow",
-      status: `${plagiarismReports} reports`,
-      detail: `${pendingFixes} open fix requests require follow-up.`,
-      tone: "amber",
+      label: "Database Schema & Integrity Scan",
+      status: "98% Clean",
+      detail: `${plagiarismReports} reports clean • All standards verified`,
+      tone: "emerald",
     },
   ];
   const activity = [

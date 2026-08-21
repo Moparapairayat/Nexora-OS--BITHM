@@ -2,7 +2,7 @@
 
 **Module**: Code Execution Engine (Provider Abstraction Layer)  
 **Default Provider**: Piston API v2 with automatic Judge0 CE Failover  
-**Database Persistence**: Supabase PostgreSQL (`CodeRun` & `CodeTestResult` models via Prisma)  
+**Database Persistence**: Neon PostgreSQL (`CodeRun` & `CodeTestResult` models via Prisma)  
 
 ---
 
@@ -33,7 +33,7 @@ PistonProvider           Judge0Provider          DockerProvider
                        OutputParser & Formatter
                                 │
                                 ▼
-                 ExecutionLoggerService (Supabase DB Log)
+                 ExecutionLoggerService (Neon DB Log)
                                 │
                                 ▼
                     Standard Execution JSON
@@ -129,7 +129,7 @@ When a request arrives at `ExecutionRouter.execute()`:
 
 ### 3. Execution History
 - **URL**: `GET /api/code/history/[workspaceId]`
-- **Response**: List of past 25 execution runs logged in Supabase PostgreSQL database.
+- **Response**: List of past 25 execution runs logged in Neon PostgreSQL database.
 
 ---
 

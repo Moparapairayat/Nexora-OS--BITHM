@@ -14,13 +14,26 @@ function normalizeOutput(value: string) {
   return value.trim();
 }
 
-function outputMatchesExpected(stdout: string, expected: string) {
-  const output = normalizeOutput(stdout);
-  return (
-    output === expected ||
-    output.endsWith(expected) ||
-    output.split(/\s+/).includes(expected)
-  );
+function outputMatchesExpected(actualStdout: string, expected: string): boolean {
+  const cleanActual = normalizeOutput(actualStdout || "");
+  const cleanExpected = normalizeOutput(expected || "");
+
+  if (cleanActual === cleanExpected) return true;
+
+  // Check line-by-line whitespace-trimmed comparison
+  const actualLines = cleanActual.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  const expectedLines = cleanExpected.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+  if (actualLines.length > 0 && actualLines.join("\n") === expectedLines.join("\n")) return true;
+
+  // Floating-point precision tolerance (within 1e-6)
+  const numActual = parseFloat(cleanActual);
+  const numExpected = parseFloat(cleanExpected);
+  if (!isNaN(numActual) && !isNaN(numExpected) && !isNaN(Number(cleanActual)) && !isNaN(Number(cleanExpected))) {
+    return Math.abs(numActual - numExpected) < 1e-6;
+  }
+
+  return false;
 }
 
 function factorial(value: number): number {
