@@ -210,9 +210,9 @@ export function RoleDashboard({ role }: { role: AppRole }) {
             }))}
           />
 
-          <div className="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.75fr)]">
+          <div className="grid gap-5 xl:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.75fr)]">
             <div className="grid gap-5">
-              <div className="grid gap-5 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+              <div className="grid gap-5 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
                 <WorkflowTimeline items={data.workflows} />
                 <DashboardCard
                   title="This Week's Activity"
@@ -344,6 +344,316 @@ function StudentAcademicDashboard({
   );
 }
 
+function Coursework3DIcon({ className = "h-8 w-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="book-cover-left-3d" x1="6" y1="16" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#34d399" />
+          <stop offset="40%" stopColor="#0aa75f" />
+          <stop offset="100%" stopColor="#04432c" />
+        </linearGradient>
+        <linearGradient id="book-cover-right-3d" x1="42" y1="16" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6ee7b7" />
+          <stop offset="45%" stopColor="#10b981" />
+          <stop offset="100%" stopColor="#065f46" />
+        </linearGradient>
+        <linearGradient id="page-stack-3d" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="60%" stopColor="#ecfdf5" />
+          <stop offset="100%" stopColor="#a7f3d0" />
+        </linearGradient>
+        <linearGradient id="cap-top-3d" x1="12" y1="4" x2="36" y2="18" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="35%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#b45309" />
+        </linearGradient>
+        <linearGradient id="cap-base-3d" x1="18" y1="14" x2="30" y2="22" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#fbbf24" />
+          <stop offset="100%" stopColor="#78350f" />
+        </linearGradient>
+      </defs>
+
+      {/* 3D Book Left Wing */}
+      <path
+        d="M6 34C13 32 19 33 24 36.5V18C19 14.5 13 13.5 6 15.5V34Z"
+        fill="url(#book-cover-left-3d)"
+      />
+      {/* 3D Book Right Wing */}
+      <path
+        d="M42 34C35 32 29 33 24 36.5V18C29 14.5 35 13.5 42 15.5V34Z"
+        fill="url(#book-cover-right-3d)"
+      />
+
+      {/* 3D Inner Stack Pages Left */}
+      <path
+        d="M7.5 32.5C14 30.7 19.5 31.7 23.5 34.7V16.5C19.5 13.5 14 12.5 7.5 14.3V32.5Z"
+        fill="url(#page-stack-3d)"
+      />
+      <path d="M10 20C13.5 19 17 19.5 20 21" stroke="#0aa75f" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+      <path d="M10 24C13.5 23 17 23.5 20 25" stroke="#0aa75f" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+      <path d="M10 28C13.5 27 17 27.5 20 29" stroke="#0aa75f" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+
+      {/* 3D Inner Stack Pages Right */}
+      <path
+        d="M40.5 32.5C34 30.7 28.5 31.7 24.5 34.7V16.5C28.5 13.5 34 12.5 40.5 14.3V32.5Z"
+        fill="#ffffff"
+      />
+      <path d="M28 21C31 19.5 34.5 19 38 20" stroke="#0aa75f" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+      <path d="M28 25C31 23.5 34.5 23 38 24" stroke="#0aa75f" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+      <path d="M28 29C31 27.5 34.5 27 38 28" stroke="#0aa75f" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" />
+
+      {/* 3D Spine Center Ridge */}
+      <path d="M24 16.5V37" stroke="#032b1d" strokeWidth="1.6" strokeLinecap="round" />
+
+      {/* 3D Graduation Cap Base */}
+      <path
+        d="M18.5 12C18.5 14.2 21 16 24 16C27 16 29.5 14.2 29.5 12V10H18.5V12Z"
+        fill="url(#cap-base-3d)"
+      />
+
+      {/* 3D Graduation Cap Diamond Top */}
+      <polygon
+        points="24,3 37,8.5 24,14 11,8.5"
+        fill="url(#cap-top-3d)"
+        stroke="#fef08a"
+        strokeWidth="0.8"
+      />
+      {/* 3D Gloss Highlight */}
+      <polygon
+        points="24,3 37,8.5 24,10 11,8.5"
+        fill="#ffffff"
+        opacity="0.32"
+      />
+
+      {/* 3D Cap Button & Golden Tassel */}
+      <circle cx="24" cy="8.5" r="1.3" fill="#fef08a" />
+      <path
+        d="M24 8.5 Q32 10 33.5 16 Q34 18.5 34.5 20.5"
+        fill="none"
+        stroke="#fef08a"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <circle cx="34.5" cy="20.5" r="1.2" fill="#fbbf24" />
+    </svg>
+  );
+}
+
+function LabSessions3DIcon({ className = "h-8 w-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="flask-glass-3d" x1="16" y1="6" x2="36" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#6ee7b7" stopOpacity="0.8" />
+          <stop offset="50%" stopColor="#34d399" stopOpacity="0.35" />
+          <stop offset="100%" stopColor="#059669" stopOpacity="0.85" />
+        </linearGradient>
+        <linearGradient id="flask-liquid-3d" x1="10" y1="26" x2="38" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#34d399" />
+          <stop offset="45%" stopColor="#10b981" />
+          <stop offset="100%" stopColor="#047857" />
+        </linearGradient>
+        <linearGradient id="flask-meniscus-3d" x1="14" y1="24" x2="34" y2="28" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#a7f3d0" />
+          <stop offset="100%" stopColor="#34d399" />
+        </linearGradient>
+        <linearGradient id="flask-rim-3d" x1="20" y1="6" x2="28" y2="8" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#a7f3d0" />
+          <stop offset="100%" stopColor="#059669" />
+        </linearGradient>
+      </defs>
+
+      {/* 3D Outer Glass Flask */}
+      <path
+        d="M21 8H27V18L37.5 35.5C39 38 37 41 34 41H14C11 41 9 38 10.5 35.5L21 18V8Z"
+        fill="url(#flask-glass-3d)"
+      />
+
+      {/* 3D Glowing Liquid Bottom Reservoir */}
+      <path
+        d="M14.5 27.5L10.5 35.5C9.3 37.6 10.8 40.5 13.5 40.5H34.5C37.2 40.5 38.7 37.6 37.5 35.5L33.5 27.5C30 29 18 29 14.5 27.5Z"
+        fill="url(#flask-liquid-3d)"
+      />
+
+      {/* 3D Liquid Surface Meniscus */}
+      <ellipse cx="24" cy="27.5" rx="9.5" ry="2.2" fill="url(#flask-meniscus-3d)" />
+
+      {/* Floating 3D Bubbles */}
+      <circle cx="20" cy="34" r="1.8" fill="#d1fae5" opacity="0.9" />
+      <circle cx="27" cy="32" r="1.4" fill="#d1fae5" opacity="0.85" />
+      <circle cx="23" cy="22" r="1.2" fill="#a7f3d0" opacity="0.75" />
+
+      {/* Glass Light Reflection / Sheen */}
+      <path
+        d="M14 36L22.5 20V9"
+        stroke="#ffffff"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeOpacity="0.65"
+      />
+      <path
+        d="M34 38L30 31"
+        stroke="#6ee7b7"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeOpacity="0.5"
+      />
+
+      {/* 3D Top Rim Ring */}
+      <ellipse cx="24" cy="8" rx="4.5" ry="1.5" fill="url(#flask-rim-3d)" stroke="#d1fae5" strokeWidth="0.6" />
+    </svg>
+  );
+}
+
+function ReviewTasks3DIcon({ className = "h-8 w-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="board-wood-3d" x1="10" y1="10" x2="38" y2="44" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#fbbf24" />
+          <stop offset="50%" stopColor="#d97706" />
+          <stop offset="100%" stopColor="#78350f" />
+        </linearGradient>
+        <linearGradient id="doc-paper-3d" x1="12" y1="14" x2="36" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="80%" stopColor="#fef3c7" />
+          <stop offset="100%" stopColor="#fde68a" />
+        </linearGradient>
+        <linearGradient id="clip-metal-3d" x1="18" y1="4" x2="30" y2="12" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="40%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#92400e" />
+        </linearGradient>
+        <linearGradient id="check-badge-3d" x1="28" y1="28" x2="42" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#34d399" />
+          <stop offset="100%" stopColor="#059669" />
+        </linearGradient>
+      </defs>
+
+      {/* 3D Back Clipboard Body */}
+      <rect
+        x="9"
+        y="9"
+        width="30"
+        height="32"
+        rx="5"
+        fill="url(#board-wood-3d)"
+      />
+
+      {/* 3D Document Sheet */}
+      <rect
+        x="13"
+        y="13"
+        width="22"
+        height="26"
+        rx="3"
+        fill="url(#doc-paper-3d)"
+      />
+
+      {/* Document Text Line Highlights */}
+      <line x1="17" y1="19" x2="27" y2="19" stroke="#f59e0b" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="17" y1="24" x2="31" y2="24" stroke="#d97706" strokeWidth="1.6" strokeLinecap="round" opacity="0.8" />
+      <line x1="17" y1="29" x2="29" y2="29" stroke="#d97706" strokeWidth="1.6" strokeLinecap="round" opacity="0.8" />
+      <line x1="17" y1="34" x2="25" y2="34" stroke="#d97706" strokeWidth="1.6" strokeLinecap="round" opacity="0.8" />
+
+      {/* 3D Metallic Top Clip */}
+      <rect x="18" y="5" width="12" height="7" rx="2" fill="url(#clip-metal-3d)" />
+      <ellipse cx="24" cy="6" rx="2.5" ry="1.2" fill="#78350f" opacity="0.6" />
+
+      {/* 3D Floating Checkmark Bubble Badge */}
+      <circle cx="34" cy="34" r="6.5" fill="url(#check-badge-3d)" stroke="#ffffff" strokeWidth="1.2" />
+      <path
+        d="M31 34L33 36L37.5 31.5"
+        stroke="#ffffff"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SkillMastery3DIcon({ className = "h-8 w-8" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      className={className}
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id="ring-outer-3d" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#67e8f9" />
+          <stop offset="50%" stopColor="#06b6d4" />
+          <stop offset="100%" stopColor="#0e7490" />
+        </linearGradient>
+        <linearGradient id="ring-inner-3d" x1="14" y1="14" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="50%" stopColor="#a5f3fc" />
+          <stop offset="100%" stopColor="#0891b2" />
+        </linearGradient>
+        <linearGradient id="bullseye-center-3d" x1="19" y1="19" x2="29" y2="29" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#a5f3fc" />
+          <stop offset="40%" stopColor="#06b6d4" />
+          <stop offset="100%" stopColor="#164e63" />
+        </linearGradient>
+        <linearGradient id="dart-body-3d" x1="26" y1="10" x2="42" y2="26" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#fef08a" />
+          <stop offset="50%" stopColor="#f59e0b" />
+          <stop offset="100%" stopColor="#b45309" />
+        </linearGradient>
+      </defs>
+
+      {/* 3D Outer Orbit Ring */}
+      <circle
+        cx="24"
+        cy="24"
+        r="17"
+        fill="url(#ring-outer-3d)"
+      />
+      {/* 3D Middle Groove */}
+      <circle cx="24" cy="24" r="12.5" fill="url(#ring-inner-3d)" />
+
+      {/* 3D Inner Ring */}
+      <circle cx="24" cy="24" r="8.5" fill="url(#ring-outer-3d)" />
+
+      {/* 3D Central Bullseye Sphere */}
+      <circle cx="24" cy="24" r="4.5" fill="url(#bullseye-center-3d)" />
+      <circle cx="22.5" cy="22.5" r="1.5" fill="#ffffff" opacity="0.85" />
+
+      {/* 3D Precision Dart */}
+      <path
+        d="M38 10L30 18L24.5 23.5L25.5 24.5L31 19L39 11Z"
+        fill="url(#dart-body-3d)"
+      />
+      {/* Dart Flight Wings */}
+      <polygon points="38,10 44,7 41,13" fill="#fbbf24" />
+      <polygon points="38,10 35,4 39,7" fill="#f59e0b" />
+      <circle cx="24.5" cy="23.5" r="1.2" fill="#ffffff" />
+    </svg>
+  );
+}
+
 function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
   const stat0 = stats?.[0] ?? { label: "Active Assignments", value: "3", trend: "Next due 15 July" };
   const stat1 = stats?.[1] ?? { label: "Lab Sessions", value: "2", trend: "Next lab: Thursday at 10:00" };
@@ -351,45 +661,43 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
   const stat3 = stats?.[3] ?? { label: "Skill Mastery", value: "78%", trend: "Great progress this week!" };
 
   return (
-    <div className="grid gap-3.5 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      {/* 1. Vibrant Aurora Emerald Hero Card - Topographical Wave Contour Background */}
-      <div className="group relative overflow-hidden rounded-[22px] border border-emerald-400/30 bg-[linear-gradient(135deg,#0aa75f_0%,#087a49_45%,#043d27_100%)] p-4 sm:p-4.5 text-white shadow-[0_14px_32px_rgba(8,122,73,0.24)] transition-all duration-300 hover:shadow-[0_18px_40px_rgba(8,122,73,0.32)] hover:-translate-y-0.5">
-        {/* Vector Topographical Wave Mesh Background (Signature Style) */}
+    <div className="grid gap-2.5 sm:gap-3.5 xl:gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* 1. Vibrant Aurora Emerald Hero Card */}
+      <div className="group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] border border-emerald-400/30 bg-[linear-gradient(135deg,#0aa75f_0%,#087a49_45%,#043d27_100%)] p-3 sm:p-3.5 xl:p-4 text-white shadow-[0_10px_26px_rgba(8,122,73,0.22)] transition-all duration-300 hover:shadow-[0_14px_34px_rgba(8,122,73,0.30)] hover:-translate-y-0.5">
+        {/* Vector Topographical Wave Mesh Background */}
         <svg
-          className="pointer-events-none absolute inset-0 h-full w-full opacity-35 overflow-hidden select-none"
+          className="pointer-events-none absolute inset-0 h-full w-full opacity-30 overflow-hidden select-none"
           viewBox="0 0 320 160"
           fill="none"
           preserveAspectRatio="none"
         >
           <path d="M-20 30 C50 10 110 50 180 35 C240 20 280 45 340 25" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.25" />
-          <path d="M-20 48 C50 28 110 68 180 53 C240 38 280 63 340 43" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.35" />
-          <path d="M-20 66 C50 46 110 86 180 71 C240 56 280 81 340 61" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.45" />
-          <path d="M-20 84 C50 64 110 104 180 89 C240 74 280 99 340 79" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.55" />
-          <path d="M-20 102 C50 82 110 122 180 107 C240 92 280 117 340 97" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.65" />
-          <path d="M-20 120 C50 100 110 140 180 125 C240 110 280 135 340 115" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.75" />
-          <path d="M-20 138 C50 118 110 158 180 143 C240 128 280 153 340 133" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.85" />
+          <path d="M-20 55 C50 35 110 75 180 60 C240 45 280 70 340 50" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.35" />
+          <path d="M-20 80 C50 60 110 100 180 85 C240 70 280 95 340 75" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.45" />
+          <path d="M-20 105 C50 85 110 125 180 110 C240 95 280 120 340 100" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.55" />
+          <path d="M-20 130 C50 110 110 150 180 135 C240 120 280 145 340 125" stroke="#ffffff" strokeWidth="1.2" strokeOpacity="0.65" />
         </svg>
 
-        <div className="pointer-events-none absolute -right-6 -top-6 h-28 w-28 rounded-full bg-[radial-gradient(circle,rgba(217,255,87,0.30),transparent_70%)] blur-lg" />
+        <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[radial-gradient(circle,rgba(217,255,87,0.25),transparent_70%)] blur-md" />
         <div className="relative z-10 flex items-center justify-between">
-          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-white/25 bg-white/20 text-white shadow-xs backdrop-blur-md">
-            <BookOpen className="h-4.5 w-4.5" />
-          </span>
-          <span className="rounded-full border border-white/20 bg-white/20 px-2.5 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+          <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
+            <Coursework3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+          </div>
+          <span className="rounded-full border border-white/20 bg-white/20 px-2.5 py-0.5 text-[9px] sm:text-[9.5px] font-bold text-white backdrop-blur-sm shadow-xs">
             Core Unit
           </span>
         </div>
-        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-emerald-100">
+        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-end justify-between gap-1.5">
+          <div className="min-w-0 flex-1">
+            <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-wider text-emerald-100 whitespace-nowrap truncate">
               Active Coursework
             </p>
-            <p className="mt-0.5 font-mono text-2xl font-extrabold tracking-tight !text-white sm:text-3xl">
-              {stat0.value} <span className="text-sm font-medium text-emerald-200">Ongoing</span>
+            <p className="mt-0.5 font-mono text-xl sm:text-2xl xl:text-3xl font-extrabold tracking-tight !text-white">
+              {stat0.value} <span className="text-xs sm:text-sm font-medium text-emerald-200">Ongoing</span>
             </p>
           </div>
           {/* Sparkline */}
-          <div className="h-7 w-16 shrink-0 sm:w-20">
+          <div className="h-5 sm:h-6 xl:h-6.5 w-12 sm:w-14 xl:w-18 shrink-0">
             <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
               <defs>
                 <linearGradient id="hero-spark" x1="0" y1="0" x2="0" y2="1">
@@ -412,7 +720,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
             </svg>
           </div>
         </div>
-        <div className="relative z-10 mt-2.5 flex items-center gap-1.5 text-[11px] font-medium text-emerald-100 truncate">
+        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[10.5px] font-medium text-emerald-100 truncate">
           <span className="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-full bg-white/20 text-white">
             <ArrowUpRight className="h-2.5 w-2.5 stroke-[3]" />
           </span>
@@ -420,9 +728,9 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
         </div>
       </div>
 
-      {/* 2. Active Labs Card - Circuit Matrix Background */}
-      <div className="command-surface group relative overflow-hidden rounded-[22px] p-4 sm:p-4.5 shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
-        {/* Vector High-Tech Matrix Circuit Traces */}
+      {/* 2. Active Labs Card */}
+      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3 sm:p-3.5 xl:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+        {/* Vector Matrix Circuit Traces */}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-10 dark:opacity-20 overflow-hidden select-none"
           viewBox="0 0 320 160"
@@ -434,29 +742,27 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
           <path d="M0 120 H105 L130 95 H210 L235 120 H320" stroke="#10b981" strokeWidth="1.2" strokeDasharray="4 4" />
           <circle cx="110" cy="55" r="3.5" fill="#10b981" />
           <circle cx="190" cy="75" r="3.5" fill="#10b981" />
-          <circle cx="260" cy="75" r="3" fill="#10b981" />
-          <circle cx="130" cy="95" r="3" fill="#10b981" />
         </svg>
 
         <div className="relative z-10 flex items-center justify-between">
-          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-emerald-500/20 bg-emerald-500/10 text-emerald-500 dark:bg-emerald-500/15 dark:text-emerald-400 shadow-xs">
-            <FlaskConical className="h-4.5 w-4.5" />
-          </span>
-          <span className="grid h-6 w-6 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
-            <ArrowUpRight className="h-3.5 w-3.5 stroke-[2.5]" />
+          <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
+            <LabSessions3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+          </div>
+          <span className="grid h-5.5 w-5.5 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
+            <ArrowUpRight className="h-3 w-3 stroke-[2.5]" />
           </span>
         </div>
-        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-end justify-between gap-1.5">
+          <div className="min-w-0 flex-1">
+            <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap truncate">
               Lab Sessions
             </p>
-            <p className="mt-0.5 font-mono text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
-              {stat1.value} <span className="text-sm font-normal text-slate-400">Booked</span>
+            <p className="mt-0.5 font-mono text-xl sm:text-2xl xl:text-3xl font-extrabold text-slate-900 dark:text-white">
+              {stat1.value} <span className="text-xs sm:text-sm font-normal text-slate-400">Booked</span>
             </p>
           </div>
           {/* Sparkline */}
-          <div className="h-7 w-16 shrink-0 sm:w-20">
+          <div className="h-5 sm:h-6 xl:h-6.5 w-12 sm:w-14 xl:w-18 shrink-0">
             <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
               <defs>
                 <linearGradient id="lab-spark" x1="0" y1="0" x2="0" y2="1">
@@ -479,14 +785,14 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
             </svg>
           </div>
         </div>
-        <div className="relative z-10 mt-2.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+        <div className="relative z-10 mt-1.5 sm:mt-2 text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
           <span className="font-bold text-emerald-600 dark:text-emerald-400">{stat1.trend}</span>
         </div>
       </div>
 
-      {/* 3. Revisions Needed / Fix Requests - Isometric Diamond Mesh Background */}
-      <div className="command-surface group relative overflow-hidden rounded-[22px] p-4 sm:p-4.5 shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
-        {/* Vector Isometric Diamond Wireframe Grid */}
+      {/* 3. Revisions Needed / Fix Requests */}
+      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3 sm:p-3.5 xl:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+        {/* Vector Diamond Wireframe Grid */}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.08] dark:opacity-[0.16] overflow-hidden select-none"
           viewBox="0 0 320 160"
@@ -497,28 +803,27 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
           <path d="M180 -30 L40 190 M250 -30 L110 190 M320 -30 L180 190 M390 -30 L250 190" stroke="#f59e0b" strokeWidth="1.1" />
           <circle cx="180" cy="80" r="3.5" fill="#f59e0b" />
           <circle cx="110" cy="80" r="3" fill="#f59e0b" />
-          <circle cx="250" cy="80" r="3" fill="#f59e0b" />
         </svg>
 
         <div className="relative z-10 flex items-center justify-between">
-          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-500 dark:bg-amber-500/15 dark:text-amber-400 shadow-xs">
-            <FileText className="h-4.5 w-4.5" />
-          </span>
-          <span className="grid h-6 w-6 place-items-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
-            <ArrowDownRight className="h-3.5 w-3.5 stroke-[2.5]" />
+          <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
+            <ReviewTasks3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+          </div>
+          <span className="grid h-5.5 w-5.5 place-items-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
+            <ArrowDownRight className="h-3 w-3 stroke-[2.5]" />
           </span>
         </div>
-        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-end justify-between gap-1.5">
+          <div className="min-w-0 flex-1">
+            <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap truncate">
               Tasks to Review
             </p>
-            <p className="mt-0.5 font-mono text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
-              {stat2.value} <span className="text-sm font-normal text-slate-400">Pending</span>
+            <p className="mt-0.5 font-mono text-xl sm:text-2xl xl:text-3xl font-extrabold text-slate-900 dark:text-white">
+              {stat2.value} <span className="text-xs sm:text-sm font-normal text-slate-400">Pending</span>
             </p>
           </div>
           {/* Sparkline */}
-          <div className="h-7 w-16 shrink-0 sm:w-20">
+          <div className="h-5 sm:h-6 xl:h-6.5 w-12 sm:w-14 xl:w-18 shrink-0">
             <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
               <defs>
                 <linearGradient id="amber-spark" x1="0" y1="0" x2="0" y2="1">
@@ -541,14 +846,14 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
             </svg>
           </div>
         </div>
-        <div className="relative z-10 mt-2.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+        <div className="relative z-10 mt-1.5 sm:mt-2 text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
           <span className="font-bold text-amber-600 dark:text-amber-400">{stat2.trend}</span>
         </div>
       </div>
 
-      {/* 4. Skills Progress - Concentric Orbital Radar Background */}
-      <div className="command-surface group relative overflow-hidden rounded-[22px] p-4 sm:p-4.5 shadow-[0_8px_24px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
-        {/* Vector Concentric Sonar Orbital Radar Element */}
+      {/* 4. Skills Progress */}
+      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3 sm:p-3.5 xl:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+        {/* Vector Radar Element */}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-10 dark:opacity-20 overflow-hidden select-none"
           viewBox="0 0 320 160"
@@ -557,31 +862,28 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
           <circle cx="270" cy="35" r="45" stroke="#06b6d4" strokeWidth="1" strokeDasharray="3 3" />
           <circle cx="270" cy="35" r="85" stroke="#06b6d4" strokeWidth="1.2" />
           <circle cx="270" cy="35" r="125" stroke="#06b6d4" strokeWidth="1" strokeDasharray="4 4" />
-          <circle cx="270" cy="35" r="165" stroke="#06b6d4" strokeWidth="1" strokeOpacity="0.5" />
           <circle cx="185" cy="35" r="3.5" fill="#06b6d4" />
-          <circle cx="270" cy="120" r="3.5" fill="#06b6d4" />
-          <circle cx="270" cy="35" r="5" fill="#06b6d4" fillOpacity="0.4" />
         </svg>
 
         <div className="relative z-10 flex items-center justify-between">
-          <span className="grid h-8.5 w-8.5 place-items-center rounded-xl border border-cyan-500/20 bg-cyan-500/10 text-cyan-500 dark:bg-cyan-500/15 dark:text-cyan-400 shadow-xs">
-            <Target className="h-4.5 w-4.5" />
-          </span>
-          <span className="rounded-full bg-cyan-500/10 px-2.5 py-0.5 text-[9.5px] font-bold text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-400">
+          <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
+            <SkillMastery3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+          </div>
+          <span className="rounded-full bg-cyan-500/10 px-2.5 py-0.5 text-[9px] sm:text-[9.5px] font-bold text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-400">
             Goal: 85%
           </span>
         </div>
-        <div className="relative z-10 mt-2.5 flex items-end justify-between gap-2">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-end justify-between gap-1.5">
+          <div className="min-w-0 flex-1">
+            <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 whitespace-nowrap truncate">
               Skill Mastery
             </p>
-            <p className="mt-0.5 font-mono text-2xl font-extrabold text-slate-900 dark:text-white sm:text-3xl">
+            <p className="mt-0.5 font-mono text-xl sm:text-2xl xl:text-3xl font-extrabold text-slate-900 dark:text-white">
               {stat3.value.includes("%") ? stat3.value : `${stat3.value}%`}
             </p>
           </div>
           {/* Sparkline */}
-          <div className="h-7 w-16 shrink-0 sm:w-20">
+          <div className="h-5 sm:h-6 xl:h-6.5 w-12 sm:w-14 xl:w-18 shrink-0">
             <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
               <defs>
                 <linearGradient id="cyan-spark" x1="0" y1="0" x2="0" y2="1">
@@ -604,7 +906,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
             </svg>
           </div>
         </div>
-        <div className="relative z-10 mt-2.5 text-[11px] text-slate-500 dark:text-slate-400 truncate">
+        <div className="relative z-10 mt-1.5 sm:mt-2 text-[10px] sm:text-[10.5px] text-slate-500 dark:text-slate-400 truncate">
           {stat3.trend}
         </div>
       </div>

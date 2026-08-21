@@ -324,9 +324,9 @@ body {
 
 :root {
   --nexora-shell-edge: 0.75rem;
-  --nexora-shell-gap: 1rem;
-  --nexora-sidebar-width: 304px;
-  --nexora-content-gutter: 2rem;
+  --nexora-shell-gap: 0.75rem;
+  --nexora-sidebar-width: 240px;
+  --nexora-content-gutter: 1.5rem;
   --nexora-section-gap: 1.25rem;
 }
 
@@ -336,11 +336,11 @@ body {
 
 @media (min-width: 1024px) {
   :root {
-    --nexora-shell-edge: clamp(0.5rem, 0.65vw, 0.75rem);
-    --nexora-shell-gap: clamp(0.625rem, 1vw, 1rem);
-    --nexora-sidebar-width: clamp(220px, 18vw, 304px);
-    --nexora-content-gutter: clamp(0.75rem, 1.55vw, 2rem);
-    --nexora-section-gap: clamp(0.75rem, 1.15vw, 1.25rem);
+    --nexora-shell-edge: clamp(0.5rem, 0.6vw, 0.75rem);
+    --nexora-shell-gap: clamp(0.5rem, 0.75vw, 0.875rem);
+    --nexora-sidebar-width: clamp(210px, 15vw, 248px);
+    --nexora-content-gutter: clamp(0.625rem, 1.25vw, 1.5rem);
+    --nexora-section-gap: clamp(0.75rem, 1vw, 1.125rem);
   }
 
   .nexora-app-frame {

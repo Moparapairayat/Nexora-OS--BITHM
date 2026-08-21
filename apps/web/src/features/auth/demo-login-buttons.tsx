@@ -112,7 +112,7 @@ export function DemoLoginButtons({
               type="button"
               variant={variant === "portal" ? "secondary" : "ghost"}
               className={cn(
-                "rounded-xl sm:rounded-2xl text-[10px] sm:text-xs px-1 sm:px-3 h-9 font-semibold",
+                "rounded-xl text-xs px-2 h-8.5 sm:h-9 font-bold transition-all duration-200",
                 variant === "portal" &&
                 "justify-center sm:justify-between border-[color:var(--border-emerald)] bg-[rgba(50,245,154,0.07)] text-[var(--foreground)] hover:bg-[rgba(50,245,154,0.12)]",
                 onDark &&
@@ -123,12 +123,11 @@ export function DemoLoginButtons({
               onClick={() => void signInDemo(account)}
             >
               {isLoading ? (
-                <span className="mx-auto text-[10px] sm:text-xs">Signing in...</span>
+                <span className="mx-auto text-[11px]">Signing in...</span>
               ) : (
-                <span className="inline-flex items-center gap-1 sm:gap-1.5 truncate">
-                  <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" aria-hidden="true" />
-                  <span className="hidden sm:inline">{account.label}</span>
-                  <span className="inline sm:hidden">{account.shortLabel}</span>
+                <span className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap">
+                  <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-400 light:text-emerald-600" aria-hidden="true" />
+                  <span>{account.shortLabel}</span>
                 </span>
               )}
               {variant === "portal" && !isLoading ? (

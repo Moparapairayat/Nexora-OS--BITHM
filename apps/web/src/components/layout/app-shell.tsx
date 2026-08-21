@@ -55,7 +55,7 @@ export function AppShell({
       data-nexora-role={role}
       style={{
         gridTemplateColumns: effectiveSidebarCollapsed
-          ? "92px minmax(0, 1fr)"
+          ? "78px minmax(0, 1fr)"
           : "var(--nexora-sidebar-width) minmax(0, 1fr)",
       }}
       className="nexora-app-frame min-h-dvh transition-[grid-template-columns] duration-300 light:bg-[#edf3ef]/55"

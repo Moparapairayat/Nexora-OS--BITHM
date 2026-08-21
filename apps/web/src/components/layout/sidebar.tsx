@@ -180,25 +180,25 @@ export function Sidebar({
         onClick={onClose}
       />
       <aside
-        style={collapsed ? { width: 92 } : undefined}
+        style={collapsed ? { width: 78 } : undefined}
         className={cn(
-          "command-surface-strong nexora-sidebar fixed inset-y-3 left-3 z-40 flex w-[304px] flex-col overflow-visible rounded-[24px] transition-[transform,width] duration-300 light:rounded-[28px] light:border-slate-200/80 lg:sticky lg:left-auto lg:z-auto lg:inset-y-auto lg:translate-x-0",
-          collapsed && "lg:w-[92px]",
+          "command-surface-strong nexora-sidebar fixed inset-y-3 left-3 z-40 flex w-[260px] flex-col overflow-visible rounded-[22px] sm:rounded-[24px] transition-[transform,width] duration-300 light:rounded-[26px] light:border-slate-200/80 lg:sticky lg:left-auto lg:z-auto lg:inset-y-auto lg:translate-x-0 lg:w-[var(--nexora-sidebar-width)]",
+          collapsed && "lg:w-[78px]",
           open ? "translate-x-0" : "-translate-x-[110%]",
         )}
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 rounded-t-[24px] bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.18),transparent_60%),radial-gradient(circle_at_16%_8%,rgba(138,95,61,0.18),transparent_48%)] light:rounded-t-[28px] light:bg-[radial-gradient(circle_at_18%_0%,rgba(10,169,91,0.13),transparent_56%),radial-gradient(circle_at_78%_4%,rgba(217,255,87,0.16),transparent_50%)]" />
-        <div className="relative flex items-center justify-between border-b border-white/10 px-4 py-4 light:border-slate-200/70">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-40 rounded-t-[22px] sm:rounded-t-[24px] bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.18),transparent_60%),radial-gradient(circle_at_16%_8%,rgba(138,95,61,0.18),transparent_48%)] light:rounded-t-[26px] light:bg-[radial-gradient(circle_at_18%_0%,rgba(10,169,91,0.13),transparent_56%),radial-gradient(circle_at_78%_4%,rgba(217,255,87,0.16),transparent_50%)]" />
+        <div className="relative flex items-center justify-between border-b border-white/10 px-3.5 py-3.5 light:border-slate-200/70">
           <Link
             href="/"
             className={cn(
               "nexora-focus flex min-w-0 items-center rounded-md",
-              collapsed ? "lg:justify-center" : "gap-3",
+              collapsed ? "lg:justify-center" : "gap-2.5",
             )}
           >
             <div className={cn("min-w-0", collapsed && "lg:hidden")}>
-              <NexoraLogo size="sm" priority className="h-10 w-[158px]" />
-              <div className="sidebar-muted mt-0.5 truncate text-xs text-slate-400 light:text-slate-500">
+              <NexoraLogo size="sm" priority className="h-8 w-[124px]" />
+              <div className="sidebar-muted mt-0.5 truncate text-[11px] text-slate-400 light:text-slate-500">
                 Academic Intelligence Platform
               </div>
             </div>
@@ -206,27 +206,27 @@ export function Sidebar({
               size="sm"
               className={cn(
                 "hidden",
-                collapsed && "lg:inline-flex lg:h-9 lg:w-14",
+                collapsed && "lg:inline-flex lg:h-8 lg:w-12",
               )}
               imageClassName="object-left"
             />
           </Link>
           <button
             type="button"
-            className="nexora-focus hidden rounded-xl border border-white/10 bg-white/[0.05] p-2 text-slate-300 transition hover:bg-white/[0.09] light:border-slate-200 light:bg-white light:text-slate-500 light:shadow-[0_8px_18px_rgba(33,45,74,0.06)] light:hover:bg-emerald-50 lg:block"
+            className="nexora-focus hidden rounded-xl border border-white/10 bg-white/[0.05] p-1.5 text-slate-300 transition hover:bg-white/[0.09] light:border-slate-200 light:bg-white light:text-slate-500 light:shadow-[0_8px_18px_rgba(33,45,74,0.06)] light:hover:bg-emerald-50 lg:block"
             onClick={onToggleCollapsed}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
             {collapsed ? (
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3.5 w-3.5" />
             ) : (
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3.5 w-3.5" />
             )}
           </button>
           <button
             type="button"
-            className="nexora-focus rounded-xl p-2 text-slate-300 light:text-slate-600 lg:hidden"
+            className="nexora-focus rounded-xl p-1.5 text-slate-300 light:text-slate-600 lg:hidden"
             onClick={onClose}
             aria-label="Close sidebar"
             title="Close sidebar"
@@ -236,17 +236,17 @@ export function Sidebar({
         </div>
 
         <div
-          className={cn("relative px-4 py-3.5", collapsed && "lg:px-3 lg:py-3")}
+          className={cn("relative px-3 py-3", collapsed && "lg:px-2.5 lg:py-2.5")}
         >
           <div
             className={cn(
-              "rounded-[22px] border border-white/10 bg-white/[0.045] p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] light:border-slate-200/80 light:bg-white light:shadow-[0_16px_34px_rgba(33,45,74,0.07)]",
+              "rounded-[18px] sm:rounded-[20px] border border-white/10 bg-white/[0.045] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] light:border-slate-200/80 light:bg-white light:shadow-[0_12px_28px_rgba(33,45,74,0.06)]",
               collapsed && "lg:hidden",
             )}
           >
             <RoleBadge role={role} />
-            <div className="mt-3 flex items-center gap-3">
-              <span className="relative grid h-10 w-10 shrink-0 overflow-hidden rounded-full border border-white/20 shadow-sm light:border-emerald-200">
+            <div className="mt-2.5 flex items-center gap-2.5">
+              <span className="relative grid h-8.5 w-8.5 shrink-0 overflow-hidden rounded-full border border-white/20 shadow-xs light:border-emerald-200">
                 <img
                   src={roleAvatar[role]}
                   alt={`${role} profile`}
@@ -254,20 +254,20 @@ export function Sidebar({
                 />
               </span>
               <div className="min-w-0">
-                <p className="sidebar-strong truncate text-sm font-semibold text-white light:text-slate-950">
+                <p className="sidebar-strong truncate text-xs sm:text-[13px] font-semibold text-white light:text-slate-950">
                   {roleProfileLabel[role]}
                 </p>
-                <p className="sidebar-muted truncate text-xs text-slate-400 light:text-slate-500">
+                <p className="sidebar-muted truncate text-[10.5px] text-slate-400 light:text-slate-500">
                   {accountEmail}
                 </p>
               </div>
             </div>
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-[rgba(50,245,154,0.1)] px-2.5 py-1 text-[11px] font-semibold text-[var(--brand-emerald)] light:bg-emerald-50 light:text-emerald-700">
+            <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+              <span className="inline-flex items-center gap-1 rounded-full bg-[rgba(50,245,154,0.1)] px-2 py-0.5 text-[10px] font-semibold text-[var(--brand-emerald)] light:bg-emerald-50 light:text-emerald-700">
                 <span className="h-1.5 w-1.5 rounded-full bg-[var(--brand-emerald)]" />
                 Online
               </span>
-              <span className="rounded-full bg-[rgba(217,255,87,0.1)] px-2.5 py-1 text-[11px] font-semibold text-[var(--brand-lime)] light:bg-lime-50 light:text-emerald-700">
+              <span className="rounded-full bg-[rgba(217,255,87,0.1)] px-2 py-0.5 text-[10px] font-semibold text-[var(--brand-lime)] light:bg-lime-50 light:text-emerald-700">
                 {role}
               </span>
             </div>
