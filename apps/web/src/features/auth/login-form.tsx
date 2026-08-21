@@ -114,16 +114,40 @@ export function LoginForm() {
 
   return (
     <AuthShell mode={authMode}>
-      {/* Top Brand Favicon Icon */}
-      <div className="mx-auto mb-1.5 sm:mb-2 flex items-center justify-center">
-        <Image
-          src="/brand/nexora-os-icon.png"
-          alt="Nexora OS"
-          width={42}
-          height={42}
-          priority
-          className="h-9.5 w-9.5 sm:h-10.5 sm:w-10.5 object-contain transition-transform duration-300 hover:scale-105"
-        />
+      {/* Top Brand Favicon Icon & Prominent Pengu Mascot */}
+      <div className="relative mb-2 sm:mb-2.5">
+        <div className="mx-auto flex items-center justify-center">
+          <Image
+            src="/brand/nexora-os-icon.png"
+            alt="Nexora OS"
+            width={44}
+            height={44}
+            priority
+            className="h-10 w-10 sm:h-11 sm:w-11 object-contain transition-transform duration-300 hover:scale-105"
+          />
+        </div>
+
+        {/* Large Crisp Animated Pengu Mascot Greeting */}
+        <motion.div
+          animate={{ y: [0, -6, 0], rotate: [-3, 3, -3] }}
+          transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -right-2 -top-5 sm:-right-4 sm:-top-7 select-none pointer-events-none z-20"
+        >
+          <div className="relative">
+            <Image
+              src="/mascots/nexora-auth-penguin.gif"
+              alt="Nexora Pengu Mascot"
+              width={90}
+              height={90}
+              unoptimized
+              priority
+              className="h-16 w-16 sm:h-20 sm:w-20 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
+            />
+            <span className="absolute -bottom-1 right-0 rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold text-white shadow-md">
+              Hi there! 👋
+            </span>
+          </div>
+        </motion.div>
       </div>
 
       {/* Header */}

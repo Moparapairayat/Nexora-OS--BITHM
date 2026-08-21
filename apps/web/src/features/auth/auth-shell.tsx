@@ -37,10 +37,10 @@ export function AuthShell({
         initial={{ opacity: 0, scale: 0.98, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-[1140px] xl:max-w-[1180px] overflow-hidden rounded-[22px] sm:rounded-[30px] lg:rounded-[36px] border border-white/10 bg-[#0d1210]/95 shadow-[0_32px_100px_rgba(0,0,0,0.6),0_0_80px_rgba(50,245,154,0.08)] backdrop-blur-2xl grid lg:grid-cols-[1fr_1fr] xl:grid-cols-[1.04fr_0.96fr] items-stretch light:border-slate-200/90 light:bg-white light:shadow-[0_24px_80px_rgba(20,50,35,0.08),0_4px_20px_rgba(0,0,0,0.04)]"
+        className="relative z-10 w-full max-w-[520px] lg:max-w-[1000px] xl:max-w-[1040px] overflow-hidden rounded-[22px] sm:rounded-[30px] lg:rounded-[36px] border border-white/10 bg-[#0d1210]/95 shadow-[0_32px_100px_rgba(0,0,0,0.6),0_0_80px_rgba(50,245,154,0.08)] backdrop-blur-2xl grid lg:grid-cols-[1fr_1fr] items-stretch light:border-slate-200/90 light:bg-white light:shadow-[0_24px_80px_rgba(20,50,35,0.08),0_4px_20px_rgba(0,0,0,0.04)]"
       >
-        {/* Left Side: Visual Showcase Panel - Gently compacted height */}
-        <div className="relative min-h-[190px] sm:min-h-[230px] lg:min-h-[490px] xl:min-h-[530px] overflow-hidden flex flex-col justify-between p-4 sm:p-5 lg:p-6 xl:p-7 rounded-t-[22px] sm:rounded-t-[30px] lg:rounded-t-none lg:rounded-l-[36px] bg-slate-100 dark:bg-[#070e0a]">
+        {/* Left Side: Visual Showcase Panel - Harmonious Proportions */}
+        <div className="relative min-h-[180px] sm:min-h-[220px] lg:min-h-[500px] xl:min-h-[520px] overflow-hidden flex flex-col justify-between p-4 sm:p-5 lg:p-6 xl:p-7 rounded-t-[22px] sm:rounded-t-[30px] lg:rounded-t-none lg:rounded-l-[36px] bg-slate-100 dark:bg-[#070e0a]">
           {/* Background Photograph of Student/Campus */}
           <Image
             src="/landing/auth_showcase_hero.jpg"
@@ -48,22 +48,22 @@ export function AuthShell({
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover object-center"
+            className="object-cover object-[center_15%]"
           />
 
-          {/* Light Mode: Soft Luminous Bottom Fade with Warm Sunset Peach Glow in the bottom right corner */}
+          {/* Light Mode: Soft Luminous Bottom Fade with subtle Sunset Peach Glow only behind the bottom text */}
           <div className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-0 light:opacity-100 transition-opacity duration-300">
-            <div className="absolute inset-x-0 top-0 h-18 sm:h-22 bg-gradient-to-b from-white/70 via-white/25 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-[65%] bg-gradient-to-t from-white/95 via-white/75 to-transparent" />
-            <div className="absolute -bottom-10 -right-10 h-60 w-60 sm:h-72 sm:w-72 rounded-full bg-[radial-gradient(circle,rgba(254,215,170,0.65)_0%,rgba(254,205,211,0.5)_40%,transparent_70%)] blur-2xl" />
-            <div className="absolute -bottom-10 -left-10 h-52 w-52 sm:h-64 sm:w-64 rounded-full bg-[radial-gradient(circle,rgba(167,243,208,0.5)_0%,transparent_70%)] blur-2xl" />
+            <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-white/40 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-white/95 via-white/70 via-35% to-transparent" />
+            <div className="absolute -bottom-10 -right-10 h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(254,215,170,0.5)_0%,rgba(254,205,211,0.4)_40%,transparent_70%)] blur-xl" />
+            <div className="absolute -bottom-10 -left-10 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(167,243,208,0.4)_0%,transparent_70%)] blur-xl" />
           </div>
 
           {/* Dark Mode: Deep Obsidian Emerald Cinematic Overlays */}
           <div className="absolute inset-0 pointer-events-none opacity-100 dark:opacity-100 light:opacity-0 transition-opacity duration-300">
-            <div className="absolute inset-x-0 top-0 h-20 sm:h-24 bg-gradient-to-b from-black/80 via-black/30 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-[65%] bg-gradient-to-t from-[#040806] via-[#040806]/85 to-transparent" />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(16,185,129,0.25),transparent_70%)]" />
+            <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/60 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-[#040806]/95 via-[#040806]/65 via-35% to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(16,185,129,0.2),transparent_70%)]" />
           </div>
 
           {/* Top Row: Nexora Logo */}
@@ -71,28 +71,6 @@ export function AuthShell({
             <Link href="/" className="nexora-focus inline-flex items-center gap-2">
               <NexoraLogo size="sm" priority className="h-7 w-[115px] sm:h-8 sm:w-[130px]" />
             </Link>
-          </div>
-
-          {/* Mascot Feature: Free-Floating Pengu Mascot */}
-          <div className="relative z-20 my-auto flex justify-end pr-1 pt-1">
-            <motion.div
-              animate={{ y: [0, -6, 0], rotate: [-2, 2, -2] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative select-none"
-            >
-              <Image
-                src="/mascots/nexora-auth-penguin.gif"
-                alt="Nexora Pengu Mascot"
-                width={120}
-                height={120}
-                unoptimized
-                priority
-                className="h-16 w-16 sm:h-19 sm:w-19 lg:h-21 lg:w-21 xl:h-23 xl:w-23 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)]"
-              />
-              <span className="absolute -bottom-1 right-0 rounded-full bg-emerald-500 px-1.5 py-0.5 text-[8.5px] sm:text-[9px] font-extrabold text-white shadow-md">
-                Hi there! 👋
-              </span>
-            </motion.div>
           </div>
 
           {/* Bottom Row: Inspiring Typography matching the reference screenshot */}
