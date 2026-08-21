@@ -152,10 +152,10 @@ export function LoginForm() {
 
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-lg sm:text-xl lg:text-2xl font-extrabold tracking-tight text-white light:text-slate-900">
+        <h1 className="text-xl lg:text-[22px] font-extrabold tracking-tight text-white light:text-slate-900">
           Welcome Back
         </h1>
-        <p className="mt-0.5 sm:mt-1 text-[11.5px] sm:text-xs text-slate-400 light:text-slate-500">
+        <p className="mt-0.5 sm:mt-1 text-xs text-slate-400 light:text-slate-500">
           Welcome back! Please enter your details.
         </p>
       </div>
@@ -170,7 +170,7 @@ export function LoginForm() {
         {/* Workspace Selector */}
         <div className="grid gap-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-600">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
               Workspace Role
             </span>
           </div>
@@ -184,7 +184,7 @@ export function LoginForm() {
         {/* Email Field */}
         <AuthField label="Email" error={errors.email?.message}>
           <div className="relative">
-            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
+            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
             <input
               {...register("email")}
               id="login-email"
@@ -192,7 +192,7 @@ export function LoginForm() {
               autoComplete="email"
               placeholder="Enter email"
               aria-invalid={Boolean(errors.email)}
-              className={`${authInputClass} pl-9 sm:pl-10`}
+              className={`${authInputClass} pl-10 text-xs sm:text-[13px]`}
             />
           </div>
         </AuthField>
@@ -200,7 +200,7 @@ export function LoginForm() {
         {/* Password Field */}
         <AuthField label="Password" error={errors.password?.message}>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
+            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
             <input
               {...register("password")}
               id="login-password"
@@ -208,7 +208,7 @@ export function LoginForm() {
               autoComplete="current-password"
               placeholder="••••••••••••"
               aria-invalid={Boolean(errors.password)}
-              className={`${authInputClass} pl-9 sm:pl-10 pr-9 sm:pr-10`}
+              className={`${authInputClass} pl-10 pr-10 text-xs sm:text-[13px]`}
             />
             <button
               type="button"
@@ -218,16 +218,16 @@ export function LoginForm() {
               title={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? (
-                <EyeOff className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+                <EyeOff className="h-4 w-4" aria-hidden="true" />
               ) : (
-                <Eye className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+                <Eye className="h-4 w-4" aria-hidden="true" />
               )}
             </button>
           </div>
         </AuthField>
 
         {/* Remember me & Forgot password */}
-        <div className="flex items-center justify-between text-[11px] sm:text-xs text-slate-400 light:text-slate-600">
+        <div className="flex items-center justify-between text-xs text-slate-400 light:text-slate-600">
           <label className="flex items-center gap-1.5 sm:gap-2 cursor-pointer select-none hover:text-slate-200 light:hover:text-slate-900 transition-colors">
             <input
               {...register("remember")}
@@ -239,7 +239,7 @@ export function LoginForm() {
           <button
             type="button"
             className="nexora-focus font-medium text-slate-400 hover:text-emerald-400 hover:underline light:text-slate-600 light:hover:text-emerald-600"
-            onClick={() => setShowRecoveryHelp((current) => !current)}
+            onClick={() => setShowRecoveryHelp(true)}
             aria-expanded={showRecoveryHelp}
           >
             Forgot password?
@@ -260,7 +260,7 @@ export function LoginForm() {
         </button>
 
         {/* Contact Admin Help Link */}
-        <p className="text-center text-[11px] sm:text-xs text-slate-400 light:text-slate-600">
+        <p className="text-center text-xs text-slate-400 light:text-slate-600">
           Need an account?{" "}
           <button
             type="button"
@@ -274,7 +274,7 @@ export function LoginForm() {
         {/* Social SSO Divider */}
         <div className="relative flex items-center justify-center my-0.5">
           <span className="w-full border-t border-white/10 light:border-slate-200" />
-          <span className="absolute bg-[#0d1210] light:bg-white px-2 text-[10px] font-medium text-slate-400 light:text-slate-500">
+          <span className="absolute bg-[#0d1210] light:bg-white px-2 text-[11px] font-medium text-slate-400 light:text-slate-500">
             or continue with
           </span>
         </div>
@@ -288,7 +288,7 @@ export function LoginForm() {
               setValue("password", "password123");
               selectRole("student");
             }}
-            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[13px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
             title="Sign in with Apple"
           >
             <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0 fill-current" viewBox="0 0 24 24">
@@ -304,7 +304,7 @@ export function LoginForm() {
               setValue("password", "password123");
               selectRole("teacher");
             }}
-            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[13px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
             title="Sign in with Google"
           >
             <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24">
@@ -335,7 +335,7 @@ export function LoginForm() {
               setValue("password", "password123");
               selectRole("admin");
             }}
-            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[13px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
             title="Sign in with GitHub"
           >
             <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0 fill-current" viewBox="0 0 24 24">
@@ -347,7 +347,7 @@ export function LoginForm() {
 
         {/* Demo Accounts Quick Login */}
         <div className="pt-1.5 border-t border-white/10 light:border-slate-200 grid gap-1.5">
-          <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-600">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
             Or try instant demo login
           </p>
           <DemoLoginButtons />

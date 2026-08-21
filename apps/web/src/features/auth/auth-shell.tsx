@@ -204,10 +204,10 @@ export function RoleTabs<TValue extends string>({
             ) : null}
             <span
               className={cn(
-                "relative z-10 transition-colors duration-200 font-extrabold",
+                "relative z-10 transition-colors duration-200 font-bold",
                 active
                   ? "!text-white"
-                  : "text-slate-400 hover:text-white light:text-slate-600 light:hover:text-slate-950"
+                  : "text-slate-400 hover:text-white light:text-slate-600 light:hover:text-slate-900"
               )}
             >
               {option.label}
