@@ -36,6 +36,45 @@ export async function apiGet<T>(path: string): Promise<T | null> {
   }
 }
 
+export type ApiResponse<T> = {
+  data: T | null;
+  error: string | null;
+  status: number;
+};
+
+export async function apiPostWithStatus<T>(
+  path: string,
+  body: Record<string, unknown>,
+): Promise<ApiResponse<T>> {
+  try {
+    const response = await fetch(`${apiBaseUrl}${path}`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      const errorMsg =
+        typeof data?.error === "string"
+          ? data.error
+          : typeof data?.message === "string"
+            ? data.message
+            : "Request failed";
+      return { data: null, error: errorMsg, status: response.status };
+    }
+
+    return { data: data as T, error: null, status: response.status };
+  } catch (err: any) {
+    return {
+      data: null,
+      error: err?.message ?? "Network error",
+      status: 0,
+    };
+  }
+}
+
 export async function apiPost<T>(
   path: string,
   body: Record<string, unknown>,

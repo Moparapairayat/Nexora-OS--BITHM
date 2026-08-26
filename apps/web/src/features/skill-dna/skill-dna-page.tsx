@@ -125,7 +125,7 @@ export function SkillDnaPage({ role = "student" }: { role?: AppRole }) {
             </Link>
             <Link
               href="/student/code-lab"
-              className="bento-primary-btn inline-flex h-9.5 items-center gap-2 rounded-xl px-4 text-xs font-bold !text-white shadow-[0_4px_16px_rgba(8,122,73,0.28)] transition hover:brightness-110 active:scale-[0.98]"
+              className="bento-primary-btn inline-flex h-9.5 items-center gap-2 rounded-xl border border-emerald-400/40 bg-[#044b3b] px-4 text-xs font-bold !text-white shadow-[0_4px_16px_rgba(4,75,59,0.38)] transition hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98]"
             >
               <Play className="h-3.5 w-3.5 fill-white !text-white" />
               <span className="!text-white font-bold">Practice in CodeLab</span>

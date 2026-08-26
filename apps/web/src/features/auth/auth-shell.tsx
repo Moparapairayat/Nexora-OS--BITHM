@@ -11,13 +11,13 @@ import { cn } from "@/lib/utils";
 
 export function AuthShell({
   children,
-  mode,
+  mode = "login",
 }: {
   children: ReactNode;
-  mode: "login" | "register";
+  mode?: "login" | "register";
 }) {
   return (
-    <main className="relative min-h-dvh w-full flex items-center justify-center overflow-x-hidden p-2.5 sm:p-4 md:p-6 lg:p-6 xl:p-8 bg-[#060907] dark:bg-[#060907] light:bg-[#f2f6f3] transition-colors duration-300">
+    <main className="relative min-h-dvh w-full flex flex-col items-center justify-center overflow-x-hidden px-3 py-5 sm:p-6 md:p-8 bg-[#060907] dark:bg-[#060907] light:bg-[#f2f6f3] transition-colors duration-300">
       {/* Dark mode glowing radial backdrop */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(50,245,154,0.14),transparent_50rem),linear-gradient(180deg,#060907_0%,#040605_100%)] opacity-100 dark:opacity-100 light:opacity-0 transition-opacity duration-300" />
 
@@ -28,7 +28,7 @@ export function AuthShell({
       <AuthBackgroundBranding />
 
       {/* Top Floating Theme Switcher */}
-      <div className="absolute right-3 top-3 z-40 sm:right-6 sm:top-5">
+      <div className="fixed sm:absolute right-3 top-3 z-40 sm:right-6 sm:top-5">
         <ThemeToggle />
       </div>
 
@@ -37,10 +37,10 @@ export function AuthShell({
         initial={{ opacity: 0, scale: 0.98, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
-        className="relative z-10 w-full max-w-[520px] lg:max-w-[1000px] xl:max-w-[1040px] overflow-hidden rounded-[22px] sm:rounded-[30px] lg:rounded-[36px] border border-white/10 bg-[#0d1210]/95 shadow-[0_32px_100px_rgba(0,0,0,0.6),0_0_80px_rgba(50,245,154,0.08)] backdrop-blur-2xl grid lg:grid-cols-[1fr_1fr] items-stretch light:border-slate-200/90 light:bg-white light:shadow-[0_24px_80px_rgba(20,50,35,0.08),0_4px_20px_rgba(0,0,0,0.04)]"
+        className="relative z-10 w-full max-w-[440px] sm:max-w-[520px] lg:max-w-[1000px] xl:max-w-[1040px] overflow-hidden rounded-[20px] sm:rounded-[28px] lg:rounded-[36px] border border-white/10 bg-[#0d1210]/95 shadow-[0_32px_100px_rgba(0,0,0,0.6),0_0_80px_rgba(50,245,154,0.08)] backdrop-blur-2xl grid lg:grid-cols-[1fr_1fr] items-stretch light:border-slate-200/90 light:bg-white light:shadow-[0_24px_80px_rgba(20,50,35,0.08),0_4px_20px_rgba(0,0,0,0.04)] my-auto"
       >
-        {/* Left Side: Visual Showcase Panel - Harmonious Proportions */}
-        <div className="relative min-h-[180px] sm:min-h-[220px] lg:min-h-[500px] xl:min-h-[520px] overflow-hidden flex flex-col justify-between p-4 sm:p-5 lg:p-6 xl:p-7 rounded-t-[22px] sm:rounded-t-[30px] lg:rounded-t-none lg:rounded-l-[36px] bg-slate-100 dark:bg-[#070e0a]">
+        {/* Left Side: Visual Showcase Panel - Harmonious Mobile & Desktop Proportions */}
+        <div className="relative min-h-[140px] xs:min-h-[160px] sm:min-h-[220px] lg:min-h-[500px] xl:min-h-[520px] overflow-hidden flex flex-col justify-between p-3.5 sm:p-5 lg:p-6 xl:p-7 rounded-t-[20px] sm:rounded-t-[28px] lg:rounded-t-none lg:rounded-l-[36px] bg-slate-100 dark:bg-[#070e0a]">
           {/* Background Photograph of Student/Campus */}
           <Image
             src="/landing/auth_showcase_hero.jpg"
@@ -53,46 +53,46 @@ export function AuthShell({
 
           {/* Light Mode: Soft Luminous Bottom Fade with subtle Sunset Peach Glow only behind the bottom text */}
           <div className="absolute inset-0 pointer-events-none opacity-0 dark:opacity-0 light:opacity-100 transition-opacity duration-300">
-            <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-white/40 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-white/95 via-white/70 via-35% to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-12 sm:h-14 bg-gradient-to-b from-white/40 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-[55%] sm:h-[48%] bg-gradient-to-t from-white/95 via-white/70 via-35% to-transparent" />
             <div className="absolute -bottom-10 -right-10 h-52 w-52 rounded-full bg-[radial-gradient(circle,rgba(254,215,170,0.5)_0%,rgba(254,205,211,0.4)_40%,transparent_70%)] blur-xl" />
             <div className="absolute -bottom-10 -left-10 h-44 w-44 rounded-full bg-[radial-gradient(circle,rgba(167,243,208,0.4)_0%,transparent_70%)] blur-xl" />
           </div>
 
           {/* Dark Mode: Deep Obsidian Emerald Cinematic Overlays */}
           <div className="absolute inset-0 pointer-events-none opacity-100 dark:opacity-100 light:opacity-0 transition-opacity duration-300">
-            <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/60 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-[#040806]/95 via-[#040806]/65 via-35% to-transparent" />
+            <div className="absolute inset-x-0 top-0 h-12 sm:h-14 bg-gradient-to-b from-black/60 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-[55%] sm:h-[48%] bg-gradient-to-t from-[#040806]/95 via-[#040806]/65 via-35% to-transparent" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(16,185,129,0.2),transparent_70%)]" />
           </div>
 
           {/* Top Row: Nexora Logo */}
           <div className="relative z-20 flex items-center justify-between gap-3">
             <Link href="/" className="nexora-focus inline-flex items-center gap-2">
-              <NexoraLogo size="sm" priority className="h-7 w-[115px] sm:h-8 sm:w-[130px]" />
+              <NexoraLogo size="sm" priority className="h-6 w-[105px] sm:h-8 sm:w-[130px]" />
             </Link>
           </div>
 
           {/* Bottom Row: Inspiring Typography matching the reference screenshot */}
-          <div className="relative z-20 max-w-[440px]">
-            <h2 className="text-lg sm:text-xl lg:text-[30px] xl:text-[34px] font-extrabold tracking-tight text-slate-950 dark:text-white leading-[1.14]">
+          <div className="relative z-20 max-w-[440px] pt-4 sm:pt-0">
+            <h2 className="text-sm sm:text-xl lg:text-[30px] xl:text-[34px] font-extrabold tracking-tight text-slate-950 dark:text-white leading-[1.18] sm:leading-[1.14]">
               Learn, connect & <br className="hidden sm:inline" />
               grow with <span className="text-emerald-600 dark:text-emerald-400">Nexora OS</span>.
             </h2>
-            <p className="mt-1 sm:mt-2 text-xs sm:text-[13.5px] font-medium leading-relaxed text-slate-700/90 dark:text-slate-200/90 max-w-[390px]">
+            <p className="mt-0.5 sm:mt-2 text-[11px] sm:text-[13.5px] font-medium leading-relaxed text-slate-700/90 dark:text-slate-200/90 max-w-[390px] hidden xs:block sm:block">
               Your all-in-one platform for courses, community and continuous learning.
             </p>
           </div>
         </div>
 
-        {/* Right Side: Auth Form Pod - Subtly more compact */}
-        <div className="relative flex flex-col justify-between p-4 sm:p-5 lg:p-6 xl:p-7 light:bg-white dark:bg-[#0d1210]/95 rounded-b-[22px] sm:rounded-b-[30px] lg:rounded-b-none lg:rounded-r-[36px]">
+        {/* Right Side: Auth Form Pod - Perfectly Balanced for Mobile & Desktop */}
+        <div className="relative flex flex-col justify-between p-3.5 xs:p-4.5 sm:p-5 lg:p-6 xl:p-7 light:bg-white dark:bg-[#0d1210]/95 rounded-b-[20px] sm:rounded-b-[28px] lg:rounded-b-none lg:rounded-r-[36px]">
           <div className="my-auto w-full max-w-[385px] lg:max-w-[395px] mx-auto">
             {children}
           </div>
 
           {/* Bottom Right Copyright */}
-          <div className="mt-2 text-center lg:text-right text-[10px] sm:text-[10.5px] font-medium text-slate-400 dark:text-slate-500 light:text-slate-400">
+          <div className="mt-2.5 sm:mt-2 text-center lg:text-right text-[10px] sm:text-[10.5px] font-medium text-slate-400 dark:text-slate-500 light:text-slate-400">
             © Nexora OS 2026 • BITHM Academic Intelligence
           </div>
         </div>

@@ -34,7 +34,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import dynamic from "next/dynamic";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -55,16 +54,17 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { PenguinLoadingSpinner } from "@/components/ui/loading-spinner";
 import {
   modelCatalog,
   roleDashboards,
-  writingRiskDisclaimer,
   type AppRole,
   type RoleDashboardData,
   type StatItem,
 } from "@/data/dashboard.mock";
 import { apiGet } from "@/services/api-client";
+import { PenguinLoadingSpinner } from "@/components/ui/loading-spinner";
+
+const writingRiskDisclaimer = "Analysis is generated using academic metrics and evaluation criteria.";
 
 const ThroughputChart = dynamic(
   () =>
@@ -281,14 +281,14 @@ function StudentAcademicDashboard({
   const nickname = emailPrefix === "student" ? "Alex" : emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
 
   return (
-    <div className="student-dashboard grid gap-3.5 sm:gap-4">
+    <div className="student-dashboard grid gap-3 sm:gap-4">
       {/* Top Personalized Welcome Heading & Quick Actions */}
-      <div className="flex flex-wrap items-end justify-between gap-3.5 pb-1 px-1">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-3.5 pb-1 px-0.5">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-xl xs:text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             Welcome back, <span className="text-emerald-600 dark:text-emerald-400">{nickname}</span> 👋
           </h1>
-          <p className="mt-1 flex flex-wrap items-center gap-2 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
+          <p className="mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
             <span>Today is {currentDateStr}</span>
             <span className="text-slate-300 dark:text-slate-600">•</span>
             <span className="inline-flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
@@ -300,20 +300,20 @@ function StudentAcademicDashboard({
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5 w-full sm:w-auto">
           <Link
             href="/student/code-lab"
-            className="bento-primary-btn inline-flex h-9 items-center gap-1.5 rounded-xl px-4 text-xs font-bold !text-white shadow-[0_3px_12px_rgba(8,122,73,0.25)] transition hover:brightness-110 active:scale-[0.98]"
+            className="bento-primary-btn flex-1 sm:flex-none inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-emerald-400/40 bg-[#044b3b] px-3.5 sm:px-4 text-xs font-bold !text-white shadow-[0_4px_16px_rgba(4,75,59,0.38)] transition hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98]"
           >
             <Play className="h-3.5 w-3.5 fill-white !text-white" />
             <span className="!text-white font-bold">Continue Lab</span>
           </Link>
           <Link
             href="/student/assignments"
-            className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3.5 text-xs font-semibold text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300 dark:border-white/10 dark:bg-[#121715] dark:text-slate-200 dark:hover:bg-white/5"
+            className="flex-1 sm:flex-none inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-200/80 bg-white px-3 sm:px-3.5 text-xs font-semibold text-slate-700 shadow-xs transition hover:bg-slate-50 hover:border-slate-300 dark:border-white/10 dark:bg-[#121715] dark:text-slate-200 dark:hover:bg-white/5"
           >
             <CalendarClock className="h-3.5 w-3.5 text-slate-400" />
-            Deadlines
+            <span>Deadlines</span>
           </Link>
         </div>
       </div>
@@ -322,21 +322,21 @@ function StudentAcademicDashboard({
       <AcademicOverviewStats stats={data.stats} />
 
       {/* 2. Middle Visual Analytics Grid (Responsive Split on Large Displays, Graceful Stack on Laptops/Tablets) */}
-      <div className="grid gap-3.5 sm:gap-4 xl:grid-cols-12">
-        <div className="xl:col-span-7 2xl:col-span-8">
+      <div className="grid gap-3 sm:gap-4 xl:grid-cols-12 w-full min-w-0">
+        <div className="xl:col-span-7 2xl:col-span-8 w-full min-w-0">
           <WeeklyStudyStackedChart />
         </div>
-        <div className="xl:col-span-5 2xl:col-span-4">
+        <div className="xl:col-span-5 2xl:col-span-4 w-full min-w-0">
           <RadialHealthMeter stats={data.stats} />
         </div>
       </div>
 
       {/* 3. Bottom Unified Bento Workspace (Expansive 2-Card Layout matching Analytics Grid) */}
-      <div className="grid gap-3.5 sm:gap-4 xl:grid-cols-12">
-        <div className="xl:col-span-7 2xl:col-span-8">
+      <div className="grid gap-3 sm:gap-4 xl:grid-cols-12 w-full min-w-0">
+        <div className="xl:col-span-7 2xl:col-span-8 w-full min-w-0">
           <UnifiedLearningAndLabHub skillData={data.skillData} labStat={data.stats?.[1]} />
         </div>
-        <div className="xl:col-span-5 2xl:col-span-4">
+        <div className="xl:col-span-5 2xl:col-span-4 w-full min-w-0">
           <UpcomingDeadlinesCard workflows={data.workflows} />
         </div>
       </div>
@@ -661,9 +661,9 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
   const stat3 = stats?.[3] ?? { label: "Skill Mastery", value: "78%", trend: "Great progress this week!" };
 
   return (
-    <div className="grid gap-2.5 sm:gap-3.5 xl:gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-3 sm:gap-3.5 xl:gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 w-full min-w-0">
       {/* 1. Vibrant Aurora Emerald Hero Card */}
-      <div className="group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] border border-emerald-400/30 bg-[linear-gradient(135deg,#0aa75f_0%,#087a49_45%,#043d27_100%)] p-3 sm:p-3.5 xl:p-4 text-white shadow-[0_10px_26px_rgba(8,122,73,0.22)] transition-all duration-300 hover:shadow-[0_14px_34px_rgba(8,122,73,0.30)] hover:-translate-y-0.5">
+      <div className="group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] border border-emerald-400/30 bg-[linear-gradient(135deg,#0aa75f_0%,#087a49_45%,#043d27_100%)] p-3.5 sm:p-4 text-white shadow-[0_10px_26px_rgba(8,122,73,0.22)] transition-all duration-300 hover:shadow-[0_14px_34px_rgba(8,122,73,0.30)] hover:-translate-y-0.5 w-full min-w-0">
         {/* Vector Topographical Wave Mesh Background */}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-30 overflow-hidden select-none"
@@ -681,23 +681,23 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
         <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[radial-gradient(circle,rgba(217,255,87,0.25),transparent_70%)] blur-md" />
         <div className="relative z-10 flex items-center justify-between">
           <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
-            <Coursework3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+            <Coursework3DIcon className="h-7 w-7 xs:h-8 xs:w-8 sm:h-8.5 sm:w-8.5" />
           </div>
-          <span className="rounded-full border border-white/20 bg-white/20 px-2.5 py-0.5 text-[9px] sm:text-[9.5px] font-bold text-white backdrop-blur-sm shadow-xs">
+          <span className="rounded-full border border-white/20 bg-white/20 px-2 xs:px-2.5 py-0.5 text-[8.5px] xs:text-[9px] sm:text-[9.5px] font-bold text-white backdrop-blur-sm shadow-xs">
             Core Unit
           </span>
         </div>
-        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-end justify-between gap-1.5">
+        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-end justify-between gap-1">
           <div className="min-w-0 flex-1">
-            <p className="text-[9.5px] sm:text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-wider text-emerald-100 whitespace-nowrap truncate">
+            <p className="text-[9px] xs:text-[9.5px] sm:text-[10px] xl:text-[10.5px] font-semibold uppercase tracking-wider text-emerald-100 whitespace-nowrap truncate">
               Active Coursework
             </p>
-            <p className="mt-0.5 font-mono text-xl sm:text-2xl xl:text-3xl font-extrabold tracking-tight !text-white">
-              {stat0.value} <span className="text-xs sm:text-sm font-medium text-emerald-200">Ongoing</span>
+            <p className="mt-0.5 font-mono text-lg xs:text-xl sm:text-2xl xl:text-3xl font-extrabold tracking-tight !text-white">
+              {stat0.value} <span className="text-[10.5px] xs:text-xs sm:text-sm font-medium text-emerald-200">Ongoing</span>
             </p>
           </div>
           {/* Sparkline */}
-          <div className="h-5 sm:h-6 xl:h-6.5 w-12 sm:w-14 xl:w-18 shrink-0">
+          <div className="hidden xs:block h-5 sm:h-6 xl:h-6.5 w-10 sm:w-14 xl:w-18 shrink-0">
             <svg viewBox="0 0 100 32" className="h-full w-full overflow-visible">
               <defs>
                 <linearGradient id="hero-spark" x1="0" y1="0" x2="0" y2="1">
@@ -720,7 +720,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
             </svg>
           </div>
         </div>
-        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-center gap-1.5 text-[10px] sm:text-[10.5px] font-medium text-emerald-100 truncate">
+        <div className="relative z-10 mt-1.5 sm:mt-2 flex items-center gap-1 text-[9.5px] xs:text-[10px] sm:text-[10.5px] font-medium text-emerald-100 truncate">
           <span className="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-full bg-white/20 text-white">
             <ArrowUpRight className="h-2.5 w-2.5 stroke-[3]" />
           </span>
@@ -729,7 +729,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
       </div>
 
       {/* 2. Active Labs Card */}
-      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3 sm:p-3.5 xl:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3.5 sm:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5 w-full min-w-0">
         {/* Vector Matrix Circuit Traces */}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-10 dark:opacity-20 overflow-hidden select-none"
@@ -746,7 +746,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
 
         <div className="relative z-10 flex items-center justify-between">
           <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
-            <LabSessions3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+            <LabSessions3DIcon className="h-7.5 w-7.5 sm:h-8.5 sm:w-8.5" />
           </div>
           <span className="grid h-5.5 w-5.5 place-items-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold">
             <ArrowUpRight className="h-3 w-3 stroke-[2.5]" />
@@ -791,7 +791,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
       </div>
 
       {/* 3. Revisions Needed / Fix Requests */}
-      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3 sm:p-3.5 xl:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3.5 sm:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5 w-full min-w-0">
         {/* Vector Diamond Wireframe Grid */}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.08] dark:opacity-[0.16] overflow-hidden select-none"
@@ -807,7 +807,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
 
         <div className="relative z-10 flex items-center justify-between">
           <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
-            <ReviewTasks3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+            <ReviewTasks3DIcon className="h-7.5 w-7.5 sm:h-8.5 sm:w-8.5" />
           </div>
           <span className="grid h-5.5 w-5.5 place-items-center rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
             <ArrowDownRight className="h-3 w-3 stroke-[2.5]" />
@@ -852,7 +852,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
       </div>
 
       {/* 4. Skills Progress */}
-      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3 sm:p-3.5 xl:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5">
+      <div className="command-surface group relative flex flex-col justify-between overflow-hidden rounded-[18px] sm:rounded-[22px] p-3.5 sm:p-4 shadow-[0_6px_20px_rgba(0,0,0,0.03)] transition-all duration-300 hover:border-slate-300 dark:hover:border-white/20 hover:-translate-y-0.5 w-full min-w-0">
         {/* Vector Radar Element */}
         <svg
           className="pointer-events-none absolute inset-0 h-full w-full opacity-10 dark:opacity-20 overflow-hidden select-none"
@@ -867,7 +867,7 @@ function AcademicOverviewStats({ stats }: { stats?: StatItem[] }) {
 
         <div className="relative z-10 flex items-center justify-between">
           <div className="relative flex items-center transition-transform duration-300 group-hover:scale-110 group-hover:-translate-y-0.5">
-            <SkillMastery3DIcon className="h-8 w-8 sm:h-8.5 sm:w-8.5" />
+            <SkillMastery3DIcon className="h-7.5 w-7.5 sm:h-8.5 sm:w-8.5" />
           </div>
           <span className="rounded-full bg-cyan-500/10 px-2.5 py-0.5 text-[9px] sm:text-[9.5px] font-bold text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-400">
             Goal: 85%
@@ -937,26 +937,26 @@ function WeeklyStudyStackedChart() {
   const slantY = -9;
 
   return (
-    <section className="command-surface relative flex h-full flex-col justify-between rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <section className="command-surface relative flex h-full flex-col justify-between rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+      <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2">
         <div>
-          <h2 className="text-base font-bold text-slate-900 dark:text-white">
+          <h2 className="text-sm xs:text-base font-bold text-slate-900 dark:text-white">
             Your Weekly Study Rhythm
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
             Daily study hours and hands-on coding practice
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+        <div className="flex items-center gap-2 self-start xs:self-auto">
+          <span className="rounded-full bg-emerald-500/10 px-2.5 sm:px-3 py-0.5 sm:py-1 text-[10.5px] sm:text-xs font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
             34.0 hours logged this week
           </span>
         </div>
       </div>
 
-      {/* 3D Isometric Chart Container (Expansive & Tall) */}
-      <div className="relative my-auto py-2 w-full">
-        <svg viewBox="0 0 620 215" className="w-full h-56 sm:h-64 select-none overflow-visible">
+      {/* 3D Isometric Chart Container (Expansive & Responsive fluid vector scaling) */}
+      <div className="relative my-auto py-2 w-full min-w-0">
+        <svg viewBox="0 0 620 215" className="w-full h-44 xs:h-48 sm:h-56 md:h-64 select-none overflow-visible">
           <defs>
             {/* Diagonal Hatch Stripe Pattern for Normal Bars */}
             <pattern
@@ -1117,21 +1117,21 @@ function WeeklyStudyStackedChart() {
       </div>
 
       {/* Footer Metrics */}
-      <div className="mt-2 flex flex-wrap items-center justify-between border-t border-slate-200/80 dark:border-white/10 pt-2.5 text-xs">
+      <div className="mt-2 flex flex-col xs:flex-row xs:items-center justify-between gap-1.5 border-t border-slate-200/80 dark:border-white/10 pt-2.5 text-xs">
         <div className="flex items-center gap-3.5">
-          <div className="flex items-center gap-1.5">
-            <span className="h-3 w-3 rounded-xs bg-[linear-gradient(135deg,#0aa75f_0%,#04432c_100%)] shadow-xs" />
-            <span className="font-semibold text-slate-800 dark:text-slate-200">
-              Most active day: {daysData[activeDayIndex]?.fullDay} ({daysData[activeDayIndex]?.hours})
+          <div className="flex items-center gap-1.5 truncate">
+            <span className="h-3 w-3 shrink-0 rounded-xs bg-[linear-gradient(135deg,#0aa75f_0%,#04432c_100%)] shadow-xs" />
+            <span className="font-semibold text-slate-800 dark:text-slate-200 truncate">
+              Peak: {daysData[activeDayIndex]?.fullDay} ({daysData[activeDayIndex]?.hours})
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
             <span className="h-2.5 w-2.5 rounded-xs bg-[#10b981]/60" />
-            <span>Target Pace</span>
+            <span>Target</span>
           </div>
         </div>
         <span className="font-mono text-xs font-bold text-slate-800 dark:text-slate-200">
-          Daily average: <strong className="text-emerald-600 dark:text-emerald-400">4.85h / day</strong>
+          Daily avg: <strong className="text-emerald-600 dark:text-emerald-400">4.85h/day</strong>
         </span>
       </div>
     </section>
@@ -1147,28 +1147,29 @@ function RadialHealthMeter({ stats }: { stats?: StatItem[] }) {
   const activeTicks = Math.round((healthScore / 100) * totalTicks);
 
   return (
-    <section className="command-surface relative flex h-full flex-col justify-between rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
-      <div className="flex items-center justify-between">
+    <section className="command-surface relative flex h-full flex-col justify-between rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+      <div className="flex items-center justify-between gap-2">
         <div>
-          <h2 className="text-base font-bold text-slate-900 dark:text-white">
+          <h2 className="text-sm xs:text-base font-bold text-slate-900 dark:text-white">
             Academic Health
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Originality score, lab tests & timely progress
+          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+            Originality score, lab tests &amp; timely progress
           </p>
         </div>
         <Link
           href="/student/academic-shield"
-          className="inline-flex items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-xs font-bold text-emerald-600 shadow-2xs transition hover:bg-emerald-50 dark:border-white/10 dark:bg-white/5 dark:text-emerald-400"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-slate-200/80 bg-slate-50/80 px-2.5 py-1 text-xs font-bold text-emerald-600 shadow-2xs transition hover:bg-emerald-50 dark:border-white/10 dark:bg-white/5 dark:text-emerald-400"
         >
           <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
-          Shield Active →
+          <span className="hidden xs:inline">Shield Active →</span>
+          <span className="xs:hidden">Active →</span>
         </Link>
       </div>
 
-      {/* High-Tech Radial Dial SVG (Large & Expansive) */}
+      {/* High-Tech Radial Dial SVG (Large & Responsive) */}
       <div className="relative my-auto flex flex-col items-center justify-center py-2">
-        <svg viewBox="0 0 240 215" className="h-52 sm:h-60 w-full overflow-visible select-none">
+        <svg viewBox="0 0 240 215" className="h-44 xs:h-52 sm:h-60 w-full overflow-visible select-none">
           <defs>
             <radialGradient id="center-pod-grad" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor="rgba(16, 185, 129, 0.10)" />
@@ -1230,26 +1231,26 @@ function RadialHealthMeter({ stats }: { stats?: StatItem[] }) {
         {/* Center Content Badge */}
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
           <div className="flex flex-col items-center pb-2">
-            <span className="font-mono text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-              {healthScore}<span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">%</span>
+            <span className="font-mono text-3xl xs:text-4xl sm:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
+              {healthScore}<span className="text-xl xs:text-2xl font-bold text-emerald-600 dark:text-emerald-400">%</span>
             </span>
-            <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10.5px] font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              All Clear & On Track
+            <span className="mt-1 inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 xs:px-2.5 py-0.5 text-[9.5px] xs:text-[10.5px] font-bold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+              <span className="h-1.5 w-1.5 xs:h-2 xs:w-2 rounded-full bg-emerald-500 animate-pulse" />
+              All Clear &amp; On Track
             </span>
           </div>
         </div>
       </div>
 
       {/* Bottom Mini Metrics Pods */}
-      <div className="mt-2 grid grid-cols-2 gap-2.5 border-t border-slate-200/80 dark:border-white/10 pt-3">
+      <div className="mt-2 grid grid-cols-2 gap-2 sm:gap-2.5 border-t border-slate-200/80 dark:border-white/10 pt-2.5 sm:pt-3">
         <Link
           href="/student/academic-shield"
           className="group rounded-xl border border-slate-200/70 bg-slate-50/70 p-2 transition hover:border-emerald-300 dark:border-white/5 dark:bg-[#121715] dark:hover:border-emerald-500/30"
         >
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-500 dark:text-slate-400 font-medium group-hover:text-emerald-600">Originality</span>
-            <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400">98% Clean</span>
+          <div className="flex items-center justify-between text-[11px] sm:text-xs">
+            <span className="text-slate-500 dark:text-slate-400 font-medium group-hover:text-emerald-600 truncate">Originality</span>
+            <span className="font-mono font-bold text-emerald-600 dark:text-emerald-400 shrink-0">98%</span>
           </div>
           <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-200/60 dark:bg-white/10">
             <div className="h-full w-[98%] rounded-full bg-emerald-500" />
@@ -1260,9 +1261,9 @@ function RadialHealthMeter({ stats }: { stats?: StatItem[] }) {
           href="/student/code-lab"
           className="group rounded-xl border border-slate-200/70 bg-slate-50/70 p-2 transition hover:border-cyan-300 dark:border-white/5 dark:bg-[#121715] dark:hover:border-cyan-500/30"
         >
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-500 dark:text-slate-400 font-medium group-hover:text-cyan-600">Code Pass</span>
-            <span className="font-mono font-bold text-cyan-600 dark:text-cyan-400">100% Tests</span>
+          <div className="flex items-center justify-between text-[11px] sm:text-xs">
+            <span className="text-slate-500 dark:text-slate-400 font-medium group-hover:text-cyan-600 truncate">Code Pass</span>
+            <span className="font-mono font-bold text-cyan-600 dark:text-cyan-400 shrink-0">100%</span>
           </div>
           <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-200/60 dark:bg-white/10">
             <div className="h-full w-full rounded-full bg-cyan-500" />
@@ -1302,19 +1303,19 @@ function UnifiedLearningAndLabHub({
       : defaultSubjects;
 
   return (
-    <section className="command-surface group relative flex h-full flex-col justify-between overflow-hidden rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+    <section className="command-surface group relative flex h-full flex-col justify-between overflow-hidden rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
       {/* Header Bar */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-white/10 pb-3">
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-white/10 pb-2.5 sm:pb-3">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-slate-900 dark:text-white">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <h2 className="text-sm xs:text-base font-bold text-slate-900 dark:text-white">
               Learning &amp; Lab Workspace
             </h2>
-            <span className="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+            <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9.5px] sm:text-[10px] font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
               4 Core Units
             </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
             Curriculum mastery &amp; instant browser coding sandbox
           </p>
         </div>
@@ -1322,7 +1323,7 @@ function UnifiedLearningAndLabHub({
         <div className="flex items-center gap-2">
           <Link
             href="/student/assignments"
-            className="text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+            className="text-[11px] sm:text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
           >
             All Modules →
           </Link>
@@ -1330,7 +1331,7 @@ function UnifiedLearningAndLabHub({
       </div>
 
       {/* 2-Column Split Body inside this unified card */}
-      <div className="relative z-10 my-auto grid grid-cols-1 gap-4 py-3 md:grid-cols-2 xl:grid-cols-12 md:items-center">
+      <div className="relative z-10 my-auto grid grid-cols-1 gap-3.5 py-3 md:grid-cols-2 xl:grid-cols-12 md:items-center">
         {/* Left Side: Curriculum Unit Audit & Progress Ledger */}
         <div className="md:col-span-1 xl:col-span-6 2xl:col-span-5 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-200/80 dark:border-white/10 pb-3 md:pb-0 md:pr-4">
           <div className="flex items-center justify-between pb-2">
@@ -1355,27 +1356,27 @@ function UnifiedLearningAndLabHub({
             ].map((u) => (
               <div
                 key={u.code}
-                className="grid grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2.5 rounded-xl border border-slate-200/60 bg-white/60 dark:bg-white/[0.03] dark:border-white/5 p-2 transition hover:border-emerald-400/30"
+                className="grid grid-cols-[26px_minmax(0,1fr)_auto] sm:grid-cols-[28px_minmax(0,1fr)_auto] items-center gap-2 sm:gap-2.5 rounded-xl border border-slate-200/60 bg-white/60 dark:bg-white/[0.03] dark:border-white/5 p-1.5 sm:p-2 transition hover:border-emerald-400/30"
               >
                 <span className={cn(
-                  "grid h-7 w-7 shrink-0 place-items-center rounded-lg font-mono text-[10px] font-black text-white shadow-2xs",
+                  "grid h-6.5 w-6.5 sm:h-7 sm:w-7 shrink-0 place-items-center rounded-lg font-mono text-[9.5px] sm:text-[10px] font-black text-white shadow-2xs",
                   u.tone === "cyan" ? "bg-cyan-600" : "bg-[#0aa75f]"
                 )}>
                   {u.code}
                 </span>
                 <div className="min-w-0 overflow-hidden">
-                  <p className="truncate text-xs font-bold text-slate-800 dark:text-slate-200">{u.name}</p>
-                  <div className="mt-0.5 flex items-center gap-2">
-                    <div className="h-1.5 min-w-[36px] flex-1 max-w-[100px] sm:max-w-[120px] overflow-hidden rounded-full bg-slate-200/70 dark:bg-white/10">
+                  <p className="truncate text-[11.5px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">{u.name}</p>
+                  <div className="mt-0.5 flex items-center gap-1.5 sm:gap-2">
+                    <div className="h-1.5 min-w-[32px] flex-1 max-w-[80px] sm:max-w-[120px] overflow-hidden rounded-full bg-slate-200/70 dark:bg-white/10">
                       <div
                         className={cn("h-full rounded-full", u.tone === "cyan" ? "bg-cyan-500" : "bg-[#0aa75f]")}
                         style={{ width: `${u.pct}%` }}
                       />
                     </div>
-                    <span className="font-mono text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">{u.pct}%</span>
+                    <span className="font-mono text-[9.5px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400 shrink-0">{u.pct}%</span>
                   </div>
                 </div>
-                <span className="shrink-0 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] font-extrabold uppercase text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
+                <span className="shrink-0 rounded-full bg-emerald-500/10 px-1.5 sm:px-2 py-0.5 text-[8.5px] sm:text-[9px] font-extrabold uppercase text-emerald-700 dark:text-emerald-400 border border-emerald-500/20">
                   {u.status}
                 </span>
               </div>
@@ -1387,35 +1388,35 @@ function UnifiedLearningAndLabHub({
         <div className="md:col-span-1 xl:col-span-6 2xl:col-span-7 flex flex-col justify-between gap-2.5 md:pl-2">
           <Link
             href="/student/code-lab"
-            className="group block rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 shadow-xs transition hover:border-emerald-300 dark:border-white/10 dark:bg-[#121715] dark:hover:border-emerald-500/30"
+            className="group block rounded-xl border border-slate-200/80 bg-slate-50/70 p-2.5 sm:p-3 shadow-xs transition hover:border-emerald-300 dark:border-white/10 dark:bg-[#121715] dark:hover:border-emerald-500/30"
           >
-            <div className="grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-2.5">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-xs group-hover:scale-105 transition-transform">
-                <Code2 className="h-5 w-5" />
+            <div className="grid grid-cols-[32px_minmax(0,1fr)_auto] sm:grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-2 sm:gap-2.5">
+              <span className="grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-xs group-hover:scale-105 transition-transform">
+                <Code2 className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
               </span>
               <div className="min-w-0 overflow-hidden">
                 <p className="truncate text-xs font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                   JavaScript Form Validation
                 </p>
-                <p className="truncate text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                <p className="truncate text-[10.5px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400">
                   DOM APIs • LiveLab Sandbox
                 </p>
               </div>
-              <span className="shrink-0 flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9.5px] font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
+              <span className="shrink-0 flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[9px] sm:text-[9.5px] font-bold text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
                 {labStat?.value ? `${labStat.value} Booked` : "Ready"}
               </span>
             </div>
 
-            <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/80 dark:border-white/10 pt-2 text-xs">
+            <div className="mt-2.5 flex items-center justify-between border-t border-slate-200/80 dark:border-white/10 pt-2 text-[11px] sm:text-xs">
               <span className="font-medium text-slate-500 dark:text-slate-400">Test Suite:</span>
-              <span className="font-bold text-emerald-600 dark:text-emerald-400">3 of 3 Tests Passing (100%)</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">3 of 3 Passing (100%)</span>
             </div>
           </Link>
 
           <Link
             href="/student/code-lab"
-            className="bento-primary-btn nexora-focus group inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold !text-white shadow-[0_4px_14px_rgba(8,122,73,0.25)] transition hover:brightness-110 active:scale-[0.98]"
+            className="bento-primary-btn nexora-focus group inline-flex h-9.5 sm:h-10 w-full items-center justify-center gap-2 rounded-xl border border-emerald-400/40 bg-[#044b3b] px-3.5 sm:px-4 text-xs font-bold !text-white shadow-[0_4px_16px_rgba(4,75,59,0.38)] transition hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98]"
           >
             <Play className="h-3.5 w-3.5 fill-white !text-white" />
             <span className="!text-white font-bold">Continue Coding Lab</span>
@@ -1425,7 +1426,7 @@ function UnifiedLearningAndLabHub({
       </div>
 
       {/* Footer Meta */}
-      <div className="relative z-10 flex items-center justify-between border-t border-slate-200/80 dark:border-white/10 pt-2.5 text-[11px] text-slate-500 dark:text-slate-400">
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-1 border-t border-slate-200/80 dark:border-white/10 pt-2 sm:pt-2.5 text-[10.5px] sm:text-[11px] text-slate-500 dark:text-slate-400">
         <span>Sandbox: <strong className="font-semibold text-slate-800 dark:text-slate-200">Piston &amp; Pyodide</strong></span>
         <span>Autosave: <strong className="font-semibold text-emerald-600 dark:text-emerald-400">Synced &amp; Saved</strong></span>
       </div>
@@ -1507,51 +1508,51 @@ function UpcomingDeadlinesCard({ workflows }: { workflows?: RoleDashboardData["w
   const displayItems = items.length > 0 ? items : defaultMilestones;
 
   return (
-    <section className="command-surface group relative flex h-full flex-col justify-between overflow-hidden rounded-[22px] p-4 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
+    <section className="command-surface group relative flex h-full flex-col justify-between overflow-hidden rounded-[20px] sm:rounded-[22px] p-3.5 sm:p-5 shadow-[0_8px_24px_rgba(0,0,0,0.03)]">
       {/* Header Bar */}
-      <div className="relative z-10 flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-3">
+      <div className="relative z-10 flex items-center justify-between border-b border-slate-200/80 dark:border-white/10 pb-2.5 sm:pb-3">
         <div>
-          <h2 className="text-base font-bold text-slate-900 dark:text-white">
+          <h2 className="text-sm xs:text-base font-bold text-slate-900 dark:text-white">
             What&apos;s Coming Up
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
             Upcoming tasks and submission milestones
           </p>
         </div>
         <Link
           href="/student/assignments"
-          className="text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
+          className="text-[11px] sm:text-xs font-bold text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
         >
           View All →
         </Link>
       </div>
 
       {/* Task Milestones List */}
-      <div className="relative z-10 my-auto grid gap-2.5 py-3">
+      <div className="relative z-10 my-auto grid gap-2 sm:gap-2.5 py-2.5 sm:py-3">
         {displayItems.map((item) => (
           <Link
             key={item.title}
             href={item.href}
-            className="group grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-2.5 sm:gap-3 rounded-xl border border-slate-200/80 bg-white/80 dark:bg-[#121715] dark:border-white/10 px-3 py-2.5 sm:px-3.5 sm:py-3 shadow-2xs transition-all duration-200 hover:border-emerald-400/40 hover:bg-emerald-50/15 dark:hover:border-emerald-500/30 dark:hover:bg-white/5"
+            className="group grid grid-cols-[32px_minmax(0,1fr)_auto] sm:grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-2 sm:gap-3 rounded-xl border border-slate-200/80 bg-white/80 dark:bg-[#121715] dark:border-white/10 px-2.5 py-2 sm:px-3.5 sm:py-3 shadow-2xs transition-all duration-200 hover:border-emerald-400/40 hover:bg-emerald-50/15 dark:hover:border-emerald-500/30 dark:hover:bg-white/5"
           >
-            <span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-xl border shadow-xs transition-transform group-hover:scale-105", item.iconBg)}>
-              <item.icon className="h-4.5 w-4.5" />
+            <span className={cn("grid h-8 w-8 sm:h-9 sm:w-9 shrink-0 place-items-center rounded-xl border shadow-xs transition-transform group-hover:scale-105", item.iconBg)}>
+              <item.icon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
             </span>
 
             <div className="min-w-0 overflow-hidden">
               <p className="truncate text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                 {item.title}
               </p>
-              <p className="truncate text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="truncate text-[10.5px] sm:text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-0.5">
                 {item.detail}
               </p>
             </div>
 
             <div className="flex shrink-0 flex-col items-end gap-1 pl-1 text-right">
-              <span className={cn("rounded-full px-2 py-0.5 text-[9px] sm:text-[9.5px] font-bold border whitespace-nowrap shadow-2xs", item.badgeClass)}>
+              <span className={cn("rounded-full px-1.5 sm:px-2 py-0.5 text-[8.5px] sm:text-[9.5px] font-bold border whitespace-nowrap shadow-2xs", item.badgeClass)}>
                 {item.status}
               </span>
-              <span className="text-[9.5px] sm:text-[10px] font-semibold text-slate-400 dark:text-slate-500 whitespace-nowrap">
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 dark:text-slate-500 whitespace-nowrap">
                 {item.dueText}
               </span>
             </div>
@@ -1560,9 +1561,9 @@ function UpcomingDeadlinesCard({ workflows }: { workflows?: RoleDashboardData["w
       </div>
 
       {/* Footer Alert */}
-      <div className="relative z-10 flex flex-wrap items-center justify-between gap-1.5 border-t border-slate-200/80 dark:border-white/10 pt-2.5 text-[11px]">
+      <div className="relative z-10 flex flex-wrap items-center justify-between gap-1 border-t border-slate-200/80 dark:border-white/10 pt-2 sm:pt-2.5 text-[10.5px] sm:text-[11px]">
         <span className="text-slate-500 dark:text-slate-400 font-medium">Priority milestone:</span>
-        <span className="font-bold text-amber-600 dark:text-amber-400">⚡ 15 July at 11:59 PM (in 2 days)</span>
+        <span className="font-bold text-amber-600 dark:text-amber-400">⚡ 15 July (in 2 days)</span>
       </div>
     </section>
   );

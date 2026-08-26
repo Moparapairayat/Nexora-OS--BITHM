@@ -16,9 +16,13 @@ export const authRouter = Router();
 export const usersRouter = Router();
 
 const credentialsSchema = z.object({
-  email: z.string().email(),
+  email: z.string().trim().email().toLowerCase(),
   password: z.string().min(8),
 });
+
+// Precomputed dummy bcrypt hash to protect against timing attacks for non-existent users
+const DUMMY_HASH =
+  "$2a$12$e8qR551w7QhN9eK6z8j4.eM9/6N2OQ58kE3Wd7hQo0z4q2Y1K2L3O";
 
 function toSessionAccount(user: {
   id: string;
@@ -42,8 +46,10 @@ authRouter.post("/login", async (request, response) => {
     return;
   }
 
+  const normalizedEmail = parsed.data.email.toLowerCase().trim();
+
   const user = await getPrisma().user.findUnique({
-    where: { email: parsed.data.email },
+    where: { email: normalizedEmail },
     select: {
       id: true,
       name: true,
@@ -56,6 +62,8 @@ authRouter.post("/login", async (request, response) => {
   });
 
   if (!user) {
+    // Perform dummy comparison to equalize response time and prevent user enumeration
+    await bcrypt.compare(parsed.data.password, DUMMY_HASH);
     response.status(401).json({ error: "Invalid credentials" });
     return;
   }

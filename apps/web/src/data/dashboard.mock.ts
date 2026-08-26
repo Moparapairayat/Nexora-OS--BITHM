@@ -19,6 +19,7 @@ export interface NavGroup {
   label: string;
   icon: string;
   badge?: string;
+  href?: string;
   items: NavItem[];
 }
 
@@ -51,28 +52,34 @@ export interface RoleDashboardData {
 }
 
 function flattenNavGroups(navGroups: NavGroup[]): NavItem[] {
-  return navGroups.flatMap((group) => group.items);
+  return navGroups.flatMap((group) =>
+    group.items.length > 0
+      ? group.items
+      : [
+          {
+            label: group.label,
+            href: group.href ?? `/${group.id}`,
+            icon: group.icon,
+            badge: group.badge,
+          },
+        ],
+  );
 }
 
 const studentNavGroups: NavGroup[] = [
   {
-    id: "overview",
-    label: "Overview",
+    id: "dashboard",
+    label: "Dashboard",
     icon: "LayoutDashboard",
-    items: [
-      {
-        label: "Dashboard",
-        href: "/student/dashboard",
-        icon: "LayoutDashboard",
-      },
-      { label: "Activity", href: "/student/activity", icon: "Activity" },
-      {
-        label: "Notifications",
-        href: "/student/notifications",
-        icon: "Bell",
-        badge: "2",
-      },
-    ],
+    href: "/student/dashboard",
+    items: [],
+  },
+  {
+    id: "activity",
+    label: "Activity",
+    icon: "Activity",
+    href: "/student/activity",
+    items: [],
   },
   {
     id: "academic-work",
@@ -281,23 +288,18 @@ const studentNavGroups: NavGroup[] = [
 
 const teacherNavGroups: NavGroup[] = [
   {
-    id: "overview",
-    label: "Overview",
+    id: "dashboard",
+    label: "Dashboard",
     icon: "LayoutDashboard",
-    items: [
-      {
-        label: "Dashboard",
-        href: "/teacher/dashboard",
-        icon: "LayoutDashboard",
-      },
-      { label: "Activity", href: "/teacher/activity", icon: "Activity" },
-      {
-        label: "Notifications",
-        href: "/teacher/notifications",
-        icon: "Bell",
-        badge: "7",
-      },
-    ],
+    href: "/teacher/dashboard",
+    items: [],
+  },
+  {
+    id: "activity",
+    label: "Activity",
+    icon: "Activity",
+    href: "/teacher/activity",
+    items: [],
   },
   {
     id: "academic-work",
@@ -488,19 +490,18 @@ const teacherNavGroups: NavGroup[] = [
 
 const adminNavGroups: NavGroup[] = [
   {
-    id: "overview",
-    label: "Overview",
+    id: "dashboard",
+    label: "Dashboard",
     icon: "LayoutDashboard",
-    items: [
-      { label: "Dashboard", href: "/admin/dashboard", icon: "LayoutDashboard" },
-      { label: "Activity", href: "/admin/activity", icon: "Activity" },
-      {
-        label: "Notifications",
-        href: "/admin/notifications",
-        icon: "Bell",
-        badge: "9",
-      },
-    ],
+    href: "/admin/dashboard",
+    items: [],
+  },
+  {
+    id: "activity",
+    label: "Activity",
+    icon: "Activity",
+    href: "/admin/activity",
+    items: [],
   },
   {
     id: "management",

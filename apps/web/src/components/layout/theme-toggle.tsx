@@ -4,6 +4,7 @@ import { Sun, Moon } from "lucide-react";
 import { useEffect, useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 function subscribe(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -44,21 +45,13 @@ export function ThemeToggle() {
   }
 
   const label = isLight
-    ? "Switch to Premium Dark mode"
-    : "Switch to Academic Light mode";
+    ? "Switch to Dark mode"
+    : "Switch to Light mode";
 
   return (
     <button
       type="button"
-      className="flex h-[32px] w-[58px] items-center rounded-full border backdrop-blur-xl transition-all duration-300 shadow-xl bg-black/40 light:bg-white/85 border-white/10 light:border-black/10 shadow-black/10 dark:shadow-black/40 hover:scale-105 active:scale-95 group/theme-toggle"
-      style={{
-        borderColor: isLight
-          ? "rgba(16, 185, 129, 0.3)"
-          : "rgba(50, 245, 154, 0.3)",
-        boxShadow: isLight
-          ? "0 0 20px rgba(16, 185, 129, 0.08), 0 8px 30px rgba(0,0,0,0.15)"
-          : "0 0 20px rgba(50, 245, 154, 0.08), 0 8px 30px rgba(0,0,0,0.25)",
-      }}
+      className="relative flex h-[32px] w-[56px] items-center rounded-full border border-slate-200/90 bg-slate-100/90 p-0.5 shadow-xs transition-all duration-300 hover:border-slate-300 active:scale-95 dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-white/20 group/theme-toggle cursor-pointer"
       onClick={toggleTheme}
       aria-label={label}
       title={label}
@@ -66,25 +59,20 @@ export function ThemeToggle() {
     >
       {/* Sliding Knob */}
       <div
-        className={`flex h-6 w-6 items-center justify-center rounded-full transition-all duration-300 shadow-md ${
+        className={cn(
+          "flex h-[24px] w-[24px] items-center justify-center rounded-full transition-all duration-300 shadow-xs",
           !isLight
-            ? "translate-x-[26px] bg-[rgba(50,245,154,0.1)] border border-[rgba(50,245,154,0.25)]"
-            : "translate-x-[4px] bg-amber-500/10 border border-amber-500/30"
-        }`}
+            ? "translate-x-[24px] bg-emerald-500/15 border border-emerald-400/30 text-emerald-400"
+            : "translate-x-[2px] bg-white border border-amber-400/30 text-amber-500 shadow-sm",
+        )}
       >
         {!isLight ? (
           <Moon
-            className="w-3.5 h-3.5 text-[var(--cursor-accent-color)] transition-transform duration-300 group-hover/theme-toggle:scale-110"
-            style={{
-              filter: "drop-shadow(0 0 3px var(--cursor-accent-color))",
-            }}
+            className="w-3.5 h-3.5 transition-transform duration-300 group-hover/theme-toggle:scale-110"
           />
         ) : (
           <Sun
-            className="w-3.5 h-3.5 text-amber-500 light:text-amber-600 transition-transform duration-300 group-hover/theme-toggle:scale-110"
-            style={{
-              filter: "drop-shadow(0 0 3px rgba(245,158,11,0.8))",
-            }}
+            className="w-3.5 h-3.5 transition-transform duration-300 group-hover/theme-toggle:scale-110"
           />
         )}
       </div>

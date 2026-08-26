@@ -53,12 +53,12 @@ export function AppShell({
   return (
     <div
       data-nexora-role={role}
-      style={{
-        gridTemplateColumns: effectiveSidebarCollapsed
-          ? "78px minmax(0, 1fr)"
-          : "var(--nexora-sidebar-width) minmax(0, 1fr)",
-      }}
-      className="nexora-app-frame min-h-dvh transition-[grid-template-columns] duration-300 light:bg-[#edf3ef]/55"
+      className={cn(
+        "nexora-app-frame min-h-dvh transition-all duration-300 light:bg-[#edf3ef]/55 flex flex-col lg:grid",
+        effectiveSidebarCollapsed
+          ? "lg:grid-cols-[78px_minmax(0,1fr)]"
+          : "lg:grid-cols-[var(--nexora-sidebar-width)_minmax(0,1fr)]",
+      )}
     >
       <a
         href="#nexora-main-content"
@@ -79,7 +79,7 @@ export function AppShell({
       <main
         id="nexora-main-content"
         tabIndex={-1}
-        className="nexora-app-main min-w-0 rounded-[24px] px-4 pb-8 outline-none sm:px-6 light:rounded-[28px] light:border light:border-white/70 light:bg-[#f8fbf9]/72 light:shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_14px_40px_rgba(31,67,49,0.04)]"
+        className="nexora-app-main min-w-0 rounded-[18px] sm:rounded-[24px] px-2.5 xs:px-3.5 pb-8 outline-none sm:px-6 light:rounded-[28px] light:border light:border-white/70 light:bg-[#f8fbf9]/72 light:shadow-[inset_0_1px_0_rgba(255,255,255,0.92),0_14px_40px_rgba(31,67,49,0.04)]"
       >
         <Topbar
           role={role}
@@ -88,7 +88,7 @@ export function AppShell({
           setCommandOpen={setCommandOpen}
           onMenu={() => setSidebarOpen(true)}
         />
-        <div className={cn("nexora-container pt-5", contentClassName)}>
+        <div className={cn("nexora-container pt-3 xs:pt-4 sm:pt-5", contentClassName)}>
           {children}
         </div>
       </main>

@@ -3,22 +3,20 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Building, Eye, EyeOff, Info, Lock, Mail, ShieldCheck, X } from "lucide-react";
+import { ArrowRight, Building, Eye, EyeOff, Lock, Mail, ShieldCheck, X } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AnimatePresence, motion } from "framer-motion";
 import { z } from "zod";
 
 import { DemoLoginButtons } from "@/features/auth/demo-login-buttons";
-import { NexoraLogo } from "@/components/brand/nexora-logo";
 import {
   AuthField,
   AuthShell,
   RoleTabs,
   authInputClass,
 } from "@/features/auth/auth-shell";
-import { Button } from "@/components/ui/button";
-import { apiPost } from "@/services/api-client";
+import { apiPostWithStatus } from "@/services/api-client";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email address."),
@@ -38,7 +36,6 @@ const roleOptions: Array<{ value: LoginRole; label: string }> = [
 
 export function LoginForm() {
   const router = useRouter();
-  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const {
     register,
     handleSubmit,
@@ -70,25 +67,30 @@ export function LoginForm() {
     setIsSubmitting(true);
     setError("");
 
-    const response = await apiPost<{
+    const response = await apiPostWithStatus<{
       token: string;
       user: { role: "STUDENT" | "TEACHER" | "ADMIN" | "SUPER_ADMIN" };
     }>("/auth/login", {
-      email: values.email,
+      email: values.email.trim().toLowerCase(),
       password: values.password,
     });
 
-    if (!response?.token) {
-      setError("We couldn't sign you in. Check your email and password.");
+    if (!response.data?.token) {
+      setError(
+        response.error && response.error !== "Request failed"
+          ? response.error
+          : "We couldn't sign you in. Check your email and password.",
+      );
       setIsSubmitting(false);
       setFocus("email");
       return;
     }
 
+    const userRole = response.data.user.role;
     const role =
-      response.user.role === "ADMIN" || response.user.role === "SUPER_ADMIN"
+      userRole === "ADMIN" || userRole === "SUPER_ADMIN"
         ? "admin"
-        : response.user.role === "TEACHER"
+        : userRole === "TEACHER"
           ? "teacher"
           : "student";
 
@@ -107,13 +109,13 @@ export function LoginForm() {
       ? window.sessionStorage
       : window.localStorage;
     otherStorage.removeItem("nexora_token");
-    preferredStorage.setItem("nexora_token", response.token);
+    preferredStorage.setItem("nexora_token", response.data.token);
 
     router.push(`/${role}/dashboard`);
   }
 
   return (
-    <AuthShell mode={authMode}>
+    <AuthShell>
       {/* Top Brand Favicon Icon & Prominent Pengu Mascot */}
       <div className="relative mb-2 sm:mb-2.5">
         <div className="mx-auto flex items-center justify-center">
@@ -123,15 +125,15 @@ export function LoginForm() {
             width={44}
             height={44}
             priority
-            className="h-10 w-10 sm:h-11 sm:w-11 object-contain transition-transform duration-300 hover:scale-105"
+            className="h-9 w-9 sm:h-11 sm:w-11 object-contain transition-transform duration-300 hover:scale-105"
           />
         </div>
 
         {/* Large Crisp Animated Pengu Mascot Greeting */}
         <motion.div
-          animate={{ y: [0, -6, 0], rotate: [-3, 3, -3] }}
+          animate={{ y: [0, -5, 0], rotate: [-2, 2, -2] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -right-2 -top-5 sm:-right-4 sm:-top-7 select-none pointer-events-none z-20"
+          className="absolute -right-1 xs:-right-2 -top-4 sm:-right-4 sm:-top-7 select-none pointer-events-none z-20"
         >
           <div className="relative">
             <Image
@@ -141,9 +143,9 @@ export function LoginForm() {
               height={90}
               unoptimized
               priority
-              className="h-16 w-16 sm:h-20 sm:w-20 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
+              className="h-14 w-14 xs:h-16 xs:w-16 sm:h-20 sm:w-20 object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.35)]"
             />
-            <span className="absolute -bottom-1 right-0 rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] sm:text-[10px] font-extrabold text-white shadow-md">
+            <span className="absolute -bottom-0.5 right-0 rounded-full bg-emerald-500 px-1.5 sm:px-2 py-0.5 text-[8.5px] sm:text-[10px] font-extrabold text-white shadow-md">
               Hi there! 👋
             </span>
           </div>
@@ -152,10 +154,10 @@ export function LoginForm() {
 
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-xl lg:text-[22px] font-extrabold tracking-tight text-white light:text-slate-900">
+        <h1 className="text-lg sm:text-xl lg:text-[22px] font-extrabold tracking-tight text-white light:text-slate-900">
           Welcome Back
         </h1>
-        <p className="mt-0.5 sm:mt-1 text-xs text-slate-400 light:text-slate-500">
+        <p className="mt-0.5 sm:mt-1 text-[11px] sm:text-xs text-slate-400 light:text-slate-500">
           Welcome back! Please enter your details.
         </p>
       </div>
@@ -170,7 +172,7 @@ export function LoginForm() {
         {/* Workspace Selector */}
         <div className="grid gap-1">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+            <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
               Workspace Role
             </span>
           </div>
@@ -184,7 +186,7 @@ export function LoginForm() {
         {/* Email Field */}
         <AuthField label="Email" error={errors.email?.message}>
           <div className="relative">
-            <Mail className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
+            <Mail className="pointer-events-none absolute left-3 sm:left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
             <input
               {...register("email")}
               id="login-email"
@@ -192,7 +194,7 @@ export function LoginForm() {
               autoComplete="email"
               placeholder="Enter email"
               aria-invalid={Boolean(errors.email)}
-              className={`${authInputClass} pl-10 text-xs sm:text-[13px]`}
+              className={`${authInputClass} pl-9 sm:pl-10 text-xs sm:text-[13px]`}
             />
           </div>
         </AuthField>
@@ -200,7 +202,7 @@ export function LoginForm() {
         {/* Password Field */}
         <AuthField label="Password" error={errors.password?.message}>
           <div className="relative">
-            <Lock className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
+            <Lock className="pointer-events-none absolute left-3 sm:left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 light:text-slate-400" />
             <input
               {...register("password")}
               id="login-password"
@@ -208,11 +210,11 @@ export function LoginForm() {
               autoComplete="current-password"
               placeholder="••••••••••••"
               aria-invalid={Boolean(errors.password)}
-              className={`${authInputClass} pl-10 pr-10 text-xs sm:text-[13px]`}
+              className={`${authInputClass} pl-9 sm:pl-10 pr-9 sm:pr-10 text-xs sm:text-[13px]`}
             />
             <button
               type="button"
-              className="nexora-focus absolute right-2 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-slate-400 transition hover:text-white light:hover:text-slate-800"
+              className="nexora-focus absolute right-1.5 sm:right-2 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-lg text-slate-400 transition hover:text-white light:hover:text-slate-800"
               onClick={() => setShowPassword((current) => !current)}
               aria-label={showPassword ? "Hide password" : "Show password"}
               title={showPassword ? "Hide password" : "Show password"}
@@ -227,7 +229,7 @@ export function LoginForm() {
         </AuthField>
 
         {/* Remember me & Forgot password */}
-        <div className="flex items-center justify-between text-xs text-slate-400 light:text-slate-600">
+        <div className="flex items-center justify-between gap-1.5 text-[11.5px] sm:text-xs text-slate-400 light:text-slate-600">
           <label className="flex items-center gap-1.5 sm:gap-2 cursor-pointer select-none hover:text-slate-200 light:hover:text-slate-900 transition-colors">
             <input
               {...register("remember")}
@@ -238,7 +240,7 @@ export function LoginForm() {
           </label>
           <button
             type="button"
-            className="nexora-focus font-medium text-slate-400 hover:text-emerald-400 hover:underline light:text-slate-600 light:hover:text-emerald-600"
+            className="nexora-focus font-medium text-slate-400 hover:text-emerald-400 hover:underline light:text-slate-600 light:hover:text-emerald-600 py-0.5"
             onClick={() => setShowRecoveryHelp(true)}
             aria-expanded={showRecoveryHelp}
           >
@@ -249,7 +251,7 @@ export function LoginForm() {
         {/* Primary Action Button - Landing Style Centered */}
         <button
           type="submit"
-          className="group relative flex h-11 sm:h-12 w-full items-center justify-center gap-2 rounded-full border border-emerald-400/40 bg-[#044b3b] px-5 sm:px-6 text-xs sm:text-sm font-extrabold !text-white shadow-[0_10px_24px_rgba(4,75,59,0.38)] transition-all duration-300 hover:scale-[1.01] hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer"
+          className="group relative flex h-10.5 sm:h-12 w-full items-center justify-center gap-2 rounded-full border border-emerald-400/40 bg-[#044b3b] px-4 sm:px-6 text-xs sm:text-sm font-extrabold !text-white shadow-[0_10px_24px_rgba(4,75,59,0.38)] transition-all duration-300 hover:scale-[1.01] hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-[0.98] disabled:opacity-75 disabled:pointer-events-none cursor-pointer"
           disabled={isSubmitting}
           aria-busy={isSubmitting}
         >
@@ -260,7 +262,7 @@ export function LoginForm() {
         </button>
 
         {/* Contact Admin Help Link */}
-        <p className="text-center text-xs text-slate-400 light:text-slate-600">
+        <p className="text-center text-[11.5px] sm:text-xs text-slate-400 light:text-slate-600">
           Need an account?{" "}
           <button
             type="button"
@@ -274,13 +276,13 @@ export function LoginForm() {
         {/* Social SSO Divider */}
         <div className="relative flex items-center justify-center my-0.5">
           <span className="w-full border-t border-white/10 light:border-slate-200" />
-          <span className="absolute bg-[#0d1210] light:bg-white px-2 text-[11px] font-medium text-slate-400 light:text-slate-500">
+          <span className="absolute bg-[#0d1210] light:bg-white px-2 text-[10.5px] sm:text-[11px] font-medium text-slate-400 light:text-slate-500">
             or continue with
           </span>
         </div>
 
         {/* Social SSO Buttons - Bigger Icons & Clearer Typography */}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
           <button
             type="button"
             onClick={() => {
@@ -288,10 +290,10 @@ export function LoginForm() {
               setValue("password", "password123");
               selectRole("student");
             }}
-            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+            className="nexora-focus inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-1.5 sm:px-2 text-[11px] sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
             title="Sign in with Apple"
           >
-            <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0 fill-current" viewBox="0 0 24 24">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 fill-current" viewBox="0 0 24 24">
               <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.85c.57-.7.96-1.68.85-2.65-.84.03-1.85.56-2.44 1.25-.52.6-.98 1.57-.86 2.52.93.07 1.88-.42 2.45-1.12z" />
             </svg>
             <span>Apple</span>
@@ -304,10 +306,10 @@ export function LoginForm() {
               setValue("password", "password123");
               selectRole("teacher");
             }}
-            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+            className="nexora-focus inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-1.5 sm:px-2 text-[11px] sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
             title="Sign in with Google"
           >
-            <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24">
               <path
                 fill="#EA4335"
                 d="M12 5c1.56 0 2.97.55 4.08 1.45l3.06-3.06C17.29 1.72 14.81 1 12 1 7.54 1 3.73 3.53 1.86 7.23l3.66 2.84C6.4 7.24 8.97 5 12 5z"
@@ -335,10 +337,10 @@ export function LoginForm() {
               setValue("password", "password123");
               selectRole("admin");
             }}
-            className="nexora-focus inline-flex h-9.5 sm:h-10 items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-2 text-xs sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
+            className="nexora-focus inline-flex h-9 sm:h-10 items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-white/10 bg-white/[0.05] px-1.5 sm:px-2 text-[11px] sm:text-[12.5px] font-bold text-slate-200 transition-all hover:bg-white/[0.09] hover:text-white hover:border-white/20 light:border-slate-200 light:bg-slate-50 light:text-slate-700 light:hover:bg-slate-100"
             title="Sign in with GitHub"
           >
-            <svg className="h-4.5 w-4.5 sm:h-5 sm:w-5 shrink-0 fill-current" viewBox="0 0 24 24">
+            <svg className="h-4 w-4 sm:h-5 sm:w-5 shrink-0 fill-current" viewBox="0 0 24 24">
               <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
             </svg>
             <span>GitHub</span>
@@ -347,7 +349,7 @@ export function LoginForm() {
 
         {/* Demo Accounts Quick Login */}
         <div className="pt-1.5 border-t border-white/10 light:border-slate-200 grid gap-1.5">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
+          <p className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 light:text-slate-500">
             Or try instant demo login
           </p>
           <DemoLoginButtons />
@@ -372,7 +374,7 @@ export function LoginForm() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-3 sm:p-4 backdrop-blur-sm"
             onClick={() => setShowRecoveryHelp(false)}
           >
             <motion.div
@@ -380,19 +382,19 @@ export function LoginForm() {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.94, opacity: 0, y: 12 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="relative w-full max-w-[400px] rounded-[24px] border border-white/15 bg-[#0f1512] p-5 sm:p-6 shadow-2xl light:border-slate-200 light:bg-white"
+              className="relative w-full max-w-[400px] rounded-[22px] sm:rounded-[24px] border border-white/15 bg-[#0f1512] p-4 sm:p-6 shadow-2xl light:border-slate-200 light:bg-white"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="grid h-9 w-9 place-items-center rounded-xl bg-emerald-500/15 text-emerald-400 light:bg-emerald-50 light:text-emerald-700">
-                    <ShieldCheck className="h-5 w-5" />
+                  <div className="grid h-8.5 w-8.5 sm:h-9 sm:w-9 place-items-center rounded-xl bg-emerald-500/15 text-emerald-400 light:bg-emerald-50 light:text-emerald-700">
+                    <ShieldCheck className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
                   </div>
                   <div>
-                    <h3 className="text-base font-extrabold text-white light:text-slate-900">
+                    <h3 className="text-sm sm:text-base font-extrabold text-white light:text-slate-900">
                       BITHM IT Support
                     </h3>
-                    <p className="text-[11px] text-slate-400 light:text-slate-500">
+                    <p className="text-[10.5px] sm:text-[11px] text-slate-400 light:text-slate-500">
                       Account Access & Recovery
                     </p>
                   </div>
@@ -406,18 +408,18 @@ export function LoginForm() {
                 </button>
               </div>
 
-              <p className="mt-3 text-xs leading-relaxed text-slate-300 light:text-slate-600">
+              <p className="mt-2.5 sm:mt-3 text-xs leading-relaxed text-slate-300 light:text-slate-600">
                 Nexora OS accounts are managed by BITHM Academic Administration. If you need new credentials or password recovery, please contact IT Administration.
               </p>
 
-              <div className="mt-3.5 grid gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-300 light:border-slate-200 light:bg-slate-50 light:text-slate-700">
+              <div className="mt-3 grid gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-2.5 sm:p-3 text-xs text-slate-300 light:border-slate-200 light:bg-slate-50 light:text-slate-700">
                 <div className="flex items-center gap-2">
-                  <Mail className="h-3.5 w-3.5 text-emerald-400 light:text-emerald-600" />
+                  <Mail className="h-3.5 w-3.5 text-emerald-400 light:text-emerald-600 shrink-0" />
                   <span className="font-semibold">Email:</span>
-                  <a href="mailto:admin@bithm.edu.bd" className="text-emerald-400 hover:underline light:text-emerald-600">admin@bithm.edu.bd</a>
+                  <a href="mailto:admin@bithm.edu.bd" className="text-emerald-400 hover:underline light:text-emerald-600 break-all">admin@bithm.edu.bd</a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Building className="h-3.5 w-3.5 text-emerald-400 light:text-emerald-600" />
+                  <Building className="h-3.5 w-3.5 text-emerald-400 light:text-emerald-600 shrink-0" />
                   <span className="font-semibold">Office:</span>
                   <span>Academic Building, Room 204</span>
                 </div>
@@ -426,7 +428,7 @@ export function LoginForm() {
               <button
                 type="button"
                 onClick={() => setShowRecoveryHelp(false)}
-                className="mt-4 w-full rounded-xl bg-[#044b3b] py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#033b2e]"
+                className="mt-3.5 sm:mt-4 w-full rounded-xl bg-[#044b3b] py-2 sm:py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-[#033b2e]"
               >
                 Got it, thanks!
               </button>

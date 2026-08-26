@@ -254,7 +254,39 @@ export function StatusBadge({
 }
 
 export function RoleBadge({ role }: { role: AppRole }) {
-  return <Badge tone={roleTone[role]}>{roleLabel[role]} Workspace</Badge>;
+  const roleStyles: Record<AppRole, { bg: string; text: string; border: string }> = {
+    student: {
+      bg: "bg-emerald-500/10 dark:bg-emerald-500/15",
+      text: "text-emerald-700 dark:text-emerald-400",
+      border: "border-emerald-500/25",
+    },
+    teacher: {
+      bg: "bg-amber-500/10 dark:bg-amber-500/15",
+      text: "text-amber-700 dark:text-amber-400",
+      border: "border-amber-500/25",
+    },
+    admin: {
+      bg: "bg-purple-500/10 dark:bg-purple-500/15",
+      text: "text-purple-700 dark:text-purple-400",
+      border: "border-purple-500/25",
+    },
+  };
+
+  const current = roleStyles[role];
+
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-bold tracking-wide transition-colors",
+        current.bg,
+        current.text,
+        current.border,
+      )}
+    >
+      <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80" />
+      <span>{roleLabel[role]}</span>
+    </span>
+  );
 }
 
 export function AIButton({
@@ -263,14 +295,17 @@ export function AIButton({
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <Button
+    <button
       type="button"
-      className={cn("h-11 shadow-[0_0_35px_rgba(50,245,154,0.2)]", className)}
+      className={cn(
+        "group inline-flex h-9 items-center gap-1.5 rounded-full border border-emerald-400/40 bg-[#044b3b] px-3.5 text-xs font-bold !text-white shadow-[0_4px_14px_rgba(4,75,59,0.32)] transition-all hover:bg-[#033b2e] hover:border-emerald-300/60 active:scale-95 cursor-pointer",
+        className,
+      )}
       {...props}
     >
-      <Sparkles className="h-4 w-4" aria-hidden="true" />
-      {children}
-    </Button>
+      <Sparkles className="h-3.5 w-3.5 text-emerald-300 fill-emerald-300/20 transition-transform group-hover:scale-110" aria-hidden="true" />
+      <span>{children}</span>
+    </button>
   );
 }
 
@@ -279,16 +314,16 @@ export function CommandSearch({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="nexora-focus hidden h-11 min-w-[220px] max-w-[520px] flex-1 items-center gap-3 rounded-2xl border border-[var(--line)] bg-[rgba(18,24,21,0.68)] px-4 text-left text-sm text-[var(--muted)] shadow-[inset_0_1px_0_rgba(245,247,242,0.06),0_12px_34px_rgba(0,0,0,0.2)] transition hover:border-[color:var(--border-emerald)] hover:bg-[rgba(32,40,35,0.78)] light:border-slate-200 light:bg-white/92 light:text-slate-500 light:shadow-[0_10px_24px_rgba(39,53,86,0.06)] light:hover:border-emerald-100 light:hover:bg-white lg:flex xl:min-w-[240px] 2xl:min-w-[280px]"
+      className="nexora-focus group hidden h-9.5 min-w-[260px] max-w-[480px] flex-1 items-center gap-2.5 rounded-full border border-slate-200/90 bg-slate-50/90 px-3.5 text-left text-xs text-slate-500 shadow-xs backdrop-blur-md transition-all duration-200 hover:border-emerald-500/40 hover:bg-white hover:shadow-sm dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-400 dark:hover:border-emerald-500/30 dark:hover:bg-white/[0.07] lg:flex xl:min-w-[280px] 2xl:min-w-[320px]"
     >
       <Search
-        className="h-4 w-4 text-[var(--brand-lime)] light:text-emerald-600"
+        className="h-3.5 w-3.5 text-slate-400 transition-colors group-hover:text-emerald-500 dark:text-slate-400"
         aria-hidden="true"
       />
-      <span className="truncate">Search pages, ask AI, jump to a module</span>
-      <span className="ml-auto rounded-lg border border-white/10 px-1.5 py-0.5 font-mono text-[10px] light:border-slate-200 light:bg-slate-50 light:text-slate-500">
+      <span className="truncate text-slate-500 dark:text-slate-400">Search pages, ask AI, jump to a module...</span>
+      <kbd className="ml-auto inline-flex items-center gap-0.5 rounded-md border border-slate-200/90 bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold text-slate-500 shadow-[0_1px_2px_rgba(0,0,0,0.05)] dark:border-white/10 dark:bg-white/10 dark:text-slate-400">
         Ctrl K
-      </span>
+      </kbd>
     </button>
   );
 }

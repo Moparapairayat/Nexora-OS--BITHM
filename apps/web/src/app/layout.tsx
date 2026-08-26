@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Caveat } from "next/font/google";
-import Script from "next/script";
 import { AppProviders } from "@/components/providers/app-providers";
 import { PremiumCursor } from "@/components/ui/premium-cursor";
 import "./globals.css";
@@ -71,11 +70,6 @@ export default function RootLayout({
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
-        />
-        <Script
-          id="nexora-theme-init"
-          src="/scripts/theme-init.js"
-          strategy="beforeInteractive"
         />
       </head>
       <body className="min-h-full flex flex-col">

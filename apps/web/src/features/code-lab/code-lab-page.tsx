@@ -1228,89 +1228,7 @@ function FileExplorerPanel({
   );
 }
 
-function ActivityBar({
-  activePanel,
-  dirtyCount,
-  problemCount,
-  panelCollapsed,
-  onSelectPanel,
-  onTogglePanel,
-}: {
-  activePanel: IdePanelId;
-  dirtyCount: number;
-  problemCount: number;
-  panelCollapsed: boolean;
-  onSelectPanel: (panel: IdePanelId) => void;
-  onTogglePanel: () => void;
-}) {
-  const items: {
-    id: IdePanelId;
-    label: string;
-    icon: LucideIcon;
-    badge?: number;
-  }[] = [
-    { id: "explorer", label: "Explorer", icon: FolderOpen, badge: dirtyCount },
-    { id: "search", label: "Search Workspace", icon: Search },
-    { id: "tests", label: "Test Suite", icon: CheckCircle2, badge: problemCount },
-    { id: "history", label: "Version History", icon: RefreshCw },
-    { id: "ai", label: "AI Copilot", icon: Command },
-  ];
 
-  return (
-    <nav
-      aria-label="Code Lab activity rail"
-      className="flex h-full min-h-0 flex-col items-center gap-1 border-r border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-1 py-2 select-none"
-    >
-      {items.map((item) => {
-        const Icon = item.icon;
-        const active = item.id === activePanel && !panelCollapsed;
-
-        return (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => {
-              onSelectPanel(item.id);
-              if (panelCollapsed) onTogglePanel();
-            }}
-            aria-label={item.label}
-            aria-pressed={active}
-            title={item.label}
-            className={cn(
-              "group relative grid h-9 w-9 place-items-center rounded-lg text-slate-500 dark:text-slate-400 transition-all",
-              active
-                ? "bg-white dark:bg-[#1E293B] text-[#059669] dark:text-[#34D399] shadow-2xs font-bold"
-                : "hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white",
-            )}
-          >
-            {active ? (
-              <span className="absolute -left-1 top-2 bottom-2 w-0.5 rounded-r bg-[#059669] dark:bg-[#34D399]" />
-            ) : null}
-            <Icon className="h-4 w-4" aria-hidden="true" />
-            {item.badge && item.badge > 0 ? (
-              <span className="absolute -right-0.5 -top-0.5 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-amber-500 px-0.5 text-[8px] font-bold text-white">
-                {item.badge > 9 ? "9+" : item.badge}
-              </span>
-            ) : null}
-          </button>
-        );
-      })}
-      <button
-        type="button"
-        onClick={onTogglePanel}
-        className="mt-auto grid h-8 w-8 place-items-center rounded-lg text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition"
-        aria-label={panelCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-        title={panelCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
-      >
-        {panelCollapsed ? (
-          <ChevronRight className="h-4 w-4" aria-hidden="true" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-        )}
-      </button>
-    </nav>
-  );
-}
 
 function SearchPanel({
   files,
@@ -1539,13 +1457,32 @@ function HistoryPanel({
   );
 }
 
+type AiResultData = {
+  action: AiAction;
+  title: string;
+  note: string;
+  suggestedCode?: string;
+  model?: string;
+  mode?: string;
+  timestamp: string;
+};
+
 function AiPanel({
   activeAiAction,
+  aiResult,
   onAiAction,
+  onClearAiResult,
+  onApplyCode,
 }: {
   activeAiAction: AiAction | null;
+  aiResult: AiResultData | null;
   onAiAction: (action: AiAction) => void;
+  onClearAiResult: () => void;
+  onApplyCode: (code: string) => void;
 }) {
+  const [copied, setCopied] = useState(false);
+  const [applied, setApplied] = useState(false);
+
   const actions: { id: AiAction; label: string; detail: string; icon: string }[] = [
     {
       id: "explain",
@@ -1566,6 +1503,20 @@ function AiPanel({
       icon: "⚡",
     },
   ];
+
+  const handleCopy = (text: string) => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      void navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleApply = (code: string) => {
+    onApplyCode(code);
+    setApplied(true);
+    setTimeout(() => setApplied(false), 2500);
+  };
 
   return (
     <aside
@@ -1590,24 +1541,123 @@ function AiPanel({
             </div>
           </div>
           <span className="rounded-full border border-[#DFF8EA] dark:border-[#009B5A]/40 bg-[#EFFFF5] dark:bg-[#009B5A]/20 px-2 py-0.5 font-mono text-[10px] font-bold text-[#00804A] dark:text-[#32F59A]">
-            Gemini 2.5
+            {aiResult?.model || "Groq / Gemini"}
           </span>
         </div>
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-3.5">
-        <div className="mb-3.5 rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#1E293B] p-3 text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8]">
-          <div className="flex items-center justify-between font-semibold text-[#0B1B33] dark:text-[#E2E8F0]">
-            <span>Smart Workspace Context</span>
-            <span className="flex h-2 w-2 rounded-full bg-[#009B5A] animate-pulse" />
+      <div className="min-h-0 flex-1 overflow-y-auto p-3.5 space-y-3">
+        {/* Instant Active AI Skeleton Loader */}
+        {activeAiAction ? (
+          <div className="rounded-xl border border-emerald-300/80 dark:border-emerald-800/80 bg-emerald-50/70 dark:bg-emerald-950/50 p-3.5 space-y-3 shadow-sm animate-pulse">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#009B5A] opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#009B5A]" />
+                </span>
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  {activeAiAction === "explain"
+                    ? "Analyzing Code Logic..."
+                    : activeAiAction === "debug"
+                      ? "Diagnosing Issues & Bugs..."
+                      : "Generating Clean Refactor..."}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-semibold animate-pulse">
+                Thinking...
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              <div className="h-3 bg-emerald-200/60 dark:bg-emerald-800/40 rounded w-4/5" />
+              <div className="h-3 bg-emerald-200/60 dark:bg-emerald-800/40 rounded w-full" />
+              <div className="h-3 bg-emerald-200/60 dark:bg-emerald-800/40 rounded w-3/5" />
+            </div>
+            <div className="h-14 rounded-lg bg-slate-900/10 dark:bg-black/30 border border-emerald-200/40 dark:border-emerald-900/30 flex items-center justify-center text-[10px] text-slate-500 font-mono">
+              Synthesizing response...
+            </div>
           </div>
-          <p className="mt-1 text-[#3D4A63] dark:text-[#CBD5E1]">
-            Connected to Monaco Editor state, active assignment criteria, and execution output.
-          </p>
-        </div>
+        ) : null}
 
-        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A99AA] dark:text-[#64748B]">
-          Quick Contextual Actions
+        {/* Dynamic AI Response Card */}
+        {aiResult ? (
+          <div className="rounded-xl border border-emerald-300/80 dark:border-emerald-800/80 bg-emerald-50/60 dark:bg-emerald-950/40 p-3.5 space-y-2.5 shadow-sm animate-in fade-in zoom-in-95 duration-200">
+            {/* Header with Title & Action */}
+            <div className="flex items-center justify-between gap-2 border-b border-emerald-200/80 dark:border-emerald-800/60 pb-2">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="text-sm">
+                  {aiResult.action === "explain" ? "💡" : aiResult.action === "debug" ? "🔍" : "⚡"}
+                </span>
+                <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                  {aiResult.title}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={onClearAiResult}
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition"
+                title="Clear AI result"
+                aria-label="Clear result"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Note / Explanation Body */}
+            <div className="text-xs leading-relaxed text-slate-800 dark:text-slate-200 whitespace-pre-wrap font-sans">
+              {aiResult.note}
+            </div>
+
+            {/* Suggested Code Container (if present) */}
+            {aiResult.suggestedCode ? (
+              <div className="space-y-2 pt-1 border-t border-emerald-200/60 dark:border-emerald-900/40">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-300">
+                  <span>Suggested Code:</span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => handleCopy(aiResult.suggestedCode!)}
+                      className="inline-flex items-center gap-1 rounded-md bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 text-[10px] font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition active:scale-95 shadow-2xs"
+                    >
+                      {copied ? <CheckCircle2 className="h-3 w-3 text-emerald-500" /> : <Copy className="h-3 w-3" />}
+                      <span>{copied ? "Copied!" : "Copy"}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleApply(aiResult.suggestedCode!)}
+                      className="inline-flex items-center gap-1 rounded-md bg-emerald-600 dark:bg-emerald-500 px-2.5 py-0.5 text-[10px] font-semibold text-white hover:bg-emerald-700 dark:hover:bg-emerald-600 transition shadow-xs active:scale-95"
+                    >
+                      {applied ? <CheckCircle2 className="h-3 w-3" /> : <Play className="h-3 w-3 fill-current" />}
+                      <span>{applied ? "Applied!" : "Apply to Editor"}</span>
+                    </button>
+                  </div>
+                </div>
+                <pre className="max-h-56 overflow-auto rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-900 dark:bg-black/90 p-2.5 font-mono text-[11px] text-emerald-300 dark:text-emerald-400 leading-normal select-text">
+                  <code>{aiResult.suggestedCode}</code>
+                </pre>
+              </div>
+            ) : null}
+
+            {/* Footer Metadata */}
+            <div className="flex items-center justify-between pt-1 text-[10px] font-mono text-slate-400 dark:text-slate-500 border-t border-emerald-200/40 dark:border-emerald-900/30">
+              <span>{aiResult.model || "Llama 3.3 / Gemini"}</span>
+              <span>{aiResult.timestamp}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-xl border border-[#E6EEF0] dark:border-[#1E293B] bg-[#FAFCFC] dark:bg-[#1E293B] p-3 text-[11px] font-medium text-[#5D6B82] dark:text-[#94A3B8]">
+            <div className="flex items-center justify-between font-semibold text-[#0B1B33] dark:text-[#E2E8F0]">
+              <span>Smart Workspace Context</span>
+              <span className="flex h-2 w-2 rounded-full bg-[#009B5A] animate-pulse" />
+            </div>
+            <p className="mt-1 text-[#3D4A63] dark:text-[#CBD5E1]">
+              Connected to Monaco Editor state, active code syntax, and execution engine.
+            </p>
+          </div>
+        )}
+
+        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8A99AA] dark:text-[#64748B]">
+          {aiResult ? "Ask Another Action" : "Quick Contextual Actions"}
         </p>
         <div className="grid gap-2">
           {actions.map((action) => (
@@ -1657,6 +1707,7 @@ function CodeLabSidebar({
   tests,
   versions,
   activeAiAction,
+  aiResult,
   onToggleCollapsed,
   onSelectPanel,
   onSelectFile,
@@ -1669,6 +1720,8 @@ function CodeLabSidebar({
   onRunTests,
   onSelectVersion,
   onAiAction,
+  onClearAiResult,
+  onApplyCode,
 }: {
   activePanel: IdePanelId;
   collapsed: boolean;
@@ -1680,6 +1733,7 @@ function CodeLabSidebar({
   tests: TestCase[];
   versions: StoredCodeLabWorkspace["versions"];
   activeAiAction: AiAction | null;
+  aiResult: AiResultData | null;
   onToggleCollapsed: () => void;
   onSelectPanel: (panel: IdePanelId) => void;
   onSelectFile: (file: FileNode) => void;
@@ -1694,54 +1748,109 @@ function CodeLabSidebar({
     version: StoredCodeLabWorkspace["versions"][number],
   ) => void;
   onAiAction: (action: AiAction) => void;
+  onClearAiResult: () => void;
+  onApplyCode: (code: string) => void;
 }) {
   const problemCount = tests.filter((test) => test.status === "failed").length;
 
+  if (collapsed) return null;
+
+  const tabs: { id: IdePanelId; label: string; icon: LucideIcon; badge?: number }[] = [
+    { id: "explorer", label: "Files", icon: FolderOpen, badge: dirtyFileIds.size },
+    { id: "search", label: "Search", icon: Search },
+    { id: "tests", label: "Tests", icon: CheckCircle2, badge: problemCount },
+    { id: "history", label: "Versions", icon: RefreshCw },
+    { id: "ai", label: "AI Copilot", icon: Command },
+  ];
+
   return (
-    <div
-      className={cn(
-        "grid h-full min-h-0 border-r border-[#E6EEF0]",
-        collapsed ? "grid-cols-[46px]" : "grid-cols-[46px_minmax(0,1fr)]",
-      )}
-    >
-      <ActivityBar
-        activePanel={activePanel}
-        dirtyCount={dirtyFileIds.size}
-        problemCount={problemCount}
-        panelCollapsed={collapsed}
-        onSelectPanel={onSelectPanel}
-        onTogglePanel={onToggleCollapsed}
-      />
-      {!collapsed && activePanel === "explorer" ? (
-        <FileExplorerPanel
-          folders={folders}
-          activeFileId={activeFileId}
-          dirtyFileIds={dirtyFileIds}
-          onSelectFile={onSelectFile}
-          onCreateFile={onCreateFile}
-          onDuplicateFile={onDuplicateFile}
-          onRenameFile={onRenameFile}
-          onDeleteFile={onDeleteFile}
-          onDownloadFile={onDownloadFile}
-          onUploadFiles={onUploadFiles}
-        />
-      ) : null}
-      {!collapsed && activePanel === "search" ? (
-        <SearchPanel
-          files={files}
-          fileContents={fileContents}
-          onSelectFile={onSelectFile}
-        />
-      ) : null}
-      {!collapsed && activePanel === "tests" ? (
-        <TestsPanel tests={tests} onRunTests={onRunTests} />
-      ) : null}
-      {!collapsed && activePanel === "history" ? (
-        <HistoryPanel versions={versions} onSelectVersion={onSelectVersion} />
-      ) : null}
-      {!collapsed && activePanel === "ai" ? (
-        <AiPanel activeAiAction={activeAiAction} onAiAction={onAiAction} />
-      ) : null}
+    <div className="flex h-full min-h-0 flex-col overflow-hidden border-r border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B]">
+      {/* Top Pill Navigation Rail */}
+      <nav
+        aria-label="Code Lab navigation tabs"
+        className="flex shrink-0 items-center justify-between border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-2 py-1.5 gap-1 select-none"
+      >
+        <div className="flex items-center gap-1 overflow-x-auto min-w-0">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const active = activePanel === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => onSelectPanel(tab.id)}
+                aria-label={tab.label}
+                aria-pressed={active}
+                className={cn(
+                  "relative inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all",
+                  active
+                    ? "bg-white dark:bg-[#1E293B] text-[#059669] dark:text-[#34D399] shadow-2xs font-bold"
+                    : "text-slate-500 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white",
+                )}
+              >
+                <Icon className="h-3.5 w-3.5" />
+                <span>{tab.label}</span>
+                {tab.badge && tab.badge > 0 ? (
+                  <span className="rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 px-1 py-0.2 text-[8px] font-bold">
+                    {tab.badge}
+                  </span>
+                ) : null}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Collapse Sidebar Button */}
+        <button
+          type="button"
+          onClick={onToggleCollapsed}
+          className="grid h-6 w-6 shrink-0 place-items-center rounded-md text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200 transition"
+          title="Collapse sidebar"
+          aria-label="Collapse sidebar"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" />
+        </button>
+      </nav>
+
+      {/* Main Active Panel Content */}
+      <div className="flex-1 min-h-0 overflow-hidden">
+        {activePanel === "explorer" ? (
+          <FileExplorerPanel
+            folders={folders}
+            activeFileId={activeFileId}
+            dirtyFileIds={dirtyFileIds}
+            onSelectFile={onSelectFile}
+            onCreateFile={onCreateFile}
+            onDuplicateFile={onDuplicateFile}
+            onRenameFile={onRenameFile}
+            onDeleteFile={onDeleteFile}
+            onDownloadFile={onDownloadFile}
+            onUploadFiles={onUploadFiles}
+          />
+        ) : null}
+        {activePanel === "search" ? (
+          <SearchPanel
+            files={files}
+            fileContents={fileContents}
+            onSelectFile={onSelectFile}
+          />
+        ) : null}
+        {activePanel === "tests" ? (
+          <TestsPanel tests={tests} onRunTests={onRunTests} />
+        ) : null}
+        {activePanel === "history" ? (
+          <HistoryPanel versions={versions} onSelectVersion={onSelectVersion} />
+        ) : null}
+        {activePanel === "ai" ? (
+          <AiPanel
+            activeAiAction={activeAiAction}
+            aiResult={aiResult}
+            onAiAction={onAiAction}
+            onClearAiResult={onClearAiResult}
+            onApplyCode={onApplyCode}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -2028,7 +2137,9 @@ function CodeEditorPanel({
   activeFileId,
   dirtyFileIds,
   workspaceExpanded,
+  leftPanelCollapsed,
   onToggleWorkspaceExpanded,
+  onToggleSidebar,
   onSelectTab,
   onCloseTab,
   onCreateFile,
@@ -2040,7 +2151,9 @@ function CodeEditorPanel({
   activeFileId: string;
   dirtyFileIds: Set<string>;
   workspaceExpanded: boolean;
+  leftPanelCollapsed?: boolean;
   onToggleWorkspaceExpanded: () => void;
+  onToggleSidebar?: () => void;
   onSelectTab: (id: string) => void;
   onCloseTab: (id: string) => void;
   onCreateFile: () => void;
@@ -2124,6 +2237,18 @@ function CodeEditorPanel({
       {/* Editor Tabs Header */}
       <header className="flex shrink-0 items-end justify-between gap-2 border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#0B101B] px-2 pt-1.5">
         <div className="flex min-w-0 items-end gap-1 overflow-x-auto">
+          {leftPanelCollapsed && onToggleSidebar ? (
+            <button
+              type="button"
+              onClick={onToggleSidebar}
+              title="Open Sidebar (Files / AI / Tests)"
+              aria-label="Open Sidebar"
+              className="mb-1 mr-1 flex shrink-0 items-center gap-1 rounded-md border border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#1E293B] px-2 py-1 text-xs font-bold text-slate-700 dark:text-slate-200 hover:border-[#059669] hover:text-[#059669] transition shadow-2xs"
+            >
+              <FolderOpen className="h-3.5 w-3.5 text-[#059669] dark:text-[#34D399]" />
+              <span>Sidebar</span>
+            </button>
+          ) : null}
           {openFiles.map((file) => (
             <EditorTab
               key={file.id}
@@ -3506,6 +3631,23 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     null,
   );
   const [activeAiAction, setActiveAiAction] = useState<AiAction | null>(null);
+  const [aiResult, setAiResult] = useState<AiResultData | null>(null);
+
+  function handleApplyAiCode(code: string) {
+    if (!activeFile) return;
+    setFileContents((current) => ({
+      ...current,
+      [activeFile.id]: code,
+    }));
+    setSavedFileSnapshots((current) => ({
+      ...current,
+      [activeFile.id]: {
+        name: activeFile.name,
+        language: activeFile.language,
+        content: code,
+      },
+    }));
+  }
   const dirtyFileIds = useMemo(() => {
     return new Set(
       allFiles
@@ -4453,53 +4595,86 @@ export function CodeLabPage({ role }: { role: AppRole }) {
     if (!activeFile) return;
     const code = fileContents[activeFile.id] ?? activeFile.content;
     const labels: Record<AiAction, string> = {
-      explain: "Code explanation",
-      debug: "Issue check",
-      improve: "Improvement suggestion",
+      explain: "Code Explanation",
+      debug: "Bug Diagnosis & Fix",
+      improve: "Refactor Recommendation",
     };
 
     setActiveAiAction(action);
-    setErrorOutput("");
-    setRunStatus("idle");
+    setActiveIdePanel("ai");
+    setLeftPanelCollapsed(false);
+    setAiResult(null);
+
+    // Sync database asynchronously in background without blocking the AI call
+    void persistWorkspaceToDatabase().catch(() => {});
 
     try {
-      const workspace = await persistWorkspaceToDatabase();
-      const serverFile = workspace
-        ? fileForWorkspace(workspace, activeFile)
-        : null;
-      const response = await apiPost<AssistantResponse>("/code-lab/assistant", {
+      const payload = {
         action,
-        workspaceId: workspace?.id,
-        fileId: serverFile?.id,
+        workspaceId: workspaceId || undefined,
+        fileId: activeFile.id,
         language: runnerLanguageFor(activeFile, language),
         code,
         stdin,
-      });
+      };
+
+      let response: AssistantResponse | null = null;
+
+      // 1. Primary: Live Next.js AI Router (Groq / OpenRouter / Gemini LLM)
+      try {
+        const nextRes = await fetch("/api/code-lab/assistant", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (nextRes.ok) {
+          response = (await nextRes.json()) as AssistantResponse;
+        }
+      } catch {
+        // Fall through to Express backend API
+      }
+
+      // 2. Secondary Fallback: Express Backend API
+      if (!response?.note) {
+        response = await apiPost<AssistantResponse>("/code-lab/assistant", payload);
+      }
 
       if (!response?.note) {
-        setConsoleOutput(`${labels[action]} failed: code help is unavailable.`);
-        setRunStatus("error");
+        setAiResult({
+          action,
+          title: `${labels[action]} Failed`,
+          note: "AI code assistance is currently unreachable. Please check your network connection or try again.",
+          model: "offline",
+          mode: "error",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        });
+        setActiveIdePanel("ai");
+        setLeftPanelCollapsed(false);
         return;
       }
 
-      const suggestedCode = response.suggestedCode
-        ? `\n\nSuggested code:\n${response.suggestedCode}`
-        : "";
-
-      setConsoleOutput(
-        [labels[action], response.note, suggestedCode]
-          .filter(Boolean)
-          .join("\n\n"),
-      );
-      setRunStatus("success");
-      setExecutionMs(0);
-      setDbStatus(workspace ? "ready" : "draft");
+      setAiResult({
+        action,
+        title: labels[action],
+        note: response.note,
+        suggestedCode: response.suggestedCode,
+        model: response.model,
+        mode: response.mode,
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      });
+      setActiveIdePanel("ai");
+      setLeftPanelCollapsed(false);
     } catch (error) {
-      setConsoleOutput("");
-      setErrorOutput(
-        error instanceof Error ? error.message : "Code help failed.",
-      );
-      setRunStatus("error");
+      setAiResult({
+        action,
+        title: `${labels[action]} Error`,
+        note: error instanceof Error ? error.message : "Code help failed.",
+        model: "error",
+        mode: "error",
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      });
+      setActiveIdePanel("ai");
+      setLeftPanelCollapsed(false);
     } finally {
       setActiveAiAction(null);
     }
@@ -4787,9 +4962,9 @@ export function CodeLabPage({ role }: { role: AppRole }) {
             {/* Left Sidebar */}
             <div
               style={{
-                width: leftPanelCollapsed ? 48 : sidebarWidth,
-                minWidth: leftPanelCollapsed ? 48 : 180,
-                maxWidth: leftPanelCollapsed ? 48 : 450,
+                width: leftPanelCollapsed ? 0 : sidebarWidth,
+                minWidth: leftPanelCollapsed ? 0 : 200,
+                maxWidth: leftPanelCollapsed ? 0 : 450,
               }}
               className="shrink-0 h-full overflow-hidden transition-[width] duration-75"
             >
@@ -4804,6 +4979,7 @@ export function CodeLabPage({ role }: { role: AppRole }) {
                 tests={tests}
                 versions={versionHistory}
                 activeAiAction={activeAiAction}
+                aiResult={aiResult}
                 onToggleCollapsed={() =>
                   setLeftPanelCollapsed((current) => !current)
                 }
@@ -4818,6 +4994,8 @@ export function CodeLabPage({ role }: { role: AppRole }) {
                 onRunTests={handleRunTests}
                 onSelectVersion={handleSelectVersion}
                 onAiAction={handleAiAction}
+                onClearAiResult={() => setAiResult(null)}
+                onApplyCode={handleApplyAiCode}
               />
             </div>
 
@@ -4855,6 +5033,8 @@ export function CodeLabPage({ role }: { role: AppRole }) {
                 activeFileId={activeFileId}
                 dirtyFileIds={dirtyFileIds}
                 workspaceExpanded={workspaceExpanded}
+                leftPanelCollapsed={leftPanelCollapsed}
+                onToggleSidebar={() => setLeftPanelCollapsed((current) => !current)}
                 onToggleWorkspaceExpanded={() =>
                   setWorkspaceExpanded((current) => !current)
                 }
