@@ -27,6 +27,8 @@ import {
   DataTable,
   MetricRail,
   PageHeader,
+  ScoreRing,
+  SkillScoreCard,
 } from "@/components/ui/command-primitives";
 import { Badge } from "@/components/ui/badge";
 import type { AppRole, Tone } from "@/data/dashboard.mock";

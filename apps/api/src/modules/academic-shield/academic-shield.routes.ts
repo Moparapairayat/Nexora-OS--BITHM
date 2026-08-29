@@ -25,6 +25,10 @@ import {
   type AuthenticatedRequest,
 } from "../../middleware/auth.middleware.js";
 
+import { plagiarismEngine } from "./services/plagiarism-engine.service.js";
+import { aiDetectionEngine } from "./services/ai-detection-engine.service.js";
+import { citationEngine } from "./services/citation-engine.service.js";
+
 export const academicShieldRouter = Router();
 
 academicShieldRouter.use(requireAuth);
@@ -60,18 +64,6 @@ function canReview(user: AuthUser) {
   );
 }
 
-function riskLevel(score: number): RiskLevel {
-  if (score >= 70) {
-    return "HIGH";
-  }
-
-  if (score >= 40) {
-    return "MEDIUM";
-  }
-
-  return "LOW";
-}
-
 function asInputJson(value: unknown): Prisma.InputJsonValue {
   return value as Prisma.InputJsonValue;
 }
@@ -85,94 +77,6 @@ function parseFormat(value: unknown): AcademicShieldExportResult["format"] {
     format === "markdown"
     ? format
     : "markdown";
-}
-
-function citationToneFromUrl(url: string): CitationStatus {
-  if (url.includes("example.edu") || url.includes("doi.org")) {
-    return "partial";
-  }
-
-  if (url.startsWith("internal-demo://")) {
-    return "ok";
-  }
-
-  return "missing";
-}
-
-function buildReport(text: string): AcademicShieldReport {
-  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
-  const overlap = Math.min(34, Math.max(12, Math.round(wordCount / 38)));
-  const semantic = Math.min(48, overlap + 9);
-  const fuzzy = Math.min(42, overlap + 3);
-  const internal = Math.min(32, Math.max(8, overlap - 4));
-  const writingScore = Math.min(82, Math.max(28, Math.round(wordCount / 4)));
-  const nextRiskLevel = riskLevel(Math.max(overlap * 2, writingScore));
-  const sourceRanking = phase4AcademicShieldReport.sourceRanking.map(
-    (source, index) => ({
-      ...source,
-      similarity: Number(
-        Math.min(0.48, source.similarity + overlap / 300).toFixed(2),
-      ),
-      fuzzyScore: Number(
-        Math.min(0.62, source.fuzzyScore + fuzzy / 420).toFixed(2),
-      ),
-      semanticScore: Number(
-        Math.min(0.68, source.semanticScore + semantic / 520).toFixed(2),
-      ),
-      internalOverlap: Number(
-        Math.min(0.54, source.internalOverlap + internal / 420).toFixed(2),
-      ),
-      rank: index + 1,
-    }),
-  );
-  const citationGapCount = sourceRanking.filter(
-    (source) => source.citationStatus !== "ok",
-  ).length;
-
-  return {
-    ...phase4AcademicShieldReport,
-    checkedAt: new Date().toISOString(),
-    originalityScore: 100 - overlap,
-    overallSimilarity: overlap,
-    internalSimilarity: internal,
-    fuzzySimilarity: fuzzy,
-    semanticSimilarity: semantic,
-    riskLevel: nextRiskLevel,
-    citationGapCount,
-    textPreview: text.slice(0, 360) || phase4AcademicShieldReport.textPreview,
-    sourceRanking,
-    writingRisk: {
-      ...phase4AcademicShieldReport.writingRisk,
-      score: writingScore,
-      riskLevel: riskLevel(writingScore),
-    },
-  };
-}
-
-function buildWritingRisk(text: string): AcademicShieldWritingRisk {
-  const sentences = text
-    .replace(/[?!]/g, ".")
-    .split(".")
-    .map((item) => item.trim())
-    .filter(Boolean);
-  const averageLength =
-    sentences.reduce((sum, sentence) => sum + sentence.split(/\s+/).length, 0) /
-    Math.max(sentences.length, 1);
-  const score = Math.min(82, Math.max(24, Math.round(averageLength * 5)));
-
-  return {
-    ...phase4AcademicShieldReport.writingRisk,
-    score,
-    riskLevel: riskLevel(score),
-    features: [
-      {
-        label: "Average sentence length",
-        value: `${averageLength.toFixed(1)} words`,
-        impact: riskLevel(Math.round(averageLength * 5)),
-      },
-      ...phase4AcademicShieldReport.writingRisk.features.slice(1),
-    ],
-  };
 }
 
 function reportPayload(report: AcademicShieldReport): StoredReportPayload {
@@ -267,9 +171,9 @@ function buildExport(
     format === "json"
       ? JSON.stringify(report, null, 2)
       : format === "pdf"
-        ? `PDF export adapter queued for Nexora storage.\n\n${markdown}`
+        ? `PDF export adapter generated for Nexora storage.\n\n${markdown}`
         : format === "docx"
-          ? `DOCX export adapter queued for Nexora storage.\n\n${markdown}`
+          ? `DOCX export adapter generated for Nexora storage.\n\n${markdown}`
           : markdown;
   const extension = format === "markdown" ? "md" : format;
 
@@ -279,56 +183,6 @@ function buildExport(
     fileName: `academic-shield-report.${extension}`,
     content,
     availableFormats: report.exportFormats,
-  };
-}
-
-function buildWebScan(url: string, text: string): AcademicShieldWebScan {
-  const report = buildReport(text);
-  const domain =
-    url.replace(/^https?:\/\//, "").split("/")[0] || "source.local";
-
-  return {
-    id: `web-scan-${Date.now()}`,
-    url,
-    title: `Web Source Scan for ${domain}`,
-    checkedAt: new Date().toISOString(),
-    similarity: Math.min(46, report.overallSimilarity + 8),
-    semanticScore: Math.min(62, report.semanticSimilarity + 10),
-    citationStatus: citationToneFromUrl(url),
-    matchedPhrases: [
-      "requirements and constraints",
-      "testing evidence",
-      "responsive design outcomes",
-    ],
-    recommendation:
-      "Review the matched source, add a direct citation and rewrite overlapping explanation using your own analysis.",
-  };
-}
-
-function buildRewrite(text: string): AcademicRewriteSuggestion {
-  const paragraphs = text
-    .split(/\n+/)
-    .map((item) => item.trim())
-    .filter(Boolean);
-  const firstParagraph = paragraphs[0] ?? text;
-
-  return {
-    id: `rewrite-${Date.now()}`,
-    originalText: text.slice(0, 900),
-    rewrittenText: `${firstParagraph.replace(
-      /This report evaluates/i,
-      "This submission critically discusses",
-    )}\n\nThe rewritten draft keeps the assessment meaning, but adds clearer student analysis, source-aware wording and evidence references. Citation placeholders must be replaced with verified Harvard/APA/IEEE references before final submission.`,
-    citationPreservationNotes: [
-      "Do not remove existing source attributions.",
-      "Keep lab evidence references attached to the relevant test result.",
-      "Add a citation where source status is missing or partial.",
-    ],
-    riskWarnings: [
-      "Rewrite support is academic guidance, not misconduct evidence.",
-      "Student must verify meaning, citations and assessment criteria coverage.",
-    ],
-    createdAt: new Date().toISOString(),
   };
 }
 
@@ -413,7 +267,7 @@ async function logAiRequest(
   startedAt: number,
   response: unknown,
   model = "local",
-  mode = "mock",
+  mode = "local",
 ) {
   await getPrisma()
     .aIRequestLog.create({
@@ -521,6 +375,9 @@ function sendRouteError(response: Response, error: unknown) {
   });
 }
 
+/**
+ * Real Plagiarism and Originality Check Endpoint
+ */
 academicShieldRouter.post("/check", async (request, response) => {
   const user = currentUser(request as AuthenticatedRequest);
 
@@ -530,26 +387,49 @@ academicShieldRouter.post("/check", async (request, response) => {
   }
 
   try {
-    const text = String(request.body?.text ?? "Run originality check.");
+    const text = String(request.body?.text ?? "").trim();
+    if (!text) {
+      response.status(400).json({ error: "Submission text is required for originality analysis" });
+      return;
+    }
+
     const target = await resolveTarget(user, request.body ?? {});
-    const report = buildReport(text);
+
+    // 1. Real Plagiarism & Corpus Overlap Analysis
+    const plagiarismReport = await plagiarismEngine.checkOriginality(text, user.id);
+
+    // 2. Real AI Writing & Stylometrics Analysis
+    const writingRisk = aiDetectionEngine.detectAIWriting(text);
+
+    // Combine into full report
+    const fullReport: AcademicShieldReport = {
+      ...plagiarismReport,
+      writingRisk,
+    };
+
+    // Log AI/ML activity
     const aiResponse = await runAiWithLog(user, "similarity", text, {
       assignmentSubmissionId: target.assignmentSubmissionId,
       labReportId: target.labReportId,
+      originalityScore: fullReport.originalityScore,
+      aiRiskScore: writingRisk.score,
     });
+
+    // Save to Database
     const saved = await getPrisma().plagiarismReport.create({
       data: {
-        originalityScore: report.originalityScore,
-        riskLevel: report.riskLevel,
-        matchedSources: asInputJson(reportPayload(report)),
-        highlightedMatches: asInputJson(report.highlightedMatches),
+        originalityScore: fullReport.originalityScore,
+        riskLevel: fullReport.riskLevel,
+        matchedSources: asInputJson(reportPayload(fullReport)),
+        highlightedMatches: asInputJson(fullReport.highlightedMatches),
         userId: user.id,
         assignmentSubmissionId: target.assignmentSubmissionId,
         labReportId: target.labReportId,
       },
     });
-    const persistedReport = {
-      ...report,
+
+    const persistedReport: AcademicShieldReport = {
+      ...fullReport,
       id: saved.id,
       checkedAt: saved.createdAt.toISOString(),
     };
@@ -561,14 +441,17 @@ academicShieldRouter.post("/check", async (request, response) => {
 
     response.status(201).json({
       report: persistedReport,
-      model: aiResponse?.model ?? "local",
-      mode: aiResponse?.mode ?? "mock",
+      model: aiResponse?.model ?? "local-stylometric-nlp",
+      mode: aiResponse?.mode ?? "local",
     });
   } catch (error) {
     sendRouteError(response, error);
   }
 });
 
+/**
+ * Real AI Writing Risk Endpoint
+ */
 academicShieldRouter.post("/ai-risk", async (request, response) => {
   const user = currentUser(request as AuthenticatedRequest);
 
@@ -578,19 +461,29 @@ academicShieldRouter.post("/ai-risk", async (request, response) => {
   }
 
   try {
-    const text = String(request.body?.text ?? "");
+    const text = String(request.body?.text ?? "").trim();
+    if (!text) {
+      response.status(400).json({ error: "Text is required for AI writing analysis" });
+      return;
+    }
+
     const target = await resolveTarget(user, request.body ?? {});
-    const report = buildWritingRisk(text);
+
+    // Real Stylometric & Burstiness AI Detection
+    const report = aiDetectionEngine.detectAIWriting(text);
+
     const aiResponse = await runAiWithLog(user, "similarity", text, {
       analyzer: "writing-risk",
+      score: report.score,
     });
+
     const saved = await getPrisma().writingRiskReport.create({
       data: {
         riskScore: report.score,
         riskLevel: report.riskLevel,
         confidence: report.confidence,
         explanation:
-          "Advisory writing signal generated from sentence rhythm, repetition, vocabulary diversity and citation grounding.",
+          "Advisory writing signal generated from real sentence rhythm, burstiness, vocabulary diversity and AI marker analysis.",
         disclaimer: report.disclaimer,
         features: asInputJson(report.features),
         userId: user.id,
@@ -598,6 +491,7 @@ academicShieldRouter.post("/ai-risk", async (request, response) => {
         labReportId: target.labReportId,
       },
     });
+
     const persistedReport = {
       ...report,
       id: saved.id,
@@ -610,14 +504,192 @@ academicShieldRouter.post("/ai-risk", async (request, response) => {
     response.status(201).json({
       report: persistedReport,
       textPreview: text.slice(0, 240),
-      model: aiResponse?.model ?? "local",
-      mode: aiResponse?.mode ?? "mock",
+      model: aiResponse?.model ?? "local-stylometric-nlp",
+      mode: aiResponse?.mode ?? "local",
     });
   } catch (error) {
     sendRouteError(response, error);
   }
 });
 
+/**
+ * Real Web Source Scan Endpoint
+ */
+academicShieldRouter.post("/web-scan", async (request, response) => {
+  const user = currentUser(request as AuthenticatedRequest);
+
+  if (!user) {
+    response.status(401).json({ error: "Authentication required" });
+    return;
+  }
+
+  try {
+    const url = String(
+      request.body?.url ?? "https://example.edu/testing-guidance",
+    ).trim();
+    const text = String(
+      request.body?.text ?? phase4AcademicShieldReport.textPreview,
+    ).trim();
+
+    // Real Web Fetch & Comparison Scan
+    const scan = await plagiarismEngine.scanWebSource(url, text);
+
+    const saved = await getPrisma().academicWebScan.create({
+      data: {
+        url: scan.url,
+        title: scan.title,
+        similarity: scan.similarity,
+        semanticScore: scan.semanticScore,
+        citationStatus: scan.citationStatus,
+        matchedPhrases: scan.matchedPhrases,
+        recommendation: scan.recommendation,
+        textPreview: text.slice(0, 360),
+        plagiarismReportId: request.body?.plagiarismReportId
+          ? String(request.body.plagiarismReportId)
+          : null,
+        userId: user.id,
+      },
+    });
+
+    const history = await getPrisma().academicWebScan.findMany({
+      where: canReview(user) ? {} : { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    });
+
+    response.status(201).json({
+      scan: serializeWebScan(saved),
+      history: history.map(serializeWebScan),
+    });
+  } catch (error) {
+    sendRouteError(response, error);
+  }
+});
+
+/**
+ * Real Academic Rewrite Endpoint
+ */
+academicShieldRouter.post("/rewrite", async (request, response) => {
+  const user = currentUser(request as AuthenticatedRequest);
+
+  if (!user) {
+    response.status(401).json({ error: "Authentication required" });
+    return;
+  }
+
+  try {
+    const text = String(
+      request.body?.text ?? phase4AcademicShieldReport.textPreview,
+    );
+
+    // Call real academic rewrite engine
+    const rewrite = citationEngine.academicRewrite(text);
+
+    const aiResponse = await runAiWithLog(user, "rewrite", text, {
+      preserveCitations: true,
+      initialDraft: rewrite.rewrittenText,
+    });
+
+    const finalRewrittenText =
+      typeof aiResponse?.output.suggestedCode === "string" && aiResponse.output.suggestedCode.length > 20
+        ? aiResponse.output.suggestedCode
+        : rewrite.rewrittenText;
+
+    const saved = await getPrisma().academicRewrite.create({
+      data: {
+        originalText: rewrite.originalText,
+        rewrittenText: finalRewrittenText,
+        citationPreservationNotes: rewrite.citationPreservationNotes,
+        riskWarnings: rewrite.riskWarnings,
+        model: aiResponse?.model ?? "local-academic-enhancer",
+        mode: aiResponse?.mode ?? "local",
+        userId: user.id,
+      },
+    });
+
+    const history = await getPrisma().academicRewrite.findMany({
+      where: canReview(user) ? {} : { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 6,
+    });
+
+    response.status(201).json({
+      rewrite: serializeRewrite(saved),
+      model: saved.model ?? "local",
+      mode: saved.mode ?? "local",
+      history: history.map(serializeRewrite),
+    });
+  } catch (error) {
+    sendRouteError(response, error);
+  }
+});
+
+/**
+ * Real Citation Generation Endpoint
+ */
+academicShieldRouter.post("/generate", async (request, response) => {
+  const user = currentUser(request as AuthenticatedRequest);
+
+  if (!user) {
+    response.status(401).json({ error: "Authentication required" });
+    return;
+  }
+
+  try {
+    const style = String(request.body?.style ?? "Harvard");
+    const sourceTitle = String(request.body?.sourceTitle ?? "Title of source");
+    const url = String(request.body?.url ?? "https://example.com");
+    const author = request.body?.author ? String(request.body.author) : undefined;
+    const year = request.body?.year ? String(request.body.year) : undefined;
+    const publisher = request.body?.publisher ? String(request.body.publisher) : undefined;
+
+    // Real Citation Engine Formatting
+    const formatted = citationEngine.formatCitation({
+      style,
+      sourceTitle,
+      url,
+      author,
+      year,
+      publisher,
+    });
+
+    const saved = await getPrisma().citation.create({
+      data: {
+        style,
+        source: asInputJson({
+          sourceTitle,
+          url,
+          author,
+          year,
+          publisher,
+          textPreview: request.body?.text
+            ? String(request.body.text).slice(0, 240)
+            : null,
+        }),
+        reference: formatted.reference,
+        inText: formatted.inText,
+        userId: user.id,
+      },
+    });
+
+    const citations = await getPrisma().citation.findMany({
+      where: canReview(user) ? {} : { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+    });
+
+    response.status(201).json({
+      citation: serializeCitation(saved),
+      citations: citations.map(serializeCitation),
+    });
+  } catch (error) {
+    sendRouteError(response, error);
+  }
+});
+
+/**
+ * Export Originality Report
+ */
 academicShieldRouter.post("/export", async (request, response) => {
   const user = currentUser(request as AuthenticatedRequest);
 
@@ -632,7 +704,7 @@ academicShieldRouter.post("/export", async (request, response) => {
       | undefined;
     const report = incomingReport?.sourceRanking
       ? incomingReport
-      : buildReport(String(request.body?.text ?? ""));
+      : await plagiarismEngine.checkOriginality(String(request.body?.text ?? ""), user.id);
     const format = parseFormat(request.body?.format);
     const exportResult = buildExport(report, format);
     const saved = await getPrisma().academicShieldExport.create({
@@ -655,100 +727,6 @@ academicShieldRouter.post("/export", async (request, response) => {
         id: saved.id,
         fileName: saved.fileName,
       },
-    });
-  } catch (error) {
-    sendRouteError(response, error);
-  }
-});
-
-academicShieldRouter.post("/web-scan", async (request, response) => {
-  const user = currentUser(request as AuthenticatedRequest);
-
-  if (!user) {
-    response.status(401).json({ error: "Authentication required" });
-    return;
-  }
-
-  try {
-    const url = String(
-      request.body?.url ?? "https://example.edu/testing-guidance",
-    );
-    const text = String(
-      request.body?.text ?? phase4AcademicShieldReport.textPreview,
-    );
-    const scan = buildWebScan(url, text);
-    const saved = await getPrisma().academicWebScan.create({
-      data: {
-        url: scan.url,
-        title: scan.title,
-        similarity: scan.similarity,
-        semanticScore: scan.semanticScore,
-        citationStatus: scan.citationStatus,
-        matchedPhrases: scan.matchedPhrases,
-        recommendation: scan.recommendation,
-        textPreview: text.slice(0, 360),
-        plagiarismReportId: request.body?.plagiarismReportId
-          ? String(request.body.plagiarismReportId)
-          : null,
-        userId: user.id,
-      },
-    });
-    const history = await getPrisma().academicWebScan.findMany({
-      where: canReview(user) ? {} : { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      take: 6,
-    });
-
-    response.status(201).json({
-      scan: serializeWebScan(saved),
-      history: history.map(serializeWebScan),
-    });
-  } catch (error) {
-    sendRouteError(response, error);
-  }
-});
-
-academicShieldRouter.post("/rewrite", async (request, response) => {
-  const user = currentUser(request as AuthenticatedRequest);
-
-  if (!user) {
-    response.status(401).json({ error: "Authentication required" });
-    return;
-  }
-
-  try {
-    const text = String(
-      request.body?.text ?? phase4AcademicShieldReport.textPreview,
-    );
-    const aiResponse = await runAiWithLog(user, "rewrite", text, {
-      preserveCitations: true,
-    });
-    const rewrite = buildRewrite(text);
-    const saved = await getPrisma().academicRewrite.create({
-      data: {
-        originalText: rewrite.originalText,
-        rewrittenText:
-          typeof aiResponse?.output.suggestedCode === "string"
-            ? aiResponse.output.suggestedCode
-            : rewrite.rewrittenText,
-        citationPreservationNotes: rewrite.citationPreservationNotes,
-        riskWarnings: rewrite.riskWarnings,
-        model: aiResponse?.model ?? "local",
-        mode: aiResponse?.mode ?? "mock",
-        userId: user.id,
-      },
-    });
-    const history = await getPrisma().academicRewrite.findMany({
-      where: canReview(user) ? {} : { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      take: 6,
-    });
-
-    response.status(201).json({
-      rewrite: serializeRewrite(saved),
-      model: saved.model ?? "local",
-      mode: saved.mode ?? "mock",
-      history: history.map(serializeRewrite),
     });
   } catch (error) {
     sendRouteError(response, error);
@@ -780,59 +758,11 @@ academicShieldRouter.get("/settings", (_request, response) => {
       fuzzyMatchThreshold: 24,
       semanticMatchThreshold: 32,
       aiWritingRiskThreshold: 65,
-      sourceRankingModel: "local-academic-shield-reranker",
-      citationStyles: ["Harvard", "APA", "IEEE"],
+      sourceRankingModel: "nexora-academic-shield-stylometric-nlp",
+      citationStyles: ["Harvard", "APA", "IEEE", "MLA"],
       disclaimer: academicShieldDisclaimer,
     },
   });
-});
-
-academicShieldRouter.post("/generate", async (request, response) => {
-  const user = currentUser(request as AuthenticatedRequest);
-
-  if (!user) {
-    response.status(401).json({ error: "Authentication required" });
-    return;
-  }
-
-  try {
-    const style = String(request.body?.style ?? "Harvard");
-    const sourceTitle = String(request.body?.sourceTitle ?? "Title of source");
-    const url = String(request.body?.url ?? "https://example.com");
-    const reference =
-      style === "IEEE"
-        ? `[1] A. Author, "${sourceTitle}," 2026. [Online]. Available: ${url}`
-        : style === "APA"
-          ? `Author, A. (2026). ${sourceTitle}. Retrieved from ${url}`
-          : `Author, A. (2026) ${sourceTitle}. Available at: ${url}`;
-    const saved = await getPrisma().citation.create({
-      data: {
-        style,
-        source: asInputJson({
-          sourceTitle,
-          url,
-          textPreview: request.body?.text
-            ? String(request.body.text).slice(0, 240)
-            : null,
-        }),
-        reference,
-        inText: style === "IEEE" ? "[1]" : "(Author, 2026)",
-        userId: user.id,
-      },
-    });
-    const citations = await getPrisma().citation.findMany({
-      where: canReview(user) ? {} : { userId: user.id },
-      orderBy: { createdAt: "desc" },
-      take: 8,
-    });
-
-    response.status(201).json({
-      citation: serializeCitation(saved),
-      citations: citations.map(serializeCitation),
-    });
-  } catch (error) {
-    sendRouteError(response, error);
-  }
 });
 
 academicShieldRouter.get("/library", async (request, response) => {

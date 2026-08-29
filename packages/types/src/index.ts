@@ -350,10 +350,12 @@ export interface AcademicShieldSourceMatch {
   similarity: number;
   fuzzyScore: number;
   semanticScore: number;
+  paraphraseScore?: number;
   internalOverlap: number;
   rank: number;
   citationStatus: CitationStatus;
   matchedPhrases: string[];
+  originalExcerpt?: string;
   recommendation: string;
 }
 
@@ -362,8 +364,11 @@ export interface AcademicShieldHighlight {
   paragraph: number;
   excerpt: string;
   matchedSourceId: string;
+  originalPassage?: string;
   severity: RiskLevel;
   reason: string;
+  isQuote?: boolean;
+  isBibliography?: boolean;
 }
 
 export interface AcademicShieldWritingFeature {
@@ -372,12 +377,25 @@ export interface AcademicShieldWritingFeature {
   impact: RiskLevel;
 }
 
+export interface AcademicShieldSentenceEvaluation {
+  index: number;
+  text: string;
+  wordCount: number;
+  aiProbability: number;
+  riskLevel: RiskLevel;
+  reason: string;
+  flaggedFeatures: string[];
+}
+
 export interface AcademicShieldWritingRisk {
   id: string;
   score: number;
   riskLevel: RiskLevel;
   confidence: "advisory";
   features: AcademicShieldWritingFeature[];
+  sentences?: AcademicShieldSentenceEvaluation[];
+  perplexityScore?: number;
+  burstinessCv?: number;
   disclaimer: string;
 }
 
