@@ -200,7 +200,8 @@ export function LandingNav() {
           transition: color 0.25s ease;
         }
         .light .nav-link {
-          color: #475569;
+          color: #334155;
+          font-weight: 600;
         }
         .nav-link::after {
           content: "";
@@ -255,7 +256,7 @@ export function LandingNav() {
         .ham-open .ham-bar:nth-child(2) { opacity: 0; transform: scaleX(0); }
         .ham-open .ham-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
         
-        /* ── Navbar Hover Glow ── */
+        /* ── Navbar Hover Glow & Crisp Elevation ── */
         .command-border {
           transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
         }
@@ -266,15 +267,22 @@ export function LandingNav() {
             0 16px 46px rgba(0,0,0,0.28),
             0 0 40px rgba(var(--theme-accent-primary-rgb-raw), 0.08);
         }
-        .light .command-border:hover {
-          border-color: rgba(var(--theme-accent-primary-rgb-raw), 0.35);
+        .light .command-border {
+          border-color: rgba(6, 78, 59, 0.14) !important;
           box-shadow: 
-            inset 0 1px 0 rgba(255,255,255,0.96),
-            0 14px 38px rgba(31,67,49,0.14),
-            0 0 32px rgba(var(--theme-accent-primary-rgb-raw), 0.08);
+            inset 0 1px 0 rgba(255,255,255,1),
+            0 12px 32px -4px rgba(4,75,59,0.12),
+            0 4px 12px -2px rgba(0,0,0,0.05);
+        }
+        .light .command-border:hover {
+          border-color: rgba(5, 150, 105, 0.35) !important;
+          box-shadow: 
+            inset 0 1px 0 rgba(255,255,255,1),
+            0 18px 42px -4px rgba(4,75,59,0.18),
+            0 0 24px rgba(5,150,105,0.12);
         }
       ` }} />
-      <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(var(--theme-accent-primary-rgb-raw),0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(var(--theme-accent-primary-rgb-raw),0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-white/75 light:bg-[linear-gradient(135deg,rgba(255,255,255,0.88),rgba(236,253,245,0.62)),rgba(255,255,255,0.68)] light:shadow-[inset_0_1px_0_rgba(255,255,255,0.96),0_14px_38px_rgba(31,67,49,0.11),0_0_28px_rgba(var(--theme-emerald-rgb-raw),0.06)]">
+      <div className="command-border mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 rounded-2xl border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.075),rgba(var(--theme-accent-primary-rgb-raw),0.025)),rgba(6,9,7,0.68)] px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_16px_46px_rgba(0,0,0,0.24),0_0_34px_rgba(var(--theme-accent-primary-rgb-raw),0.055)] backdrop-blur-2xl backdrop-saturate-150 sm:px-5 md:px-6 light:border-emerald-950/10 light:bg-white/92 light:backdrop-blur-xl light:backdrop-saturate-180">
         <div className="relative flex shrink-0 items-center">
           <Link href="/" aria-label="Nexora OS home">
             <NexoraLogo size="md" priority className="h-8 w-[124px] sm:h-10 sm:w-[158px]" />
@@ -326,7 +334,7 @@ export function LandingNav() {
       </div>
 
       {/* Mobile slide-down drawer */}
-      <div className={`mobile-drawer mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-[rgba(6,9,7,0.92)] backdrop-blur-2xl min-[1180px]:hidden light:border-white/60 light:bg-[rgba(255,255,255,0.95)] ${mobileOpen ? "open" : ""}`}>
+      <div className={`mobile-drawer mx-auto mt-2 max-w-7xl rounded-2xl border border-white/10 bg-[rgba(6,9,7,0.92)] backdrop-blur-2xl min-[1180px]:hidden light:border-slate-200/90 light:bg-[rgba(255,255,255,0.97)] light:shadow-2xl ${mobileOpen ? "open" : ""}`}>
         <nav className="flex flex-col gap-1 px-4 py-4">
           {navLinks.map((l) => (
             <a
