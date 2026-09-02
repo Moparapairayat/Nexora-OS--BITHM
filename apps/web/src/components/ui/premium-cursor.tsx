@@ -28,11 +28,16 @@ export function PremiumCursor() {
     rad: 0,
   });
 
-  // Load configuration on mount
+  // Load configuration on mount. Both setState calls are unavoidable here:
+  // `mounted` must flip only after the client mount (an SSR-safe hydration
+  // guard, not something a lazy initializer can express), and the epic-mode
+  // flag comes from browser-only localStorage.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- SSR hydration guard, must run post-mount
     setMounted(true);
     const saved = localStorage.getItem("nexora-epic-cursor");
     if (saved === "on") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing from browser-only localStorage
       setIsEpicMode(true);
     }
   }, []);

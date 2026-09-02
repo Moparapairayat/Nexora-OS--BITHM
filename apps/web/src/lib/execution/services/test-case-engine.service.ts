@@ -3,7 +3,7 @@
  */
 
 import { BaseExecutionProvider } from "../providers/base.provider";
-import { ExecutionInput, TestCaseInput, TestCaseResult, StandardExecutionResult } from "../types/execution.types";
+import { ExecutionInput, TestCaseInput, TestCaseResult, StandardExecutionResult, SupportedLanguage } from "../types/execution.types";
 
 export class TestCaseEngineService {
   /**
@@ -50,7 +50,7 @@ export class TestCaseEngineService {
         status: "error",
         executionTimeMs: 0,
         provider: provider.id,
-        language: input.language as any,
+        language: input.language as SupportedLanguage,
         errorMessage: "No test cases configured.",
         timestamp: new Date().toISOString(),
       };
@@ -92,7 +92,7 @@ export class TestCaseEngineService {
       status: allPassed ? "success" : "runtime_error",
       executionTimeMs: Date.now() - startTime,
       provider: provider.id,
-      language: input.language as any,
+      language: input.language as SupportedLanguage,
       testResults: results,
       timestamp: new Date().toISOString(),
     };

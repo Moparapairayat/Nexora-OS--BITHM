@@ -22,15 +22,16 @@ export class DatabaseConnectionService {
         latencyMs,
         timestamp: new Date().toISOString(),
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       const latencyMs = Date.now() - startTime;
-      console.error("[DatabaseConnectionService] Health check failed:", err.message);
+      const message = err instanceof Error ? err.message : String(err);
+      console.error("[DatabaseConnectionService] Health check failed:", message);
 
       return {
         connected: false,
         provider: "Neon PostgreSQL",
         latencyMs,
-        error: err.message,
+        error: message,
         timestamp: new Date().toISOString(),
       };
     }

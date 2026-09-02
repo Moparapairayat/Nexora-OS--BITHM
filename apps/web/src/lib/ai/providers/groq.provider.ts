@@ -11,11 +11,9 @@ export class GroqProvider extends BaseAIProvider {
   public readonly name: string = AI_CONFIG.providers.groq.name;
 
   private getApiKey(): string {
-    return (
-      process.env.GROQ_API_KEY ||
-      process.env.NEXT_PUBLIC_GROQ_API_KEY ||
-      ""
-    );
+    // Never fall back to a NEXT_PUBLIC_ variable here — Next.js inlines those
+    // into the client bundle, which would ship this secret key to the browser.
+    return process.env.GROQ_API_KEY || "";
   }
 
   public isConfigured(): boolean {
@@ -90,9 +88,10 @@ export class GroqProvider extends BaseAIProvider {
         },
         executionTime,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       clearTimeout(timeoutId);
-      throw new Error(`GroqProvider Error: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`GroqProvider Error: ${message}`);
     }
   }
 }

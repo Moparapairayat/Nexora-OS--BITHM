@@ -1,5 +1,7 @@
 import cors from "cors";
 import express from "express";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 import { env } from "./config/env.js";
 import { academicShieldRouter } from "./modules/academic-shield/academic-shield.routes.js";
@@ -14,6 +16,8 @@ import { uploadsRouter } from "./modules/uploads/uploads.routes.js";
 
 export const app = express();
 
+app.set("trust proxy", 1);
+app.use(helmet());
 app.use(
   cors({
     origin: env.corsOrigins.length === 1 ? env.corsOrigins[0] : env.corsOrigins,
@@ -21,6 +25,14 @@ app.use(
   }),
 );
 app.use(express.json({ limit: "10mb" }));
+
+const authRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many authentication attempts. Please try again later." },
+});
 
 app.use((_request, response, next) => {
   response.setHeader("X-Nexora-Trace-Id", `trace-${Date.now()}`);
@@ -49,7 +61,7 @@ app.get("/api/health", (_request, response) => {
   });
 });
 
-app.use("/api/auth", authRouter);
+app.use("/api/auth", authRateLimiter, authRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/code-lab", codeLabRouter);

@@ -1,12 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
   CheckCircle2,
   Code2,
-  FileCheck2,
   FileText,
-  FlaskConical,
   Folder,
   Play,
   Check,
@@ -15,7 +13,6 @@ import {
   Terminal,
   Loader2,
 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
 type WorkflowCardProps = {
@@ -70,7 +67,7 @@ const cardTones = [
   },
 ] as const;
 
-function CourseworkMedia({ isActive = true }: { isActive?: boolean }) {
+function CourseworkMedia(_: { isActive?: boolean }) {
   return (
     <div className="relative h-full w-full overflow-hidden bg-[#07130e] text-left font-sans select-none light:bg-[#f3f9f5]">
       {/* Grid Pattern overlay */}
@@ -159,24 +156,20 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
 
   const fullCommand = "npm run test";
 
-  useEffect(() => {
-    if (!isActive || !isIntersected) {
-      setTestStatus("idle");
-      setTerminalLines([]);
-      setTypedText("");
-      return;
-    }
+  const pendingTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-    triggerTestRun();
-  }, [isActive, isIntersected]);
+  const clearPendingTimers = useCallback(() => {
+    pendingTimers.current.forEach(clearTimeout);
+    pendingTimers.current = [];
+  }, []);
 
-  const triggerTestRun = () => {
+  const triggerTestRun = useCallback(() => {
+    clearPendingTimers();
     setTestStatus("typing");
     setTerminalLines([]);
     setTypedText("");
 
     let charIndex = 0;
-    let timeoutId: NodeJS.Timeout;
 
     const typeNextChar = () => {
       if (charIndex < fullCommand.length) {
@@ -192,39 +185,45 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
           delay = 150 + Math.random() * 80; // symbols delay
         }
 
-        timeoutId = setTimeout(typeNextChar, delay);
+        pendingTimers.current.push(setTimeout(typeNextChar, delay));
       } else {
         setTestStatus("running");
         setTerminalLines(["$ npm run test"]);
-        
-        const test1Timer = setTimeout(() => {
-          setTerminalLines((prev) => [...prev, "✓ page.test.tsx passed (118ms)"]);
-        }, 700);
 
-        const test2Timer = setTimeout(() => {
-          setTerminalLines((prev) => [
-            ...prev,
-            "✓ route.test.ts passed (45ms)",
-            "ALL TESTS PASSING (12 Passed, 0 Failed)"
-          ]);
-          setTestStatus("success");
-        }, 1500);
-
-        return () => {
-          clearTimeout(test1Timer);
-          clearTimeout(test2Timer);
-        };
+        pendingTimers.current.push(
+          setTimeout(() => {
+            setTerminalLines((prev) => [...prev, "✓ page.test.tsx passed (118ms)"]);
+          }, 700),
+          setTimeout(() => {
+            setTerminalLines((prev) => [
+              ...prev,
+              "✓ route.test.ts passed (45ms)",
+              "ALL TESTS PASSING (12 Passed, 0 Failed)"
+            ]);
+            setTestStatus("success");
+          }, 1500),
+        );
       }
     };
 
     // Human pause delay before typing begins
-    const initialDelayId = setTimeout(typeNextChar, 600);
+    pendingTimers.current.push(setTimeout(typeNextChar, 600));
+  }, [clearPendingTimers, fullCommand]);
 
-    return () => {
-      clearTimeout(initialDelayId);
-      clearTimeout(timeoutId);
-    };
-  };
+  useEffect(() => {
+    if (!isActive || !isIntersected) {
+      clearPendingTimers();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting UI state alongside ref-based timer cleanup, which can't happen during render
+      setTestStatus("idle");
+      setTerminalLines([]);
+      setTypedText("");
+      return;
+    }
+
+    triggerTestRun();
+
+    return clearPendingTimers;
+  }, [isActive, isIntersected, triggerTestRun, clearPendingTimers]);
 
   const handleRunTestsManually = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -274,7 +273,7 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
               <span className="text-pink-400 font-medium">import</span>{" "}
               <span className="text-blue-350 dark:text-blue-300 light:text-blue-700">{"{ NextResponse }"}</span>{" "}
               <span className="text-pink-400">from</span>{" "}
-              <span className="text-emerald-450 dark:text-emerald-300 light:text-emerald-700 font-semibold">"next/server"</span>;
+              <span className="text-emerald-450 dark:text-emerald-300 light:text-emerald-700 font-semibold">&quot;next/server&quot;</span>;
             </div>
             <div>
               <span className="text-pink-400">export async function</span>{" "}
@@ -287,11 +286,11 @@ function LabMedia({ isActive = true }: { isActive?: boolean }) {
             </div>
             <div className="pl-6">
               <span className="text-orange-400 dark:text-orange-300">status</span>:{" "}
-              <span className="text-emerald-450 dark:text-emerald-300 light:text-emerald-700">"success"</span>,
+              <span className="text-emerald-450 dark:text-emerald-300 light:text-emerald-700">&quot;success&quot;</span>,
             </div>
             <div className="pl-6">
               <span className="text-orange-400 dark:text-orange-300">evidence</span>:{" "}
-              <span className="text-emerald-450 dark:text-emerald-300 light:text-emerald-700">"bundled"</span>
+              <span className="text-emerald-450 dark:text-emerald-300 light:text-emerald-700">&quot;bundled&quot;</span>
             </div>
             <div className="pl-3">{"});"}</div>
             <div>{"}"}</div>
@@ -361,13 +360,25 @@ const confettiParticles = Array.from({ length: 28 }).map((_, i) => {
 function ProgressMedia({ isActive = true }: { isActive?: boolean }) {
   const [submittingStatus, setSubmittingStatus] = useState<"editing" | "submitting" | "submitted">("editing");
   const [loadingStep, setLoadingStep] = useState(0);
+  const pendingTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
+  const clearPendingTimers = useCallback(() => {
+    pendingTimers.current.forEach(clearTimeout);
+    pendingTimers.current = [];
+  }, []);
+
+  // Reset (and cancel any in-flight timers) when this card becomes inactive.
+  // Ref cleanup can't happen during render, so this must stay an effect.
   useEffect(() => {
     if (!isActive) {
+      clearPendingTimers();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting UI state alongside ref-based timer cleanup, which can't happen during render
       setSubmittingStatus("editing");
       setLoadingStep(0);
     }
-  }, [isActive]);
+
+    return clearPendingTimers;
+  }, [isActive, clearPendingTimers]);
 
   const handleResubmit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -376,11 +387,13 @@ function ProgressMedia({ isActive = true }: { isActive?: boolean }) {
     setLoadingStep(0);
 
     // Cycle loaders sequentially
-    const timer1 = setTimeout(() => setLoadingStep(1), 500);
-    const timer2 = setTimeout(() => setLoadingStep(2), 1100);
-    const timer3 = setTimeout(() => {
-      setSubmittingStatus("submitted");
-    }, 1700);
+    pendingTimers.current.push(
+      setTimeout(() => setLoadingStep(1), 500),
+      setTimeout(() => setLoadingStep(2), 1100),
+      setTimeout(() => {
+        setSubmittingStatus("submitted");
+      }, 1700),
+    );
   };
 
   return (
@@ -446,7 +459,7 @@ function ProgressMedia({ isActive = true }: { isActive?: boolean }) {
               </span>
             </div>
             <p className="mt-1 text-[8.5px] leading-relaxed text-slate-300 light:text-slate-600">
-              "Great dynamic routing choice! Let's ensure cache validation headers are added to optimize final build speed."
+              &quot;Great dynamic routing choice! Let&apos;s ensure cache validation headers are added to optimize final build speed.&quot;
             </p>
             <div className="mt-2 flex items-center gap-1.5 justify-end">
               <button className="rounded px-1.5 py-0.5 text-[8px] font-medium text-slate-400 hover:text-white transition-colors">

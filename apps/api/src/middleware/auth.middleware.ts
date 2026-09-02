@@ -128,15 +128,18 @@ export const optionalAuth: RequestHandler = async (request, _response, next) => 
         email: account.email,
         name: account.name,
         role: account.role,
-        permissions: decoded.permissions ?? permissionsForRole(account.role),
+        permissions: permissionsForRole(account.role),
       };
     } else {
+      // Account is missing, deactivated, or soft-deleted: never honor the role
+      // or permissions embedded in the (possibly still-unexpired) JWT — fall
+      // back to a fresh, unprivileged guest identity instead.
       (request as AuthenticatedRequest).user = {
         id: "guest-student-id",
-        email: decoded.sub || "student@nexora.bithm.edu",
+        email: "student@nexora.bithm.edu",
         name: "Guest Student",
-        role: decoded.role || "STUDENT",
-        permissions: decoded.permissions ?? permissionsForRole("STUDENT"),
+        role: "STUDENT",
+        permissions: permissionsForRole("STUDENT"),
       };
     }
     next();
@@ -195,7 +198,7 @@ export const requireAuth: RequestHandler = async (request, response, next) => {
       email: account.email,
       name: account.name,
       role: account.role,
-      permissions: decoded.permissions ?? permissionsForRole(account.role),
+      permissions: permissionsForRole(account.role),
     };
     next();
   } catch {
@@ -241,6 +244,7 @@ export function auditAction(action: string, target: string): RequestHandler {
 
     if (user) {
       recordAuditEvent({
+        actorId: user.id,
         actor: user.email,
         role: user.role,
         action,

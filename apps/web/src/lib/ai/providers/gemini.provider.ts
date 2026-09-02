@@ -11,11 +11,9 @@ export class GeminiProvider extends BaseAIProvider {
   public readonly name: string = AI_CONFIG.providers.gemini.name;
 
   private getApiKey(): string {
-    return (
-      process.env.GEMINI_API_KEY ||
-      process.env.NEXT_PUBLIC_GEMINI_API_KEY ||
-      ""
-    );
+    // Never fall back to a NEXT_PUBLIC_ variable here — Next.js inlines those
+    // into the client bundle, which would ship this secret key to the browser.
+    return process.env.GEMINI_API_KEY || "";
   }
 
   public isConfigured(): boolean {
@@ -93,9 +91,9 @@ export class GeminiProvider extends BaseAIProvider {
           },
           executionTime,
         };
-      } catch (err: any) {
-        lastError = err;
-        console.warn(`[GeminiProvider] Attempt with model failed:`, err.message);
+      } catch (err: unknown) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+        console.warn(`[GeminiProvider] Attempt with model failed:`, lastError.message);
       }
     }
 

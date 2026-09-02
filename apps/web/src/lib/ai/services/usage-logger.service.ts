@@ -4,6 +4,7 @@
 
 import { AIRequestLogData } from "../types/ai.types";
 import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 
 export class UsageLoggerService {
   public static async logRequest(data: AIRequestLogData): Promise<void> {
@@ -23,7 +24,9 @@ export class UsageLoggerService {
             mode: data.mode || "api",
             status: data.status,
             prompt: data.prompt.substring(0, 4000), // Protect DB from huge prompts
-            response: typeof data.response === "string" ? { text: data.response.substring(0, 8000) } : data.response,
+            response: (typeof data.response === "string"
+              ? { text: data.response.substring(0, 8000) }
+              : data.response) as Prisma.InputJsonValue,
             promptLength: data.promptLength,
             responseLength: data.responseLength,
             executionTime: data.executionTime,
@@ -35,8 +38,9 @@ export class UsageLoggerService {
           },
         });
       }
-    } catch (err: any) {
-      console.warn("[UsageLoggerService] Failed to persist AI request log to PostgreSQL:", err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn("[UsageLoggerService] Failed to persist AI request log to PostgreSQL:", message);
     }
   }
 }

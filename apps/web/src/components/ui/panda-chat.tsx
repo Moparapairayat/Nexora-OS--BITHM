@@ -33,27 +33,26 @@ const PREDEFINED_QA = [
   },
 ];
 
+function initialGreeting(): Message[] {
+  return [
+    {
+      id: "greet",
+      sender: "penguin",
+      text: "Hi there! I am Nexora's Assistant Penguin 🐧. Ask me anything about the platform or University coursework!",
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    },
+  ];
+}
+
 export function PandaChat() {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(initialGreeting);
   const [isTyping, setIsTyping] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // Initialize with greeting
-  useEffect(() => {
-    setMessages([
-      {
-        id: "greet",
-        sender: "penguin",
-        text: "Hi there! I am Nexora's Assistant Penguin 🐧. Ask me anything about the platform or University coursework!",
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      },
-    ]);
-  }, []);
 
   // Auto scroll to bottom
   useEffect(() => {
@@ -64,7 +63,7 @@ export function PandaChat() {
     if (!text.trim()) return;
 
     const userMsg: Message = {
-      id: Math.random().toString(),
+      id: crypto.randomUUID(),
       sender: "user",
       text,
       time: new Date().toLocaleTimeString([], {
@@ -87,7 +86,7 @@ export function PandaChat() {
         setMessages((prev) => [
           ...prev,
           {
-            id: Math.random().toString(),
+            id: crypto.randomUUID(),
             sender: "penguin",
             text: matchedQA.answer,
             time: new Date().toLocaleTimeString([], {
@@ -129,7 +128,7 @@ export function PandaChat() {
       setMessages((prev) => [
         ...prev,
         {
-          id: Math.random().toString(),
+          id: crypto.randomUUID(),
           sender: "penguin",
           text: replyText,
           time: new Date().toLocaleTimeString([], {

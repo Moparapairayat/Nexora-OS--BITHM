@@ -3,6 +3,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 
+declare global {
+  interface Window {
+    pandaAttentionTarget: { x: number; y: number } | null;
+    triggerPandaSubmitSequence?: () => void;
+  }
+}
+
 export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: boolean; className?: string } = {}) {
   const rootRef = useRef<HTMLDivElement>(null);
   const [submitBtnText, setSubmitBtnText] = useState("Send Message");
@@ -37,11 +44,11 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
     const HEAD_ORIGIN_VB = { x: 300, y: 230 }, VIEWBOX_SIZE = 500;
 
     let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-    let headOriginScreen = { x: 0, y: 0 };
+    const headOriginScreen = { x: 0, y: 0 };
     let currentPupilX = 0, currentPupilY = 0, currentHeadRot = 0, currentBodyRot = 0;
 
     // We attach attention target to window/module scope
-    (window as any).pandaAttentionTarget = null; 
+    window.pandaAttentionTarget = null; 
 
     function updateHeadOrigin() {
       if (!mascotContainer) return;
@@ -79,7 +86,8 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
     const IDLE_SWAY_AMPLITUDE = 0.5, IDLE_SWAY_SPEED = 0.00035;  
     const CURSOR_INFLUENCE_RADIUS = 700, BRANCH_ORIGIN_VB = { x: 480, y: 20 };
 
-    let branchOriginScreen = { x: 0, y: 0 }, branchAngle = 0, branchVelocity = 0;
+    const branchOriginScreen = { x: 0, y: 0 };
+    let branchAngle = 0, branchVelocity = 0;
     let pandaSwingAngle = 0, pandaVelocity = 0;
 
     function updateBranchOrigin() {
@@ -145,7 +153,7 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       fallRot: 0
     };
 
-    let breath = { headRot: 0, scaleY: 0, scaleX: 0, bambooRot: 0 };
+    const breath = { headRot: 0, scaleY: 0, scaleX: 0, bambooRot: 0 };
     interface Tween {
       prop: keyof typeof stateVals;
       startValue: number;
@@ -172,7 +180,7 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
 
     let activeTweens: Tween[] = [];
     let activeDelays: Delay[] = [];
-    let particleEntities: Particle[] = [];
+    const particleEntities: Particle[] = [];
 
     const easeInCubic = (t: number) => t * t * t;
     const easeInOutCubic = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -590,15 +598,15 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       lastMouseTime = performance.now();
     }
 
-    function handleInputFocus(e: FocusEvent) {
+    function handleInputFocus(e: Event) {
       const el = e.target as HTMLElement;
       const rect = el.getBoundingClientRect();
-      (window as any).pandaAttentionTarget = { x: rect.left + rect.width, y: rect.top + rect.height / 2 };
+      window.pandaAttentionTarget = { x: rect.left + rect.width, y: rect.top + rect.height / 2 };
       if (state === "AWAKE") { state = "TYPING"; cancelAllAnimations(); }
     }
 
     function handleInputBlur() {
-      (window as any).pandaAttentionTarget = null;
+      window.pandaAttentionTarget = null;
       if (state === "TYPING") { state = "AWAKE"; lastMouseTime = performance.now(); }
     }
 
@@ -689,9 +697,9 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
     // Input listeners
     const inputs = rootRef.current?.querySelectorAll(".form-control") || [];
     inputs.forEach(el => {
-      el.addEventListener("focus", handleInputFocus as any);
-      el.addEventListener("blur", handleInputBlur as any);
-      el.addEventListener("input", handleInputType as any);
+      el.addEventListener("focus", handleInputFocus);
+      el.addEventListener("blur", handleInputBlur);
+      el.addEventListener("input", handleInputType);
     });
 
     // Panda click triggers
@@ -727,7 +735,7 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
     mascotContainer.addEventListener("mouseenter", onMascotMouseEnter);
 
     // Exposé submit trigger to window scope for react form submission
-    (window as any).triggerPandaSubmitSequence = () => {
+    window.triggerPandaSubmitSequence = () => {
       playSubmitSequence();
     };
 
@@ -816,7 +824,7 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
           if (life >= 1) { p.el.remove(); particleEntities.splice(i, 1); }
           else {
             const driftY = -life * 75, driftX = Math.sin(life * Math.PI * 3) * 12 + life * 15;
-            let opacity = life < 0.2 ? life / 0.2 : life > 0.6 ? 1 - ((life - 0.6) / 0.4) : 1;
+            const opacity = life < 0.2 ? life / 0.2 : life > 0.6 ? 1 - ((life - 0.6) / 0.4) : 1;
             p.el.setAttribute("transform", `translate(${290 + driftX}, ${240 + driftY}) scale(${0.5 + life})`);
             p.el.setAttribute("opacity", opacity.toString());
           }
@@ -850,8 +858,8 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       }
 
       // Bamboo branch swing & hanging swing updates
-      const targetX = (window as any).pandaAttentionTarget ? (window as any).pandaAttentionTarget.x : mouseX;
-      const targetY = (window as any).pandaAttentionTarget ? (window as any).pandaAttentionTarget.y : mouseY;
+      const targetX = window.pandaAttentionTarget ? window.pandaAttentionTarget.x : mouseX;
+      const targetY = window.pandaAttentionTarget ? window.pandaAttentionTarget.y : mouseY;
       
       const pDx = targetX - headOriginScreen.x;
       const pDy = targetY - headOriginScreen.y;
@@ -906,9 +914,9 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
         submitBtn.removeEventListener("mouseleave", onHoverOut);
       }
       inputs.forEach(el => {
-        el.removeEventListener("focus", handleInputFocus as any);
-        el.removeEventListener("blur", handleInputBlur as any);
-        el.removeEventListener("input", handleInputType as any);
+        el.removeEventListener("focus", handleInputFocus);
+        el.removeEventListener("blur", handleInputBlur);
+        el.removeEventListener("input", handleInputType);
       });
       pandaCharacter.removeEventListener("click", onPandaClick);
       pandaCharacter.removeEventListener("dblclick", onPandaDblClick);
@@ -931,8 +939,8 @@ export function PandaCTA({ mascotOnly = false, className = "" }: { mascotOnly?: 
       setSubmitBtnDisabled(true);
 
       // Trigger the celebration sequence!
-      if ((window as any).triggerPandaSubmitSequence) {
-        (window as any).triggerPandaSubmitSequence();
+      if (window.triggerPandaSubmitSequence) {
+        window.triggerPandaSubmitSequence();
       }
 
       // Reset form eventually

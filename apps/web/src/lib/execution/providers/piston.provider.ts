@@ -3,7 +3,7 @@
  */
 
 import { BaseExecutionProvider } from "./base.provider";
-import { ExecutionInput, ExecutionProviderId, StandardExecutionResult, SupportedLanguage } from "../types/execution.types";
+import { ExecutionInput, ExecutionProviderId, StandardExecutionResult } from "../types/execution.types";
 import { EXECUTION_CONFIG } from "../config/execution.config";
 import { OutputParser } from "../parsers/output.parser";
 import { normalizeLanguage } from "../router/language.resolver";
@@ -64,10 +64,15 @@ export class PistonProvider extends BaseExecutionProvider {
       const executionTime = Date.now() - startTime;
 
       return OutputParser.parsePistonResponse(data, normalizedLang, executionTime, this.id);
-    } catch (err: any) {
+    } catch (err: unknown) {
       clearTimeout(timeoutId);
       const executionTime = Date.now() - startTime;
-      const errorMsg = err.name === "AbortError" ? `Execution timed out after ${timeoutMs}ms.` : err.message;
+      const errorMsg =
+        err instanceof Error
+          ? err.name === "AbortError"
+            ? `Execution timed out after ${timeoutMs}ms.`
+            : err.message
+          : "Piston API request failed.";
       return OutputParser.formatErrorResult(errorMsg, normalizedLang, executionTime, this.id);
     }
   }

@@ -11,11 +11,9 @@ export class OpenRouterProvider extends BaseAIProvider {
   public readonly name: string = AI_CONFIG.providers.openrouter.name;
 
   private getApiKey(): string {
-    return (
-      process.env.OPENROUTER_API_KEY ||
-      process.env.NEXT_PUBLIC_OPENROUTER_API_KEY ||
-      ""
-    );
+    // Never fall back to a NEXT_PUBLIC_ variable here — Next.js inlines those
+    // into the client bundle, which would ship this secret key to the browser.
+    return process.env.OPENROUTER_API_KEY || "";
   }
 
   public isConfigured(): boolean {
@@ -92,9 +90,10 @@ export class OpenRouterProvider extends BaseAIProvider {
         },
         executionTime,
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       clearTimeout(timeoutId);
-      throw new Error(`OpenRouterProvider Error: ${err.message}`);
+      const message = err instanceof Error ? err.message : String(err);
+      throw new Error(`OpenRouterProvider Error: ${message}`);
     }
   }
 }

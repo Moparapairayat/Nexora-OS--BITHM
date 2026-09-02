@@ -11,6 +11,18 @@ import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
+// In production, demo accounts (including a well-known admin@nexora.local /
+// password123 login) must be explicitly opted into — never created by default,
+// since forgetting to disable this flag before a production seed would ship a
+// publicly-known admin credential.
+function shouldSeedDemoAccounts() {
+  if (process.env.NODE_ENV === "production") {
+    return process.env.NEXORA_DEMO_LOGIN_ENABLED === "true";
+  }
+
+  return process.env.NEXORA_DEMO_LOGIN_ENABLED !== "false";
+}
+
 const rolePermissions: Record<UserRole, string[]> = {
   STUDENT: [
     "dashboard:read",
@@ -814,7 +826,7 @@ async function seedRoles() {
 }
 
 async function seedDemoAccounts() {
-  if (process.env.NEXORA_DEMO_LOGIN_ENABLED === "false") {
+  if (!shouldSeedDemoAccounts()) {
     console.log(
       "Demo login users skipped because NEXORA_DEMO_LOGIN_ENABLED=false.",
     );
@@ -846,7 +858,7 @@ async function seedDemoAccounts() {
 }
 
 async function seedAcademicAssignments() {
-  if (process.env.NEXORA_DEMO_LOGIN_ENABLED === "false") {
+  if (!shouldSeedDemoAccounts()) {
     console.log("Academic assignment seed skipped with demo login disabled.");
     return;
   }
@@ -1054,7 +1066,7 @@ function labSessionDescription(seed: (typeof liveLabSeeds)[number]) {
 }
 
 async function seedLiveLabs() {
-  if (process.env.NEXORA_DEMO_LOGIN_ENABLED === "false") {
+  if (!shouldSeedDemoAccounts()) {
     console.log("LiveLab seed skipped with demo login disabled.");
     return;
   }
@@ -1300,7 +1312,7 @@ async function seedLiveLabs() {
 }
 
 async function seedLabReports() {
-  if (process.env.NEXORA_DEMO_LOGIN_ENABLED === "false") {
+  if (!shouldSeedDemoAccounts()) {
     console.log("Lab report seed skipped with demo login disabled.");
     return;
   }
@@ -1408,7 +1420,7 @@ async function seedLabReports() {
 }
 
 async function seedCodeLabWorkspace() {
-  if (process.env.NEXORA_DEMO_LOGIN_ENABLED === "false") {
+  if (!shouldSeedDemoAccounts()) {
     console.log("Code Lab seed skipped with demo login disabled.");
     return;
   }
@@ -1687,7 +1699,7 @@ async function seedCodeLabWorkspace() {
 }
 
 async function seedAcademicShield() {
-  if (process.env.NEXORA_DEMO_LOGIN_ENABLED === "false") {
+  if (!shouldSeedDemoAccounts()) {
     console.log("AcademicShield seed skipped with demo login disabled.");
     return;
   }
@@ -1932,7 +1944,7 @@ async function seedAcademicShield() {
 }
 
 async function seedDatabaseAndMlStudio() {
-  if (process.env.NEXORA_DEMO_LOGIN_ENABLED === "false") {
+  if (!shouldSeedDemoAccounts()) {
     console.log(
       "Database Visualizer and ML Studio seed skipped with demo login disabled.",
     );

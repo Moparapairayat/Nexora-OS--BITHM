@@ -466,10 +466,10 @@ function runnerLanguageFor(
     language === "typescript" ||
     language === "html"
   ) {
-    return language as any;
+    return language;
   }
 
-  return fallback as any;
+  return fallback;
 }
 
 function outputMatchesExpected(actualStdout: string, expected: string): boolean {
@@ -2321,16 +2321,16 @@ function CodeEditorPanel({
                 <div className="mb-2.5 space-y-1">
                   <label className="text-[11px] font-semibold text-slate-500">Theme Preset</label>
                   <div className="grid grid-cols-2 gap-1">
-                    {[
+                    {([
                       { id: "nexora-code-dark", label: "Slate Dark" },
                       { id: "nexora-one-dark", label: "One Dark Pro" },
                       { id: "nexora-catppuccin", label: "Catppuccin" },
                       { id: "nexora-code-light", label: "Clean Light" },
-                    ].map((t) => (
+                    ] as const).map((t) => (
                       <button
                         key={t.id}
                         type="button"
-                        onClick={() => setEditorThemeOverride(t.id as any)}
+                        onClick={() => setEditorThemeOverride(t.id)}
                         className={cn(
                           "rounded-md px-2 py-1 text-left text-[11px] font-medium transition",
                           (editorThemeOverride ?? systemMonacoTheme) === t.id

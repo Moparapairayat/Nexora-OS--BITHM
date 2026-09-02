@@ -19,7 +19,9 @@ export class ExecutionRouter {
     const startTime = Date.now();
 
     // 1. Rate Limiting Check
-    const rateLimit = ExecutionRateLimiterService.isAllowed(input.userId || "anonymous");
+    const rateLimit = ExecutionRateLimiterService.isAllowed(
+      input.rateLimitKey || input.userId || "anonymous",
+    );
     if (!rateLimit.allowed) {
       const retrySec = Math.ceil((rateLimit.retryAfterMs || 1000) / 1000);
       return OutputParser.formatErrorResult(`Execution rate limit reached. Please wait ${retrySec}s before running again.`, normalizeLanguage(input.language), 0);
@@ -61,8 +63,9 @@ export class ExecutionRouter {
 
         lastResult = result;
         console.warn(`[ExecutionRouter] Provider "${provider.name}" returned error (${result.errorMessage || result.stderr}). Triggering failover...`);
-      } catch (err: any) {
-        console.error(`[ExecutionRouter] Provider "${provider.name}" exception:`, err.message);
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err);
+        console.error(`[ExecutionRouter] Provider "${provider.name}" exception:`, message);
       }
     }
 

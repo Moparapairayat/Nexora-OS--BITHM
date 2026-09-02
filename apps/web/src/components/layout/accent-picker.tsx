@@ -58,9 +58,31 @@ export function AccentPicker({ variant = "floating" }: AccentPickerProps) {
   const widgetRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);
 
-  // Load theme preference on mount & listen for changes
+  const applyTheme = (themeId: string) => {
+    const root = document.documentElement;
+
+    // Remove all existing theme classes
+    THEMES.forEach((t) => {
+      if (t.id !== "emerald") {
+        root.classList.remove(`theme-${t.id}`);
+      }
+    });
+
+    // Add selected theme class (emerald is default, so no class needed)
+    if (themeId !== "emerald") {
+      root.classList.add(`theme-${themeId}`);
+    }
+
+    localStorage.setItem("nexora-accent-theme", themeId);
+    window.dispatchEvent(new Event("nexora-accent-change"));
+  };
+
+  // Load theme preference on mount & listen for changes. Reads localStorage,
+  // so this must stay in an effect (SSR has no localStorage to read during
+  // render) rather than a lazy useState initializer.
   useEffect(() => {
     const saved = localStorage.getItem("nexora-accent-theme") || "emerald";
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing from browser-only localStorage, unavoidable outside an effect
     setActiveTheme(saved);
     applyTheme(saved);
 
@@ -100,25 +122,6 @@ export function AccentPicker({ variant = "floating" }: AccentPickerProps) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isOpen]);
-
-  const applyTheme = (themeId: string) => {
-    const root = document.documentElement;
-
-    // Remove all existing theme classes
-    THEMES.forEach((t) => {
-      if (t.id !== "emerald") {
-        root.classList.remove(`theme-${t.id}`);
-      }
-    });
-
-    // Add selected theme class (emerald is default, so no class needed)
-    if (themeId !== "emerald") {
-      root.classList.add(`theme-${themeId}`);
-    }
-
-    localStorage.setItem("nexora-accent-theme", themeId);
-    window.dispatchEvent(new Event("nexora-accent-change"));
-  };
 
   const handleSelect = (themeId: string) => {
     setActiveTheme(themeId);

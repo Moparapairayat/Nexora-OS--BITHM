@@ -3,6 +3,9 @@ export type CodeRunnerLanguage =
   | "javascript"
   | "typescript"
   | "html"
+  | "c"
+  | "cpp"
+  | "java"
   | "unsupported";
 
 export type CodeRunnerFile = {

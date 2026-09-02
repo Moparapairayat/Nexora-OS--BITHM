@@ -66,10 +66,10 @@ export async function apiPostWithStatus<T>(
     }
 
     return { data: data as T, error: null, status: response.status };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       data: null,
-      error: err?.message ?? "Network error",
+      error: err instanceof Error ? err.message : "Network error",
       status: 0,
     };
   }

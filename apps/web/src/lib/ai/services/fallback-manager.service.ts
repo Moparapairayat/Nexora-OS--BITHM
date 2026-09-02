@@ -30,9 +30,9 @@ export class FallbackManagerService {
         const result = await provider.generateContent(options);
         const fallbackUsed = i > 0;
         return { response: result, fallbackUsed, attemptedProviders };
-      } catch (err: any) {
-        lastError = err;
-        console.error(`[FallbackManager] Provider "${provider.name}" (${provider.id}) failed:`, err.message);
+      } catch (err: unknown) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+        console.error(`[FallbackManager] Provider "${provider.name}" (${provider.id}) failed:`, lastError.message);
       }
     }
 

@@ -54,8 +54,9 @@ export class ExecutionLoggerService {
           });
         }
       }
-    } catch (err: any) {
-      console.warn("[ExecutionLoggerService] Failed to persist code run to database:", err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.warn("[ExecutionLoggerService] Failed to persist code run to database:", message);
     }
   }
 }

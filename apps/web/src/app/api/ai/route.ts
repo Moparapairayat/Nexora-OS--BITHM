@@ -6,11 +6,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AIRouter } from "@/lib/ai";
 import { AIRequestOptions, AITaskCategory } from "@/lib/ai/types/ai.types";
+import { getRateLimitIdentifier, getSessionUser } from "@/lib/auth/session";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { task, prompt, systemPrompt, userId, moduleName, preferredProvider, temperature, maxTokens } = body;
+    const { task, prompt, systemPrompt, moduleName, preferredProvider, temperature, maxTokens } = body;
+    const sessionUser = await getSessionUser(req);
 
     if (!prompt || typeof prompt !== "string") {
       return NextResponse.json(
@@ -35,7 +37,8 @@ export async function POST(req: NextRequest) {
       task: taskCategory,
       prompt,
       systemPrompt,
-      userId: userId || "anonymous",
+      userId: sessionUser?.id,
+      rateLimitKey: getRateLimitIdentifier(req, sessionUser),
       moduleName: moduleName || "General",
       preferredProvider,
       temperature,
@@ -47,8 +50,9 @@ export async function POST(req: NextRequest) {
     const httpStatus = result.success ? 200 : result.error?.includes("Rate limit") ? 429 : 500;
 
     return NextResponse.json(result, { status: httpStatus });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[API /api/ai] Unhandled exception:", error);
+    const message = error instanceof Error ? error.message : "Unknown internal error.";
     return NextResponse.json(
       {
         success: false,
@@ -59,7 +63,7 @@ export async function POST(req: NextRequest) {
         tokens: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
         executionTime: 0,
         timestamp: new Date().toISOString(),
-        error: error.message || "Unknown internal error.",
+        error: message,
       },
       { status: 500 }
     );

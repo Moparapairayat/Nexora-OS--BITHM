@@ -9,6 +9,7 @@ import {
   FileCheck2,
   Lightbulb,
   PenTool,
+  type LucideIcon,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { ScrollReveal } from "./landing-primitives";
@@ -17,7 +18,7 @@ import { NextGenBrandDivider } from "./nextgen-brand-divider";
 type WorkflowFeature = {
   title: string;
   description: string;
-  icon: any;
+  icon: LucideIcon;
   customImage?: string;
 };
 

@@ -105,10 +105,11 @@ export class Judge0Provider extends BaseExecutionProvider {
         errorMessage: isSuccess ? undefined : decodeBase64(data.message) || data.status?.description || stderr,
         timestamp: new Date().toISOString(),
       };
-    } catch (err: any) {
+    } catch (err: unknown) {
       clearTimeout(timeoutId);
       const executionTimeMs = Date.now() - startTime;
-      return OutputParser.formatErrorResult(err.message || "Judge0 API request failed.", lang, executionTimeMs, this.id);
+      const message = err instanceof Error ? err.message : "Judge0 API request failed.";
+      return OutputParser.formatErrorResult(message, lang, executionTimeMs, this.id);
     }
   }
 }

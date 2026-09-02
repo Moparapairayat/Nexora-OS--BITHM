@@ -2217,13 +2217,18 @@ function ExportStudioModal({
     getNexoraLogoDataUrl().then(setLogoSrc);
   }, []);
 
-  useEffect(() => {
+  // Reset the preset to match the current theme every time the dialog opens.
+  // Adjusted directly during render (the transition from closed to open)
+  // rather than a useEffect, since it's derived purely from the `isOpen` prop.
+  const [wasOpen, setWasOpen] = useState(isOpen);
+  if (isOpen !== wasOpen) {
+    setWasOpen(isOpen);
     if (isOpen) {
       const activePreset: ExportPreset =
         themeMode === "blueprint" ? "blueprint" : themeMode === "light" ? "clean" : "studio";
       setConfig((prev) => ({ ...prev, preset: activePreset }));
     }
-  }, [isOpen, themeMode]);
+  }
 
   if (!isOpen) return null;
 

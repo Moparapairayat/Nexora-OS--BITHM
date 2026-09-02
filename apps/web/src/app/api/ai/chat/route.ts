@@ -6,11 +6,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AIRouter, ConversationContextService } from "@/lib/ai";
 import { AIRequestOptions, ChatMessage } from "@/lib/ai/types/ai.types";
+import { getRateLimitIdentifier, getSessionUser } from "@/lib/auth/session";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages, prompt, systemPrompt, userId, moduleName } = body;
+    const { messages, prompt, systemPrompt, moduleName } = body;
+    const sessionUser = await getSessionUser(req);
 
     const chatHistory: ChatMessage[] = Array.isArray(messages) ? messages : [];
     const userPrompt = prompt || (chatHistory.length > 0 ? chatHistory[chatHistory.length - 1].content : "");
@@ -39,7 +41,8 @@ export async function POST(req: NextRequest) {
       prompt: userPrompt,
       systemPrompt,
       messages: fittedMessages,
-      userId: userId || "anonymous",
+      userId: sessionUser?.id,
+      rateLimitKey: getRateLimitIdentifier(req, sessionUser),
       moduleName: moduleName || "PandaChat",
     };
 
@@ -48,8 +51,9 @@ export async function POST(req: NextRequest) {
     const httpStatus = result.success ? 200 : result.error?.includes("Rate limit") ? 429 : 500;
 
     return NextResponse.json(result, { status: httpStatus });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[API /api/ai/chat] Unhandled exception:", error);
+    const message = error instanceof Error ? error.message : "Unknown error.";
     return NextResponse.json(
       {
         success: false,
@@ -60,7 +64,7 @@ export async function POST(req: NextRequest) {
         tokens: { promptTokens: 0, completionTokens: 0, totalTokens: 0 },
         executionTime: 0,
         timestamp: new Date().toISOString(),
-        error: error.message || "Unknown error.",
+        error: message,
       },
       { status: 500 }
     );

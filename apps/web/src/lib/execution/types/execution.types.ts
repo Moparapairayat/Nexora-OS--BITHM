@@ -36,6 +36,13 @@ export interface ExecutionInput {
   timeoutMs?: number;
   workspaceId?: string;
   userId?: string;
+  /**
+   * Server-derived identifier used for rate limiting (verified session id or
+   * request IP — never a client-supplied value). Falls back to `userId` when
+   * omitted for backward compatibility, but every route handler should set
+   * this explicitly rather than trusting request-body `userId` for limiting.
+   */
+  rateLimitKey?: string;
   taskTitle?: string;
   submissionId?: string;
   preferredProvider?: ExecutionProviderId;

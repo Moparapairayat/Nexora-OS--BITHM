@@ -559,18 +559,18 @@ def get_balance(node):
 
               {/* Sub-tab Navigation */}
               <div className="flex items-center gap-1 border-b border-slate-200/70 dark:border-white/10 pb-2 text-xs font-bold">
-                {[
+                {([
                   { id: "architecture", label: "System Architecture", icon: Workflow },
                   { id: "metrics", label: "Engineering Metrics", icon: Activity },
                   { id: "code", label: "Core Implementation", icon: Code2 },
                   { id: "tests", label: "CI Test Assertions", icon: ShieldCheck },
-                ].map((t) => {
+                ] as const).map((t) => {
                   const Icon = t.icon;
                   return (
                     <button
                       key={t.id}
                       type="button"
-                      onClick={() => setActiveTab(t.id as any)}
+                      onClick={() => setActiveTab(t.id)}
                       className={cn(
                         "inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 transition",
                         activeTab === t.id

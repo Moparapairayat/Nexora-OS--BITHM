@@ -45,11 +45,16 @@ export interface AIRequestOptions {
   systemPrompt?: string;
   messages?: ChatMessage[];
   userId?: string;
+  /**
+   * Server-derived identifier used for rate limiting (verified session id or
+   * request IP — never a client-supplied value). Falls back to `userId`.
+   */
+  rateLimitKey?: string;
   moduleName?: AIModule;
   maxTokens?: number;
   temperature?: number;
   preferredProvider?: AIProviderId;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface AIProviderResponse {
@@ -97,7 +102,7 @@ export interface AIRequestLogData {
   mode?: string;
   status: "success" | "fallback_success" | "error";
   prompt: string;
-  response?: any;
+  response?: unknown;
   promptLength: number;
   responseLength: number;
   executionTime: number;

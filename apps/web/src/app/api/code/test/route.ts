@@ -5,11 +5,14 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { ExecutionRouter, ExecutionInput } from "@/lib/execution";
+import { getRateLimitIdentifier, getSessionUser } from "@/lib/auth/session";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { language, code, files, testCases, timeoutMs, workspaceId, userId, preferredProvider } = body;
+    const { language, code, files, testCases, timeoutMs, workspaceId, preferredProvider } = body;
+
+    const sessionUser = await getSessionUser(req);
 
     const input: ExecutionInput = {
       language,
@@ -18,25 +21,27 @@ export async function POST(req: NextRequest) {
       testCases,
       timeoutMs,
       workspaceId,
-      userId: userId || "anonymous",
+      userId: sessionUser?.id || "anonymous",
+      rateLimitKey: getRateLimitIdentifier(req, sessionUser),
       preferredProvider,
     };
 
     const result = await ExecutionRouter.execute(input);
 
     return NextResponse.json(result, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[API /api/code/test] Unhandled exception:", error);
+    const message = error instanceof Error ? error.message : "Internal server error running test suite.";
     return NextResponse.json(
       {
         success: false,
         stdout: "",
-        stderr: error.message || "Internal server error running test suite.",
+        stderr: message,
         status: "error",
         executionTimeMs: 0,
         provider: "piston",
         language: "c",
-        errorMessage: error.message || "Internal error.",
+        errorMessage: message,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }

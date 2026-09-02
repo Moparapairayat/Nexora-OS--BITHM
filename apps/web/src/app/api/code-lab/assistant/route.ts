@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AIRouter } from "@/lib/ai";
 import type { AIRequestOptions } from "@/lib/ai/types/ai.types";
+import { getRateLimitIdentifier, getSessionUser } from "@/lib/auth/session";
 
 type AiAction = "explain" | "debug" | "improve";
 
@@ -28,7 +29,8 @@ function extractCodeBlock(text: string): { note: string; suggestedCode?: string 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { action, language, code, stdin, workspaceId, fileId, userId } = body;
+    const { action, language, code, stdin } = body;
+    const sessionUser = await getSessionUser(req);
 
     const currentAction: AiAction = (action as AiAction) || "explain";
     const currentLang = language || "javascript";
@@ -68,7 +70,8 @@ export async function POST(req: NextRequest) {
       task: currentAction === "debug" ? "debugging" : "coding",
       prompt: userPrompt,
       systemPrompt,
-      userId: userId || "student",
+      userId: sessionUser?.id,
+      rateLimitKey: getRateLimitIdentifier(req, sessionUser),
       moduleName: "CodeAssistant",
       temperature: 0.2,
       maxTokens: 1200,
@@ -101,12 +104,13 @@ export async function POST(req: NextRequest) {
       model: result.model,
       mode: "live",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[API /api/code-lab/assistant] Unhandled exception:", error);
+    const message = error instanceof Error ? error.message : "Failed to process AI code assistant request.";
     return NextResponse.json(
       {
         action: "explain",
-        note: error.message || "Failed to process AI code assistant request.",
+        note: message,
         model: "error",
         mode: "error",
       },

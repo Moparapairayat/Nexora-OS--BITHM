@@ -57,8 +57,8 @@ opsRouter.get(
   "/audit",
   requirePermission("security:audit"),
   auditAction("ops.audit", "audit trail"),
-  (_request, response) => {
-    response.json({ events: listAuditEvents() });
+  async (_request, response) => {
+    response.json({ events: await listAuditEvents() });
   },
 );
 

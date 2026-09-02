@@ -38,7 +38,9 @@ export class AIRouter {
     const startTime = Date.now();
 
     // 1. Rate Limiting Check
-    const rateLimit = RateLimiterService.isAllowed(options.userId || "global");
+    const rateLimit = RateLimiterService.isAllowed(
+      options.rateLimitKey || options.userId || "global",
+    );
     if (!rateLimit.allowed) {
       const errorMsg = `Rate limit exceeded. Please wait ${Math.ceil((rateLimit.retryAfterMs || 1000) / 1000)} seconds.`;
       return ResponseFormatterService.formatError(errorMsg, 0, "none");
@@ -106,9 +108,10 @@ export class AIRouter {
       });
 
       return formatted;
-    } catch (err: any) {
+    } catch (err: unknown) {
       const executionTime = Date.now() - startTime;
-      const errorResponse = ResponseFormatterService.formatError(err, executionTime, providerChain[0]?.id || "none");
+      const normalizedError = err instanceof Error ? err : String(err);
+      const errorResponse = ResponseFormatterService.formatError(normalizedError, executionTime, providerChain[0]?.id || "none");
 
       // Log failure to database
       await UsageLoggerService.logRequest({
@@ -118,7 +121,7 @@ export class AIRouter {
         mode: "api",
         status: "error",
         prompt: cleanPrompt,
-        response: { error: err.message },
+        response: { error: errorResponse.error },
         promptLength: cleanPrompt.length,
         responseLength: 0,
         executionTime,
