@@ -54,4 +54,5 @@ Desktop.ini
 
 # Temporary files
 .tmp-responsive/
+*.zip
 

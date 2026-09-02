@@ -13,6 +13,7 @@ import {
   RefreshCw,
   Search,
   ShieldCheck,
+  Sparkles,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -31,26 +32,11 @@ The application requirements and constraints are analyzed for web/mobile usage a
 export function WebSourceScanPage({ role }: { role: AppRole }) {
   const roleData = roleDashboards[role];
 
-  const [url, setUrl] = useState("https://en.wikipedia.org/wiki/Responsive_web_design");
-  const [submissionText, setSubmissionText] = useState(defaultSample);
+  const [url, setUrl] = useState("");
+  const [submissionText, setSubmissionText] = useState("");
   const [isScanning, setIsScanning] = useState(false);
 
-  const [scanResult, setScanResult] = useState<AcademicShieldWebScan | null>({
-    id: "web-scan-initial",
-    url: "https://en.wikipedia.org/wiki/Responsive_web_design",
-    title: "Responsive web design - Wikipedia",
-    checkedAt: new Date().toISOString(),
-    similarity: 28,
-    semanticScore: 32,
-    citationStatus: "partial",
-    matchedPhrases: [
-      "responsive web design",
-      "web and mobile application",
-      "performance checks and validation",
-    ],
-    recommendation:
-      "Partial reference detected. Add a formal citation for 'Responsive web design - Wikipedia' and acknowledge definitions in your references.",
-  });
+  const [scanResult, setScanResult] = useState<AcademicShieldWebScan | null>(null);
 
   const [scanHistory, setScanHistory] = useState<AcademicShieldWebScan[]>([]);
 
@@ -95,24 +81,14 @@ export function WebSourceScanPage({ role }: { role: AppRole }) {
     >
       <div className="grid gap-6 max-w-7xl mx-auto">
         
-        {/* ZEN TOP HEADER */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/70 dark:border-white/[0.06] pb-5">
+        {/* CLEAN MINIMALIST TOP HEADER */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/60 dark:border-white/[0.06] pb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-600 dark:text-cyan-400">
-                <Globe2 className="h-3.5 w-3.5 inline" />
-                Live HTML Scraper Active
-              </span>
-              <span className="text-slate-300 dark:text-slate-700">&bull;</span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-                Real-Time Document Comparator
-              </span>
-            </div>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-2xl">
               Web Source Scanner
             </h1>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
-              Extract and cross-examine live web content directly against your submission text in real time.
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Extract and compare live webpage content directly against your submission text.
             </p>
           </div>
         </div>
@@ -224,9 +200,27 @@ export function WebSourceScanPage({ role }: { role: AppRole }) {
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-slate-400 py-16 text-center">
-                  Click 'Scan URL' above to fetch and compare the live webpage.
-                </p>
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 mb-3">
+                    <Radar className="h-6 w-6" />
+                  </div>
+                  <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Awaiting Target Web Scan</h4>
+                  <p className="mt-1 max-w-xs text-xs text-slate-500 dark:text-slate-400">
+                    Enter target URL and text, then click <strong>Scan Web Source</strong>.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => {
+                      setUrl("https://en.wikipedia.org/wiki/Responsive_web_design");
+                      setSubmissionText(defaultSample);
+                    }}
+                    className="mt-4 h-8 px-3 text-xs rounded-xl"
+                  >
+                    <Sparkles className="mr-1.5 h-3 w-3 text-cyan-600" />
+                    Load Sample Target &amp; Draft
+                  </Button>
+                </div>
               )}
             </div>
 

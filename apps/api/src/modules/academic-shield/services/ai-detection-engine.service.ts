@@ -8,11 +8,13 @@ import type {
 /**
  * Categorized LLM Transition & Stylometric Hallmarks
  */
+/**
+ * Categorized LLM Transition & Stylometric Hallmarks (Synthetic Clichés)
+ */
 const AI_HEDGE_MARKERS = [
   "it is important to note",
   "it is worth noting",
   "it should be emphasized",
-  "can be seen as",
   "plays a pivotal role",
   "plays a crucial role",
   "plays an essential role",
@@ -29,9 +31,10 @@ const AI_HEDGE_MARKERS = [
   "comprehensive understanding",
   "seamlessly integrates",
   "fosters collaboration",
+  "fosters a sense of",
   "beacon of",
   "holistic approach",
-  "cornerstone",
+  "cornerstone of",
   "it is imperative",
   "paramount importance",
   "spearheading",
@@ -42,14 +45,6 @@ const AI_HEDGE_MARKERS = [
   "embark on",
   "revolutionizing",
   "by leveraging",
-  "in essence",
-  "in summary",
-  "to summarize",
-  "furthermore",
-  "moreover",
-  "consequently",
-  "nevertheless",
-  "additionally",
 ];
 
 // Academic phrases that should NOT be penalized as AI markers
@@ -69,6 +64,14 @@ const ACADEMIC_LEGITIMATE_PHRASES = [
   "form validation",
   "test cases",
   "boundary values",
+  "in conclusion",
+  "furthermore",
+  "moreover",
+  "consequently",
+  "nevertheless",
+  "additionally",
+  "in summary",
+  "to summarize",
 ];
 
 // Passive voice indicators
@@ -107,7 +110,7 @@ export class AIDetectionEngineService {
     burstinessScore: number;
   } {
     if (sentences.length === 0) {
-      return { averageLength: 0, stdDev: 0, coefficientOfVariation: 0, burstinessScore: 50 };
+      return { averageLength: 0, stdDev: 0, coefficientOfVariation: 0, burstinessScore: 0 };
     }
 
     const lengths = sentences.map((s) => s.split(/\s+/).filter(Boolean).length);
@@ -120,19 +123,19 @@ export class AIDetectionEngineService {
 
     const coefficientOfVariation = averageLength > 0 ? stdDev / averageLength : 0;
 
-    // AI typically clusters with low CV (0.15 - 0.35)
-    // Human writing has rich variance (CV > 0.50)
-    let burstinessAiSignal = 40;
-    if (coefficientOfVariation < 0.20) {
-      burstinessAiSignal = 90;
-    } else if (coefficientOfVariation < 0.32) {
-      burstinessAiSignal = 75;
-    } else if (coefficientOfVariation < 0.45) {
-      burstinessAiSignal = 50;
-    } else if (coefficientOfVariation > 0.60) {
-      burstinessAiSignal = 18;
+    // AI typically clusters with low CV (0.05 - 0.25)
+    // Human writing has rich natural variance (CV > 0.40)
+    let burstinessAiSignal = 0;
+    if (coefficientOfVariation < 0.15 && lengths.length >= 3) {
+      burstinessAiSignal = 85;
+    } else if (coefficientOfVariation < 0.28 && lengths.length >= 3) {
+      burstinessAiSignal = 55;
+    } else if (coefficientOfVariation < 0.38) {
+      burstinessAiSignal = 25;
+    } else if (coefficientOfVariation >= 0.45) {
+      burstinessAiSignal = 0; // Natural organic variance
     } else {
-      burstinessAiSignal = 28;
+      burstinessAiSignal = 10;
     }
 
     return {
@@ -289,39 +292,34 @@ export class AIDetectionEngineService {
       const wCount = words.length;
       const lower = sentence.toLowerCase();
 
-      let sentenceAiProbability = 15;
+      let sentenceAiProbability = 0;
       const flaggedFeatures: string[] = [];
       let reason = "Natural human sentence rhythm with authentic lexical variance.";
 
-      // Check for markers in this sentence
+      // Check for synthetic AI clichés in this sentence
       const localMarkers = AI_HEDGE_MARKERS.filter((m) => lower.includes(m));
       if (localMarkers.length > 0) {
-        sentenceAiProbability += localMarkers.length * 28;
-        flaggedFeatures.push(`Characteristic AI transition (${localMarkers.join(", ")})`);
+        sentenceAiProbability += localMarkers.length * 35;
+        flaggedFeatures.push(`Synthetic cliché (${localMarkers.join(", ")})`);
         reason = `Contains distinct AI transitional phrasing (${localMarkers.slice(0, 2).join(", ")}).`;
       }
 
-      // Check for length deviation / uniformity
+      // Check for extreme length uniformity (< 1 word deviation in medium-long sentence)
       const deviation = Math.abs(wCount - avgLength);
-      if (deviation < 2 && wCount > 12) {
+      if (deviation < 1.5 && wCount > 15 && sentences.length >= 4) {
         sentenceAiProbability += 15;
         flaggedFeatures.push("Uniform sentence length clustering");
       }
 
-      // Check for repetitive clause openings (e.g. Furthermore, Additionally, In conclusion)
-      if (/^(furthermore|moreover|consequently|additionally|in summary|in conclusion|overall|importantly),/i.test(sentence)) {
-        sentenceAiProbability += 22;
-        flaggedFeatures.push("Formulaic transitional opening");
-        reason = "Formulaic adverbial opening frequently indexed by conversational LLMs.";
-      }
-
-      // Safeguard for legitimate academic phrasing
+      // Safeguard for legitimate academic research vocabulary
       if (ACADEMIC_LEGITIMATE_PHRASES.some((p) => lower.includes(p))) {
-        sentenceAiProbability = Math.max(10, sentenceAiProbability - 25);
-        reason = "Verified academic research structure.";
+        sentenceAiProbability = Math.max(0, sentenceAiProbability - 20);
+        if (sentenceAiProbability === 0) {
+          reason = "Verified authentic academic phrasing and methodology.";
+        }
       }
 
-      const finalProb = Math.min(98, Math.max(6, Math.round(sentenceAiProbability)));
+      const finalProb = Math.min(100, Math.max(0, Math.round(sentenceAiProbability)));
       const riskLevel: RiskLevel =
         finalProb >= 65 ? "HIGH" : finalProb >= 35 ? "MEDIUM" : "LOW";
 
@@ -348,7 +346,7 @@ export class AIDetectionEngineService {
     if (wordCount < 15) {
       return {
         id: `writing-risk-${Date.now()}`,
-        score: 12,
+        score: 0,
         riskLevel: "LOW",
         confidence: "advisory",
         features: [
@@ -386,18 +384,18 @@ export class AIDetectionEngineService {
     const sentenceAvgScore =
       evaluatedSentences.length > 0
         ? evaluatedSentences.reduce((acc, s) => acc + s.aiProbability, 0) / evaluatedSentences.length
-        : 20;
+        : 0;
 
     // Composite Weighted Hybrid Score:
-    // 30% Sentence-level granular + 25% Burstiness/CV + 25% Markers/Hedging + 10% Perplexity + 10% Lexical TTR
+    // 35% Sentence-level granular + 25% Burstiness/CV + 25% Markers/Hedging + 15% Perplexity & Lexical Diversity
     const rawScore =
-      sentenceAvgScore * 0.30 +
+      sentenceAvgScore * 0.35 +
       burstiness.burstinessScore * 0.25 +
       markers.markerScore * 0.25 +
-      perplexity.predictabilityScore * 0.10 +
-      diversity.diversityScore * 0.10;
+      perplexity.predictabilityScore * 0.08 +
+      diversity.diversityScore * 0.07;
 
-    const finalScore = Math.min(96, Math.max(8, Math.round(rawScore)));
+    const finalScore = Math.min(100, Math.max(0, Math.round(rawScore)));
 
     const riskLevel: RiskLevel =
       finalScore >= 65 ? "HIGH" : finalScore >= 35 ? "MEDIUM" : "LOW";
@@ -405,15 +403,15 @@ export class AIDetectionEngineService {
     const features: AcademicShieldWritingFeature[] = [
       {
         label: "Sentence rhythm & burstiness",
-        value: `${burstiness.averageLength} avg words per sentence (CV: ${burstiness.coefficientOfVariation} — ${burstiness.coefficientOfVariation >= 0.40 ? "Natural Variance" : "Uniform Machine Pattern"})`,
-        impact: burstiness.burstinessScore >= 70 ? "HIGH" : burstiness.burstinessScore >= 45 ? "MEDIUM" : "LOW",
+        value: `${burstiness.averageLength} avg words per sentence (CV: ${burstiness.coefficientOfVariation} — ${burstiness.coefficientOfVariation >= 0.40 ? "Natural Variance" : "Machine-like Regularity"})`,
+        impact: burstiness.burstinessScore >= 70 ? "HIGH" : burstiness.burstinessScore >= 40 ? "MEDIUM" : "LOW",
       },
       {
         label: "AI transition & hedge markers",
         value: markers.markerCount > 0
-          ? `${markers.markerCount} characteristic markers detected (${markers.detectedMarkers.slice(0, 3).join(", ")})`
-          : "No characteristic AI transitional phrases found",
-        impact: markers.markerScore >= 70 ? "HIGH" : markers.markerScore >= 45 ? "MEDIUM" : "LOW",
+          ? `${markers.markerCount} synthetic clichés detected (${markers.detectedMarkers.slice(0, 3).join(", ")})`
+          : "No characteristic AI synthetic clichés found",
+        impact: markers.markerScore >= 70 ? "HIGH" : markers.markerScore >= 40 ? "MEDIUM" : "LOW",
       },
       {
         label: "N-gram perplexity & predictability",

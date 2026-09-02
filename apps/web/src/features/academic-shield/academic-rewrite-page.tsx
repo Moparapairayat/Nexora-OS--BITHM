@@ -33,27 +33,12 @@ export function AcademicRewritePage({ role }: { role: AppRole }) {
   const roleData = roleDashboards[role];
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [text, setText] = useState(defaultDraft);
+  const [text, setText] = useState("");
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isRewriting, setIsRewriting] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const [rewrite, setRewrite] = useState<AcademicRewriteSuggestion | null>({
-    id: "rewrite-initial",
-    originalText: defaultDraft,
-    rewrittenText: `This investigation rigorously evaluates the architectural specifications, empirical testing documentation, and implementation methodologies for an integrated web and mobile application infrastructure.
-
-System requirements and operational constraints are comprehensively examined across diverse form factors, prioritizing adaptive viewport responsiveness. Empirical validation protocols encompass systematic route navigation, boundary form validation, cross-device responsiveness, and benchmark performance metrics.`,
-    citationPreservationNotes: [
-      "Referenced testing methodologies and standard terminology preserved.",
-      "Quantitative metrics and boundary condition specifications retained.",
-    ],
-    riskWarnings: [
-      "Review the rewritten prose to verify personal analytical voice.",
-      "Ensure all project-specific test names match your implementation log.",
-    ],
-    createdAt: new Date().toISOString(),
-  });
+  const [rewrite, setRewrite] = useState<AcademicRewriteSuggestion | null>(null);
 
   const [history, setHistory] = useState<AcademicRewriteSuggestion[]>([]);
 
@@ -121,24 +106,14 @@ System requirements and operational constraints are comprehensively examined acr
     >
       <div className="grid gap-6 max-w-7xl mx-auto">
         
-        {/* ZEN TOP HEADER */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/70 dark:border-white/[0.06] pb-5">
+        {/* CLEAN MINIMALIST TOP HEADER */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/60 dark:border-white/[0.06] pb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
-                <Lock className="h-3 w-3 inline text-emerald-500" />
-                Citation &amp; Empirical Data Lock Active
-              </span>
-              <span className="text-slate-300 dark:text-slate-700">&bull;</span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-                Formal Academic Diction Model
-              </span>
-            </div>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-2xl">
               Academic Rewrite Studio
             </h1>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
-              Elevate linguistic precision, eliminate passive ambiguity, and maintain institutional assessment standards without losing citations.
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Elevate linguistic precision while strictly preserving citations and empirical test data.
             </p>
           </div>
         </div>
@@ -258,9 +233,24 @@ System requirements and operational constraints are comprehensively examined acr
                   {rewrite.rewrittenText}
                 </div>
               ) : (
-                <p className="text-xs text-slate-400 py-16 text-center">
-                  Click 'Generate Academic Rewrite' to produce formal academic text.
-                </p>
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mb-3">
+                    <Wand2 className="h-6 w-6" />
+                  </div>
+                  <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Awaiting Academic Rewrite</h4>
+                  <p className="mt-1 max-w-xs text-xs text-slate-500 dark:text-slate-400">
+                    Enter or paste draft text on the left, then click <strong>Generate Academic Rewrite</strong>.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setText(defaultDraft)}
+                    className="mt-4 h-8 px-3 text-xs rounded-xl"
+                  >
+                    <Sparkles className="mr-1.5 h-3 w-3 text-emerald-600" />
+                    Load Sample Draft
+                  </Button>
+                </div>
               )}
             </div>
 

@@ -17,44 +17,88 @@ export class CitationEngineService {
    * Format citation according to style specifications
    */
   formatCitation(params: CitationParams): { reference: string; inText: string } {
-    const author = (params.author || "Nexora Academic Research Group").trim();
+    let rawAuthor = (params.author || "Academic Research Group").trim();
+    let year = params.year || new Date().getFullYear().toString();
+
+    // Extract year from author if present like "Marcotte, E. (2010)"
+    const yearMatch = rawAuthor.match(/\((\d{4})\)/);
+    if (yearMatch) {
+      year = yearMatch[1];
+      rawAuthor = rawAuthor.replace(/\(\d{4}\)/, "").trim();
+    }
+
     const title = (params.sourceTitle || "Academic Study and Technical Framework").trim();
-    const year = params.year || new Date().getFullYear().toString();
     const url = params.url || "https://example.edu";
-    const publisher = params.publisher || "Academic Press";
+    let publisher = params.publisher?.trim();
+
+    if (!publisher || publisher.toLowerCase() === "academic press") {
+      const urlLower = url.toLowerCase();
+      if (urlLower.includes("wikipedia.org")) {
+        publisher = "Wikipedia, The Free Encyclopedia";
+      } else if (urlLower.includes("ieee.org")) {
+        publisher = "IEEE Standards Association";
+      } else if (urlLower.includes("acm.org")) {
+        publisher = "ACM Digital Library";
+      } else if (urlLower.includes("alistapart.com")) {
+        publisher = "A List Apart Magazine";
+      } else if (urlLower.includes("othm.org.uk")) {
+        publisher = "OTHM Qualifications UK";
+      } else if (urlLower.includes("github.com")) {
+        publisher = "GitHub Repository";
+      } else if (urlLower.includes("repository.nexora.edu") || urlLower.startsWith("vault://")) {
+        publisher = "BITHM Institutional Repository";
+      } else {
+        const domainMatch = url.match(/https?:\/\/(?:www\.)?([^/]+)/i);
+        publisher = domainMatch ? domainMatch[1] : "Online Academic Literature";
+      }
+    }
+
     const style = (params.style || "Harvard").toUpperCase();
 
-    const authorParts = author.split(/\s+/);
-    const lastName = authorParts[authorParts.length - 1] || author;
-    const initial = authorParts.length > 1 ? `${authorParts[0][0]}.` : "";
+    // Format author name properly
+    let formattedAuthor = rawAuthor;
+    let inTextAuthor = rawAuthor;
+
+    if (rawAuthor.toLowerCase().includes("wikipedia")) {
+      formattedAuthor = "Wikipedia Contributors";
+      inTextAuthor = "Wikipedia Contributors";
+    } else if (!rawAuthor.includes(",") && rawAuthor.includes(" ") && !rawAuthor.toLowerCase().includes("association") && !rawAuthor.toLowerCase().includes("board") && !rawAuthor.toLowerCase().includes("group")) {
+      const parts = rawAuthor.split(/\s+/);
+      const lastName = parts[parts.length - 1];
+      const initials = parts.slice(0, -1).map(p => `${p[0]}.`).join("");
+      formattedAuthor = `${lastName}, ${initials}`;
+      inTextAuthor = lastName;
+    } else if (rawAuthor.includes(",")) {
+      inTextAuthor = rawAuthor.split(",")[0].trim();
+    }
 
     switch (style) {
       case "APA":
       case "APA 7":
       case "APA7":
         return {
-          reference: `${lastName}, ${initial} (${year}). ${title}. ${publisher}. ${url}`,
-          inText: `(${lastName}, ${year})`,
+          reference: `${formattedAuthor} (${year}). ${title}. ${publisher}. ${url}`,
+          inText: `(${inTextAuthor}, ${year})`,
         };
 
       case "IEEE":
         return {
-          reference: `[1] ${initial} ${lastName}, "${title}," ${publisher}, ${year}. [Online]. Available: ${url}`,
+          reference: `[1] ${formattedAuthor}, "${title}," ${publisher}, ${year}. [Online]. Available: ${url}`,
           inText: `[1]`,
         };
 
       case "MLA":
       case "MLA 9":
         return {
-          reference: `${lastName}, ${authorParts.slice(0, -1).join(" ") || initial}. "${title}." ${publisher}, ${year}, ${url}.`,
-          inText: `(${lastName})`,
+          reference: `${formattedAuthor}. "${title}." ${publisher}, ${year}, ${url}.`,
+          inText: `(${inTextAuthor})`,
         };
 
       case "HARVARD":
       default:
         return {
-          reference: `${lastName}, ${initial} (${year}) '${title}', ${publisher}. Available at: ${url} (Accessed: ${new Date().toLocaleDateString("en-GB")}).`,
-          inText: `(${lastName}, ${year})`,
+          reference: `${formattedAuthor} (${year}) '${title}', ${publisher}. Available at: ${url} (Accessed: ${new Date().toLocaleDateString("en-GB")}).`,
+          inText: `(${inTextAuthor}, ${year})`,
         };
     }
   }

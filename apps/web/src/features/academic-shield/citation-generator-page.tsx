@@ -28,20 +28,12 @@ export function CitationGeneratorPage({ role }: { role: AppRole }) {
   const roleData = roleDashboards[role];
 
   const [style, setStyle] = useState("Harvard");
-  const [sourceTitle, setSourceTitle] = useState("Responsive Web Design Principles");
-  const [author, setAuthor] = useState("Ethan Marcotte");
-  const [url, setUrl] = useState("https://alistapart.com/article/responsive-web-design/");
-  const [year, setYear] = useState("2026");
+  const [sourceTitle, setSourceTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
+  const [year, setYear] = useState("");
 
-  const [generatedCitation, setGeneratedCitation] = useState<CitationRecord | null>({
-    id: "cite-default",
-    style: "Harvard",
-    sourceTitle: "Responsive Web Design Principles",
-    url: "https://alistapart.com/article/responsive-web-design/",
-    reference: "Marcotte, E. (2026) 'Responsive Web Design Principles', A List Apart. Available at: https://alistapart.com/article/responsive-web-design/ (Accessed: 29 August 2026).",
-    inText: "(Marcotte, 2026)",
-    createdAt: new Date().toISOString(),
-  });
+  const [generatedCitation, setGeneratedCitation] = useState<CitationRecord | null>(null);
 
   const [citations, setCitations] = useState<CitationRecord[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -49,6 +41,14 @@ export function CitationGeneratorPage({ role }: { role: AppRole }) {
   const [copiedRef, setCopiedRef] = useState(false);
   const [copiedInText, setCopiedInText] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  function loadSampleData() {
+    setStyle("Harvard");
+    setSourceTitle("Responsive Web Design Principles");
+    setAuthor("Ethan Marcotte");
+    setUrl("https://alistapart.com/article/responsive-web-design/");
+    setYear("2026");
+  }
 
   useEffect(() => {
     let active = true;
@@ -132,24 +132,14 @@ export function CitationGeneratorPage({ role }: { role: AppRole }) {
     >
       <div className="grid gap-6 max-w-7xl mx-auto">
         
-        {/* ZEN TOP HEADER */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/70 dark:border-white/[0.06] pb-5">
+        {/* CLEAN MINIMALIST TOP HEADER */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-slate-200/60 dark:border-white/[0.06] pb-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-teal-600 dark:text-teal-400">
-                <span className="h-2 w-2 rounded-full bg-teal-500 animate-pulse" />
-                Referencing Standards Active
-              </span>
-              <span className="text-slate-300 dark:text-slate-700">&bull;</span>
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-mono">
-                Harvard &bull; APA 7th &bull; IEEE &bull; MLA 9th
-              </span>
-            </div>
-            <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-2xl">
               Citation Generator
             </h1>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-2xl">
-              Build full bibliographic references and in-text citation keys from DOIs, journal articles, or web resources.
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Format Harvard, APA 7th, IEEE, and MLA bibliographic references.
             </p>
           </div>
 
@@ -157,7 +147,7 @@ export function CitationGeneratorPage({ role }: { role: AppRole }) {
             type="button"
             onClick={exportBibliography}
             disabled={citations.length === 0}
-            className="h-9 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded-xl shadow-xs dark:bg-teal-600 dark:hover:bg-teal-500 self-start sm:self-auto"
+            className="h-8.5 px-3.5 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded-xl shadow-xs dark:bg-teal-600 dark:hover:bg-teal-500 self-start sm:self-auto"
           >
             <Download className="mr-1.5 h-3.5 w-3.5" />
             Export Bibliography ({citations.length})
@@ -303,9 +293,24 @@ export function CitationGeneratorPage({ role }: { role: AppRole }) {
                   </div>
                 </div>
               ) : (
-                <p className="text-xs text-slate-400 py-10 text-center">
-                  Fill in the details on the left to preview formatted citation output.
-                </p>
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-500/10 text-teal-600 dark:text-teal-400 mb-3">
+                    <BookOpen className="h-6 w-6" />
+                  </div>
+                  <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Awaiting Citation Generation</h4>
+                  <p className="mt-1 max-w-xs text-xs text-slate-500 dark:text-slate-400">
+                    Fill in the source metadata on the left and click <strong>Generate Citation</strong>.
+                  </p>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={loadSampleData}
+                    className="mt-4 h-8 px-3 text-xs rounded-xl"
+                  >
+                    <Sparkles className="mr-1.5 h-3 w-3 text-teal-600" />
+                    Load Sample Source
+                  </Button>
+                </div>
               )}
             </div>
 

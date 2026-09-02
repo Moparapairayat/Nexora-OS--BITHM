@@ -399,6 +399,14 @@ export interface AcademicShieldWritingRisk {
   disclaimer: string;
 }
 
+export interface TamperingDefense {
+  hasTampering: boolean;
+  homoglyphCount: number;
+  zeroWidthCount: number;
+  details: string[];
+  sanitized: boolean;
+}
+
 export interface AcademicShieldReport {
   id: string;
   title: string;
@@ -414,6 +422,7 @@ export interface AcademicShieldReport {
   sourceRanking: AcademicShieldSourceMatch[];
   highlightedMatches: AcademicShieldHighlight[];
   writingRisk: AcademicShieldWritingRisk;
+  tamperingDefense?: TamperingDefense;
   exportFormats: Array<"pdf" | "docx" | "markdown" | "json">;
 }
 

@@ -88,6 +88,70 @@ export function createSessionToken(account: SessionAccount) {
   );
 }
 
+export const optionalAuth: RequestHandler = async (request, _response, next) => {
+  const header = request.headers.authorization;
+  const token = header?.startsWith("Bearer ") ? header.slice(7) : null;
+
+  if (!token) {
+    (request as AuthenticatedRequest).user = {
+      id: "guest-student-id",
+      email: "student@nexora.bithm.edu",
+      name: "Guest Student",
+      role: "STUDENT",
+      permissions: permissionsForRole("STUDENT"),
+    };
+    return next();
+  }
+
+  try {
+    const decoded = jwt.verify(token, jwtSecret()) as {
+      sub: string;
+      userId?: string;
+      role: UserRole;
+      permissions?: string[];
+    };
+    const account = await getPrisma().user.findUnique({
+      where: { email: decoded.sub },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        status: true,
+        deletedAt: true,
+      },
+    });
+
+    if (account && account.status === "ACTIVE" && !account.deletedAt) {
+      (request as AuthenticatedRequest).user = {
+        id: account.id,
+        email: account.email,
+        name: account.name,
+        role: account.role,
+        permissions: decoded.permissions ?? permissionsForRole(account.role),
+      };
+    } else {
+      (request as AuthenticatedRequest).user = {
+        id: "guest-student-id",
+        email: decoded.sub || "student@nexora.bithm.edu",
+        name: "Guest Student",
+        role: decoded.role || "STUDENT",
+        permissions: decoded.permissions ?? permissionsForRole("STUDENT"),
+      };
+    }
+    next();
+  } catch {
+    (request as AuthenticatedRequest).user = {
+      id: "guest-student-id",
+      email: "student@nexora.bithm.edu",
+      name: "Guest Student",
+      role: "STUDENT",
+      permissions: permissionsForRole("STUDENT"),
+    };
+    next();
+  }
+};
+
 export const requireAuth: RequestHandler = async (request, response, next) => {
   const header = request.headers.authorization;
   const token = header?.startsWith("Bearer ") ? header.slice(7) : null;
