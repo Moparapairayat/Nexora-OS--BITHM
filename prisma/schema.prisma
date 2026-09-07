@@ -100,6 +100,7 @@ model User {
   documents              Document[]
   plagiarismReports      PlagiarismReport[]
   writingRiskReports     WritingRiskReport[]
+  writingProvenanceSessions WritingProvenanceSession[]
   citations              Citation[]
   academicWebScans       AcademicWebScan[]
   academicRewrites       AcademicRewrite[]
@@ -643,6 +644,29 @@ model WritingRiskReport {
   @@index([userId])
   @@index([assignmentSubmissionId])
   @@index([labReportId])
+}
+
+/// Captures HOW a piece of academic text was composed (typed gradually vs.
+/// pasted in bulk), not just the final text. A large single paste is a much
+/// harder signal to fake than any text-analysis heuristic, and complements
+/// AcademicShieldWritingRisk's stylometric score with real process evidence.
+model WritingProvenanceSession {
+  id                String    @id @default(cuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  context           String
+  totalChars        Int       @default(0)
+  pastedChars       Int       @default(0)
+  pasteEvents       Int       @default(0)
+  largestPasteChars Int       @default(0)
+  keystrokeCount    Int       @default(0)
+  activeMs          Int       @default(0)
+  verdict           String
+  events            Json?
+  createdAt         DateTime  @default(now())
+
+  @@index([userId])
+  @@index([context])
 }
 
 model Citation {

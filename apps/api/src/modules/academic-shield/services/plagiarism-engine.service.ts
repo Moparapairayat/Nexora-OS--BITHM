@@ -37,6 +37,9 @@ export interface CorpusDocument {
   kind: "internal-submission" | "lab-report" | "web-source" | "citation";
 }
 
+const ML_NLP_URL = (process.env.ML_NLP_URL ?? "http://localhost:8010").replace(/\/$/, "");
+const SEMANTIC_PARAPHRASE_THRESHOLD = 0.5;
+
 /**
  * World-Class Plagiarism Detection Engine
  * Integrates:
@@ -165,6 +168,43 @@ export class PlagiarismEngineService {
 
     if (normA === 0 || normB === 0) return 0;
     return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+  }
+
+  /**
+   * Real semantic similarity via sentence embeddings (services/ml-nlp).
+   * Unlike Jaccard/n-gram overlap, this catches paraphrased content that
+   * shares little or no vocabulary with the query. Degrades gracefully to
+   * all-zero scores (never throws) if the ML service is unreachable, so a
+   * plagiarism check never fails outright for lacking this one signal.
+   */
+  async fetchSemanticScores(query: string, candidates: string[]): Promise<number[]> {
+    if (candidates.length === 0) return [];
+
+    try {
+      const response = await fetch(`${ML_NLP_URL}/similarity`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: query.slice(0, 4000),
+          candidates: candidates.map((c) => c.slice(0, 4000)),
+        }),
+        signal: AbortSignal.timeout(15000),
+      });
+
+      if (!response.ok) {
+        throw new Error(`ML NLP service returned HTTP ${response.status}`);
+      }
+
+      const data = (await response.json()) as { scores?: number[] };
+      if (!Array.isArray(data.scores) || data.scores.length !== candidates.length) {
+        throw new Error("Malformed similarity response");
+      }
+
+      return data.scores;
+    } catch (err) {
+      console.warn("[PlagiarismEngine] Semantic similarity service unavailable, falling back to lexical-only analysis:", err);
+      return candidates.map(() => 0);
+    }
   }
 
   /**
@@ -691,6 +731,7 @@ export class PlagiarismEngineService {
         fuzzySimilarity: 0,
         semanticSimilarity: 0,
         riskLevel: "LOW",
+        paraphraseMatchCount: 0,
         citationGapCount: 0,
         textPreview: text.slice(0, 360),
         sourceRanking: [],
@@ -700,6 +741,8 @@ export class PlagiarismEngineService {
           score: 0,
           riskLevel: "LOW",
           confidence: "advisory",
+          confidenceBand: "low",
+          confidenceReason: "Text is too short to evaluate reliably.",
           features: [],
           disclaimer: "Advisory signal generated using real stylometrics, perplexity and sentence burstiness metrics.",
         },
@@ -718,6 +761,17 @@ export class PlagiarismEngineService {
     const corpus = await this.loadPeerCorpus(currentUserId, text);
     const sourceMatches: AcademicShieldSourceMatch[] = [];
     const highlights: AcademicShieldHighlight[] = [];
+
+    // Real embedding-based semantic similarity — catches paraphrased content
+    // that shares no vocabulary with the source text, which the n-gram/word
+    // overlap analysis below cannot detect on its own.
+    const rawSemanticScores = await this.fetchSemanticScores(
+      effectiveText,
+      corpus.map((doc) => doc.content),
+    );
+    const semanticScoreByDoc = new Map<string, number>(
+      corpus.map((doc, idx) => [doc.id, rawSemanticScores[idx] ?? 0]),
+    );
 
     // Track unique word indices matched across all sources to avoid double-counting
     const globalMatchedWordIndices = new Set<number>();
@@ -812,46 +866,62 @@ export class PlagiarismEngineService {
     // Populate correlated source ranking with exact document-level coverage percentage
     let internalMatchedWords = 0;
     let webMatchedWords = 0;
-    let academicMatchedWords = 0;
+    let paraphraseMatchCount = 0;
 
     for (const doc of corpus) {
       const docIndices = docMatchedWordIndices.get(doc.id);
       const matchedCount = docIndices ? docIndices.size : 0;
+      const lexicalHit = matchedCount >= 4;
+      const semanticScore = semanticScoreByDoc.get(doc.id) ?? 0;
+      const semanticHit = semanticScore >= SEMANTIC_PARAPHRASE_THRESHOLD;
 
-      if (matchedCount >= 4) {
-        const similarityPct = Number((matchedCount / totalWords).toFixed(2));
-        const citationStatus = this.detectCitationStatus(text, doc);
-        const phrases = docMatchedPhrases.get(doc.id) || [];
+      if (!lexicalHit && !semanticHit) continue;
 
-        sourceMatches.push({
-          id: doc.id,
-          title: doc.title,
-          kind: doc.kind,
-          url: doc.url,
-          author: doc.author,
-          similarity: Math.max(0.01, similarityPct),
-          fuzzyScore: similarityPct,
-          semanticScore: similarityPct,
-          paraphraseScore: Math.round(similarityPct * 100),
-          internalOverlap: doc.kind === "internal-submission" || doc.kind === "lab-report" ? similarityPct : 0,
-          rank: 1,
-          citationStatus,
-          matchedPhrases: phrases.length > 0 ? phrases.slice(0, 4) : [doc.title.slice(0, 45)],
-          originalExcerpt: doc.content.slice(0, 350) + (doc.content.length > 350 ? "..." : ""),
-          recommendation:
-            citationStatus === "ok"
-              ? "Source is properly acknowledged. Verify quotes and page numbers."
-              : citationStatus === "partial"
-              ? "Partial reference detected. Add a full formal in-text citation and bibliography entry."
-              : "Direct overlap with missing citation. Add academic citation and rewrite in your own words.",
-        });
+      // A paraphrase-only hit has no word-overlap evidence to size a
+      // percentage from, so its "similarity" is the embedding score itself.
+      const similarityPct = lexicalHit
+        ? Number((matchedCount / totalWords).toFixed(2))
+        : Number(semanticScore.toFixed(2));
 
+      const citationStatus = this.detectCitationStatus(text, doc);
+      const phrases = docMatchedPhrases.get(doc.id) || [];
+      const detectionMethod: "lexical" | "semantic" | "both" =
+        lexicalHit && semanticHit ? "both" : lexicalHit ? "lexical" : "semantic";
+
+      if (detectionMethod === "semantic") paraphraseMatchCount += 1;
+
+      sourceMatches.push({
+        id: doc.id,
+        title: doc.title,
+        kind: doc.kind,
+        url: doc.url,
+        author: doc.author,
+        similarity: Math.max(0.01, similarityPct),
+        fuzzyScore: lexicalHit ? similarityPct : 0,
+        semanticScore,
+        paraphraseScore: Math.round(semanticScore * 100),
+        detectionMethod,
+        internalOverlap:
+          lexicalHit && (doc.kind === "internal-submission" || doc.kind === "lab-report") ? similarityPct : 0,
+        rank: 1,
+        citationStatus,
+        matchedPhrases: phrases.length > 0 ? phrases.slice(0, 4) : [doc.title.slice(0, 45)],
+        originalExcerpt: doc.content.slice(0, 350) + (doc.content.length > 350 ? "..." : ""),
+        recommendation:
+          detectionMethod === "semantic"
+            ? `Semantically very similar to this source (${Math.round(semanticScore * 100)}% embedding match) despite little shared wording — likely paraphrased without citation. Add a formal citation.`
+            : citationStatus === "ok"
+            ? "Source is properly acknowledged. Verify quotes and page numbers."
+            : citationStatus === "partial"
+            ? "Partial reference detected. Add a full formal in-text citation and bibliography entry."
+            : "Direct overlap with missing citation. Add academic citation and rewrite in your own words.",
+      });
+
+      if (lexicalHit) {
         if (doc.kind === "internal-submission" || doc.kind === "lab-report") {
           internalMatchedWords += matchedCount;
         } else if (doc.kind === "web-source") {
           webMatchedWords += matchedCount;
-        } else {
-          academicMatchedWords += matchedCount;
         }
       }
     }
@@ -861,15 +931,21 @@ export class PlagiarismEngineService {
       s.rank = idx + 1;
     });
 
-    // True mathematical cumulative similarity
+    // True mathematical cumulative similarity (lexical) plus real embedding
+    // similarity for the single closest source (semantic).
     const overallSimilarityPct = Math.min(100, Math.round((globalMatchedWordIndices.size / totalWords) * 100));
     const internalSimilarityPct = Math.min(100, Math.round((internalMatchedWords / totalWords) * 100));
     const fuzzySimilarityPct = Math.min(100, Math.round((webMatchedWords / totalWords) * 100));
-    const semanticSimilarityPct = Math.min(100, Math.round((academicMatchedWords / totalWords) * 100));
-    const originalityScore = Math.max(0, 100 - overallSimilarityPct);
+    const maxSemanticScore = Math.max(0, ...Array.from(semanticScoreByDoc.values()));
+    const semanticSimilarityPct = Math.round(maxSemanticScore * 100);
+    // A pure-paraphrase source (0% lexical overlap but very high embedding
+    // similarity) is at least as serious as a lexical match — factor it in
+    // rather than letting a purely word-based score hide it.
+    const effectiveSimilarityPct = Math.max(overallSimilarityPct, paraphraseMatchCount > 0 ? semanticSimilarityPct : 0);
+    const originalityScore = Math.max(0, 100 - effectiveSimilarityPct);
 
     const overallRisk: RiskLevel =
-      overallSimilarityPct >= 40 ? "HIGH" : overallSimilarityPct >= 18 ? "MEDIUM" : "LOW";
+      effectiveSimilarityPct >= 40 ? "HIGH" : effectiveSimilarityPct >= 18 ? "MEDIUM" : "LOW";
 
     const citationGapCount = sourceMatches.filter((s) => s.citationStatus !== "ok").length;
 
@@ -883,6 +959,7 @@ export class PlagiarismEngineService {
       fuzzySimilarity: fuzzySimilarityPct,
       semanticSimilarity: semanticSimilarityPct,
       riskLevel: overallRisk,
+      paraphraseMatchCount,
       citationGapCount,
       textPreview: text.slice(0, 360),
       sourceRanking: sourceMatches.slice(0, 8),
@@ -892,6 +969,8 @@ export class PlagiarismEngineService {
         score: 0,
         riskLevel: "LOW",
         confidence: "advisory",
+        confidenceBand: "low",
+        confidenceReason: "Writing-risk analysis is populated by the AI-detection engine, not the plagiarism engine.",
         features: [],
         disclaimer: "Advisory signal generated using real stylometrics, perplexity and sentence burstiness metrics.",
       },
@@ -944,12 +1023,9 @@ export class PlagiarismEngineService {
       scrapedContent = `Academic repository documentation and guidelines for ${url}`;
     }
 
-    const subTokens = this.tokenize(submissionText);
-    const webTokens = this.tokenize(scrapedContent);
-
-    const cosineSim = this.cosineSimilarity(subTokens, webTokens);
     const fuzzySim = this.fuzzyStringSimilarity(submissionText.slice(0, 800), scrapedContent.slice(0, 800));
-    const simPct = Math.min(100, Math.round((cosineSim * 0.65 + fuzzySim * 0.35) * 100));
+    const [realSemanticScore] = await this.fetchSemanticScores(submissionText, [scrapedContent]);
+    const simPct = Math.min(100, Math.round((realSemanticScore * 0.65 + fuzzySim * 0.35) * 100));
 
     const matchedPhrases = this.extractMatchingPhrases(submissionText, scrapedContent);
     const citationStatus = this.detectCitationStatus(submissionText, {
@@ -967,7 +1043,7 @@ export class PlagiarismEngineService {
       title: pageTitle,
       checkedAt: new Date().toISOString(),
       similarity: simPct,
-      semanticScore: Math.round(cosineSim * 100),
+      semanticScore: Math.round(realSemanticScore * 100),
       citationStatus,
       matchedPhrases: matchedPhrases.length > 0 ? matchedPhrases : ["requirements and methodology", "testing evidence"],
       recommendation:

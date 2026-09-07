@@ -60,6 +60,7 @@ import { Button } from "@/components/ui/button";
 import type { AppRole } from "@/data/dashboard.mock";
 import { roleDashboards } from "@/data/dashboard.mock";
 import { apiGet, apiPost } from "@/services/api-client";
+import { useWritingProvenance } from "@/lib/academic-shield/use-writing-provenance";
 import { cn } from "@/lib/utils";
 
 const sampleText = `This report evaluates the requirements, design, testing evidence and implementation decisions for a web and mobile application project.
@@ -137,6 +138,7 @@ export function PlagiarismCheckerPage({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [text, setText] = useState("");
+  const provenance = useWritingProvenance();
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [hasScanned, setHasScanned] = useState(false);
@@ -188,6 +190,7 @@ export function PlagiarismCheckerPage({
     reader.onload = (event) => {
       const content = String(event.target?.result ?? "");
       setText(content);
+      provenance.reset();
       setCanvasMode("edit");
       triggerToast(`Loaded "${file.name}" (${content.split(/\s+/).length} words)`);
     };
@@ -263,6 +266,7 @@ export function PlagiarismCheckerPage({
       fuzzySimilarity: 0,
       semanticSimilarity: 0,
       riskLevel: totalAIRisk > 50 ? "HIGH" : totalAIRisk > 25 ? "MEDIUM" : "LOW",
+      paraphraseMatchCount: 0,
       citationGapCount: 0,
       textPreview: inputText.slice(0, 360),
       sourceRanking: [],
@@ -272,6 +276,12 @@ export function PlagiarismCheckerPage({
         score: totalAIRisk,
         riskLevel: totalAIRisk > 50 ? "HIGH" : totalAIRisk > 25 ? "MEDIUM" : "LOW",
         confidence: "advisory",
+        confidenceBand:
+          (cv >= 0.4) === (matchedMarkers === 0) ? "high" : matchedMarkers <= 1 ? "medium" : "low",
+        confidenceReason:
+          (cv >= 0.4) === (matchedMarkers === 0)
+            ? "Sentence rhythm and marker-density signals agree with each other."
+            : "Sentence rhythm and marker-density signals point in different directions — treat this score as indicative only.",
         features: [
           { label: "Sentence Length Variance ($CV$)", value: `${cv.toFixed(2)} (${cv >= 0.40 ? "Natural" : "Uniform"})`, impact: cv >= 0.40 ? "LOW" : "HIGH" },
           { label: "Vocabulary Diversity (TTR)", value: `${((new Set(rawWords.map(w => w.toLowerCase())).size / totalWords) * 100).toFixed(0)}%`, impact: "LOW" },
@@ -299,9 +309,10 @@ export function PlagiarismCheckerPage({
     setScanProgress(0);
 
     // Launch API requests in parallel in the background
+    const provenanceSummary = provenance.summarize(text);
     const apiPromise = Promise.allSettled([
-      apiPost<{ report: AcademicShieldReport }>("/plagiarism/check", { text }),
-      apiPost<{ report: AcademicShieldReport["writingRisk"] }>("/writing/ai-risk", { text }),
+      apiPost<{ report: AcademicShieldReport }>("/plagiarism/check", { text, provenance: provenanceSummary }),
+      apiPost<{ report: AcademicShieldReport["writingRisk"] }>("/writing/ai-risk", { text, provenance: provenanceSummary }),
     ]);
 
     try {
@@ -913,6 +924,7 @@ export function PlagiarismCheckerPage({
                   <textarea
                     value={text}
                     onChange={(e) => setText(e.target.value)}
+                    {...provenance.bind}
                     placeholder="Type, paste, or upload assignment text to verify originality and AI writing risk..."
                     className="w-full h-[460px] max-h-[460px] overflow-y-auto pr-3 scrollbar-thin resize-none border-none bg-transparent p-0 font-sans text-[15px] leading-relaxed text-slate-800 placeholder-slate-400 outline-none focus:ring-0 dark:text-slate-100 dark:placeholder-slate-500"
                   />
@@ -960,6 +972,7 @@ export function PlagiarismCheckerPage({
                     type="button"
                     onClick={() => {
                       setText(sampleText);
+                      provenance.reset();
                       setCanvasMode("edit");
                       triggerToast("Loaded sample text. Click 'Scan Document' to analyze.");
                     }}
@@ -1353,6 +1366,14 @@ export function PlagiarismCheckerPage({
                               {source.paraphraseScore !== undefined && (
                                 <span className="rounded-md bg-cyan-50 px-2 py-0.5 text-[10px] font-semibold text-cyan-800 dark:bg-cyan-950/60 dark:text-cyan-300">
                                   {source.paraphraseScore}% Concept Match
+                                </span>
+                              )}
+                              {source.detectionMethod === "semantic" && (
+                                <span
+                                  className="rounded-md bg-amber-50 px-2 py-0.5 text-[10px] font-semibold text-amber-800 dark:bg-amber-950/60 dark:text-amber-300"
+                                  title="No shared wording with this source — caught only by meaning-based (semantic) analysis."
+                                >
+                                  Paraphrase detected — no shared wording
                                 </span>
                               )}
                             </div>

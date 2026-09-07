@@ -23,6 +23,7 @@ import { Card } from "@/components/ui/card";
 import type { AppRole } from "@/data/dashboard.mock";
 import { roleDashboards } from "@/data/dashboard.mock";
 import { apiPost } from "@/services/api-client";
+import { useWritingProvenance } from "@/lib/academic-shield/use-writing-provenance";
 import { cn } from "@/lib/utils";
 
 const defaultSample = `This report evaluates the requirements, design, testing evidence and implementation decisions for a web and mobile application project.
@@ -38,12 +39,15 @@ export function AIWritingRiskPage({ role }: { role: AppRole }) {
   const [text, setText] = useState(defaultSample);
   const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const provenance = useWritingProvenance();
 
   const [riskReport, setRiskReport] = useState<AcademicShieldWritingRisk>({
     id: "risk-initial",
     score: 14,
     riskLevel: "LOW",
     confidence: "advisory",
+    confidenceBand: "high",
+    confidenceReason: "Sentence rhythm, markers, perplexity and diversity signals all point the same direction.",
     features: [
       {
         label: "Sentence Length Variance (Burstiness)",
@@ -83,6 +87,8 @@ export function AIWritingRiskPage({ role }: { role: AppRole }) {
       const content = event.target?.result;
       if (typeof content === "string") {
         setText(content);
+        // File upload isn't a "paste"; start tracking fresh from here.
+        provenance.reset();
       }
     };
     reader.readAsText(file);
@@ -93,7 +99,7 @@ export function AIWritingRiskPage({ role }: { role: AppRole }) {
     setIsAnalyzing(true);
     const response = await apiPost<{ report: AcademicShieldWritingRisk }>(
       "/writing/ai-risk",
-      { text },
+      { text, provenance: provenance.summarize(text) },
     );
 
     if (response?.report) {
@@ -157,9 +163,14 @@ export function AIWritingRiskPage({ role }: { role: AppRole }) {
               icon: ShieldAlert,
             },
             {
-              label: "Confidence Assessment",
-              value: "Institutional Advisory",
-              tone: "cyan",
+              label: "Signal Agreement",
+              value:
+                riskReport.confidenceBand === "high"
+                  ? "High confidence"
+                  : riskReport.confidenceBand === "medium"
+                    ? "Medium confidence"
+                    : "Low confidence",
+              tone: riskReport.confidenceBand === "high" ? "emerald" : riskReport.confidenceBand === "medium" ? "amber" : "rose",
               icon: CheckCircle2,
             },
             {
@@ -193,6 +204,7 @@ export function AIWritingRiskPage({ role }: { role: AppRole }) {
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
+                {...provenance.bind}
                 placeholder="Paste assignment, lab report, or essay text to evaluate AI writing likelihood..."
                 className="w-full min-h-[280px] resize-none border-none bg-transparent p-0 font-sans text-base leading-relaxed text-slate-100 placeholder-slate-500 outline-none focus:ring-0 light:text-slate-800 light:placeholder-slate-400"
               />
@@ -235,7 +247,10 @@ export function AIWritingRiskPage({ role }: { role: AppRole }) {
 
                 <button
                   type="button"
-                  onClick={() => setText(defaultSample)}
+                  onClick={() => {
+                    setText(defaultSample);
+                    provenance.reset();
+                  }}
                   className="text-xs sm:text-sm font-medium text-slate-400 hover:text-purple-400 transition-colors light:text-slate-500 light:hover:text-purple-700 underline-offset-4 hover:underline"
                 >
                   Try sample text
@@ -289,7 +304,32 @@ export function AIWritingRiskPage({ role }: { role: AppRole }) {
                 </div>
               </div>
 
-              <div className="mt-5 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-200 light:border-amber-200 light:bg-amber-50 light:text-amber-800">
+              <div
+                className={cn(
+                  "mt-5 rounded-xl border p-3 text-xs",
+                  riskReport.confidenceBand === "low"
+                    ? "border-rose-500/25 bg-rose-500/10 text-rose-200 light:border-rose-200 light:bg-rose-50 light:text-rose-800"
+                    : "border-white/10 bg-white/5 text-slate-300 light:border-slate-200 light:bg-slate-50 light:text-slate-600",
+                )}
+              >
+                <span className="font-bold">
+                  {riskReport.confidenceBand === "low" ? "Low confidence: " : "Confidence: "}
+                </span>
+                {riskReport.confidenceReason}
+              </div>
+
+              {riskReport.provenance && riskReport.provenance.totalChars >= 20 && (
+                <div className="mt-3 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-slate-300 light:border-slate-200 light:bg-slate-50 light:text-slate-600">
+                  <span className="font-bold text-white light:text-slate-900">Writing process:</span>
+                  {riskReport.provenance.verdict === "paste-heavy"
+                    ? `${Math.round((riskReport.provenance.pastedChars / riskReport.provenance.totalChars) * 100)}% of this text arrived via paste, not typing.`
+                    : riskReport.provenance.verdict === "organic"
+                      ? "Typed gradually in this session, with no bulk pasting detected."
+                      : "A mix of typing and pasted content was detected."}
+                </div>
+              )}
+
+              <div className="mt-3 rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-200 light:border-amber-200 light:bg-amber-50 light:text-amber-800">
                 {riskReport.disclaimer}
               </div>
             </Card>

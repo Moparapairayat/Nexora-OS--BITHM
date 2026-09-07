@@ -14,6 +14,7 @@ import type {
   CitationRecord,
   CitationStatus,
   RiskLevel,
+  WritingProvenanceSummary,
 } from "@nexora/types";
 import { Prisma } from "@prisma/client";
 
@@ -75,6 +76,95 @@ function canReview(user: AuthUser) {
 
 function asInputJson(value: unknown): Prisma.InputJsonValue {
   return value as Prisma.InputJsonValue;
+}
+
+/**
+ * Parses the client-captured writing-provenance summary (see apps/web's
+ * useWritingProvenance hook). Never trusts it blindly — a malicious client
+ * could send fabricated numbers, so this is treated as a *soft* corroborating
+ * signal, never as sole grounds for a verdict.
+ */
+function parseProvenance(body: unknown): WritingProvenanceSummary | null {
+  if (typeof body !== "object" || body === null) return null;
+  const source = body as Record<string, unknown>;
+
+  const num = (key: string) => (typeof source[key] === "number" && Number.isFinite(source[key]) ? (source[key] as number) : 0);
+  const verdict = source.verdict === "organic" || source.verdict === "mixed" || source.verdict === "paste-heavy" ? source.verdict : null;
+
+  if (!verdict) return null;
+
+  return {
+    totalChars: Math.max(0, num("totalChars")),
+    pastedChars: Math.max(0, num("pastedChars")),
+    pasteEvents: Math.max(0, Math.round(num("pasteEvents"))),
+    largestPasteChars: Math.max(0, num("largestPasteChars")),
+    keystrokeCount: Math.max(0, Math.round(num("keystrokeCount"))),
+    activeMs: Math.max(0, num("activeMs")),
+    verdict,
+  };
+}
+
+/**
+ * Combines the text-only stylometric score with real writing-process
+ * evidence. Agreement between the two independent signals raises confidence;
+ * disagreement (e.g. a high AI-score on text that was visibly typed by hand,
+ * with no bulk pastes) lowers it — this is the main defense against a false
+ * accusation from the heuristic score alone.
+ */
+function applyProvenanceSignal(
+  writingRisk: AcademicShieldWritingRisk,
+  provenance: WritingProvenanceSummary | null,
+): AcademicShieldWritingRisk {
+  if (!provenance || provenance.totalChars < 20) {
+    return provenance ? { ...writingRisk, provenance } : writingRisk;
+  }
+
+  const highAiScore = writingRisk.score >= 50;
+  const pasteHeavy = provenance.verdict === "paste-heavy";
+  const organic = provenance.verdict === "organic";
+
+  if (pasteHeavy && highAiScore) {
+    return {
+      ...writingRisk,
+      provenance,
+      confidenceBand: "high",
+      confidenceReason: `Corroborated by writing-process evidence: ${Math.round((provenance.pastedChars / provenance.totalChars) * 100)}% of this text arrived via paste rather than being typed, consistent with the stylometric AI signal.`,
+    };
+  }
+
+  if (organic && highAiScore) {
+    return {
+      ...writingRisk,
+      provenance,
+      confidenceBand: "low",
+      confidenceReason:
+        "Conflicting evidence: the stylometric score suggests AI writing, but the writing-process log shows this text was typed gradually with no bulk pasting. Do not treat this score as conclusive — review manually before taking any action.",
+    };
+  }
+
+  return { ...writingRisk, provenance };
+}
+
+async function persistProvenanceSession(userId: string, context: string, provenance: WritingProvenanceSummary | null) {
+  if (!provenance || userId === "guest-student-id") return;
+
+  try {
+    await getPrisma().writingProvenanceSession.create({
+      data: {
+        userId,
+        context,
+        totalChars: Math.round(provenance.totalChars),
+        pastedChars: Math.round(provenance.pastedChars),
+        pasteEvents: provenance.pasteEvents,
+        largestPasteChars: Math.round(provenance.largestPasteChars),
+        keystrokeCount: provenance.keystrokeCount,
+        activeMs: Math.round(provenance.activeMs),
+        verdict: provenance.verdict,
+      },
+    });
+  } catch (err) {
+    console.warn("Could not persist writing-provenance session:", err);
+  }
 }
 
 function parseFormat(value: unknown): AcademicShieldExportResult["format"] {
@@ -403,12 +493,15 @@ academicShieldRouter.post("/check", async (request, response) => {
     }
 
     const target = await resolveTarget(user, request.body ?? {});
+    const provenance = parseProvenance(request.body?.provenance);
 
     // 1. Real Plagiarism & Corpus Overlap Analysis
     const plagiarismReport = await plagiarismEngine.checkOriginality(text, user.id);
 
-    // 2. Real AI Writing & Stylometrics Analysis
-    const writingRisk = aiDetectionEngine.detectAIWriting(text);
+    // 2. Real AI Writing & Stylometrics Analysis, corroborated by how the
+    // text was actually composed (typed vs. bulk-pasted).
+    const writingRisk = applyProvenanceSignal(aiDetectionEngine.detectAIWriting(text), provenance);
+    await persistProvenanceSession(user.id, "plagiarism-check", provenance);
 
     // Combine into full report
     const fullReport: AcademicShieldReport = {
@@ -484,9 +577,12 @@ academicShieldRouter.post("/ai-risk", async (request, response) => {
     }
 
     const target = await resolveTarget(user, request.body ?? {});
+    const provenance = parseProvenance(request.body?.provenance);
 
-    // Real Stylometric & Burstiness AI Detection
-    const report = aiDetectionEngine.detectAIWriting(text);
+    // Real Stylometric & Burstiness AI Detection, corroborated by how the
+    // text was actually composed (typed vs. bulk-pasted).
+    const report = applyProvenanceSignal(aiDetectionEngine.detectAIWriting(text), provenance);
+    await persistProvenanceSession(user.id, "ai-writing-risk", provenance);
 
     const aiResponse = await runAiWithLog(user, "similarity", text, {
       analyzer: "writing-risk",

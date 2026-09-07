@@ -349,8 +349,11 @@ export interface AcademicShieldSourceMatch {
   author: string;
   similarity: number;
   fuzzyScore: number;
+  /** Real sentence-embedding cosine similarity (0-1), not a relabeled word-overlap count. */
   semanticScore: number;
   paraphraseScore?: number;
+  /** How this match was found: word/n-gram overlap, embedding similarity alone (paraphrase), or both agreeing. */
+  detectionMethod?: "lexical" | "semantic" | "both";
   internalOverlap: number;
   rank: number;
   citationStatus: CitationStatus;
@@ -387,11 +390,37 @@ export interface AcademicShieldSentenceEvaluation {
   flaggedFeatures: string[];
 }
 
+/**
+ * How much the underlying sub-signals agree with each other. Low agreement
+ * (e.g. burstiness says "human", perplexity says "AI") means the headline
+ * score is less trustworthy and should prompt human review rather than a
+ * confident verdict either way.
+ */
+export type ConfidenceBand = "low" | "medium" | "high";
+
+/**
+ * How a piece of text was actually composed, captured client-side while the
+ * author types (see apps/web's useWritingProvenance hook). A large single
+ * paste is a far harder signal to fake than any text-analysis heuristic.
+ */
+export interface WritingProvenanceSummary {
+  totalChars: number;
+  pastedChars: number;
+  pasteEvents: number;
+  largestPasteChars: number;
+  keystrokeCount: number;
+  activeMs: number;
+  verdict: "organic" | "mixed" | "paste-heavy";
+}
+
 export interface AcademicShieldWritingRisk {
   id: string;
   score: number;
   riskLevel: RiskLevel;
   confidence: "advisory";
+  confidenceBand: ConfidenceBand;
+  confidenceReason: string;
+  provenance?: WritingProvenanceSummary;
   features: AcademicShieldWritingFeature[];
   sentences?: AcademicShieldSentenceEvaluation[];
   perplexityScore?: number;
@@ -417,6 +446,8 @@ export interface AcademicShieldReport {
   fuzzySimilarity: number;
   semanticSimilarity: number;
   riskLevel: RiskLevel;
+  /** Count of sourceRanking entries found only via semantic similarity (no shared vocabulary with the query). */
+  paraphraseMatchCount: number;
   citationGapCount: number;
   textPreview: string;
   sourceRanking: AcademicShieldSourceMatch[];

@@ -719,6 +719,7 @@ export const phase4AcademicShieldReport: AcademicShieldReport = {
   fuzzySimilarity: 18,
   semanticSimilarity: 24,
   riskLevel: "LOW",
+  paraphraseMatchCount: 0,
   citationGapCount: 2,
   textPreview:
     "This report evaluates the requirements, design, testing evidence and implementation decisions for a web and mobile application project.",
@@ -872,6 +873,8 @@ export const phase4AcademicShieldReport: AcademicShieldReport = {
     score: 12,
     riskLevel: "LOW",
     confidence: "advisory",
+    confidenceBand: "high",
+    confidenceReason: "Sentence rhythm, markers, perplexity and diversity signals all point the same direction.",
     burstinessCv: 0.44,
     perplexityScore: 78.5,
     features: [

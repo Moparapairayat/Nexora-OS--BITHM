@@ -2,7 +2,7 @@ const apiBaseUrl =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ??
   "http://localhost:8311/api";
 
-function authHeaders() {
+export function authHeaders() {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };

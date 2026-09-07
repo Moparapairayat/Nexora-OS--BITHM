@@ -349,6 +349,8 @@ export class AIDetectionEngineService {
         score: 0,
         riskLevel: "LOW",
         confidence: "advisory",
+        confidenceBand: "low",
+        confidenceReason: "Text is too short for the sub-signals to be measured reliably.",
         features: [
           {
             label: "Sample volume",
@@ -400,6 +402,32 @@ export class AIDetectionEngineService {
     const riskLevel: RiskLevel =
       finalScore >= 65 ? "HIGH" : finalScore >= 35 ? "MEDIUM" : "LOW";
 
+    // Confidence reflects how much the independent sub-signals agree with
+    // each other, not how extreme the final score is. Four signals all
+    // pointing the same direction is trustworthy; burstiness screaming
+    // "human" while markers scream "AI" means the headline score shouldn't
+    // be taken at face value — flag it for human review instead.
+    const subScores = [
+      sentenceAvgScore,
+      burstiness.burstinessScore,
+      markers.markerScore,
+      perplexity.predictabilityScore,
+      diversity.diversityScore,
+    ];
+    const subScoreMean = subScores.reduce((sum, s) => sum + s, 0) / subScores.length;
+    const subScoreVariance =
+      subScores.reduce((sum, s) => sum + (s - subScoreMean) ** 2, 0) / subScores.length;
+    const subScoreStdDev = Math.sqrt(subScoreVariance);
+
+    const confidenceBand: "low" | "medium" | "high" =
+      subScoreStdDev <= 15 ? "high" : subScoreStdDev <= 30 ? "medium" : "low";
+    const confidenceReason =
+      confidenceBand === "high"
+        ? "Sentence rhythm, markers, perplexity and diversity signals all point the same direction."
+        : confidenceBand === "medium"
+        ? "Most signals agree, but at least one metric diverges — treat the score as indicative, not conclusive."
+        : "The underlying signals substantially disagree with each other. This score is unreliable on its own and should not be used without human review of the highlighted sentences.";
+
     const features: AcademicShieldWritingFeature[] = [
       {
         label: "Sentence rhythm & burstiness",
@@ -430,6 +458,8 @@ export class AIDetectionEngineService {
       score: finalScore,
       riskLevel,
       confidence: "advisory",
+      confidenceBand,
+      confidenceReason,
       features,
       sentences: evaluatedSentences,
       perplexityScore: perplexity.perplexityIndex,
