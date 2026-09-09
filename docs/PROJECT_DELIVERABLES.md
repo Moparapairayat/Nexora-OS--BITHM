@@ -17,10 +17,6 @@ Low-fidelity wireframes were produced for the platform's key screens before
 development began, covering the full three-role information architecture
 (Student / Teacher / Admin).
 
-**Information Architecture**
-
-![Nexora OS Site Map](./wireframes/sitemap.png)
-
 **Screens**
 
 | # | Screen | Preview |
@@ -28,16 +24,16 @@ development began, covering the full three-role information architecture
 | 1 | Home / Landing Page | ![Home](./wireframes/0_home.png) |
 | 2 | Login / Sign Up | ![Login](./wireframes/1_login.png) |
 | 3 | Student Dashboard | ![Student Dashboard](./wireframes/2_student_dashboard.png) |
-| 4 | Academic Shield — Plagiarism & AI Checker | ![Academic Shield](./wireframes/3_academic_shield.png) |
-| 5 | Code Lab — Monaco IDE + Test Runner | ![Code Lab](./wireframes/4_code_lab.png) |
-| 6 | Teacher Dashboard | ![Teacher Dashboard](./wireframes/5_teacher_dashboard.png) |
-| 7 | Admin Dashboard | ![Admin Dashboard](./wireframes/6_admin_dashboard.png) |
-| 8 | "Coming Soon" Pattern | ![Coming Soon](./wireframes/7_coming_soon.png) |
+| 4 | Academic Shield — Plagiarism & AI Checker | *Pending* |
+| 5 | Code Lab — Monaco IDE + Test Runner | *Pending* |
+| 6 | Teacher Dashboard | *Pending* |
+| 7 | Admin Dashboard | *Pending* |
+| 8 | "Coming Soon" Pattern | *Pending* |
 
-> ⚠️ **Action required:** the `docs/wireframes/` folder does not exist in this
-> repository yet. Add the PNG files above with these exact filenames and every
-> image will render automatically here and on GitHub — no external hosting or
-> links needed.
+> Add the remaining screenshots to `docs/wireframes/` with the filenames
+> above (`3_academic_shield.png`, `4_code_lab.png`, `5_teacher_dashboard.png`,
+> `6_admin_dashboard.png`, `7_coming_soon.png`) and they will render
+> automatically here and on GitHub — no external hosting or links needed.
 
 ---
 
