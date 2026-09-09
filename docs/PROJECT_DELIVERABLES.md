@@ -88,7 +88,8 @@ Nexora OS - BITHM/
     ├── NEON_DATABASE_MIGRATION.md
     ├── architecture.md
     ├── project-structure.md
-    └── development.md
+    ├── development.md
+    └── wireframes/                    # Site map + 8 screen screenshots (this document)
 ```
 
 > The local Docker Compose stack (`compose.yaml` / `compose.database.yaml`)
