@@ -491,7 +491,6 @@ The following modules currently render dedicated **Coming Soon** pages and are f
 | [Master Project Report](docs/NEXORA_OS_MASTER_PROJECT_REPORT.md)       | Executive engineering dossier and module implementation status |
 | [Neon Database Migration](docs/NEON_DATABASE_MIGRATION.md)             | Production database architecture and connection pooling     |
 | [AI Router Documentation](docs/AI_ROUTER_DOCUMENTATION.md)             | Multi-provider AI routing and fallback strategy              |
-| [Piston Code Execution Engine](docs/PISTON_CODE_EXECUTION_ENGINE.md)   | Code Lab sandboxed execution pipeline                        |
 | [Mathematical Foundations](docs/MATHEMATICAL_FOUNDATIONS.md)           | TF-IDF, cosine similarity, and stylometric formulas used     |
 
 ---

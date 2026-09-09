@@ -68,7 +68,7 @@ and **[Project Deliverables — Folder Structure](PROJECT_DELIVERABLES.md#️-fo
 | Module | Status | Detail |
 |---|---|---|
 | **Academic Shield** (plagiarism, AI-writing risk, citations, web-source scan) | Implemented | [Mathematical Foundations](MATHEMATICAL_FOUNDATIONS.md) |
-| **Code Lab & Monaco IDE** (in-browser execution, test runner, lab reports) | Implemented | [Piston Code Execution Engine](PISTON_CODE_EXECUTION_ENGINE.md) |
+| **Code Lab & Monaco IDE** (in-browser execution, test runner, lab reports) | Implemented | Sandboxed Docker execution — see [architecture.md](architecture.md) |
 | **Role-Based Dashboards & RBAC** (Student / Teacher / Admin / Super Admin) | Implemented | [Architecture](architecture.md) |
 | **Skill DNA, Learning Roadmap, Portfolio Builder, Data Hub** | Implemented core, extensible | Root [README — Platform Modules](../README.md#-platform-modules) |
 | Academic Work, AI Workspace, ML & Data, Content Studio, and other roadmap sections | Frontend-only "Coming Soon" placeholders | Root [README — Roadmap](../README.md#️-roadmap) |

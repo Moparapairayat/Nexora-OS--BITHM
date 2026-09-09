@@ -90,7 +90,6 @@ Nexora OS - BITHM/
     ├── NEXORA_OS_MASTER_PROJECT_REPORT.md
     ├── MATHEMATICAL_FOUNDATIONS.md
     ├── AI_ROUTER_DOCUMENTATION.md
-    ├── PISTON_CODE_EXECUTION_ENGINE.md
     ├── NEON_DATABASE_MIGRATION.md
     ├── architecture.md
     ├── project-structure.md
