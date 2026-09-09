@@ -17,6 +17,10 @@ Low-fidelity wireframes were produced for the platform's key screens before
 development began, covering the full three-role information architecture
 (Student / Teacher / Admin).
 
+**Information Architecture**
+
+![Nexora OS Site Map](./wireframes/sitemap.png)
+
 **Screens**
 
 | # | Screen | Preview |
