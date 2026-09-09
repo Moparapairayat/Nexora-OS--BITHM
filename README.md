@@ -1,131 +1,415 @@
-# Nexora OS
+<div align="center">
 
-Nexora OS is a multi-model academic workspace for assignments, labs, reports,
-coding, academic-integrity review, and institution operations. The repository is
-an npm monorepo with a Next.js web app, an Express API, shared TypeScript
-packages, a Prisma/PostgreSQL data layer, and a FastAPI ML/NLP service.
+  <img src="./apps/web/public/brand/nexora-3d-transparent.png" alt="Nexora OS Logo" width="140" height="140" />
 
-## Repository layout
+# NEXORA OS
 
-```text
-apps/
-  api/                 Express API
-  web/                 Next.js App Router frontend
-packages/
-  config/              Shared model and runtime configuration
-  types/               Shared TypeScript contracts
-  ui/                  Shared UI package
-prisma/                Schema, migrations, and seed data
-services/
-  ml-nlp/
-    app/               FastAPI application package
-docs/
-  architecture.md      System boundaries and runtime topology
-  development.md       Setup, conventions, and verification
-compose.yaml           Complete local stack
-compose.database.yaml  Database-only development stack
+**Multi-Model AI Academic Operating System — BITHM Edition**
+
+  <p align="center">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=800&size=20&pause=1400&color=10B981&center=true&vCenter=true&width=920&lines=Next.js+16+%E2%80%A2+Express+5+%E2%80%A2+Prisma+6+%E2%80%A2+FastAPI;Academic+Shield+%E2%80%A2+Code+Lab+%E2%80%A2+Skill+DNA+%E2%80%A2+Data+Hub;Monorepo+%E2%80%A2+Role-Based+Access+%E2%80%A2+JWT+Auth+%E2%80%A2+Docker+Sandbox" alt="Typing animation" />
+  </p>
+
+  <p align="center">
+    <img src="https://img.shields.io/badge/BUILD-PASSING-10B981?style=for-the-badge&labelColor=0D1117" alt="Build Passing" />
+    <img src="https://img.shields.io/badge/TYPECHECK-STRICT-3178C6?style=for-the-badge&labelColor=0D1117" alt="TypeScript Strict" />
+    <img src="https://img.shields.io/badge/ARCHITECTURE-MONOREPO-7C3AED?style=for-the-badge&labelColor=0D1117" alt="Monorepo" />
+    <img src="https://img.shields.io/badge/DATABASE-NEON_POSTGRESQL-0EA5E9?style=for-the-badge&labelColor=0D1117" alt="Neon PostgreSQL" />
+  </p>
+
+  <p align="center">
+    <a href="#-tech-stack--engineering-tools"><img src="https://img.shields.io/badge/Tech_Stack-10B981?style=for-the-badge&labelColor=0D1117" alt="Tech Stack" /></a>
+    <a href="#-core-features"><img src="https://img.shields.io/badge/Core_Features-0EA5E9?style=for-the-badge&labelColor=0D1117" alt="Core Features" /></a>
+    <a href="#-platform-modules"><img src="https://img.shields.io/badge/Platform_Modules-7C3AED?style=for-the-badge&labelColor=0D1117" alt="Platform Modules" /></a>
+    <a href="#-architecture--system-design"><img src="https://img.shields.io/badge/Architecture-F97316?style=for-the-badge&labelColor=0D1117" alt="Architecture" /></a>
+    <a href="#-getting-started"><img src="https://img.shields.io/badge/Getting_Started-EF4444?style=for-the-badge&labelColor=0D1117" alt="Getting Started" /></a>
+  </p>
+
+  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3987-4801-a50e-c67081e2b58b.gif" width="100%" alt="Header Divider Animation" />
+
+</div>
+
+---
+
+<div align="center">
+
+<a id="academic-submission"></a>
+
+  <h2>🎓 ACADEMIC SUBMISSION & COURSE DOSSIER</h2>
+
+  <p align="center">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=700&size=19&pause=1400&color=FCD34D&center=true&vCenter=true&width=850&lines=%E2%9C%A8+Web+%26+Mobile+Applications+Coursework+%E2%9C%A8;Student%3A+Mopara+Pair+Ayat;Instructor%3A+Afsana+Tabassum+Tamishra;Institution%3A+BITHM+College+Of+Professionals;Qualification%3A+OTHM+Level+5+in+IT%2FCSE" alt="Academic Header Typing Banner" />
+  </p>
+
+  <p align="center">
+    <a href="#academic-submission"><img src="https://img.shields.io/badge/STUDENT_NAME-Mopara_Pair_Ayat-0EA5E9?style=for-the-badge&logo=github&logoColor=white&labelColor=0D1117" alt="Student Name" /></a>
+    <a href="#academic-submission"><img src="https://img.shields.io/badge/INSTRUCTOR-Afsana_Tabassum_Tamishra-F59E0B?style=for-the-badge&logo=award&logoColor=white&labelColor=0D1117" alt="Instructor" /></a>
+  </p>
+
+  <p align="center">
+    <a href="#academic-submission"><img src="https://img.shields.io/badge/INSTITUTION-BITHM_College_Of_Professionals-10B981?style=for-the-badge&logo=graduation-cap&logoColor=white&labelColor=0D1117" alt="Institution" /></a>
+  </p>
+
+  <p align="center">
+    <a href="#academic-submission"><img src="https://img.shields.io/badge/QUALIFICATION-OTHM_Level_5_in_IT%2FCSE-8B5CF6?style=for-the-badge&labelColor=0D1117" alt="Qualification" /></a>
+    <a href="#academic-submission"><img src="https://img.shields.io/badge/COURSE-Web_%26_Mobile_Applications-EC4899?style=for-the-badge&labelColor=0D1117" alt="Course" /></a>
+  </p>
+
+  <br>
+
+  <table align="center" width="95%">
+    <thead>
+      <tr>
+        <th align="center" width="35%">🖋️ Specification Field</th>
+        <th align="left" width="65%">📋 Academic Record</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td align="center"><b>👤 Student Name</b></td>
+        <td><code>Mopara Pair Ayat</code> &nbsp;&nbsp; 🚀 <i>Primary Developer & System Architect</i></td>
+      </tr>
+      <tr>
+        <td align="center"><b>👩‍🏫 Course Instructor</b></td>
+        <td><code>Afsana Tabassum Tamishra</code> &nbsp;&nbsp; 🏆 <i>Lecturer · Department of Information Technology</i></td>
+      </tr>
+      <tr>
+        <td align="center"><b>🏛️ Educational Institute</b></td>
+        <td><b>BITHM College Of Professionals</b> &nbsp;&nbsp; 🎓 <i>Affiliated Campus</i></td>
+      </tr>
+      <tr>
+        <td align="center"><b>📘 Qualification Level</b></td>
+        <td><code>OTHM Level 5 in IT/CSE</code> &nbsp;&nbsp; 🇬🇧 <i>UK Regulated Framework</i></td>
+      </tr>
+      <tr>
+        <td align="center"><b>📚 Course Name</b></td>
+        <td><code>Web & Mobile Applications</code> &nbsp;&nbsp; 💻 <i>Full-Stack Systems Coursework</i></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3987-4801-a50e-c67081e2b58b.gif" width="100%" alt="Divider Animation" />
+
+</div>
+
+---
+
+## 🛠️ Tech Stack & Engineering Tools
+
+<a id="tech-stack--engineering-tools"></a>
+
+### Frontend Engineering & UI Core (`apps/web`)
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=nextjs,react,ts,tailwind,html,css" alt="Core engineering icons" />
+  <br><br>
+  <img src="https://img.shields.io/badge/Next.js_16.2-000000?style=for-the-badge&logo=nextdotjs&logoColor=white&labelColor=0D1117" alt="Next.js 16" />
+  <img src="https://img.shields.io/badge/React_19.2-61DAFB?style=for-the-badge&logo=react&logoColor=black&labelColor=0D1117" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript_5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white&labelColor=0D1117" alt="TypeScript 5.9" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white&labelColor=0D1117" alt="Tailwind CSS 4" />
+  <img src="https://img.shields.io/badge/Framer_Motion_12-0055FF?style=for-the-badge&logo=framer&logoColor=white&labelColor=0D1117" alt="Framer Motion 12" />
+  <img src="https://img.shields.io/badge/Monaco_Editor-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white&labelColor=0D1117" alt="Monaco Editor" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/TanStack_Query_5-FF4154?style=for-the-badge&logo=reactquery&logoColor=white&labelColor=0D1117" alt="TanStack Query" />
+  <img src="https://img.shields.io/badge/Zustand_5-433E38?style=for-the-badge&labelColor=0D1117&color=F97316" alt="Zustand" />
+  <img src="https://img.shields.io/badge/React_Hook_Form_7-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white&labelColor=0D1117" alt="React Hook Form" />
+  <img src="https://img.shields.io/badge/Zod_4-3E67B1?style=for-the-badge&logo=zod&logoColor=white&labelColor=0D1117" alt="Zod 4" />
+  <img src="https://img.shields.io/badge/Recharts_3-8884D8?style=for-the-badge&labelColor=0D1117" alt="Recharts" />
+</p>
+
+### Core Backend API (`apps/api`)
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=nodejs,express,ts" alt="Backend engineering icons" />
+  <br><br>
+  <img src="https://img.shields.io/badge/Node.js_20+_ESM-339933?style=for-the-badge&logo=nodedotjs&logoColor=white&labelColor=0D1117" alt="Node.js 20+" />
+  <img src="https://img.shields.io/badge/Express.js_5.1-000000?style=for-the-badge&logo=express&logoColor=white&labelColor=0D1117" alt="Express.js 5" />
+  <img src="https://img.shields.io/badge/JWT_Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white&labelColor=0D1117" alt="JWT Auth" />
+  <img src="https://img.shields.io/badge/bcryptjs-0D1117?style=for-the-badge&labelColor=0D1117&color=EF4444" alt="bcryptjs" />
+  <img src="https://img.shields.io/badge/Helmet_%2B_Rate_Limit-0D1117?style=for-the-badge&labelColor=0D1117&color=10B981" alt="Helmet + Rate Limit" />
+  <img src="https://img.shields.io/badge/Zod_Validation-3E67B1?style=for-the-badge&labelColor=0D1117" alt="Zod Validation" />
+</p>
+
+### Database, ORM & Seeding Layer (`prisma/`)
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=postgres,prisma" alt="Database engineering icons" />
+  <br><br>
+  <img src="https://img.shields.io/badge/PostgreSQL_16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white&labelColor=0D1117" alt="PostgreSQL 16" />
+  <img src="https://img.shields.io/badge/Neon_Serverless-00E599?style=for-the-badge&logo=neon&logoColor=black&labelColor=0D1117" alt="Neon Serverless" />
+  <img src="https://img.shields.io/badge/Prisma_ORM_6.19-2D3748?style=for-the-badge&logo=prisma&logoColor=white&labelColor=0D1117" alt="Prisma ORM 6" />
+  <img src="https://img.shields.io/badge/30%2B_Relational_Schemas-0D1117?style=for-the-badge&labelColor=0D1117&color=8B5CF6" alt="30+ Schemas" />
+</p>
+
+### Machine Learning & NLP Microservice (`services/ml-nlp`)
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=python,fastapi" alt="ML/NLP engineering icons" />
+  <br><br>
+  <img src="https://img.shields.io/badge/Python_3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white&labelColor=0D1117" alt="Python 3.11+" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white&labelColor=0D1117" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/Uvicorn_ASGI-0D1117?style=for-the-badge&labelColor=0D1117&color=499848" alt="Uvicorn ASGI" />
+  <img src="https://img.shields.io/badge/Scikit_Learn_TF--IDF-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white&labelColor=0D1117" alt="Scikit-Learn" />
+  <img src="https://img.shields.io/badge/NumPy_%2B_Pandas-0D1117?style=for-the-badge&labelColor=0D1117&color=150458" alt="NumPy + Pandas" />
+</p>
+
+### Monorepo, DevOps & Quality Tooling
+
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=docker,git,github,vscode" alt="Tooling icons" />
+  <br><br>
+  <img src="https://img.shields.io/badge/npm_Workspaces_Monorepo-CB3837?style=for-the-badge&logo=npm&logoColor=white&labelColor=0D1117" alt="npm Workspaces" />
+  <img src="https://img.shields.io/badge/Docker_Sandboxed_Execution-2496ED?style=for-the-badge&logo=docker&logoColor=white&labelColor=0D1117" alt="Docker" />
+  <img src="https://img.shields.io/badge/ESLint_9-4B32C3?style=for-the-badge&logo=eslint&logoColor=white&labelColor=0D1117" alt="ESLint 9" />
+  <img src="https://img.shields.io/badge/Prettier_3-F7B93E?style=for-the-badge&logo=prettier&logoColor=black&labelColor=0D1117" alt="Prettier 3" />
+  <img src="https://img.shields.io/badge/Concurrently-10B981?style=for-the-badge&labelColor=0D1117" alt="Concurrently" />
+</p>
+
+---
+
+## 📦 Overview
+
+**Nexora OS** is an enterprise-grade, full-stack **academic operating system** built for higher-education assignments, laboratory coding work, academic-integrity review, and AI-assisted learning — engineered around **UK OTHM (Level 4/5/7)** and **Pearson BTEC Higher National** qualification standards.
+
+The platform is organized as an **npm-workspaces monorepo**: a **Next.js 16 / React 19** frontend, an **Express 5** REST API trust boundary, a **Prisma 6 / PostgreSQL (Neon)** data layer, and an isolated **FastAPI** Python microservice for plagiarism and writing-risk analytics — each with a single, well-defined responsibility and a hard boundary at the HTTP layer.
+
+---
+
+## 🎯 Core Features
+
+<a id="core-features"></a>
+
+- 🛡️ **Academic Shield Suite**: TF-IDF + cosine-similarity plagiarism detection, AI-writing-risk stylometric heatmaps, an automated citation engine, and a web-source scanner.
+- 💻 **Code Lab & Monaco IDE**: Full in-browser multi-language editor with a sandboxed Docker execution engine — network-disabled containers, CPU/memory/PID/timeout limits, and per-language test-case validation.
+- 🔐 **JWT-Based RBAC**: Four-tier role hierarchy (`STUDENT`, `TEACHER`, `ADMIN`, `SUPER_ADMIN`) enforced at the API boundary, with bcrypt password hashing and timing-attack-resistant login.
+- 📊 **Role-Based Dashboards**: Purpose-built dashboards for every role — assignments, lab tasks, submissions, and fix-request workflows.
+- 🧬 **Skill DNA & Learning Roadmap**: Competency tracking and personalized, milestone-driven learning paths mapped to Learning Outcomes / Assessment Criteria (LO/AC).
+- 🗂️ **Data Hub & Portfolio Builder**: Institutional data snapshots, data-quality checks, and a student portfolio/CV export pipeline.
+- 🤖 **Multi-Model AI Router**: Task-aware routing across AI providers with automatic fallback for code assistance, rewriting, feedback, and document generation.
+- 🧾 **Operations & Audit Trail**: Persisted `SystemLog`-backed audit events, background-job orchestration, and admin deployment-readiness checks.
+
+---
+
+## 🧭 Platform Modules
+
+<a id="platform-modules"></a>
+
+| Module              | Badge | Description                                                                                     |
+| :------------------- | :---: | :------------------------------------------------------------------------------------------------ |
+| **Academic Shield**  |  🛡️   | Plagiarism scanning, AI-writing-risk detection, citation generation, and web-source scans.        |
+| **Code Lab**         |  💻   | Monaco-powered IDE with Dockerized Python/Node execution, terminal CLI, and live test runners.    |
+| **Skill DNA**        |  🧬   | Learning-outcome-mapped skill scoring and competency visualization.                               |
+| **Learning Roadmap** |  🗺️   | Milestone-based, personalized academic and technical learning paths.                              |
+| **Portfolio Builder**|  🪪   | Auto-generated student portfolios and exportable CVs from verified coursework.                    |
+| **Data Hub**         |  🗄️   | Institutional data snapshots, data-quality checks, and export packets.                            |
+| **Admin & Ops**      |  ⚙️   | Role/permission management, audit trail, background jobs, and deployment-readiness dashboards.    |
+
+---
+
+## 🏗️ Architecture & System Design
+
+<a id="architecture--system-design"></a>
+
+Nexora OS follows a **trust-boundary-first monorepo architecture**: the browser never talks to the database directly, all authorization decisions live behind the API, and Python ML dependencies stay fully isolated from the Node.js workspaces.
+
+```
+Browser (Next.js :3000)
+    │
+    │  REST / JSON • Bearer JWT • CORS
+    ▼
+Express API (:8311) ───────────────▶ FastAPI ML/NLP Microservice (:8010)
+    │                                    │
+    │  Prisma ORM Client v6              │  Scikit-Learn TF-IDF • Cosine Similarity
+    ▼                                    ▼
+PostgreSQL (Neon Serverless) ◀──────────┘
+    │
+    ▼
+Docker Sandbox (network: none, CPU/mem/PID-limited) — Code Lab execution engine
 ```
 
-## Quick start
+```
+apps/
+├── api/                     # Express API, grouped by feature module
+│   └── src/
+│       ├── middleware/      # JWT auth, RBAC, audit logging
+│       ├── modules/         # academic-shield, admin, auth, code-lab, data, ops, uploads
+│       └── infrastructure/  # Prisma client, Docker code-runner, terminal sandbox
+├── web/                     # Next.js App Router frontend
+│   └── src/
+│       ├── app/             # Routes, layouts, and API route handlers
+│       ├── components/      # Shared layout & UI primitives
+│       ├── features/        # Self-contained product modules (feature-first)
+│       ├── lib/             # AI router, execution router, code-runner, database services
+│       └── services/        # HTTP API clients
+packages/
+├── config/                  # Shared model & runtime configuration
+├── types/                   # Shared TypeScript contracts (User, Role, AuditEvent, ...)
+└── ui/                      # Shared UI package
+prisma/                      # Schema (30+ models), migrations, and seed data
+services/
+└── ml-nlp/                  # FastAPI plagiarism / writing-risk microservice
+docs/                        # Architecture, migration, and engineering dossiers
+```
 
-Prerequisites: Node.js 22+, npm, Docker Desktop, and Python 3.12+ for the ML/NLP
-service.
+### Engineering Principles
 
-1. Install the JavaScript workspace from the committed lockfile:
+- **Trust Boundary at the API**: Browser input is never trusted; all authorization, ownership, and RBAC checks are enforced server-side before touching Prisma.
+- **Feature-First Organization**: Page-specific code, hooks, and schemas live together under `src/features/*`; only genuinely cross-cutting code is promoted to a shared package.
+- **Sandboxed Execution**: Code Lab workloads run in ephemeral, network-isolated Docker containers with explicit resource ceilings — never on the host process.
+- **Single Source of Truth for Data**: One Neon PostgreSQL database, one Prisma schema, shared by every workspace that needs it — no divergent database targets between apps.
+
+---
+
+## ⚙️ Getting Started
+
+<a id="getting-started"></a>
+
+### Prerequisites
+
+- **Node.js**: `v22.0.0` or higher
+- **npm**: `v10.0.0` or higher
+- **Python**: `3.11+` (for the ML/NLP microservice)
+- **Docker Desktop**: required for sandboxed Code Lab execution
+
+### Steps
+
+1. **Clone Repository**:
+
+   ```bash
+   git clone https://github.com/Moparapairayat/Nexora-OS--BITHM.git
+   cd Nexora-OS--BITHM
+   ```
+
+2. **Install Dependencies** (installs every workspace from the committed lockfile):
 
    ```bash
    npm ci
    ```
 
-2. Copy `.env.example` to `.env`, then replace the development secrets.
+3. **Configure Environment Variables**:
 
-3. Prepare Prisma and start the persistent development database:
+   ```bash
+   cp .env.example .env
+   cp apps/web/.env.example apps/web/.env
+   ```
+
+   Then fill in `DATABASE_URL` / `DIRECT_URL` (Neon PostgreSQL — must match across the root **and** `apps/web`), a strong `JWT_SECRET`, and your AI provider keys. Never prefix a secret key with `NEXT_PUBLIC_`.
+
+4. **Prepare the Database**:
 
    ```bash
    npm run db:generate
-   docker compose -f compose.database.yaml up -d
    npm run db:push
    npm run db:seed
    ```
 
-4. Install the optional ML/NLP runtime in a Python virtual environment:
+5. **Start All Services**:
 
    ```bash
-   python -m venv .venv
-   # Activate .venv for your shell, then run:
-   python -m pip install -r services/ml-nlp/requirements.txt
+   npm run dev
    ```
 
-5. Start the services in separate terminals, or activate the Python environment
-   and run `npm run dev` to start all three:
+   Or run each service independently:
 
    ```bash
-   npm run dev:web
-   npm run dev:api
-   npm run dev:ml
+   npm run dev:web    # Next.js frontend
+   npm run dev:api    # Express API
+   npm run dev:ml     # FastAPI ML/NLP service
    ```
 
-Local endpoints:
+### Local Endpoints
 
-- Web: `http://localhost:3000`
-- API health: `http://localhost:8311/api/health`
-- ML/NLP health: `http://localhost:8010/health`
-- Database-only PostgreSQL: `localhost:5433`
+| Service              | URL                                     |
+| :-------------------- | :--------------------------------------- |
+| Web App               | `http://localhost:3000`                  |
+| API Health            | `http://localhost:8311/api/health`       |
+| ML/NLP Health         | `http://localhost:8010/health`           |
 
-## Roadmap-only modules
+---
 
-Academic Work, AI Workspace, ML & Data, Content Studio, Feedback, Activity,
-Notifications, ERD to Code, API Tester, GitHub Analyzer, and Deployment
-Assistant currently render dedicated **Coming Soon** pages. These sections are
-frontend-only placeholders: they do not call an API, use simulated responses,
-or persist data.
-
-The active API remains focused on authentication, administration, dashboards,
-Developer Tools, AcademicShield, operations, uploads, and the Data Hub.
-
-## Docker Compose
-
-Start the complete containerized stack with the default `compose.yaml`:
+## 🧪 Quality & Verification
 
 ```bash
-docker compose up --build
+# Type-check shared packages and the API
+npm run typecheck
+
+# Lint the web workspace
+npm run lint
+
+# Check formatting across the monorepo
+npm run format:check
+
+# Build every workspace for production
+npm run build
 ```
 
-The complete stack exposes PostgreSQL on `5432`; the database-only development
-stack intentionally uses `5433` so it can coexist with another local PostgreSQL
-instance. Its data is stored under `.docker-data/postgres` and is ignored by Git
-and Docker build contexts.
+| Verification Layer      | Command                | Scope                                                        |
+| :------------------------ | :---------------------- | :-------------------------------------------------------------- |
+| **TypeScript Strict**    | `npm run typecheck`    | `@nexora/types`, `@nexora/config`, `apps/api`                  |
+| **ESLint 9**             | `npm run lint`          | `apps/web` — React Compiler rules, hooks correctness, `no-explicit-any` |
+| **Prisma Schema Validate** | `npx prisma validate` | 30+ relational models, cascade rules, and indexes               |
+| **Prettier**             | `npm run format:check` | `.ts`, `.tsx`, `.js`, `.json`, `.md`, `.css`                    |
 
-## Common commands
+---
 
-| Command                | Purpose                                        |
-| ---------------------- | ---------------------------------------------- |
-| `npm run dev`          | Start web, API, and ML/NLP development servers |
-| `npm run build`        | Build all buildable TypeScript workspaces      |
-| `npm run lint`         | Lint the web workspace                         |
-| `npm run typecheck`    | Type-check the shared packages and API         |
-| `npm run format:check` | Check supported files with Prettier            |
-| `npm run db:generate`  | Generate the Prisma client                     |
-| `npm run db:push`      | Apply the schema to a development database     |
-| `npm run db:seed`      | Seed roles and development accounts            |
+## 🔒 Security & Compliance
 
-## Development access
+- **RBAC enforced server-side** on every protected route — permissions are recomputed from the live database role on each request, never trusted from a stale token.
+- **Sandboxed code execution**: `--network none`, memory/CPU/PID limits, read-only workspace mounts, and forced container cleanup on timeout.
+- **Timing-attack-resistant login**: a dummy bcrypt comparison runs for unknown emails to prevent user enumeration.
+- **Hardened Express API**: `helmet` security headers and rate-limited authentication endpoints.
+- **Persisted audit trail**: security-relevant actions are written to the `SystemLog` table for durability across restarts and instances.
+- **Demo credentials are non-production**: seeded demo accounts require an explicit opt-in flag in production environments.
 
-When `NEXORA_DEMO_LOGIN_ENABLED=true`, the seed includes these local-only
-accounts:
+---
 
-- Student: `student@nexora.local` / `password123`
-- Teacher: `teacher@nexora.local` / `password123`
-- Admin: `admin@nexora.local` / `password123`
+## 🎓 Demo / Development Access
 
-Never enable demo credentials in a production environment. Set a strong
-`JWT_SECRET` and bootstrap administrator password before deployment.
+When `NEXORA_DEMO_LOGIN_ENABLED=true` (the default outside production), the seed creates these local-only accounts:
 
-## Documentation
+| Role        | Email                     | Password      |
+| :----------- | :-------------------------- | :-------------- |
+| Student     | `student@nexora.local`     | `password123`  |
+| Teacher     | `teacher@nexora.local`     | `password123`  |
+| Admin       | `admin@nexora.local`       | `password123`  |
 
-- [Architecture](docs/architecture.md)
-- [Development guide](docs/development.md)
+> ⚠️ Demo credentials must **never** be enabled in a production deployment. Set a strong `JWT_SECRET` and a real bootstrap administrator password before shipping.
 
-Code Lab executes supported programs in constrained Docker sandboxes with no
-network access and resource limits. Pre-pull the configured Python and Node
-images when `CODE_RUN_DOCKER_PULL_POLICY=never`.
+---
+
+## 🗺️ Roadmap
+
+The following modules currently render dedicated **Coming Soon** pages and are frontend-only placeholders (no API handlers, simulation layer, or persistence yet):
+
+`Academic Work` • `AI Workspace` • `ML & Data` • `Content Studio` • `Feedback` • `Activity` • `Notifications` • `ERD to Code` • `API Tester` • `GitHub Analyzer` • `Deployment Assistant`
+
+---
+
+## 📖 Documentation
+
+| Document                                                              | Description                                              |
+| :----------------------------------------------------------------------- | :----------------------------------------------------------- |
+| [Architecture](docs/architecture.md)                                   | System boundaries and runtime topology                     |
+| [Project Structure](docs/project-structure.md)                         | Feature-first monorepo layout and naming rules             |
+| [Development Guide](docs/development.md)                               | Setup, conventions, and verification workflow               |
+| [Master Project Report](docs/NEXORA_OS_MASTER_PROJECT_REPORT.md)       | Full technical dossier and 100% dependency audit            |
+| [Neon Database Migration](docs/NEON_DATABASE_MIGRATION.md)             | Production database architecture and connection pooling     |
+| [AI Router Documentation](docs/AI_ROUTER_DOCUMENTATION.md)             | Multi-provider AI routing and fallback strategy              |
+| [Piston Code Execution Engine](docs/PISTON_CODE_EXECUTION_ENGINE.md)   | Code Lab sandboxed execution pipeline                        |
+| [Mathematical Foundations](docs/MATHEMATICAL_FOUNDATIONS.md)           | TF-IDF, cosine similarity, and stylometric formulas used     |
+
+---
+
+## 📄 License
+
+This project is submitted as academic coursework for **OTHM Level 5 in IT/CSE** at **BITHM College Of Professionals**. All rights reserved by the author unless otherwise licensed.
+
+<div align="center">
+
+  <img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3987-4801-a50e-c67081e2b58b.gif" width="100%" alt="Footer Divider Animation" />
+
+<sub>Engineered for academic integrity, cognitive learning support, and full-stack systems mastery.</sub>
+
+</div>
