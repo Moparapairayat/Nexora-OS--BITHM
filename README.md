@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="./apps/web/public/brand/nexora-3d-transparent.png" alt="Nexora OS Logo" width="140" height="140" />
+  <img src="./apps/web/public/brand/nexora-3d-emblem.png" alt="Nexora OS Logo" width="140" height="140" />
 
 # NEXORA OS
 
