@@ -3,8 +3,8 @@
 ## Prerequisites
 
 - Node.js 22 or later and npm
-- Docker Desktop with Compose v2
-- Python 3.12 or later for `services/ml-nlp`
+- Docker Desktop (used only to run the sandboxed Code Lab execution containers)
+- Python 3.11 or later for `services/ml-nlp`
 
 Install JavaScript dependencies once at the repository root with `npm ci`. npm
 workspaces link the applications and shared packages; do not install separate
@@ -12,27 +12,26 @@ dependency trees inside `apps/*`.
 
 ## Environment setup
 
-Copy `.env.example` to `.env` and replace `JWT_SECRET` plus any bootstrap
-credentials. Real `.env` files are local-only.
+Copy `.env.example` to `.env` at the repository root **and** to
+`apps/web/.env`, then fill in `DATABASE_URL` / `DIRECT_URL` (Neon PostgreSQL —
+must be identical in both files, since `apps/web` runs its own Prisma queries),
+a strong `JWT_SECRET` (also identical in both files), and your AI provider
+keys. Never prefix a secret key with `NEXT_PUBLIC_`. Real `.env` files are
+local-only.
 
-For host-based development, start the persistent database and prepare Prisma:
+The project uses **Neon Serverless PostgreSQL** in every environment — see
+[Neon Database Migration](NEON_DATABASE_MIGRATION.md). There is no local
+Docker database; prepare the schema directly against Neon:
 
 ```bash
 npm run db:generate
-docker compose -f compose.database.yaml up -d
 npm run db:push
 npm run db:seed
 ```
 
-The database-only stack uses `.docker-data/postgres`. Stop it without deleting
-data by running:
-
-```bash
-docker compose -f compose.database.yaml down
-```
-
-Do not add `--volumes` or delete `.docker-data` unless a database reset is
-intentional.
+Docker is only needed for Code Lab's sandboxed code execution containers
+(`--network none`, memory/CPU/PID limits) — pull the configured runtime images
+once with `docker pull python:3.12-alpine` and `docker pull node:22-alpine`.
 
 Create the Python environment outside the service package so it remains shared
 and ignored:
@@ -53,8 +52,7 @@ npm run dev:api   # http://localhost:8311
 npm run dev:ml    # http://localhost:8010
 ```
 
-Run the complete containerized stack with `docker compose up --build`. Compose
-automatically reads `compose.yaml`.
+Or start all three together with `npm run dev`.
 
 ## Verification
 
@@ -66,8 +64,7 @@ npm run format:check
 npm run lint
 npm run typecheck
 npm run build
-docker compose config --quiet
-docker compose -f compose.database.yaml config --quiet
+npx prisma validate --schema prisma/schema.prisma
 python -c "from pathlib import Path; import ast; p=Path('services/ml-nlp/app/main.py'); ast.parse(p.read_text(encoding='utf-8'), filename=str(p)); print('ML syntax OK')"
 ```
 

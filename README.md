@@ -484,12 +484,11 @@ The following modules currently render dedicated **Coming Soon** pages and are f
 
 | Document                                                              | Description                                              |
 | :----------------------------------------------------------------------- | :----------------------------------------------------------- |
-| [Documentation Index](docs/README.md)                                  | Full index of every document below, organized by topic     |
 | [Project Deliverables](docs/PROJECT_DELIVERABLES.md)                   | Wireframes, folder structure, architecture diagrams, and Test Plan & QA audit (Task 2 submission) |
 | [Architecture](docs/architecture.md)                                   | System boundaries and runtime topology                     |
 | [Project Structure](docs/project-structure.md)                         | Feature-first monorepo layout and naming rules             |
 | [Development Guide](docs/development.md)                               | Setup, conventions, and verification workflow               |
-| [Master Project Report](docs/NEXORA_OS_MASTER_PROJECT_REPORT.md)       | Full technical dossier and 100% dependency audit            |
+| [Master Project Report](docs/NEXORA_OS_MASTER_PROJECT_REPORT.md)       | Executive engineering dossier and module implementation status |
 | [Neon Database Migration](docs/NEON_DATABASE_MIGRATION.md)             | Production database architecture and connection pooling     |
 | [AI Router Documentation](docs/AI_ROUTER_DOCUMENTATION.md)             | Multi-provider AI routing and fallback strategy              |
 | [Piston Code Execution Engine](docs/PISTON_CODE_EXECUTION_ENGINE.md)   | Code Lab sandboxed execution pipeline                        |

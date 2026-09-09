@@ -91,7 +91,7 @@ Ensure the following variables are declared in `apps/web/.env` or root `.env`:
 
 ```env
 # Google Gemini API
-GEMINI_API_KEY="AQ.Ab8RN6Kct8x-fGOv6j-JuiWRS-P46pIPYJXhZYd5KZHTSOHL7g"
+GEMINI_API_KEY="your-gemini-api-key-here"
 
 # Groq Cloud API
 GROQ_API_KEY="your-groq-api-key-here"
@@ -99,8 +99,8 @@ GROQ_API_KEY="your-groq-api-key-here"
 # OpenRouter API
 OPENROUTER_API_KEY="your-openrouter-api-key-here"
 
-# Database Connection (PostgreSQL)
-DATABASE_URL="postgresql://user:password@localhost:5432/nexora_db"
+# Database Connection (Neon PostgreSQL — see NEON_DATABASE_MIGRATION.md)
+DATABASE_URL="postgresql://neondb_owner:[PASSWORD]@[HOST]-pooler.[REGION].aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 ```
 
 > [!IMPORTANT]
@@ -115,17 +115,24 @@ DATABASE_URL="postgresql://user:password@localhost:5432/nexora_db"
 ```typescript
 const response = await fetch("/api/ai", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${sessionToken}`,
+  },
   body: JSON.stringify({
     task: "coding",
     prompt: "Write a TypeScript function to balance a binary search tree",
     moduleName: "CodeAssistant",
-    userId: "usr_12345"
   }),
 });
 
 const data = await response.json();
 ```
+
+> The caller's identity for rate-limiting and usage logging comes from the
+> verified `Authorization: Bearer <token>` session token (or, for anonymous
+> callers, the request's IP address) — never from a client-supplied `userId`
+> field in the request body.
 
 **Standard Response Format**:
 ```json
@@ -150,11 +157,13 @@ const data = await response.json();
 ```typescript
 const response = await fetch("/api/ai/chat", {
   method: "POST",
-  headers: { "Content-Type": "application/json" },
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${sessionToken}`,
+  },
   body: JSON.stringify({
     prompt: "What is OTHM Unit H/650/3385?",
     moduleName: "PandaChat",
-    userId: "usr_student"
   }),
 });
 

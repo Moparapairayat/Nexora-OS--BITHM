@@ -86,14 +86,11 @@ Nexora OS - BITHM/
 │   └── seed.ts
 │
 └── docs/                               # engineering & academic documentation
-    ├── README.md                       # Documentation index
     ├── PROJECT_DELIVERABLES.md         # This file
     ├── NEXORA_OS_MASTER_PROJECT_REPORT.md
     ├── MATHEMATICAL_FOUNDATIONS.md
     ├── AI_ROUTER_DOCUMENTATION.md
     ├── PISTON_CODE_EXECUTION_ENGINE.md
-    ├── CODE_LAB_PRODUCTION_AUDIT.md
-    ├── CODE_LAB_UI_UX_AUDIT.md
     ├── NEON_DATABASE_MIGRATION.md
     ├── architecture.md
     ├── project-structure.md

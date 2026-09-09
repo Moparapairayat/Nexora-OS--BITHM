@@ -32,12 +32,20 @@ layer, or database persistence.
 ```text
 Browser :3000
     |
-    v
-Express API :8311 -----> FastAPI ML/NLP :8010
-    |
-    v
-PostgreSQL :5432 (full stack) or :5433 (database-only development)
+    +---------------------------------------+
+    v                                       v
+Express API :8311 --> FastAPI ML/NLP :8010  apps/web /api/* route handlers
+    |                                       |
+    +-------------------+-------------------+
+                        v
+        PostgreSQL (Neon Serverless) — single shared database
 ```
+
+`apps/api` is the trust boundary for institutional/admin concerns
+(authentication, RBAC, Academic Shield, operations). Code execution and
+AI-assisted features are served directly by `apps/web`'s own Next.js route
+handlers, which authenticate against the same Neon database rather than
+proxying through `apps/api` — see [Neon Database Migration](NEON_DATABASE_MIGRATION.md).
 
 Code execution is a separate security boundary. Supported Code Lab workloads
 run in short-lived Docker containers with network access disabled and explicit
@@ -59,7 +67,8 @@ CPU, memory, process, and timeout limits.
 
 ## Local state
 
-`compose.database.yaml` bind-mounts PostgreSQL data at
-`.docker-data/postgres`. This directory, generated output, caches, logs, uploads,
-and local environment files are intentionally excluded from Git and Docker
-build contexts.
+There is no local PostgreSQL container — every environment (local
+development included) connects to the same Neon Serverless PostgreSQL
+database via `DATABASE_URL`/`DIRECT_URL`, configured identically in the root
+`.env` and `apps/web/.env`. Generated output, caches, logs, uploads, and local
+environment files are intentionally excluded from Git.

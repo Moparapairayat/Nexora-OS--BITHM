@@ -80,8 +80,8 @@ When a request arrives at `ExecutionRouter.execute()`:
 
 - **Input Validation**: `validateExecutionInput()` rejects empty payloads or source code exceeding `64,000` characters.
 - **Output Sanitization**: `sanitizeStdout()` strips null bytes and truncates outputs exceeding `16,000` characters to prevent buffer overflow attacks.
-- **Rate Limiting**: `ExecutionRateLimiterService` enforces a limit of `30 requests/minute` per user/IP.
-- **Iframe Security**: Browser JS runner uses `parent.postMessage(..., window.location.origin)` to prevent cross-window target origin leakage.
+- **Rate Limiting**: `ExecutionRateLimiterService` keys its limit on the verified session id (or request IP for anonymous callers) via `getRateLimitIdentifier` — never a client-supplied field, so a caller cannot spoof a fresh identifier by editing the request body.
+- **Iframe Security**: the browser JS runner's iframe→parent result message targets `window.location.origin`. The parent→iframe run-request message still uses a wildcard `"*"` target — lower risk since the sandboxed `srcdoc` iframe has an opaque (`null`) origin, but not yet tightened to an explicit target.
 
 ---
 
