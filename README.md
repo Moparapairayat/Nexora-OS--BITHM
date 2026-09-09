@@ -117,6 +117,9 @@
   <img src="https://img.shields.io/badge/React_Hook_Form_7-EC5990?style=for-the-badge&logo=reacthookform&logoColor=white&labelColor=0D1117" alt="React Hook Form" />
   <img src="https://img.shields.io/badge/Zod_4-3E67B1?style=for-the-badge&logo=zod&logoColor=white&labelColor=0D1117" alt="Zod 4" />
   <img src="https://img.shields.io/badge/Recharts_3-8884D8?style=for-the-badge&labelColor=0D1117" alt="Recharts" />
+  <img src="https://img.shields.io/badge/React_Compiler-0D1117?style=for-the-badge&labelColor=0D1117&color=61DAFB" alt="React Compiler" />
+  <img src="https://img.shields.io/badge/Class_Variance_Authority-0D1117?style=for-the-badge&labelColor=0D1117&color=A78BFA" alt="Class Variance Authority" />
+  <img src="https://img.shields.io/badge/Lucide_Icons-0D1117?style=for-the-badge&labelColor=0D1117&color=F97316" alt="Lucide Icons" />
 </p>
 
 ### Core Backend API (`apps/api`)
@@ -153,6 +156,8 @@
   <img src="https://img.shields.io/badge/Uvicorn_ASGI-0D1117?style=for-the-badge&labelColor=0D1117&color=499848" alt="Uvicorn ASGI" />
   <img src="https://img.shields.io/badge/Scikit_Learn_TF--IDF-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white&labelColor=0D1117" alt="Scikit-Learn" />
   <img src="https://img.shields.io/badge/NumPy_%2B_Pandas-0D1117?style=for-the-badge&labelColor=0D1117&color=150458" alt="NumPy + Pandas" />
+  <img src="https://img.shields.io/badge/Sentence_Transformers-0D1117?style=for-the-badge&labelColor=0D1117&color=FFD21E" alt="Sentence Transformers" />
+  <img src="https://img.shields.io/badge/Pydantic_2-E92063?style=for-the-badge&logo=pydantic&logoColor=white&labelColor=0D1117" alt="Pydantic 2" />
 </p>
 
 ### Monorepo, DevOps & Quality Tooling
@@ -165,7 +170,95 @@
   <img src="https://img.shields.io/badge/ESLint_9-4B32C3?style=for-the-badge&logo=eslint&logoColor=white&labelColor=0D1117" alt="ESLint 9" />
   <img src="https://img.shields.io/badge/Prettier_3-F7B93E?style=for-the-badge&logo=prettier&logoColor=black&labelColor=0D1117" alt="Prettier 3" />
   <img src="https://img.shields.io/badge/Concurrently-10B981?style=for-the-badge&labelColor=0D1117" alt="Concurrently" />
+  <img src="https://img.shields.io/badge/tsx_Watch_Runtime-0D1117?style=for-the-badge&labelColor=0D1117&color=3178C6" alt="tsx" />
 </p>
+
+<details>
+<summary><b>📜 Click to expand — Complete 100% Dependency Audit (every package, every workspace)</b></summary>
+
+#### `apps/web` — Next.js Frontend
+
+| Package                        | Version    | Role                                                          |
+| :------------------------------ | :---------- | :------------------------------------------------------------- |
+| `next`                         | `16.2.9`   | App Router framework, SSR, and edge route handlers.           |
+| `react` / `react-dom`          | `19.2.4`   | Core UI library and DOM renderer.                              |
+| `typescript`                   | `^5`       | Strict static typing across the workspace.                     |
+| `tailwindcss` / `@tailwindcss/postcss` | `^4` | Utility-first styling engine and PostCSS integration.   |
+| `@monaco-editor/react` / `monaco-editor` | `^4.7.0` / `^0.55.1` | In-browser Code Lab IDE engine.                |
+| `framer-motion`                | `^12.23.24`| Animation and layout-transition engine.                        |
+| `@tanstack/react-query`        | `^5.90.11` | Server-state cache, fetching, and mutations.                    |
+| `zustand`                      | `^5.0.8`   | Minimal client-side global state store.                         |
+| `react-hook-form` / `@hookform/resolvers` | `^7.67.0` / `^5.2.2` | Form state management with Zod schema binding.  |
+| `zod`                          | `^4.1.13`  | Runtime schema validation shared with the API.                  |
+| `jsonwebtoken` / `@types/jsonwebtoken` | `^9.0.2` / `^9.0.10` | Server-side session token verification in route handlers. |
+| `recharts`                     | `^3.5.0`   | Charting for Skill DNA, Data Hub, and analytics views.          |
+| `lucide-react`                 | `^0.555.0` | Tree-shakeable SVG icon set.                                    |
+| `class-variance-authority`     | `^0.7.1`   | Type-safe component variant management.                         |
+| `clsx` / `tailwind-merge`      | `^2.1.1` / `^3.4.0` | Conditional and conflict-safe className composition.  |
+| `@alloc/quick-lru`             | `^5.2.0`   | In-memory LRU cache for fast lookups.                            |
+| `@prisma/client` / `prisma`    | `^6.19.0`  | Type-safe database client and CLI (used by web's own API routes).|
+| `babel-plugin-react-compiler`  | `1.0.0`    | Automatic memoization of components and hooks.                  |
+| `eslint` / `eslint-config-next`| `^9` / `16.2.9` | Static analysis and Next.js best-practice linting.          |
+| `@tailwindcss/oxide-linux-x64-musl` *(optional)* | `4.3.1` | Native Rust-powered CSS parser (Linux musl builds). |
+| `lightningcss-linux-x64-musl` *(optional)* | `1.32.0` | Rust-based CSS transformer/minifier (Linux musl builds). |
+| `@nexora/config` / `@nexora/types` | workspace | Internal shared configuration and TypeScript contracts.     |
+
+#### `apps/api` — Express Backend
+
+| Package               | Version     | Role                                                             |
+| :---------------------- | :----------- | :------------------------------------------------------------------ |
+| `express`              | `^5.1.0`    | Async-first REST web framework.                                   |
+| `typescript` / `tsx`   | `^5.9.3` / `^4.20.6` | Strict typing and hot-reloading dev runtime.              |
+| `jsonwebtoken`         | `^9.0.2`    | Stateless session token signing and verification.                 |
+| `bcryptjs`             | `^3.0.2`    | Password hashing with timing-attack-resistant comparisons.         |
+| `helmet`               | `^8.3.0`    | Security response headers (CSP, HSTS, etc.).                       |
+| `express-rate-limit`   | `^8.7.0`    | Rate limiting on authentication endpoints.                         |
+| `cors`                 | `^2.8.5`    | Cross-origin resource sharing policy enforcement.                  |
+| `zod`                  | `^4.1.13`   | Request body / query / payload runtime validation.                 |
+| `dotenv`               | `^17.2.3`   | Environment variable loading from the monorepo root `.env`.        |
+| `@nexora/config` / `@nexora/types` | workspace | Internal shared configuration and TypeScript contracts.  |
+
+#### `prisma/` — Database & ORM
+
+| Package            | Version    | Role                                                             |
+| :------------------- | :---------- | :------------------------------------------------------------------ |
+| `prisma` (CLI)      | `^6.19.0`  | Schema migrations, introspection, and client generation.          |
+| `@prisma/client`    | `^6.19.0`  | Type-safe, auto-generated query builder.                          |
+| PostgreSQL (Neon)   | `v16+`     | Serverless, connection-pooled relational database — 30+ models.   |
+
+#### `services/ml-nlp` — Python ML/NLP Microservice
+
+| Package                | Version    | Role                                                            |
+| :------------------------ | :---------- | :------------------------------------------------------------------ |
+| `fastapi`                | `0.122.0`  | Asynchronous REST API framework.                                  |
+| `uvicorn[standard]`      | `0.38.0`   | Production-grade ASGI server.                                     |
+| `scikit-learn`           | `1.7.2`    | TF-IDF vectorization and cosine-similarity scoring.                |
+| `sentence-transformers`  | `6.0.1`    | Transformer-based semantic sentence embeddings for similarity analysis. |
+| `numpy`                  | `2.3.5`    | Matrix operations and vector norms.                                |
+| `pandas`                 | `2.3.3`    | Structured data frames for shingle/frequency analysis.             |
+| `pydantic`               | `2.12.5`   | Request/response validation via Python type annotations.           |
+
+#### `packages/*` — Shared Workspace Packages
+
+| Package              | Version    | Role                                                              |
+| :---------------------- | :---------- | :--------------------------------------------------------------------- |
+| `@nexora/types`        | `0.1.0`    | Cross-workspace TypeScript contracts (`User`, `Role`, `AuditEvent`, ...). |
+| `@nexora/config`       | `0.1.0`    | Shared model catalogs and runtime-safe configuration.               |
+| `@nexora/ui`           | `0.1.0`    | Shared presentation primitives (pure TypeScript, no dependencies).  |
+| `typescript`           | `^5.9.3`   | Shared strict compiler configuration (`tsconfig.base.json`).       |
+
+#### Root / Monorepo Tooling
+
+| Package         | Version    | Role                                                                |
+| :---------------- | :---------- | :----------------------------------------------------------------------- |
+| `concurrently`   | `^9.2.4`   | Parallel multi-process runner for `web` + `api` + `ml` dev servers.  |
+| `prettier`       | `^3.6.2`   | Opinionated formatting across `.ts/.tsx/.js/.json/.md/.css`.         |
+| `prisma`         | `^6.19.0`  | Root-level schema/migration/seed commands.                           |
+| `tsx`            | `^4.20.6`  | TypeScript execution engine for the Prisma seed script.              |
+| `bcryptjs`       | `^3.0.2`   | Password hashing used by `prisma/seed.ts`.                            |
+| `@prisma/client` | `^6.19.0`  | Shared generated client consumed by every workspace.                 |
+
+</details>
 
 ---
 
