@@ -8,11 +8,13 @@
     "packages/*"
   ],
   "scripts": {
+    "predev": "npm run build:packages",
     "dev": "concurrently -n web,api,ml -c cyan,green,magenta \"npm run dev:web\" \"npm run dev:api\" \"npm run dev:ml\"",
     "dev:web": "npm run dev --workspace @nexora/web",
     "dev:api": "npm run dev --workspace @nexora/api",
     "dev:ml": "py -3.13 -m uvicorn app.main:app --app-dir services/ml-nlp --reload --port 8010",
-    "postinstall": "prisma generate --schema=prisma/schema.prisma",
+    "build:packages": "npm run build --workspace @nexora/types && npm run build --workspace @nexora/config",
+    "postinstall": "prisma generate --schema=prisma/schema.prisma && npm run build:packages",
     "build": "npm run db:generate && npm run build --workspace @nexora/types && npm run build --workspace @nexora/config && npm run build --workspace @nexora/api && npm run build --workspace @nexora/web",
     "build:web": "npm run db:generate && npm run build --workspace @nexora/web",
     "build:api": "npm run build --workspace @nexora/api",
