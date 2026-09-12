@@ -18,6 +18,7 @@
   </p>
 
   <p align="center">
+    <a href="./INSTRUCTOR_QUICKSTART.md"><img src="https://img.shields.io/badge/INSTRUCTOR_GUIDE-QUICKSTART-10B981?style=for-the-badge&labelColor=0D1117" alt="Instructor Quickstart" /></a>
     <a href="#-tech-stack--engineering-tools"><img src="https://img.shields.io/badge/Tech_Stack-10B981?style=for-the-badge&labelColor=0D1117" alt="Tech Stack" /></a>
     <a href="#-core-features"><img src="https://img.shields.io/badge/Core_Features-0EA5E9?style=for-the-badge&labelColor=0D1117" alt="Core Features" /></a>
     <a href="#-platform-modules"><img src="https://img.shields.io/badge/Platform_Modules-7C3AED?style=for-the-badge&labelColor=0D1117" alt="Platform Modules" /></a>
